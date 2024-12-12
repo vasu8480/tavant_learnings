@@ -1,0 +1,3 @@
+#Install Telnet via Command Line
+dism /online /Enable-Feature /FeatureName:TelnetClient
+
