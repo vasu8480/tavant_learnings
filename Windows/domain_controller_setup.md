@@ -95,18 +95,9 @@ Ensure the prerequisites are met:
 - Verify that the shared folders are accessible with appropriate permissions.
 - Optionally, configure **Group Policy** on the domain controller for advanced management.
 
----
-
-## Naming Considerations
-- The domain name (e.g., `example.local`) must be unique and ideally not conflict with any existing DNS structure.
-- The folder names (`Project`, `Input`) can be freely chosen but should align with their purpose for clarity.
-
----
-
 This setup ensures centralized authentication and easy communication between worker and master instances.
 
 ---
-# Troublr shotting
 # Troubleshooting
 
 ## 1. Reset the Domain Administrator Password on the Worker Instance
