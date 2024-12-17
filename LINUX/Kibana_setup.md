@@ -2,6 +2,15 @@
 
 ## Prerequisites
 The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.210.85.44`.
+1. **Modify the Configuration to Use the New IP**  
+   Update the `filebeat.yml` file to include the new IP address `10.210.85.44`.  
+
+   ```bash
+   cat /etc/filebeat/filebeat.yml
+   vi /etc/filebeat/filebeat.yml
+   systemctl restart filebeat
+   systemctl status filebeat
+   ```
 
 ## Download and Install Elasticsearch
 
