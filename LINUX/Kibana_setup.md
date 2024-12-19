@@ -14,7 +14,34 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
 
 ## Download and Install Elasticsearch
 
-1. Download the SHA512 checksum file for Elasticsearch:
+1. Creating logs disk for Logstash
+   ```bash
+   # Create a directory for mounting
+   mkdir -p /elk
+
+   # Identify the disk to format and mount
+   mnt=$(lsblk | sed -n '5p' | awk '{print $1}')
+   echo "Mounting disk: $mnt"
+
+   # Format the disk with ext4
+   mkfs.ext4 /dev/nvme1n1
+
+   # Mount the disk to the /elk directory
+   mount /dev/nvme1n1 /elk
+
+   # Add the mount to /etc/fstab for persistence
+   echo "/dev/nvme1n1 /elk ext4 defaults,nofail 0 2" >> /etc/fstab
+
+   # Verify the mount
+   df -kh
+
+   # Test remounting
+   umount /elk
+   mount -a
+   df -kh
+   ```
+
+2. Download the SHA512 checksum file for Elasticsearch:
    ```bash
    yum install wget
 
@@ -25,8 +52,7 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.1-x86_64.rpm
 
    sudo rpm --install elasticsearch-7.16.1-x86_64.rpm
-  
-   shasum -a 512 -c elasticsearch-7.16.1-x86_64.rpm.sha512
+   # shasum -a 512 -c elasticsearch-7.16.1-x86_64.rpm.sha512
    ```
 
 ## Configure Elasticsearch
@@ -76,13 +102,14 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
    ```bash
    java --version
    yum install java-1.8.0-openjdk
-   sudo yum install logstash
    ```
 ## Configure Logstash
 
 1. Edit the repository file for Logstash:
 
    ```bash
+   sudo yum install logstash
+   
    vi /etc/yum.repos.d/logstash.repo
    ```
 
@@ -226,10 +253,13 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
    ```
 
 2. Configure Kibana:
-   ```bash
-   cat /etc/kibana/kibana.yml
+   -```bash
    cp /etc/kibana/kibana.yml /etc/kibana/kibana.yml_blp
    vi /etc/kibana/kibana.yml
+      - server.host: "0.0.0.0"
+   ```
+   ```bash
+   vi /etc/yum.repos.d/kibana.repo
    ```
 
    Update the repository details as follows:
