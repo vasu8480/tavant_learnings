@@ -52,7 +52,7 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.16.1-x86_64.rpm
 
    sudo rpm --install elasticsearch-7.16.1-x86_64.rpm
-   # shasum -a 512 -c elasticsearch-7.16.1-x86_64.rpm.sha512
+   shasum -a 512 -c elasticsearch-7.16.1-x86_64.rpm.sha512
    ```
 
 ## Configure Elasticsearch

@@ -1,0 +1,81 @@
+  image: maven:3.3.9-jdk-8
+
+  variables:
+    GITHUB_REPO: "git@github.com:DoosanICA/db-irw.git"
+    REPOSITORY_NAME: "db-irw"
+    DEFAULT_BRANCH:
+      value: "develop"
+      description: "Enter the branch name"
+      
+  stages:
+    - clone
+    - build
+    - deploy
+
+
+  clone_job:
+    stage: clone
+    tags:
+      - Linux
+    before_script:
+      - mkdir -p ~/.ssh
+      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - ssh -T git@github.com || true
+    script:
+      - git clone git@github.com:DoosanICA/db-irw.git
+      - cd db-irw
+      - mkdir -p temp_dir
+      - find . -mindepth 1 -maxdepth 1 ! -name 'temp_dir' -exec cp -r {} temp_dir/ \;
+      - tar -czf cloned_files.tar.gz -C temp_dir .
+      - rm -rf temp_dir
+    artifacts:
+      paths:
+        - db-irw/cloned_files.tar.gz
+      expire_in: 1 week
+    rules:
+      - if: '$CI_PIPELINE_SOURCE == "trigger"'
+        when: on_success
+      - when: manual
+    variables:
+      BRANCH: $DEFAULT_BRANCH
+
+
+  build_job:
+    stage: build
+    tags:
+      - Linux
+    dependencies:
+      - clone_job
+    script:
+      - tar -xzf cloned_files.tar.gz
+      - cd db-irw
+      - mvn -s /home/gitlab-runner/maven-settings-files/twms-bobcat-irw-setting.xml -U clean install -Dmaven.test.skip=true -Dmaven.repo.local=/home/gitlab-runner/maven-settings-files/twms_bobcat_irw -f integration/bods/pom.xml
+      - mvn -s /home/gitlab-runner/maven-settings-files/twms-bobcat-irw-setting.xml -U clean install -Dmaven.test.skip=true -Dmaven.repo.local=/home/gitlab-runner/maven-settings-files/twms_bobcat_irw -f integration/server/pom.xml
+      - mvn -s /home/gitlab-runner/maven-settings-files/twms-bobcat-irw-setting.xml -U clean install -P dailyqabuild -Dmaven.test.skip=true -Dmaven.repo.local=/home/gitlab-runner/maven-settings-files/twms_bobcat_irw -DbuildNumber=${GIT_COMMIT} -DreleaseVersion=${RELEASE_VERSION}
+    artifacts:
+      paths:
+        - integration/bods/target/*.jar
+        - integration/server/target/*.war
+        - target/*.war
+      expire_in: 1 week
+    
+  deploy:
+    stage: deploy
+    tags:
+      - Linux
+    script:
+      # Transfer WAR files from webapp/target
+      - scp -r webapp/target/*.war btprojusr01@remote_server:/home/btprojusr01/deploy_util_wildfly/installables/wars
+
+      # Transfer WAR files from integration/server/target
+      - scp -r integration/server/target/*.war btprojusr01@remote_server:/home/btprojusr01/deploy_util_wildfly/installables/wars
+
+      # Transfer configuration files
+      - scp -r etc/qa/integration/* btprojusr01@remote_server:/home/btprojusr01/deploy_util_wildfly/installables/configurations
+
+      # Execute the remote deployment script
+      - ssh btprojusr01@remote_server "/home/btprojusr01/ci/deploy_util_wildfly/scripts/deployer.sh"
+
+    when: on_success
