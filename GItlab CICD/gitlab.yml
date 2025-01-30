@@ -1,0 +1,73 @@
+image: maven:3.3.9-jdk-8
+
+variables:
+  GITHUB_REPO: "github.com/FinXperience/finexp_library.git"
+  REPOSITORY_NAME: "finexp_library"
+  DEFAULT_BRANCH:
+    description: "Specify the branch to build"
+    value: "release-5.4.3-bayview-nd"
+  FOLDER:
+    description: "Select the folder to build"
+    value: "mortgage-common"  # Default value
+    options:
+      - "finexp-service-interface"
+      - "finconnect-base-adapter"
+      - "storage-mgmt"
+      - "credential-manager"
+      - "finexp-service-interface"
+      - "finx-dr-util"
+      - "logging-api"
+      - "mismo-exception-model"
+      - "mortgage-common"
+      - "mismo-common"
+      - "storage-mgmt"
+      - "finconnect-base-adapter"
+      - "mismo-common"
+      - "mismo-rules"
+      - "mismo-rules-model"
+      - "request-response-model"
+      - "voi/voi-adapter"
+      - "voi/voi-loan-module"
+      - "voi/voi-model"
+      - "voi/voi-providers"
+      - "voa/voa-model"
+      - "voa/voa-module"
+      - "finexp-mortgage-interface"
+
+stages:
+  - clone
+  - build
+
+before_script:
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+  - export NVM_DIR="$HOME/.nvm"
+  - bash -c 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 14 && nvm use 14'
+
+
+checkout:
+  stage: clone
+  tags:
+    - Linux
+  script:
+    - echo "Cloning repository from branch:" $DEFAULT_BRANCH
+    - echo "Selected folder:" $FOLDER    
+    - git clone --branch $DEFAULT_BRANCH https://${GH_TOKEN_GLOBAL}:${GH_TOKEN_GLOBAL}@$GITHUB_REPO
+    - cd $REPOSITORY_NAME
+  artifacts:
+    paths:
+      - $REPOSITORY_NAME
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+      when: on_success  # Run this job automatically when triggered by another pipeline
+    - when: manual  # Allow manual execution otherwise
+
+build:
+  stage: build
+  tags:
+    - Linux
+  script:
+    - cd $REPOSITORY_NAME
+    - ls
+    - cd ${FOLDER}
+    - mvn clean deploy -s /home/gitlab-runner/maven-settings-files/bayview_broker_nondel.xml dependency:purge-local-repository -DreResolve=false -P broker -DskipTests=true
+  when: on_success

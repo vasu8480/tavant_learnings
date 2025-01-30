@@ -1,0 +1,43 @@
+stages:
+  - deploy
+
+variables:
+  JUMP_SERVER: "10.206.17.27"
+
+default:
+  before_script:
+    - |
+      echo "$SEB_UAT_PROD_PKEY" > /home/gitlab-runner/SEB_UAT_PROD_PKEY.pem
+      pkey="/home/gitlab-runner/SEB_UAT_PROD_PKEY.pem"
+      chmod 600 $pkey
+
+# Reusable deploy template
+.deploy_template: &deploy_template
+  tags:
+    - Linux
+  script:
+    - |
+      echo "Deploying core service on $SERVER!"
+      ssh -o StrictHostKeyChecking=no -i $pkey deployuser@$JUMP_SERVER <<EOF
+        ssh -tt -i deployuser.pem $SERVER "sudo ./coreService-deploy.sh && cd templatefolder && sudo ./template-deploy.sh"
+      EOF
+
+deploy_server1:
+  stage: deploy
+  extends: .deploy_template
+  variables:
+    SERVER: "deployuser@10.206.16.113"
+  rules:
+    - when: manual
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+      when: on_success
+
+deploy_server2:
+  stage: deploy
+  extends: .deploy_template
+  variables:
+    SERVER: "deployuser@10.206.16.9"
+  rules:
+    - when: on_success
+  needs:
+    - deploy_server1

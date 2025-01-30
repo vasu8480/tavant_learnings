@@ -1,0 +1,62 @@
+image: maven:3.3.9-jdk-8
+
+variables:
+  GITHUB_REPO: "git@github.com:DoosanICA/db-irw.git"
+  REPOSITORY_NAME: "db-irw"
+  DEFAULT_BRANCH: 
+    value: "develop"
+    description: "Enter the branch name"
+  RELEASE_VERSION:
+    value: "0"
+    description: "Enter the Release name"
+  MAVEN_SETTINGS_PATH: /home/gitlab-runner/maven-settings-files/twms-bobcat-irw-setting.xml -U clean install -Dmaven.test.skip=true
+  MAVEN_REPO_LOCAL: /home/gitlab-runner/maven-settings-files/twms_bobcat_irw
+  DEPLOY_SERVER_1: appuser@10.10.11.120
+  DEPLOY_SERVER_2: appuser@10.10.11.121
+  DEPLOY_SERVER_3: appuser@10.10.11.129
+  DEPLOY_PATH_WARS: /home/appuser/ci/deploy_util_wildfly/installables/wars
+  DEPLOY_PATH_CONFIGS: /home/appuser/ci/deploy_util_wildfly/installables/configurations/
+  DEPLOY_SCRIPT: /home/appuser/ci/deploy_util_wildfly/scripts/jenkins_deployer.sh
+
+
+stages:
+  - clone
+  - build
+  - deploy
+
+clone_job:
+  stage: clone
+  tags:
+    - Linux
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - ssh -T git@github.com || true
+    - |
+      echo "$twms_irw_uat_keys" > /home/gitlab-runner/twms_irw_uat_keys.pem
+      pkey="/home/gitlab-runner/twms_irw_uat_keys.pem"
+      chmod 600 $pkey
+
+  script:
+    - git clone --branch $DEFAULT_BRANCH $GITHUB_REPO
+    - cp deploy_to_server_120_121.sh deploy_to_server_129.sh $REPOSITORY_NAME/
+    - cd $REPOSITORY_NAME
+    - chmod +x *.sh
+    - export GIT_COMMIT=$(git rev-parse HEAD)  # Get latest commit hash from the cloned repository
+    - echo "Revision:$GIT_COMMIT"
+
+    # Build integration modules
+    - mvn -s $MAVEN_SETTINGS_PATH -Dmaven.repo.local=$MAVEN_REPO_LOCAL -f integration/bods/pom.xml
+    - mvn -s $MAVEN_SETTINGS_PATH -Dmaven.repo.local=$MAVEN_REPO_LOCAL -f integration/server/pom.xml
+    - mvn -s $MAVEN_SETTINGS_PATH -Dmaven.repo.local=$MAVEN_REPO_LOCAL -DbuildNumber=$GIT_COMMIT -DreleaseVersion=$RELEASE_VERSION -Pdailyqabuild
+    #Deploy
+    - ./deploy_to_server_120_121.sh $DEPLOY_SERVER_1 $DEPLOY_PATH_WARS $DEPLOY_PATH_CONFIGS $pkey $DEPLOY_SCRIPT
+    - ./deploy_to_server_120_121.sh $DEPLOY_SERVER_2 $DEPLOY_PATH_WARS $DEPLOY_PATH_CONFIGS $pkey $DEPLOY_SCRIPT
+    - ./deploy_to_server_129.sh $DEPLOY_SERVER_3 $DEPLOY_PATH_WARS $DEPLOY_PATH_CONFIGS $pkey $DEPLOY_SCRIPT
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+      when: on_success
+    - when: manual
