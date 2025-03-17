@@ -71,3 +71,5 @@ build:
     - cd ${FOLDER}
     - mvn clean deploy -s /home/gitlab-runner/maven-settings-files/bayview_broker_nondel.xml dependency:purge-local-repository -DreResolve=false -P broker -DskipTests=true
   when: on_success
+
+
