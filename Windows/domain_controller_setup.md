@@ -47,7 +47,7 @@ Ensure the prerequisites are met:
 ### Step 2: Configure the Network Adapter
 1. Right-click the active network adapter and select **Properties**.
 2. Select **Internet Protocol Version 4 (TCP/IPv4)** and click **Properties**.
-3. Under **Use the following DNS server addresses**, enter the IP address of the domain controller.
+3. Under **Use the following DNS server addresses**, enter the IP address of the domain controller (Woker IP).
 4. Click **OK** to save the changes.
 
 ---
