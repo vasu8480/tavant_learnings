@@ -31,10 +31,6 @@ nxdkl2l8yw3o   bayview-nondel-qa_finexpproxy              replicated   0/0      
 52fq9ybd1oa1   bayview-nondel-qa_finexpusermgmt           replicated   0/0        600427762251.dkr.ecr.us-east-2.amazonaws.com/finexp/finexpusermgmt:latest-qa           *:9091->9091/tcp
 
 
-
-
-
-
 start all the
 
 

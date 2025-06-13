@@ -1,75 +1,89 @@
-image: maven:3.3.9-jdk-8
-
 variables:
-  GITHUB_REPO: "github.com/FinXperience/finexp_library.git"
-  REPOSITORY_NAME: "finexp_library"
-  DEFAULT_BRANCH:
-    description: "Specify the branch to build"
-    value: "release-5.4.3-bayview-nd"
-  FOLDER:
-    description: "Select the folder to build"
-    value: "mortgage-common"  # Default value
-    options:
-      - "finexp-service-interface"
-      - "finconnect-base-adapter"
-      - "storage-mgmt"
-      - "credential-manager"
-      - "finexp-service-interface"
-      - "finx-dr-util"
-      - "logging-api"
-      - "mismo-exception-model"
-      - "mortgage-common"
-      - "mismo-common"
-      - "storage-mgmt"
-      - "finconnect-base-adapter"
-      - "mismo-common"
-      - "mismo-rules"
-      - "mismo-rules-model"
-      - "request-response-model"
-      - "voi/voi-adapter"
-      - "voi/voi-loan-module"
-      - "voi/voi-model"
-      - "voi/voi-providers"
-      - "voa/voa-model"
-      - "voa/voa-module"
-      - "finexp-mortgage-interface"
+  GITHUB_REPO: "gitlab.tavant.com/internal-project-tavant-cranium/cranium.git"
+  REPOSITORY_NAME: "cranium"
+  DEFAULT_BRANCH: 
+    value: "IM_Release_28_Features"
+    description: "Enter the branch name"
+  M2_HOME: "/opt/apache-maven-3.3.9"
+  NEXUS_URL: "https://nexus.tavant.com/repository/Cranium-Maven-Repo"
+  VERSION_CMD: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout"
+
+default:
+  tags:
+    - Linux2
+    
+.PEM: &ssh_key
+  before_script:
+    - |
+      echo "$PKEY" > /home/gitlab-runner/cranium_dev.pem
+      pkey="/home/gitlab-runner/cranium_dev.pem"
+      chmod 600 $pkey
 
 stages:
-  - clone
-  - build
+  - build_upload
+  - deploy
 
-before_script:
-  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-  - export NVM_DIR="$HOME/.nvm"
-  - bash -c 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 14 && nvm use 14'
-
-
-checkout:
-  stage: clone
-  tags:
-    - Linux
+build_upload:
+  stage: build_upload
+  before_script:
+    - export PATH="$M2_HOME/bin:$PATH"
+    - mvn -version
   script:
-    - echo "Cloning repository from branch:" $DEFAULT_BRANCH
-    - echo "Selected folder:" $FOLDER    
-    - git clone --branch $DEFAULT_BRANCH https://${GH_TOKEN_GLOBAL}:${GH_TOKEN_GLOBAL}@$GITHUB_REPO
-    - cd $REPOSITORY_NAME
-  artifacts:
-    paths:
-      - $REPOSITORY_NAME
+    - |
+      echo "🔁 Cloning repository Branch was:$DEFAULT_BRANCH"
+    - git clone --branch "$DEFAULT_BRANCH" "https://$GITLAB_PAT:$GITLAB_PAT@$GITHUB_REPO"
+    - cd "$REPOSITORY_NAME"
+
+    - echo "🚀 Building project"
+    - mvn clean install -DskipTests
+
+    - echo "🔍 Extracting version"
+    - VERSION=$($VERSION_CMD)
+    - echo "📦 Version:$VERSION"
+
+    - echo "📜 Generating effective POM"
+    - mvn help:effective-pom -Doutput="cranium-core/target/cranium-core-${VERSION}.pom"
+
+    - cd cranium-core/target
+    - ls -lh
+
+    - |
+      echo "⬆️ Uploading to Nexus"
+      for FILE in cranium-core-${VERSION}.pom cranium-core-${VERSION}.jar; do
+        curl -v -u "$NEXUS_USER:$NEXUS_PASS" --upload-file "$FILE" "${NEXUS_URL}/${VERSION}/$FILE"
+      done
+
+    - echo "📂 Extracting JAR"
+    - jar -xvf "cranium-core-${VERSION}.jar"
+
+    - echo "⬆️ Uploading properties files"
+    - cd BOOT-INF/classes
+    - |
+      for ENV in dev qa uat perf prod ""; do
+        FILE="application${ENV:+-$ENV}.properties"
+        curl -v -u "$NEXUS_USER:$NEXUS_PASS" --upload-file "$FILE" "${NEXUS_URL}/${VERSION}/$FILE"
+      done
+  # artifacts:
+  #   paths:
+  #     - $REPOSITORY_NAME/cranium-core/target
+  #   expire_in: 7 days
   rules:
     - if: '$CI_PIPELINE_SOURCE == "trigger"'
-      when: on_success  # Run this job automatically when triggered by another pipeline
-    - when: manual  # Allow manual execution otherwise
+      when: on_success
+    - when: manual
 
-build:
-  stage: build
-  tags:
-    - Linux
+deploy:
+  stage: deploy
+  << : *ssh_key
   script:
-    - cd $REPOSITORY_NAME
-    - ls
-    - cd ${FOLDER}
-    - mvn clean deploy -s /home/gitlab-runner/maven-settings-files/bayview_broker_nondel.xml dependency:purge-local-repository -DreResolve=false -P broker -DskipTests=true
-  when: on_success
+    - |
+      ssh -o StrictHostKeyChecking=no -i $pkey btprojusr01@10.132.201.76 << 'ENDSSH'
+        cd /home/btprojusr01/devcranium/cranium
+        NEXUS_URL="https://nexus.tavant.com/repository/Cranium-Maven-Repo/0.0.2"
+        curl ${NEXUS_URL}/application-dev.properties -o application-dev.properties
+        curl ${NEXUS_URL}/cranium-core-0.0.2.jar -o cranium-core-0.0.2.jar
+        curl ${NEXUS_URL}/application.properties -o application.properties
+        sudo sh restart-server.sh || true
+      ENDSSH
 
-
+  when : on_success

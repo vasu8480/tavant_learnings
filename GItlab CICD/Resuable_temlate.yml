@@ -1,43 +1,74 @@
-stages:
-  - deploy
-
 variables:
-  JUMP_SERVER: "10.206.17.27"
+  GITHUB_REPO: "git@gitlab.tavant.com:dataengineeringaccel/datascape-frontend.git"
+  REPOSITORY_NAME: "datascape-frontend"
+  DEFAULT_BRANCH: 
+    value: "development"
+    description: "Enter the branch name"
+  AWS_ROLE_ARN: "arn:aws:iam::438465141463:role/Datascape-Gitlab-CICD-Role"
+  ROLE_SESSION_NAME: "session1"
+ 
+stages:
+  - clone
+  - build
 
-default:
-  before_script:
-    - |
-      echo "$SEB_UAT_PROD_PKEY" > /home/gitlab-runner/SEB_UAT_PROD_PKEY.pem
-      pkey="/home/gitlab-runner/SEB_UAT_PROD_PKEY.pem"
-      chmod 600 $pkey
-
-# Reusable deploy template
-.deploy_template: &deploy_template
+clone_job:
+  stage: clone
   tags:
     - Linux
+  before_script:
+    - |
+      mkdir -p ~/.ssh
+      echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+      chmod 600 ~/.ssh/id_rsa
+      ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+      ssh -T git@gitlab.com || true
+    - echo "Cloning repository from branch:" $DEFAULT_BRANCH
+    - export $(cat aws_creds.env | xargs)
   script:
     - |
-      echo "Deploying core service on $SERVER!"
-      ssh -o StrictHostKeyChecking=no -i $pkey deployuser@$JUMP_SERVER <<EOF
-        ssh -tt -i deployuser.pem $SERVER "sudo ./coreService-deploy.sh && cd templatefolder && sudo ./template-deploy.sh"
-      EOF
-
-deploy_server1:
-  stage: deploy
-  extends: .deploy_template
-  variables:
-    SERVER: "deployuser@10.206.16.113"
+      git clone --branch "$DEFAULT_BRANCH" "$GITHUB_REPO"
+    - |
+      echo "Assuming AWS role..."
+      CREDENTIALS=$(aws sts assume-role --role-arn ${AWS_ROLE_ARN} --role-session-name ${ROLE_SESSION_NAME})
+      export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId')
+      export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey')
+      export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.Credentials.SessionToken')
+      echo "AWS credentials assumed successfully."
+      echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" > aws_creds.env
+      echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> aws_creds.env
+      echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> aws_creds.env
+  artifacts:
+    paths:
+      - aws_creds.env
+      - $REPOSITORY_NAME
+    expire_in: 1 day  
   rules:
-    - when: manual
     - if: '$CI_PIPELINE_SOURCE == "trigger"'
       when: on_success
+    - when: manual
 
-deploy_server2:
-  stage: deploy
-  extends: .deploy_template
-  variables:
-    SERVER: "deployuser@10.206.16.9"
-  rules:
-    - when: on_success
-  needs:
-    - deploy_server1
+build:
+  stage: build
+  tags:
+    - nodejs20
+  before_script:
+    - export $(cat aws_creds.env | xargs)
+  script:
+    - |
+      cd $REPOSITORY_NAME
+      ls
+      nvm use 22
+      node -v
+    - npm i -f
+    - npm run build  
+    - ls
+    - echo "Deploying to production..."
+    - aws s3 sync dist/ s3://datascape-ui-build/ --delete
+    - DIST_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[0].DomainName=='datascape-ui-build.s3.us-east-1.amazonaws.com'].Id" --output text)
+    - echo $EE7ZRLKUFS68B
+
+    - aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+  artifacts:
+    paths:
+      - $REPOSITORY_NAME/dist/*
+      

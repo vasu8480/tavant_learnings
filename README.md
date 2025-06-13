@@ -1,1 +1,0 @@
-# tavant_learnings
