@@ -1,4 +1,4 @@
-# Deployment Instructions
+e# Deployment Instructions
 ## Worker Setup
 ### 1. Prepare Worker API
 - **Create Path:** `C:\\TRUE\\web\\workerapi`
@@ -19,7 +19,7 @@
   - `C:\\TRUE\\web\\MasterAPI`
   - **Copy Files:** Transfer from `TDI_APIv5.1.80` to these folder file (e.g., af, ar) as needed.
   - **Copy Files:** Transfer from `manager_service_v5.1.71` to these folder file (e.g., appsettings,... ) as needed.
-
+e
 ### 2. IIS Configuration
 - **Delete** default site in IIS.
 - **Add Sites:**
@@ -145,7 +145,21 @@
    - **Open** `DBCreds` and replace `TDI_Worker2` with `TDI_Master2`.
 
 4. **Edit DBCreds_Master**:
-   - **Paste** copied content, no additional changes needed.
+   - **Paste** copied content, no additional changes needed .
+   - <?xml version="1.0" encoding="utf-8"?>
+         <DatabaseCredentials>
+         <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>
+         <Database>TDI_Worker2</Database>
+         <WindowsLogin>false</WindowsLogin>
+         <Username>admin</Username>
+         <Password>Pbw4hsznu9aQnkS7roIWHvvgZaYMa+O5PlG2r3UT+bo=</Password>
+         <AdditionalParams>
+            <Param>
+               <Key>Persist Security Info</Key>
+               <Value>False</Value>
+            </Param>
+         </AdditionalParams>
+      </DatabaseCredentials>
 
 5. **Create and Configure DBCreds_Manager**:
    - Make a copy of `DBCreds`.

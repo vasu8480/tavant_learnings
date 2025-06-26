@@ -5,11 +5,17 @@ Master-DC
 password: 0;i62gMfcn-6FJP.mq?aOrzPMk2IIDET
 
 
+m$;Vw-qE6RIn7FG!7!aeff=)S2-sfbGy
 
 =OX1&P7;!EJ$lnLsx)%P9ApfMVlTa43k
 
 DomainName: True.com
 Password: True@123456
+
+
+\\WORKER-DC2.True.com\Project
+
+
 
 
 

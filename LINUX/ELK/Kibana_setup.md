@@ -108,7 +108,7 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
 1. Edit the repository file for Logstash:
 
    ```bash
-   sudo yum install logstash
+   sudo yum install logstash -y
    
    vi /etc/yum.repos.d/logstash.repo
    ```
@@ -200,7 +200,7 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
       ```bash
       output {
       elasticsearch {
-         hosts => [ "10.216.218.50:9200" ]
+         hosts => [ "10.210.85.44:9200" ]
          sniffing => false
       }
       stdout { codec => rubydebug }
@@ -237,23 +237,26 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
 
 4. Manage Logstash Service:
    ```bash
-   ls -ltr
+   sudo chown -R logstash:logstash /etc/logstash/conf.d/
+   sudo chmod -R 644 /etc/logstash/conf.d/*.conf
    chmod 777 *
-   ls -ltr
+   
    systemctl status logstash
    tail -f /var/log/logstash/logstash-plain.log
    cat /var/log/logstash/logstash-plain.log
+   sudo journalctl -u logstash -f
+
    ```
 
 # Kibana Installation Guide
 
 1. Install Kibana Run the following command to install Kibana version 7.16.1:
    ```bash
-   yum install kibana-7.16.1
+   yum install kibana-7.16.1 -y
    ```
 
 2. Configure Kibana:
-   -```bash
+   ```bash
    cp /etc/kibana/kibana.yml /etc/kibana/kibana.yml_blp
    vi /etc/kibana/kibana.yml
       - server.host: "0.0.0.0"
@@ -280,6 +283,8 @@ The server IP for the ELK (Elasticsearch, Logstash, Kibana) installation is `10.
    systemctl start kibana
    systemctl status kibana
    systemctl status kibana -l
+
+   curl -X GET http://localhost:5601/api/status
    ```
 
 4. Verify Related Services:
