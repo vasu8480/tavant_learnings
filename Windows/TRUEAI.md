@@ -40,7 +40,7 @@ e
    - **For Worker Machine**: Use `nginx.worker.conf`, rename to `nginx.conf`, and repeat the steps above.
 
 ## TRUE Data Intelligence Installation (Worker)
-- **Install:** TrueDataIntelligence_5 App from Delivery.
+- **Install:** `TrueDataIntelligence_5 App` from Delivery.
 - **License Monitor:** Search for TRUE License Monitor and take a screenshot.
 - **Navigate to Program Data:**
    - Open **C Drive**.

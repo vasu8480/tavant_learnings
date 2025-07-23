@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DatabaseCredentials>
+  <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>
+  <Database>Tdi_Master</Database>
+  <WindowsLogin>false</WindowsLogin>
+  <Username>admin</Username>
+  <Password>Pbw4hsznu9aQnkS7roIWHvvgZaYMa+O5PlG2r3UT+bo=</Password>
+  <AdditionalParams>
+    <Param>
+      <Key>Persist Security Info</Key>
+      <Value>False</Value>
+    </Param>
+  </AdditionalParams>
+</DatabaseCredentials>
+DatabaseCredentials
+
+
+
+
+
+IP 
+<?xml version="1.0" encoding="utf-8"?>
+<DatabaseCredentials>
+  <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>
+  <Database>Tdi_Worker_18</Database>
+  <WindowsLogin>false</WindowsLogin>
+  <Username>admin</Username>
+  <Password>Pbw4hsznu9aQnkS7roIWHvvgZaYMa+O5PlG2r3UT+bo=</Password>
+  <AdditionalParams>
+    <Param>
+      <Key>Persist Security Info</Key>
+      <Value>False</Value>
+    </Param>
+  </AdditionalParams>
+</DatabaseCredentials>
+
+
+
+manager
+<?xml version="1.0" encoding="utf-8"?>
+<DatabaseCredentials>
+  <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>
+  <Database>Tdi_Manager</Database>
+  <WindowsLogin>false</WindowsLogin>
+  <Username>admin</Username>
+  <Password>Pbw4hsznu9aQnkS7roIWHvvgZaYMa+O5PlG2r3UT+bo=</Password>
+  <AdditionalParams>
+    <Param>
+      <Key>Persist Security Info</Key>
+      <Value>False</Value>
+    </Param>
+  </AdditionalParams>
+</DatabaseCredentials>
+
+
+DBCreds_Master
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<DatabaseCredentials>
+  <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>
+  <Database>Tdi_Master</Database>
+  <WindowsLogin>false</WindowsLogin>
+  <Username>admin</Username>
+  <Password>Pbw4hsznu9aQnkS7roIWHvvgZaYMa+O5PlG2r3UT+bo=</Password>
+  <AdditionalParams>
+    <Param>
+      <Key>Persist Security Info</Key>
+      <Value>False</Value>
+    </Param>
+  </AdditionalParams>
+</DatabaseCredentials>

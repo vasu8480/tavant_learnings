@@ -24,12 +24,15 @@ sudo yum -y install clamav-server clamav-data clamav-update clamav-filesystem cl
 sudo setsebool -P antivirus_can_scan_system 1
 sudo setsebool -P clamd_use_jit 1
 sudo getsebool -a | grep antivirus
+
 sudo sed -i -e "s/^Example/#Example/" /etc/clamd.d/scan.conf
 sudo sed -i -e "s/^Example/#Example/" /etc/freshclam.conf
 
 cp  /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf_bkp
 cat /etc/clamd.d/scan.conf
+
 vi /etc/clamd.d/scan.conf
+
 sudo systemctl enable clamd@scan
 sudo systemctl start clamd@scan
 

@@ -1,3 +1,6 @@
+
+APRIL
+--------------------------------
 Worker-DC
 password: True@123456
 
@@ -5,9 +8,35 @@ Master-DC
 password: 0;i62gMfcn-6FJP.mq?aOrzPMk2IIDET
 
 
-m$;Vw-qE6RIn7FG!7!aeff=)S2-sfbGy
+Worker-DC2
+password: m$;Vw-qE6RIn7FG!7!aeff=)S2-sfbGy
 
-=OX1&P7;!EJ$lnLsx)%P9ApfMVlTa43k
+
+
+
+\\WORKERDC2\true\Project
+
+
+
+
+dec 5
+--------------------------------
+Master-DC
+password: =OX1&P7;!EJ$lnLsx)%P9ApfMVlTa43k
+
+Worker 1 : 10.216.184.40
+True@10216184
+
+Worker-DC2
+password:True@10216184
+
+Domain: Trueai.com
+
+wZBCmbIStL=%PDOd93!FDQaeB*pdb8PL -- worker2
+
+
+FalconSensor_Windows 1 (file://WORKERDC2/Users/Administrator.TRUEAI/Downloads/FalconSensor_Windows%201)
+
 
 DomainName: True.com
 Password: True@123456
@@ -16,6 +45,10 @@ Password: True@123456
 \\WORKER-DC2.True.com\Project
 
 
+\\10.216.184.46\c$
+appwiz.cpl
+
+FalconSensor_Windows.exe /install /quiet /norestart CID=07993F0C4C924ABD81DBAEC79BE1C562-BC TAGS=windows,TRUEAI         
 
 
 
@@ -26,7 +59,7 @@ P:YL3a+Kaf
 
 Use this sql servr - finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com
 user - admin
-password - F!nxdlfdevdbAdm!n1433
+password - F!nxdlfdevdbAdm!n
 
 
 Get-ChildItem -Path C:\ -Recurse -Filter nginx.exe -ErrorAction SilentlyContinue
@@ -34,7 +67,6 @@ Get-ChildItem -Path C:\ -Recurse -Filter nginx.exe -ErrorAction SilentlyContinue
 
 Stop-Process -Name nginx -Force -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force "C:\Install_inginx\nginx-1.26.3"
-
 
 
 powershell -ExecutionPolicy Bypass -File "_Universal_Prereqs_Windows.ps1"
