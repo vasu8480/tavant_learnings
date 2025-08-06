@@ -1,4 +1,4 @@
-e# Deployment Instructions
+# Deployment Instructions
 ## Worker Setup
 ### 1. Prepare Worker API
 - **Create Path:** `C:\\TRUE\\web\\workerapi`

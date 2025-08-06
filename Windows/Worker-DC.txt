@@ -52,9 +52,9 @@ FalconSensor_Windows.exe /install /quiet /norestart CID=07993F0C4C924ABD81DBAEC7
 
 
 
-Host:SFTP.true.ai
-U:Tavant_User
-P:YL3a+Kaf
+SFTP.true.ai
+Tavant_User
+YL3a+Kaf
 
 
 Use this sql servr - finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com
@@ -97,10 +97,6 @@ True-Manager01
 
 \\\\Worker-dc\\true\\Project\\config\\Dbcreds_Master.xml
 
-New-NetFirewallRule -DisplayName "Allow HTTP Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow
-New-NetFirewallRule -DisplayName "testing 8000" -Direction Inbound -LocalPort 8000 -Protocol TCP -Action Allow
-
-New-NetFirewallRule -DisplayName "Allow Trapeze manger HTTP 8400" -Direction Inbound -LocalPort 8400 -Protocol TCP -Action Allow
 
 
 New-NetFirewallRule -DisplayName "Allow HTTP (80)"           -Direction Inbound -LocalPort 80    -Protocol TCP -Action Allow
@@ -126,3 +122,36 @@ Test-NetConnection -ComputerName localhost -Port 8001
 
 
 dism /online /Enable-Feature /FeatureName:TelnetClient
+
+
+
+
+
+
+
+
+
+\\WORKERDC-JULY\Project
+
+
+
+
+
+
+---------------------------- #JULY 25 Setup --------------------------------------
+
+DOMAIN: Trueai25072025.com
+DOMAIN PASSWORD : True@123456
+NET BIOS: TRUEAI20250725
+
+
+
+Master: 
+U8v96Jf7g%X*of(KWXE*yE!emJ(fhVDy
+
+Worker:
+!4?2396TjdWovn;&Cglx!O5W2RkKqN@F
+
+
+
+

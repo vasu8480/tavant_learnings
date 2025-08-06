@@ -49,6 +49,14 @@ Ensure the prerequisites are met:
 2. Select **Internet Protocol Version 4 (TCP/IPv4)** and click **Properties**.
 3. Under **Use the following DNS server addresses**, enter the IP address of the domain controller (Woker IP).
 4. Click **OK** to save the changes.
+5.  Try Joining Domain
+On Master EC2:
+
+Go to System Properties > Domain > Join a Domain
+
+Enter the domain name (e.g., corp.local, not IP)
+
+Use the Domain Admin credentials from Worker EC2
 
 ---
 
