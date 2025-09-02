@@ -1,14 +1,14 @@
 
 APRIL
 --------------------------------
-Worker-DC
+Worker-DC1: 10.216.184.62
 password: True@123456
 
-Master-DC
+Master-DC : 10.216.184.45
 password: 0;i62gMfcn-6FJP.mq?aOrzPMk2IIDET
 
 
-Worker-DC2
+Worker-DC2 :10.216.184.44
 password: m$;Vw-qE6RIn7FG!7!aeff=)S2-sfbGy
 
 
@@ -21,13 +21,13 @@ password: m$;Vw-qE6RIn7FG!7!aeff=)S2-sfbGy
 
 dec 5
 --------------------------------
-Master-DC
+Master-DC :10.216.184.15
 password: =OX1&P7;!EJ$lnLsx)%P9ApfMVlTa43k
 
 Worker 1 : 10.216.184.40
 True@10216184
 
-Worker-DC2
+Worker-DC2 : 10.216.184.46
 password:True@10216184
 
 Domain: Trueai.com
@@ -145,13 +145,31 @@ DOMAIN PASSWORD : True@123456
 NET BIOS: TRUEAI20250725
 
 
-
-Master: 
+Master: 10.216.184.50
 U8v96Jf7g%X*of(KWXE*yE!emJ(fhVDy
 
-Worker:
+Worker: 10.216.184.48
 !4?2396TjdWovn;&Cglx!O5W2RkKqN@F
 
 
 
 
+
+True@1234
+
+sourabh.naik
+
+
+
+Access Details for True AI
+Hi,
+
+Here are your credentials for True AI:
+
+Username: [your username]
+
+Password: [your password]
+
+URL: http://dlf-fincapture-1189981079.us-east-1.elb.amazonaws.com/
+
+Please keep this information secure.
