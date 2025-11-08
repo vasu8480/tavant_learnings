@@ -1,4 +1,5 @@
 
+
 APRIL
 --------------------------------
 Worker-DC1: 10.216.184.62
@@ -56,6 +57,8 @@ SFTP.true.ai
 Tavant_User
 YL3a+Kaf
 
+
+TDI_Worker_July_29
 
 Use this sql servr - finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com
 user - admin
@@ -173,3 +176,35 @@ Password: [your password]
 URL: http://dlf-fincapture-1189981079.us-east-1.elb.amazonaws.com/
 
 Please keep this information secure.
+
+
+
+
+---------------------------- #OCT 1 Setup --------------------------------------
+# TRUEAI PRE PROD OCT Environment Access Details
+
+Domain Name: trueai-tavant.com
+Domain Admin: trueai-tavant\Administrator
+Domain Password: True@862025
+
+--------------------------------------------------
+Master Domain Controller (DC)
+IP Address: 10.217.92.226
+Password: q5@0BY3%KOoLYrnMFpAi=3)lCQZ6CF&;
+
+Worker Domain Controller (DC)
+IP Address: 10.217.92.191
+Password: zlhQF=qNQ8)4G=7jy?!AP&o8ENazbc*L
+
+--------------------------------------------------
+Databases Created from TDI:
+- TDI_Master_OCT_1
+- TDI_Worker_OCT_1
+
+--------------------------------------------------
+Database Credentials
+EndPoint/Server Name: trueai.cktyge28mqy7.us-east-1.rds.amazonaws.com
+User: admin
+Password: F!nxdlfPreProddbAdm!n
+
+--------------------------------------------------

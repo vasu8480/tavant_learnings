@@ -3,9 +3,10 @@
 ---
 ## Pre-Setup Checklist
 1. To log in to the domain instance, use `DomainName\Administrator` or just the `DomainName`.
-2. Take note of the `Root Domain` and `NetBIOS Domain Names`. Also, remember the password you set during configuration.
+2. Take note of the **Root Domain** and **NetBIOS Domain Names**. Also, remember the password you set during configuration.
 3. Ensure an entry is created in the AWS DHCP option sets with the domain name and IP address of the Machine which you created the Domain Name. Enable the DHCP options in the VPC settings. If the option is not available, it should still work as expected.
-4. The Domain User Name will be `Administrator` and remember the Passowrd for DomainName you are seeting because with thtat passowrd only you can login to that windows system
+4. The Domain User Name will be `Administrator` and remember the **Password** for Domain Name you are setting because with that password only you can login to that Windows system.
+
 ---
 
 ## 1. Prepare the Worker Instance
@@ -14,7 +15,7 @@ Ensure the prerequisites are met:
 - A static IP address is configured.
 
 ### Set the Server Name:
-1. Open **Server Manager > Local Server**.
+1. Open **Server Manager > `Local Server`**.
 2. Change the computer name to something meaningful (e.g., `WORKER-DC`).
 
 ### Install Active Directory Domain Services (AD DS):
@@ -38,33 +39,30 @@ Ensure the prerequisites are met:
 
 ### Configure Network Settings
 
-## Ensure the Domain Controller's IP is Used as the DNS Server
+#### Ensure the Domain Controller's IP is Used as the DNS Server
 
-### Step 1: Open Network and Sharing Center
+##### Step 1: Open Network and Sharing Center
 - Press `Win + R` to open the **Run** dialog.
 - Type `ncpa.cpl` and press **Enter**.
 
-### Step 2: Configure the Network Adapter
+##### Step 2: Configure the Network Adapter
 1. Right-click the active network adapter and select **Properties**.
 2. Select **Internet Protocol Version 4 (TCP/IPv4)** and click **Properties**.
-3. Under **Use the following DNS server addresses**, enter the IP address of the domain controller (Woker IP).
+3. Under **Use the following DNS server addresses**, enter the IP address of the domain controller (**Worker IP**).
 4. Click **OK** to save the changes.
-5.  Try Joining Domain
+
+##### Step 3: Try Joining the Domain
 On Master EC2:
-
-Go to System Properties > Domain > Join a Domain
-
-Enter the domain name (e.g., corp.local, not IP)
-
-Use the Domain Admin credentials from Worker EC2
+1. Go to **System > Advanced system settings > Computer Name > Change**.
+2. Under "Member of", select **Domain** and enter the domain name (e.g., `corp.local`, not IP).
+3. When prompted for credentials, use the domain admin credentials created during domain controller setup.
 
 ---
 
 ## Test Connectivity to the Domain Controller
 
 ### Step 1: Open Command Prompt or PowerShell
-- ping **<IP_of_the_DomainController>** or **DomainURL (e.g., `example.local`)**. 
-
+- Ping **<IP_of_the_DomainController>** or **DomainURL (e.g., `example.local`)**.
 
 ### Step 2: Join the Domain
 1. Open **System Properties**:
@@ -121,6 +119,5 @@ This setup ensures centralized authentication and easy communication between wor
 1. Right-click on the account and select **Reset Password**.
 2. Enter and confirm the new password.
 3. Click **OK** to apply the changes.
-
 
 ---

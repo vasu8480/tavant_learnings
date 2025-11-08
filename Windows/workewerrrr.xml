@@ -54,8 +54,6 @@ manager
 
 
 DBCreds_Master
-
-
 <?xml version="1.0" encoding="utf-8"?>
 <DatabaseCredentials>
   <Server>finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com</Server>

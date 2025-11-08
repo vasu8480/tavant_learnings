@@ -17,9 +17,9 @@
 ### 1. Prepare APIs
 - **Paths:** 
   - `C:\\TRUE\\web\\MasterAPI`
-  - **Copy Files:** Transfer from `TDI_APIv5.1.80` to these folder file (e.g., af, ar) as needed.
+  - `C:\\TRUE\\web\\ManagerService`
+  - **Copy Files:** Transfer from `TDI_APIv5.1.80` to these folder file (e.g., af, ar) as needed to `C:\\TRUE\\web\\MasterAPI`.
   - **Copy Files:** Transfer from `manager_service_v5.1.71` to these folder file (e.g., appsettings,... ) as needed.
-e
 ### 2. IIS Configuration
 - **Delete** default site in IIS.
 - **Add Sites:**
@@ -84,10 +84,7 @@ e
 ### Editing the Database Schema
 1. **Navigate to AdminGUI Folder:**
    - Follow the path to `Program Data` → `TRUE Data Intelligence` → `Config` → `AdminGUI`.
-
-2. **Open DBSchema:**
-   - Use Microsoft SQL Server Management Studio (SSMS) to open `DBSchema`.
-
+  
 ### Modifying the Manager Schema
 
 1. **Open Delivery Folder:**
@@ -108,7 +105,7 @@ e
 2. **Select the Delivery Folder**:
    - Locate and choose `MortgageEnterprise-5.1`.
    - Confirm by clicking **OK**.
-   - Enter the UNC path: `\\\\WORKER-DC\\Project`.
+   - Enter the UNC path: `\\WORKER-DC\Project`.
    - Click **OK**.
 3. **Configure Database**:
    - **Server Name**: `finxdlf-dev-mssql.cmcevzbgcfhr.us-east-1.rds.amazonaws.com`
@@ -119,7 +116,7 @@ e
      - **Create New Database**: Confirm with **Yes** then **OK**.
 4. **Watch Folder Setup**:
    - Click **Start Watch Folder**.
-   - Enter path: `\\\\WORKER-DC\\Input`.
+   - Enter path: `\\WORKER-DC\Input`.
    - Confirm with **OK** and **Yes**.
    - **Stop Watch Folder** after setup is complete.
 
@@ -227,6 +224,22 @@ e
        ]
      }
      ```
+   - Nagivate to `C:\TRUE\web\MasterAPI`.
+   - Open `appsettings.json` with Notepad.
+     ```json
+       "Project": {
+         "BasePath": "\\\\WORKERDC-JULY\\Project",
+         "InputPath": "\\\\WORKERDC-JULY\\Input",
+         "DBCredPath": "\\\\WORKERDC-JULY\\Project\\config\\DBCreds_Master.xml",
+         "ClassListFile": "\\config\\classNameLookup.txt",
+         "ClassificationValidationRulesFile": "\\config\\ClassificationValidationRules.xml",
+         "UseDefaultDBUser": "true",
+         "VersioningAware": "true",
+         "ShowFilePath": "false",
+         "ValidUploadPaths": [],
+         "RetainInputFile": "true"
+      },
+     ```
 
 2. **Security Settings for Master:**
    - Follow the same security setup instructions as for the Worker.
@@ -238,3 +251,7 @@ e
 ### Network Configuration
 - **Network Port Configuration:**
   - Allow Port 80 from the Worker machine for network access.
+
+
+-------
+
