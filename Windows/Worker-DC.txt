@@ -101,7 +101,6 @@ True-Manager01
 \\\\Worker-dc\\true\\Project\\config\\Dbcreds_Master.xml
 
 
-
 New-NetFirewallRule -DisplayName "Allow HTTP (80)"           -Direction Inbound -LocalPort 80    -Protocol TCP -Action Allow
 New-NetFirewallRule -DisplayName "Allow HTTPS (443)"         -Direction Inbound -LocalPort 443   -Protocol TCP -Action Allow
 New-NetFirewallRule -DisplayName "Allow Manager (8400)"      -Direction Inbound -LocalPort 8400  -Protocol TCP -Action Allow
