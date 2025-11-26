@@ -1,4 +1,5 @@
 # IAM (Identity and Access Management)
+
 ## Q: What is IAM?
 
 ### 🧠 Overview
@@ -9,9 +10,9 @@
 
 ### ⚙️ Purpose / How it Works
 
-* IAM defines **identities** (users, roles, groups) and **permissions** (policies).
-* Each request to an AWS service is **authenticated** (who you are) and **authorized** (what you can do).
-* Supports **MFA**, **temporary credentials**, and **federated access** via SSO or identity providers (e.g., Okta, AD).
+- IAM defines **identities** (users, roles, groups) and **permissions** (policies).
+- Each request to an AWS service is **authenticated** (who you are) and **authorized** (what you can do).
+- Supports **MFA**, **temporary credentials**, and **federated access** via SSO or identity providers (e.g., Okta, AD).
 
 **Flow:**
 
@@ -68,11 +69,11 @@ aws iam attach-user-policy \
 
 ### ✅ Best Practices
 
-* Follow **least privilege principle** — only give what’s needed.
-* Use **IAM roles** instead of static credentials.
-* Rotate **access keys** regularly or avoid them entirely.
-* Enable **MFA** for users with console access.
-* Use **AWS Organizations SCPs** for account-wide restrictions.
+- Follow **least privilege principle** — only give what’s needed.
+- Use **IAM roles** instead of static credentials.
+- Rotate **access keys** regularly or avoid them entirely.
+- Enable **MFA** for users with console access.
+- Use **AWS Organizations SCPs** for account-wide restrictions.
 
 ---
 
@@ -81,7 +82,8 @@ aws iam attach-user-policy \
 IAM is AWS’s access control system for managing users, roles, and permissions.
 Use roles for temporary access, policies for fine-grained control, and always enforce least privilege.
 
-----
+---
+
 ## Q: What are the main IAM components?
 
 ---
@@ -133,11 +135,11 @@ These components ensure controlled access, whether it’s a human user, an AWS s
 
 ### ✅ Best Practices
 
-* Use **groups** for permission management (avoid direct user policies).
-* Assign **roles** for EC2, Lambda, or EKS workloads instead of embedding credentials.
-* Always **enable MFA** for console users.
-* Enforce **least privilege** in policies.
-* Use **AWS Organizations SCPs** for multi-account governance.
+- Use **groups** for permission management (avoid direct user policies).
+- Assign **roles** for EC2, Lambda, or EKS workloads instead of embedding credentials.
+- Always **enable MFA** for console users.
+- Enforce **least privilege** in policies.
+- Use **AWS Organizations SCPs** for multi-account governance.
 
 ---
 
@@ -147,7 +149,8 @@ IAM components — **Users, Groups, Roles, Policies, MFA, and IdPs** — define 
 Roles = temporary permissions, Policies = rules, Users/Groups = identities.
 Together, they form the foundation of AWS security and access control.
 
-----
+---
+
 ## Q: What is the default IAM user when you create an AWS account?
 
 ---
@@ -160,22 +163,22 @@ When you first create an **AWS account**, AWS automatically creates a **root use
 
 ### ⚙️ Purpose / How It Works
 
-* The **root user** is linked to the **email address** used during AWS account creation.
-* It has **unrestricted privileges**, including account settings, billing, IAM management, and service access.
-* IAM users and roles are created **afterward** to delegate access securely — the root user should rarely be used.
+- The **root user** is linked to the **email address** used during AWS account creation.
+- It has **unrestricted privileges**, including account settings, billing, IAM management, and service access.
+- IAM users and roles are created **afterward** to delegate access securely — the root user should rarely be used.
 
 ---
 
 ### 📋 Root User vs IAM User
 
-| Feature                   | Root User                           | IAM User                           |
-| ------------------------- | ----------------------------------- | ---------------------------------- |
-| Created Automatically     | ✅ Yes (during AWS account creation) | ❌ Created manually                 |
-| Access Level              | Full access to everything           | Limited (based on policy)          |
-| Recommended for Daily Use | ❌ No                                | ✅ Yes                              |
+| Feature                   | Root User                            | IAM User                           |
+| ------------------------- | ------------------------------------ | ---------------------------------- |
+| Created Automatically     | ✅ Yes (during AWS account creation) | ❌ Created manually                |
+| Access Level              | Full access to everything            | Limited (based on policy)          |
+| Recommended for Daily Use | ❌ No                                | ✅ Yes                             |
 | Can Manage Billing        | ✅ Yes                               | Only if granted                    |
-| Authentication Type       | Email + Password + (MFA optional)   | Username + Password or Access Keys |
-| Can Be Deleted            | ❌ No                                | ✅ Yes                              |
+| Authentication Type       | Email + Password + (MFA optional)    | Username + Password or Access Keys |
+| Can Be Deleted            | ❌ No                                | ✅ Yes                             |
 
 ---
 
@@ -186,22 +189,24 @@ When you first create an **AWS account**, AWS automatically creates a **root use
    ```bash
    aws iam enable-mfa-device --user-name root --serial-number arn:aws:iam::123456789012:mfa/root --authentication-code1 123456 --authentication-code2 654321
    ```
+
 2. **Create an admin IAM user**:
 
    ```bash
    aws iam create-user --user-name admin-user
    aws iam attach-user-policy --user-name admin-user --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
    ```
+
 3. Use the **admin IAM user** for daily tasks, not the root user.
 
 ---
 
 ### ✅ Best Practices
 
-* **Do not use the root user** for routine operations.
-* **Enable MFA** immediately after account creation.
-* **Create IAM users/roles** with specific permissions for daily use.
-* **Lock away root credentials** and use **AWS Organizations** for multi-account setups.
+- **Do not use the root user** for routine operations.
+- **Enable MFA** immediately after account creation.
+- **Create IAM users/roles** with specific permissions for daily use.
+- **Lock away root credentials** and use **AWS Organizations** for multi-account setups.
 
 ---
 
@@ -211,6 +216,7 @@ The **root user** is the default IAM identity with full control over your AWS ac
 Use it **only for critical setup tasks**, enable **MFA**, and create IAM users/roles for daily operations.
 
 ---
+
 ## Q: What is the difference between IAM User and IAM Role?
 
 ---
@@ -224,8 +230,8 @@ The key difference lies in **how credentials are managed** and **who/what assume
 
 ### ⚙️ Purpose / How It Works
 
-* **IAM User**: A *permanent* identity created for humans or apps needing long-term credentials (passwords, access keys).
-* **IAM Role**: A *temporary* identity assumed by users, AWS services, or external identities, using **STS (Security Token Service)** to issue short-lived credentials.
+- **IAM User**: A _permanent_ identity created for humans or apps needing long-term credentials (passwords, access keys).
+- **IAM Role**: A _temporary_ identity assumed by users, AWS services, or external identities, using **STS (Security Token Service)** to issue short-lived credentials.
 
 **Flow example:**
 An EC2 instance assumes an IAM role → AWS STS provides temporary credentials → instance accesses S3 securely **without static keys**.
@@ -284,21 +290,22 @@ resource "aws_iam_role_policy_attachment" "attach" {
 
 ### ✅ Best Practices
 
-* Use **roles for EC2, Lambda, EKS**, and CI/CD workloads — never embed keys.
-* Assign **least privilege** permissions.
-* Rotate user access keys frequently or use **temporary tokens (STS)**.
-* Monitor access with **CloudTrail**.
-* Prefer **federation (SSO)** instead of IAM users for corporate logins.
+- Use **roles for EC2, Lambda, EKS**, and CI/CD workloads — never embed keys.
+- Assign **least privilege** permissions.
+- Rotate user access keys frequently or use **temporary tokens (STS)**.
+- Monitor access with **CloudTrail**.
+- Prefer **federation (SSO)** instead of IAM users for corporate logins.
 
 ---
 
 ### 💡 In short
 
-* **IAM User** → Long-term identity for humans or apps (with keys/passwords).
-* **IAM Role** → Temporary, assumed identity for AWS services or federated users.
+- **IAM User** → Long-term identity for humans or apps (with keys/passwords).
+- **IAM Role** → Temporary, assumed identity for AWS services or federated users.
   👉 Always **use roles over users** for workloads to avoid managing static credentials.
 
------
+---
+
 ## Q: What is a Policy in IAM?
 
 ---
@@ -312,13 +319,14 @@ Policies are attached to **users, groups, or roles** to control access in AWS.
 
 ### ⚙️ Purpose / How It Works
 
-* IAM policies use **statements** that specify:
+- IAM policies use **statements** that specify:
 
-  * **Effect** → Allow or Deny
-  * **Action** → API operations (e.g., `s3:GetObject`)
-  * **Resource** → AWS resources (e.g., specific S3 bucket)
-  * **Condition** → Optional filters (e.g., IP address, MFA, tag-based)
-* AWS evaluates all policies and grants access **only if an explicit Allow** exists and **no explicit Deny** applies.
+  - **Effect** → Allow or Deny
+  - **Action** → API operations (e.g., `s3:GetObject`)
+  - **Resource** → AWS resources (e.g., specific S3 bucket)
+  - **Condition** → Optional filters (e.g., IP address, MFA, tag-based)
+
+- AWS evaluates all policies and grants access **only if an explicit Allow** exists and **no explicit Deny** applies.
 
 ---
 
@@ -369,11 +377,11 @@ aws iam attach-user-policy \
 
 ### ✅ Best Practices
 
-* Always use **least privilege** — grant only necessary actions.
-* Prefer **managed policies** for reusability.
-* Use **inline policies** only for special cases.
-* Apply **conditions** (e.g., MFA, IP restrictions) for better security.
-* Regularly **review and audit** attached policies with IAM Access Analyzer.
+- Always use **least privilege** — grant only necessary actions.
+- Prefer **managed policies** for reusability.
+- Use **inline policies** only for special cases.
+- Apply **conditions** (e.g., MFA, IP restrictions) for better security.
+- Regularly **review and audit** attached policies with IAM Access Analyzer.
 
 ---
 
@@ -383,6 +391,7 @@ An **IAM Policy** defines **who can do what** in AWS using a JSON rule set.
 It specifies **actions, resources, and conditions** and enforces least privilege for users, roles, and groups.
 
 ---
+
 ## Q: What is a Managed Policy?
 
 ---
@@ -396,12 +405,12 @@ It helps simplify permission management by allowing centralized control over acc
 
 ### ⚙️ Purpose / How It Works
 
-* Managed policies are **not embedded** in a specific user or role — they exist independently.
-* You can attach or detach them easily, making permission management **modular and scalable**.
-* Two main types exist:
+- Managed policies are **not embedded** in a specific user or role — they exist independently.
+- You can attach or detach them easily, making permission management **modular and scalable**.
+- Two main types exist:
 
-  * **AWS Managed Policies** — Created and maintained by AWS.
-  * **Customer Managed Policies** — Created and maintained by you.
+  - **AWS Managed Policies** — Created and maintained by AWS.
+  - **Customer Managed Policies** — Created and maintained by you.
 
 When a policy is updated, **all identities attached** to it automatically get the updated permissions — no manual edits required.
 
@@ -411,8 +420,8 @@ When a policy is updated, **all identities attached** to it automatically get th
 
 | Type                        | Description                         | Maintained By | Editable | Example                                      |
 | --------------------------- | ----------------------------------- | ------------- | -------- | -------------------------------------------- |
-| **AWS Managed Policy**      | Predefined for common job functions | AWS           | ❌ No     | `AmazonEC2FullAccess`, `AdministratorAccess` |
-| **Customer Managed Policy** | Custom-built and reusable           | You           | ✅ Yes    | `DevOpsEKSAccessPolicy`                      |
+| **AWS Managed Policy**      | Predefined for common job functions | AWS           | ❌ No    | `AmazonEC2FullAccess`, `AdministratorAccess` |
+| **Customer Managed Policy** | Custom-built and reusable           | You           | ✅ Yes   | `DevOpsEKSAccessPolicy`                      |
 
 ---
 
@@ -451,11 +460,11 @@ aws iam attach-role-policy \
 
 ### ✅ Best Practices
 
-* Use **AWS Managed Policies** for baseline permissions (e.g., read-only, full access).
-* Use **Customer Managed Policies** for custom, project-specific needs.
-* **Version** your custom policies to track changes.
-* Regularly review **policy usage with IAM Access Analyzer**.
-* Avoid inline policies for reusability — prefer managed policies instead.
+- Use **AWS Managed Policies** for baseline permissions (e.g., read-only, full access).
+- Use **Customer Managed Policies** for custom, project-specific needs.
+- **Version** your custom policies to track changes.
+- Regularly review **policy usage with IAM Access Analyzer**.
+- Avoid inline policies for reusability — prefer managed policies instead.
 
 ---
 
@@ -464,7 +473,8 @@ aws iam attach-role-policy \
 A **Managed Policy** is a **standalone, reusable permission set** in AWS.
 Use **AWS Managed Policies** for standard access and **Customer Managed Policies** for custom roles — both simplify and centralize IAM permission management.
 
-----
+---
+
 ## Q: What is an Inline Policy?
 
 ---
@@ -478,9 +488,9 @@ Unlike managed policies, it exists **only within that identity** and **cannot be
 
 ### ⚙️ Purpose / How It Works
 
-* Inline policies are **attached inline** — they live *inside* a user, group, or role definition.
-* They provide **tight control** when you need a one-to-one relationship between a policy and an IAM entity.
-* If the entity (user/role/group) is deleted, the inline policy is **automatically deleted** too.
+- Inline policies are **attached inline** — they live _inside_ a user, group, or role definition.
+- They provide **tight control** when you need a one-to-one relationship between a policy and an IAM entity.
+- If the entity (user/role/group) is deleted, the inline policy is **automatically deleted** too.
 
 Use inline policies for **special-case permissions** that should not be shared or reused.
 
@@ -491,7 +501,7 @@ Use inline policies for **special-case permissions** that should not be shared o
 | Feature              | **Inline Policy**                   | **Managed Policy**                |
 | -------------------- | ----------------------------------- | --------------------------------- |
 | **Attachment Scope** | Attached to one IAM entity only     | Reusable across multiple entities |
-| **Reusability**      | ❌ No                                | ✅ Yes                             |
+| **Reusability**      | ❌ No                               | ✅ Yes                            |
 | **Lifecycle**        | Deleted with the parent entity      | Independent                       |
 | **Ideal For**        | Unique, entity-specific permissions | Standardized access patterns      |
 | **Created By**       | You                                 | AWS or You                        |
@@ -527,10 +537,10 @@ aws iam put-role-policy \
 
 ### ✅ Best Practices
 
-* Use **inline policies** only when permissions must stay tightly bound to a specific identity.
-* Prefer **managed policies** for scalability and consistency.
-* Regularly **audit inline policies** using IAM Policy Reports.
-* Avoid duplication — convert repeated inline policies into a **customer managed policy**.
+- Use **inline policies** only when permissions must stay tightly bound to a specific identity.
+- Prefer **managed policies** for scalability and consistency.
+- Regularly **audit inline policies** using IAM Policy Reports.
+- Avoid duplication — convert repeated inline policies into a **customer managed policy**.
 
 ---
 
@@ -539,7 +549,8 @@ aws iam put-role-policy \
 An **Inline Policy** is a **non-reusable, embedded IAM policy** tied directly to one user, role, or group.
 Use it for **unique, one-off permissions**, but favor **managed policies** for maintainability and scalability.
 
-----
+---
+
 ## Q: What is the IAM Policy Evaluation Logic?
 
 ---
@@ -576,11 +587,11 @@ When an AWS user, role, or service makes a request:
 
 | Policy Type                      | Evaluated?     | Description                                                          |
 | -------------------------------- | -------------- | -------------------------------------------------------------------- |
-| **Identity-based Policy**        | ✅              | Attached to user/role/group — defines what actions they can perform. |
-| **Resource-based Policy**        | ✅              | Attached to the resource (e.g., S3 bucket policy).                   |
-| **Permissions Boundary**         | ✅              | Limits the maximum permissions for IAM roles/users.                  |
-| **Service Control Policy (SCP)** | ✅              | Applies at AWS Organization level — restricts member accounts.       |
-| **Session Policy**               | ✅              | Applied to temporary credentials (via STS).                          |
+| **Identity-based Policy**        | ✅             | Attached to user/role/group — defines what actions they can perform. |
+| **Resource-based Policy**        | ✅             | Attached to the resource (e.g., S3 bucket policy).                   |
+| **Permissions Boundary**         | ✅             | Limits the maximum permissions for IAM roles/users.                  |
+| **Service Control Policy (SCP)** | ✅             | Applies at AWS Organization level — restricts member accounts.       |
+| **Session Policy**               | ✅             | Applied to temporary credentials (via STS).                          |
 | **Explicit Deny**                | 🛑 Always Wins | Overrides all Allow statements.                                      |
 
 ---
@@ -590,11 +601,11 @@ When an AWS user, role, or service makes a request:
 **Scenario:**
 A user has:
 
-* **Identity policy:** allows `s3:GetObject` on `arn:aws:s3:::my-bucket/*`
-* **S3 bucket policy:** explicitly denies all actions from a specific IP
+- **Identity policy:** allows `s3:GetObject` on `arn:aws:s3:::my-bucket/*`
+- **S3 bucket policy:** explicitly denies all actions from a specific IP
 
 **Result:**
-✅ `s3:GetObject` is *denied* because the **explicit Deny in the bucket policy overrides** the user’s Allow.
+✅ `s3:GetObject` is _denied_ because the **explicit Deny in the bucket policy overrides** the user’s Allow.
 
 ---
 
@@ -614,10 +625,10 @@ Implicit Deny → ❌ Deny
 
 ### ✅ Best Practices
 
-* Always **avoid broad permissions** (e.g., `Action: "*"`, `Resource: "*"`)
-* Use **explicit Deny** for critical restrictions (e.g., from certain IPs).
-* Combine **resource-based + identity-based** policies for fine control.
-* Review policy impact with **IAM Policy Simulator**.
+- Always **avoid broad permissions** (e.g., `Action: "*"`, `Resource: "*"`)
+- Use **explicit Deny** for critical restrictions (e.g., from certain IPs).
+- Combine **resource-based + identity-based** policies for fine control.
+- Review policy impact with **IAM Policy Simulator**.
 
 ---
 
@@ -628,6 +639,7 @@ IAM evaluates all policies in order:
 🚫 **Explicit Deny always overrides Allow**, ensuring secure and predictable access control.
 
 ---
+
 ## Q: What are IAM Credentials?
 
 ---
@@ -700,11 +712,11 @@ Output includes temporary keys (`AccessKeyId`, `SecretAccessKey`, `SessionToken`
 
 ### ✅ Best Practices
 
-* Prefer **roles** (temporary credentials) over static **access keys**.
-* **Rotate** access keys every 90 days or less.
-* Enable **MFA** for console and critical users.
-* Never hard-code credentials — use **environment variables**, **AWS CLI profiles**, or **EC2 instance roles**.
-* Use **AWS Secrets Manager** or **Parameter Store** for key storage.
+- Prefer **roles** (temporary credentials) over static **access keys**.
+- **Rotate** access keys every 90 days or less.
+- Enable **MFA** for console and critical users.
+- Never hard-code credentials — use **environment variables**, **AWS CLI profiles**, or **EC2 instance roles**.
+- Use **AWS Secrets Manager** or **Parameter Store** for key storage.
 
 ---
 
@@ -713,7 +725,8 @@ Output includes temporary keys (`AccessKeyId`, `SecretAccessKey`, `SessionToken`
 **IAM credentials** are keys, passwords, or tokens that authenticate users and services in AWS.
 Use **temporary role-based credentials** wherever possible, and **avoid static keys** for secure, scalable access.
 
-----
+---
+
 ## Q: How do you Rotate IAM Access Keys?
 
 ---
@@ -727,9 +740,9 @@ Rotation ensures compliance with **AWS security best practices** and **least pri
 
 ### ⚙️ Purpose / How It Works
 
-* Each IAM user can have **two active access keys** at a time (`AccessKeyId` + `SecretAccessKey`).
-* This allows safe rotation — you can **create a new key**, **update applications**, and **deactivate the old one** without downtime.
-* Once verified, delete the old key to complete the rotation.
+- Each IAM user can have **two active access keys** at a time (`AccessKeyId` + `SecretAccessKey`).
+- This allows safe rotation — you can **create a new key**, **update applications**, and **deactivate the old one** without downtime.
+- Once verified, delete the old key to complete the rotation.
 
 ---
 
@@ -765,7 +778,7 @@ export AWS_ACCESS_KEY_ID=AKIAEXAMPLE2
 export AWS_SECRET_ACCESS_KEY=NEWSECRETEXAMPLEKEY
 ```
 
-*(Update credentials in Jenkins, CI/CD, environment variables, etc.)*
+_(Update credentials in Jenkins, CI/CD, environment variables, etc.)_
 
 #### 🔹 Step 4: Verify functionality
 
@@ -808,11 +821,11 @@ aws iam delete-access-key \
 
 ### ✅ Best Practices
 
-* Rotate access keys **every 90 days or less**.
-* Prefer **IAM roles or federated access** to eliminate static keys.
-* Use **AWS Secrets Manager** to automate key rotation and secure storage.
-* Audit access keys using **IAM Credential Reports**.
-* Never share or commit keys in code repositories (use `.gitignore` and scanning tools).
+- Rotate access keys **every 90 days or less**.
+- Prefer **IAM roles or federated access** to eliminate static keys.
+- Use **AWS Secrets Manager** to automate key rotation and secure storage.
+- Audit access keys using **IAM Credential Reports**.
+- Never share or commit keys in code repositories (use `.gitignore` and scanning tools).
 
 ---
 
@@ -821,7 +834,8 @@ aws iam delete-access-key \
 Rotate IAM access keys by **creating a new one**, **updating configurations**, and **deactivating + deleting the old key**.
 For stronger security — **use IAM roles instead of long-term access keys** wherever possible.
 
-----
+---
+
 ## Q: What are IAM Roles used for?
 
 ---
@@ -838,8 +852,8 @@ Unlike IAM users, roles **don’t have long-term credentials** — instead, they
 IAM Roles are used to **delegate permissions** without sharing static credentials.
 They define:
 
-* **Who can assume the role** (trust policy).
-* **What the role can do** (permission policy).
+- **Who can assume the role** (trust policy).
+- **What the role can do** (permission policy).
 
 When an entity assumes a role, AWS provides **temporary security credentials** valid for a short period (typically 15 min–12 hrs).
 
@@ -909,18 +923,18 @@ Output contains temporary credentials:
 
 | Policy Type           | Purpose                                     | Example                                         |
 | --------------------- | ------------------------------------------- | ----------------------------------------------- |
-| **Trust Policy**      | Defines *who* can assume the role           | `Principal: { "Service": "ec2.amazonaws.com" }` |
-| **Permission Policy** | Defines *what* actions the role can perform | `Action: ["s3:GetObject"], Resource: "*" `      |
+| **Trust Policy**      | Defines _who_ can assume the role           | `Principal: { "Service": "ec2.amazonaws.com" }` |
+| **Permission Policy** | Defines _what_ actions the role can perform | `Action: ["s3:GetObject"], Resource: "*" `      |
 
 ---
 
 ### ✅ Best Practices
 
-* Use **roles instead of access keys** for AWS services.
-* Apply **least privilege** — grant only necessary permissions.
-* Restrict role assumption via **trust policy conditions** (like source IP, MFA).
-* Monitor role usage with **CloudTrail**.
-* Regularly **review and rotate trust relationships**.
+- Use **roles instead of access keys** for AWS services.
+- Apply **least privilege** — grant only necessary permissions.
+- Restrict role assumption via **trust policy conditions** (like source IP, MFA).
+- Monitor role usage with **CloudTrail**.
+- Regularly **review and rotate trust relationships**.
 
 ---
 
@@ -929,7 +943,8 @@ Output contains temporary credentials:
 **IAM Roles** provide **temporary, permission-based access** for users, applications, or AWS services — eliminating the need for static credentials.
 They’re the backbone of **secure, automated access** in AWS (e.g., EC2 → S3, CI/CD → EKS).
 
-----
+---
+
 ## Q: How to Attach an IAM Role to an EC2 Instance?
 
 ---
@@ -943,9 +958,9 @@ The instance automatically receives **temporary credentials** via the **Instance
 
 ### ⚙️ Purpose / How It Works
 
-* The role is assigned through an **Instance Profile** (a wrapper for IAM roles).
-* When EC2 assumes the role, AWS STS provides **temporary tokens**.
-* Applications inside EC2 (CLI, SDK, etc.) automatically use these credentials — no manual setup needed.
+- The role is assigned through an **Instance Profile** (a wrapper for IAM roles).
+- When EC2 assumes the role, AWS STS provides **temporary tokens**.
+- Applications inside EC2 (CLI, SDK, etc.) automatically use these credentials — no manual setup needed.
 
 **Flow:**
 
@@ -997,9 +1012,9 @@ aws ec2 associate-iam-instance-profile \
   --iam-instance-profile Name=EC2S3AccessProfile
 ```
 
-✅ *Or while launching a new EC2 instance (Console):*
+✅ _Or while launching a new EC2 instance (Console):_
 
-* In **Step 3: Configure Instance**, under **IAM role**, choose your role (e.g., `EC2S3AccessRole`).
+- In **Step 3: Configure Instance**, under **IAM role**, choose your role (e.g., `EC2S3AccessRole`).
 
 ---
 
@@ -1038,11 +1053,11 @@ curl http://169.254.169.254/latest/meta-data/iam/security-credentials/EC2S3Acces
 
 ### ✅ Best Practices
 
-* Always use **IMDSv2** for instance metadata access.
-* Limit permissions with **least privilege** policies.
-* Rotate role credentials automatically (STS handles this).
-* Avoid embedding access keys in EC2 environments.
-* Monitor access with **CloudTrail** and **IAM Access Analyzer**.
+- Always use **IMDSv2** for instance metadata access.
+- Limit permissions with **least privilege** policies.
+- Rotate role credentials automatically (STS handles this).
+- Avoid embedding access keys in EC2 environments.
+- Monitor access with **CloudTrail** and **IAM Access Analyzer**.
 
 ---
 
@@ -1052,7 +1067,8 @@ To attach an IAM role to EC2:
 1️⃣ Create role with EC2 trust policy → 2️⃣ Attach policy → 3️⃣ Create instance profile → 4️⃣ Associate it to the EC2 instance.
 ✅ This enables secure, **keyless access** to AWS services via **temporary credentials**.
 
-----
+---
+
 ## Q: What is the IAM Policy Structure?
 
 ---
@@ -1069,10 +1085,10 @@ It follows a structured format with specific elements — each defining **who**,
 Every policy is evaluated by AWS to determine if a request should be **Allowed** or **Denied**.
 A policy contains **statements** with rules specifying:
 
-* **Effect** (Allow/Deny)
-* **Action** (which API operations)
-* **Resource** (ARNs of AWS resources)
-* **Condition** (optional filters for finer control)
+- **Effect** (Allow/Deny)
+- **Action** (which API operations)
+- **Resource** (ARNs of AWS resources)
+- **Condition** (optional filters for finer control)
 
 ---
 
@@ -1085,10 +1101,7 @@ A policy contains **statements** with rules specifying:
     {
       "Sid": "OptionalStatementID",
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:GetObject", "s3:ListBucket"],
       "Resource": [
         "arn:aws:s3:::my-app-bucket",
         "arn:aws:s3:::my-app-bucket/*"
@@ -1109,13 +1122,13 @@ A policy contains **statements** with rules specifying:
 
 | Element       | Required | Description                                                              | Example                                           |
 | ------------- | -------- | ------------------------------------------------------------------------ | ------------------------------------------------- |
-| **Version**   | ✅        | Defines policy language version; always `"2012-10-17"` for new policies. | `"Version": "2012-10-17"`                         |
-| **Statement** | ✅        | Contains one or more permissions blocks.                                 | `[ {...}, {...} ]`                                |
-| **Sid**       | ❌        | Optional identifier for the statement.                                   | `"Sid": "S3AccessStatement"`                      |
-| **Effect**    | ✅        | Defines whether to *Allow* or *Deny* access.                             | `"Effect": "Allow"`                               |
-| **Action**    | ✅        | Lists AWS API operations the policy affects.                             | `"Action": ["ec2:DescribeInstances"]`             |
-| **Resource**  | ✅        | Specifies resource ARNs the policy applies to.                           | `"arn:aws:s3:::mybucket/*"`                       |
-| **Condition** | ❌        | Adds restrictions (e.g., IP, time, MFA).                                 | `"IpAddress": {"aws:SourceIp": "203.0.113.0/24"}` |
+| **Version**   | ✅       | Defines policy language version; always `"2012-10-17"` for new policies. | `"Version": "2012-10-17"`                         |
+| **Statement** | ✅       | Contains one or more permissions blocks.                                 | `[ {...}, {...} ]`                                |
+| **Sid**       | ❌       | Optional identifier for the statement.                                   | `"Sid": "S3AccessStatement"`                      |
+| **Effect**    | ✅       | Defines whether to _Allow_ or _Deny_ access.                             | `"Effect": "Allow"`                               |
+| **Action**    | ✅       | Lists AWS API operations the policy affects.                             | `"Action": ["ec2:DescribeInstances"]`             |
+| **Resource**  | ✅       | Specifies resource ARNs the policy applies to.                           | `"arn:aws:s3:::mybucket/*"`                       |
+| **Condition** | ❌       | Adds restrictions (e.g., IP, time, MFA).                                 | `"IpAddress": {"aws:SourceIp": "203.0.113.0/24"}` |
 
 ---
 
@@ -1137,7 +1150,7 @@ A policy contains **statements** with rules specifying:
 }
 ```
 
-✅ *Allows uploading objects to S3 only when MFA is enabled.*
+✅ _Allows uploading objects to S3 only when MFA is enabled._
 
 ---
 
@@ -1167,12 +1180,12 @@ A policy contains **statements** with rules specifying:
 
 ### ✅ Best Practices
 
-* Always use the latest `"Version": "2012-10-17"`.
-* Use **least privilege** — specify only required `Action` and `Resource`.
-* Use **conditions** for extra security (e.g., IPs, MFA, tags).
-* Avoid `"Action": "*"`, `"Resource": "*"`.
-* Use **Sid** values for traceability and readability.
-* Validate policies using **IAM Policy Simulator** or **Access Analyzer**.
+- Always use the latest `"Version": "2012-10-17"`.
+- Use **least privilege** — specify only required `Action` and `Resource`.
+- Use **conditions** for extra security (e.g., IPs, MFA, tags).
+- Avoid `"Action": "*"`, `"Resource": "*"`.
+- Use **Sid** values for traceability and readability.
+- Validate policies using **IAM Policy Simulator** or **Access Analyzer**.
 
 ---
 
@@ -1183,6 +1196,7 @@ An **IAM policy** is a JSON document with a defined **structure**:
 It tells AWS **what actions** are allowed or denied on **which resources**, and **under what conditions**.
 
 ---
+
 ## Q: What is the Difference Between AWS Managed and Customer Managed Policies?
 
 ---
@@ -1198,8 +1212,8 @@ They come in two types — **AWS Managed** and **Customer Managed** — based on
 
 Both policy types help simplify permission management, but differ in **ownership**, **control**, and **customization**:
 
-* **AWS Managed Policies** are prebuilt by AWS for common job functions or use cases.
-* **Customer Managed Policies** are custom-built and maintained by you to meet specific organizational needs.
+- **AWS Managed Policies** are prebuilt by AWS for common job functions or use cases.
+- **Customer Managed Policies** are custom-built and maintained by you to meet specific organizational needs.
 
 ---
 
@@ -1208,7 +1222,7 @@ Both policy types help simplify permission management, but differ in **ownership
 | Feature                        | **AWS Managed Policy**                                   | **Customer Managed Policy**                                        |
 | ------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------ |
 | **Created & Maintained By**    | AWS                                                      | You (Account Owner)                                                |
-| **Editable**                   | ❌ No (read-only)                                         | ✅ Yes (full control)                                               |
+| **Editable**                   | ❌ No (read-only)                                        | ✅ Yes (full control)                                              |
 | **Customization**              | Not customizable                                         | Fully customizable                                                 |
 | **Policy Scope**               | Generic, broad permissions                               | Fine-tuned, specific to workloads                                  |
 | **Versioning Support**         | Automatically updated by AWS                             | You manage versions manually                                       |
@@ -1228,7 +1242,7 @@ Both policy types help simplify permission management, but differ in **ownership
 }
 ```
 
-📘 *Maintained by AWS — grants read-only permissions for all EC2 resources.*
+📘 _Maintained by AWS — grants read-only permissions for all EC2 resources._
 
 ---
 
@@ -1241,16 +1255,13 @@ Both policy types help simplify permission management, but differ in **ownership
     {
       "Effect": "Allow",
       "Action": ["s3:ListBucket", "s3:GetObject"],
-      "Resource": [
-        "arn:aws:s3:::project-logs",
-        "arn:aws:s3:::project-logs/*"
-      ]
+      "Resource": ["arn:aws:s3:::project-logs", "arn:aws:s3:::project-logs/*"]
     }
   ]
 }
 ```
 
-📘 *Created by you — grants S3 read access only to a specific bucket.*
+📘 _Created by you — grants S3 read access only to a specific bucket._
 
 ---
 
@@ -1274,11 +1285,11 @@ aws iam attach-role-policy \
 
 ### ✅ Best Practices
 
-* Use **AWS Managed Policies** for quick setup and general permissions.
-* Use **Customer Managed Policies** for **production** environments requiring custom access control.
-* Regularly **review AWS Managed Policies** — AWS may add new permissions automatically.
-* Apply **least privilege** and **version control** on custom policies.
-* Use **naming conventions** for managed policies (e.g., `Team-Service-AccessPolicy`).
+- Use **AWS Managed Policies** for quick setup and general permissions.
+- Use **Customer Managed Policies** for **production** environments requiring custom access control.
+- Regularly **review AWS Managed Policies** — AWS may add new permissions automatically.
+- Apply **least privilege** and **version control** on custom policies.
+- Use **naming conventions** for managed policies (e.g., `Team-Service-AccessPolicy`).
 
 ---
 
@@ -1292,7 +1303,8 @@ aws iam attach-role-policy \
 
 👉 Use **AWS Managed Policies** for quick setup or testing, and **Customer Managed Policies** for **secure, production-grade access control**.
 
-----
+---
+
 ## Q: What is the Principle of Least Privilege (PoLP)?
 
 ---
@@ -1301,7 +1313,7 @@ aws iam attach-role-policy \
 
 The **Principle of Least Privilege (PoLP)** is a **security best practice** in AWS IAM and DevOps that states:
 
-> *“Users, roles, and services should have only the permissions necessary to perform their tasks — and nothing more.”*
+> _“Users, roles, and services should have only the permissions necessary to perform their tasks — and nothing more.”_
 
 It minimizes the **attack surface**, **limits accidental misuse**, and **reduces blast radius** in case of credential compromise.
 
@@ -1309,9 +1321,9 @@ It minimizes the **attack surface**, **limits accidental misuse**, and **reduces
 
 ### ⚙️ Purpose / How It Works
 
-* Every IAM entity (user, role, group, service) should get **only the minimal required actions and resources**.
-* Avoid granting broad access such as `"Action": "*"`, `"Resource": "*"`.
-* Review and refine permissions regularly as responsibilities or workloads change.
+- Every IAM entity (user, role, group, service) should get **only the minimal required actions and resources**.
+- Avoid granting broad access such as `"Action": "*"`, `"Resource": "*"`.
+- Review and refine permissions regularly as responsibilities or workloads change.
 
 **Flow Example:**
 1️⃣ Developer needs to read logs → Give `CloudWatchLogsReadOnlyAccess`.
@@ -1322,8 +1334,8 @@ It minimizes the **attack surface**, **limits accidental misuse**, and **reduces
 
 ### 📋 Example Comparison
 
-| Policy Type                  | Description                                        | Risk Level |
-| ---------------------------- | -------------------------------------------------- | ---------- |
+| Policy Type                   | Description                                        | Risk Level |
+| ----------------------------- | -------------------------------------------------- | ---------- |
 | ❌ **Over-Privileged Policy** | Grants all actions on all resources                | 🔥 High    |
 | ✅ **Least Privilege Policy** | Grants only required read actions on specific logs | 🟢 Low     |
 
@@ -1363,12 +1375,12 @@ It minimizes the **attack surface**, **limits accidental misuse**, and **reduces
 
 ### ✅ Best Practices
 
-* **Start with deny-all → grant incrementally.**
-* Use **IAM Access Analyzer** to detect unused or excessive permissions.
-* Apply **resource-level permissions** whenever possible.
-* Regularly **review IAM roles, users, and groups** for unnecessary access.
-* Enforce **MFA** and **temporary credentials (STS)**.
-* Use **service-specific roles** (e.g., EC2Role, LambdaRole).
+- **Start with deny-all → grant incrementally.**
+- Use **IAM Access Analyzer** to detect unused or excessive permissions.
+- Apply **resource-level permissions** whenever possible.
+- Regularly **review IAM roles, users, and groups** for unnecessary access.
+- Enforce **MFA** and **temporary credentials (STS)**.
+- Use **service-specific roles** (e.g., EC2Role, LambdaRole).
 
 ---
 
@@ -1377,8 +1389,8 @@ It minimizes the **attack surface**, **limits accidental misuse**, and **reduces
 The **Principle of Least Privilege** means granting **only the permissions absolutely necessary** — nothing extra.
 ✅ It reduces security risks, prevents accidental misuse, and is a cornerstone of AWS IAM best practices.
 
+---
 
------
 ## Q: How to Enforce MFA for IAM Users?
 
 ---
@@ -1392,9 +1404,9 @@ Enforcing MFA ensures that even if credentials are compromised, unauthorized acc
 
 ### ⚙️ Purpose / How It Works
 
-* MFA ties **something you know** (password/access key) with **something you have** (authenticator app/device).
-* AWS IAM supports both **virtual MFA devices** (e.g., Google Authenticator, Authy) and **hardware MFA** (YubiKey, Gemalto).
-* You can **enforce MFA** using IAM **policies** that deny all requests unless MFA is active in the session.
+- MFA ties **something you know** (password/access key) with **something you have** (authenticator app/device).
+- AWS IAM supports both **virtual MFA devices** (e.g., Google Authenticator, Authy) and **hardware MFA** (YubiKey, Gemalto).
+- You can **enforce MFA** using IAM **policies** that deny all requests unless MFA is active in the session.
 
 ---
 
@@ -1407,8 +1419,9 @@ Enforcing MFA ensures that even if credentials are compromised, unauthorized acc
 3. Under **Multi-Factor Authentication (MFA)** → Click **Assign MFA device**.
 4. Choose:
 
-   * **Virtual MFA** → Scan QR code with Authenticator app.
-   * **Hardware MFA** → Enter serial number.
+   - **Virtual MFA** → Scan QR code with Authenticator app.
+   - **Hardware MFA** → Enter serial number.
+
 5. Enter 2 consecutive OTPs to complete setup.
 
 ---
@@ -1456,7 +1469,7 @@ Attach this policy to **users or groups** to deny all actions unless MFA is enab
 }
 ```
 
-✅ *Effect:* Any request without MFA will be denied — even if other policies allow it.
+✅ _Effect:_ Any request without MFA will be denied — even if other policies allow it.
 
 ---
 
@@ -1499,11 +1512,11 @@ export AWS_SESSION_TOKEN=TOKENEXAMPLE
 
 ### ✅ Best Practices
 
-* Enforce MFA for **all IAM users and root account**.
-* Combine with **least privilege** and **strong password policy**.
-* Monitor MFA compliance using **IAM Credential Reports**.
-* For organizations, enforce MFA across accounts using **AWS Organizations SCPs**.
-* Prefer **federated SSO (with MFA)** over local IAM users when possible.
+- Enforce MFA for **all IAM users and root account**.
+- Combine with **least privilege** and **strong password policy**.
+- Monitor MFA compliance using **IAM Credential Reports**.
+- For organizations, enforce MFA across accounts using **AWS Organizations SCPs**.
+- Prefer **federated SSO (with MFA)** over local IAM users when possible.
 
 ---
 
@@ -1515,6 +1528,7 @@ To enforce MFA for IAM users:
 ✅ This ensures **no IAM user can access AWS without MFA**, strengthening your account security posture.
 
 ---
+
 ## Q: What are IAM Access Analyzer Findings?
 
 ---
@@ -1531,16 +1545,16 @@ They highlight **who has access** to your resources **from outside your account*
 IAM Access Analyzer uses **automated reasoning** to analyze **policies attached to resources** (like S3 buckets, IAM roles, KMS keys, etc.).
 It continuously monitors for:
 
-* **External access** (public or cross-account)
-* **Policy misconfigurations** (e.g., overly broad access)
-* **Noncompliance with security standards**
+- **External access** (public or cross-account)
+- **Policy misconfigurations** (e.g., overly broad access)
+- **Noncompliance with security standards**
 
 When detected, Access Analyzer generates **findings** that describe:
 
-* **Which resource** is accessible
-* **Who** can access it
-* **Type of access** (Read, Write, Full)
-* **Source account or entity**
+- **Which resource** is accessible
+- **Who** can access it
+- **Type of access** (Read, Write, Full)
+- **Source account or entity**
 
 ---
 
@@ -1564,7 +1578,7 @@ When detected, Access Analyzer generates **findings** that describe:
 }
 ```
 
-📘 *Indicates that `public-data-bucket` is publicly accessible (`principal: *`).*
+📘 _Indicates that `public-data-bucket` is publicly accessible (`principal: _`).\*
 
 ---
 
@@ -1620,12 +1634,12 @@ aws accessanalyzer archive-findings \
 
 ### ✅ Best Practices
 
-* Enable **IAM Access Analyzer in all AWS Regions**.
-* Regularly **review and resolve ACTIVE findings**.
-* Use **AWS Organizations analyzers** for centralized visibility.
-* Integrate findings with **Security Hub** or **EventBridge** for alerts.
-* Use findings to enforce the **Principle of Least Privilege**.
-* Archive or suppress valid findings (e.g., intentional cross-account roles).
+- Enable **IAM Access Analyzer in all AWS Regions**.
+- Regularly **review and resolve ACTIVE findings**.
+- Use **AWS Organizations analyzers** for centralized visibility.
+- Integrate findings with **Security Hub** or **EventBridge** for alerts.
+- Use findings to enforce the **Principle of Least Privilege**.
+- Archive or suppress valid findings (e.g., intentional cross-account roles).
 
 ---
 
@@ -1635,6 +1649,7 @@ aws accessanalyzer archive-findings \
 ✅ They help detect **public or cross-account exposure** early, ensuring your IAM and resource policies follow **least privilege and compliance best practices**.
 
 ---
+
 ## Q: What are Service-Linked Roles?
 
 ---
@@ -1648,10 +1663,10 @@ It allows an AWS service to **perform actions on your behalf** — using permiss
 
 ### ⚙️ Purpose / How It Works
 
-* AWS creates and manages the **trust and permission policies** for service-linked roles.
-* These roles are **linked directly to an AWS service** (e.g., ECS, EKS, RDS, CloudTrail).
-* They simplify permissions setup — you don’t have to manually create or attach IAM policies.
-* When the service performs an operation (like creating or managing resources), it assumes this role automatically.
+- AWS creates and manages the **trust and permission policies** for service-linked roles.
+- These roles are **linked directly to an AWS service** (e.g., ECS, EKS, RDS, CloudTrail).
+- They simplify permissions setup — you don’t have to manually create or attach IAM policies.
+- When the service performs an operation (like creating or managing resources), it assumes this role automatically.
 
 **Flow Example:**
 
@@ -1730,7 +1745,7 @@ aws iam delete-service-linked-role \
   --role-name AWSServiceRoleForECS
 ```
 
-*(Will fail if ECS is still using it.)*
+_(Will fail if ECS is still using it.)_
 
 ---
 
@@ -1750,15 +1765,16 @@ aws iam delete-service-linked-role \
 
 ### ✅ Best Practices
 
-* **Do not modify or delete** service-linked roles manually.
-* Allow AWS to **auto-manage permissions** to prevent service errors.
-* Regularly **review SLRs** using:
+- **Do not modify or delete** service-linked roles manually.
+- Allow AWS to **auto-manage permissions** to prevent service errors.
+- Regularly **review SLRs** using:
 
   ```bash
   aws iam list-roles --query "Roles[?contains(RoleName, 'AWSServiceRole')].RoleName"
   ```
-* Use **least privilege** for your custom roles; reserve SLRs for service automation.
-* **Document which services** have active service-linked roles for compliance.
+
+- Use **least privilege** for your custom roles; reserve SLRs for service automation.
+- **Document which services** have active service-linked roles for compliance.
 
 ---
 
@@ -1768,6 +1784,7 @@ aws iam delete-service-linked-role \
 ✅ AWS manages their policies and trust relationships automatically — ensuring correct, minimal permissions without manual configuration.
 
 ---
+
 ## Q: How Do You Give Cross-Account Access in AWS IAM?
 
 ---
@@ -1825,10 +1842,7 @@ Create an IAM role and trust **Account A**:
     {
       "Effect": "Allow",
       "Action": ["s3:ListBucket", "s3:GetObject"],
-      "Resource": [
-        "arn:aws:s3:::shared-bucket",
-        "arn:aws:s3:::shared-bucket/*"
-      ]
+      "Resource": ["arn:aws:s3:::shared-bucket", "arn:aws:s3:::shared-bucket/*"]
     }
   ]
 }
@@ -1892,10 +1906,7 @@ export AWS_SESSION_TOKEN=FQoGZXIvYXdzE...
       "Effect": "Allow",
       "Principal": { "AWS": "arn:aws:iam::111111111111:user/devops-user" },
       "Action": ["s3:GetObject", "s3:ListBucket"],
-      "Resource": [
-        "arn:aws:s3:::shared-bucket",
-        "arn:aws:s3:::shared-bucket/*"
-      ]
+      "Resource": ["arn:aws:s3:::shared-bucket", "arn:aws:s3:::shared-bucket/*"]
     }
   ]
 }
@@ -1919,12 +1930,12 @@ export AWS_SESSION_TOKEN=FQoGZXIvYXdzE...
 
 ### ✅ Best Practices
 
-* Prefer **role-based access** for dynamic, secure cross-account usage.
-* Use **STS temporary credentials** instead of static access keys.
-* Limit permissions using **least privilege**.
-* Add **conditions** (e.g., source account, IP, or VPC endpoint).
-* Log and audit with **CloudTrail** to monitor cross-account usage.
-* Use **AWS Organizations SCPs** to enforce boundaries centrally.
+- Prefer **role-based access** for dynamic, secure cross-account usage.
+- Use **STS temporary credentials** instead of static access keys.
+- Limit permissions using **least privilege**.
+- Add **conditions** (e.g., source account, IP, or VPC endpoint).
+- Log and audit with **CloudTrail** to monitor cross-account usage.
+- Use **AWS Organizations SCPs** to enforce boundaries centrally.
 
 ---
 
@@ -1935,7 +1946,8 @@ To grant **cross-account access**, either:
 2️⃣ Use **resource-based policies** for direct sharing (like S3).
 ✅ Always apply **least privilege** and use **STS temporary credentials** for secure, auditable access.
 
-----
+---
+
 ## Q: How Do You Audit IAM Permissions?
 
 ---
@@ -1951,10 +1963,10 @@ AWS provides several **native tools** for analyzing, reporting, and monitoring I
 
 IAM auditing involves:
 
-* **Listing current permissions** (who can do what)
-* **Identifying unused or over-privileged permissions**
-* **Monitoring access patterns and anomalies**
-* **Enforcing least privilege via reports and analyzers**
+- **Listing current permissions** (who can do what)
+- **Identifying unused or over-privileged permissions**
+- **Monitoring access patterns and anomalies**
+- **Enforcing least privilege via reports and analyzers**
 
 This is typically done using **IAM Access Analyzer**, **Credential Reports**, **Access Advisor**, and **CloudTrail** logs.
 
@@ -2046,13 +2058,13 @@ ORDER BY eventTime DESC;
 
 ### ✅ Best Practices
 
-* Enable **IAM Access Analyzer** in all regions.
-* Review **credential reports** and **Access Advisor data** regularly.
-* Use **CloudTrail** to log and monitor IAM changes.
-* Automate audits via **AWS Config rules** (e.g., MFA enforcement, key rotation).
-* Remove **inactive users and access keys** immediately.
-* Store audit logs securely in **S3 with encryption**.
-* Use **AWS Organizations SCPs** to apply consistent access governance.
+- Enable **IAM Access Analyzer** in all regions.
+- Review **credential reports** and **Access Advisor data** regularly.
+- Use **CloudTrail** to log and monitor IAM changes.
+- Automate audits via **AWS Config rules** (e.g., MFA enforcement, key rotation).
+- Remove **inactive users and access keys** immediately.
+- Store audit logs securely in **S3 with encryption**.
+- Use **AWS Organizations SCPs** to apply consistent access governance.
 
 ---
 
@@ -2065,6 +2077,7 @@ To audit IAM permissions:
 ✅ Together, these tools ensure secure, compliant, and least-privileged IAM access across AWS.
 
 ---
+
 ## Q: What is AWS STS (Security Token Service)?
 
 ---
@@ -2138,7 +2151,7 @@ Output:
 }
 ```
 
-✅ *You can now use these temporary credentials to access AWS securely.*
+✅ _You can now use these temporary credentials to access AWS securely._
 
 ---
 
@@ -2168,12 +2181,12 @@ This enforces MFA before generating temporary credentials.
 
 ### ✅ Best Practices
 
-* Prefer **STS credentials** over static IAM keys for automation and CI/CD.
-* Use **AssumeRole** for **cross-account** or **service-to-service access**.
-* Always enforce **MFA** for `GetSessionToken`.
-* Monitor usage with **CloudTrail (AssumeRole events)**.
-* Use **least privilege policies** for roles assumed via STS.
-* Rotate roles or sessions frequently; never cache expired tokens.
+- Prefer **STS credentials** over static IAM keys for automation and CI/CD.
+- Use **AssumeRole** for **cross-account** or **service-to-service access**.
+- Always enforce **MFA** for `GetSessionToken`.
+- Monitor usage with **CloudTrail (AssumeRole events)**.
+- Use **least privilege policies** for roles assumed via STS.
+- Rotate roles or sessions frequently; never cache expired tokens.
 
 ---
 
@@ -2182,7 +2195,8 @@ This enforces MFA before generating temporary credentials.
 **AWS STS** issues **temporary credentials** to securely access AWS resources **without static IAM keys**.
 ✅ It’s used for **cross-account**, **federated**, and **MFA-based** access — making it a cornerstone of secure, short-lived authentication in AWS.
 
-----
+---
+
 ## Q: What is `AssumeRole` in AWS IAM?
 
 ---
@@ -2207,8 +2221,8 @@ User/App → STS:AssumeRole → Temporary Credentials → Access AWS Resource
 
 **Key Concept:**
 
-* The **trust policy** on the role defines *who can assume it*.
-* The **permissions policy** on the role defines *what actions they can perform*.
+- The **trust policy** on the role defines _who can assume it_.
+- The **permissions policy** on the role defines _what actions they can perform_.
 
 ---
 
@@ -2305,12 +2319,12 @@ Now your CLI commands operate under the **assumed role’s permissions**.
 
 ### ✅ Best Practices
 
-* Always apply **least privilege** in the role’s permission policy.
-* Use **MFA** with `AssumeRole` for sensitive roles.
-* **Log all AssumeRole events** via CloudTrail (`AssumeRole` API calls).
-* Limit role assumption with **trust policy conditions** (e.g., source IP, account ID).
-* Rotate and **limit session durations** (default 1 hour).
-* Use **STS session tags** to track user identity and session context.
+- Always apply **least privilege** in the role’s permission policy.
+- Use **MFA** with `AssumeRole` for sensitive roles.
+- **Log all AssumeRole events** via CloudTrail (`AssumeRole` API calls).
+- Limit role assumption with **trust policy conditions** (e.g., source IP, account ID).
+- Rotate and **limit session durations** (default 1 hour).
+- Use **STS session tags** to track user identity and session context.
 
 ---
 
@@ -2320,6 +2334,7 @@ Now your CLI commands operate under the **assumed role’s permissions**.
 ✅ It’s essential for **cross-account access**, **federation**, and **secure automation** — no static keys, no long-term exposure.
 
 ---
+
 ## Q: What is IAM Federation?
 
 ---
@@ -2400,14 +2415,16 @@ IAM Role with OIDC trust policy:
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": { "Federated": "arn:aws:iam::123456789012:oidc-provider/oidc.eks.ap-south-1.amazonaws.com/id/EXAMPLE" },
+      "Principal": {
+        "Federated": "arn:aws:iam::123456789012:oidc-provider/oidc.eks.ap-south-1.amazonaws.com/id/EXAMPLE"
+      },
       "Action": "sts:AssumeRoleWithWebIdentity"
     }
   ]
 }
 ```
 
-✅ *EKS Pods can assume this role using their OIDC token — no AWS credentials stored in the container.*
+✅ _EKS Pods can assume this role using their OIDC token — no AWS credentials stored in the container._
 
 ---
 
@@ -2425,12 +2442,12 @@ IAM Role with OIDC trust policy:
 
 ### ✅ Best Practices
 
-* Always **enforce MFA** through your IdP.
-* Limit **session duration** for federated users (e.g., 1 hour).
-* Use **tags or session policies** to track identity and restrict access.
-* **Monitor AssumeRoleWithSAML/WebIdentity** events using CloudTrail.
-* Use **AWS IAM Identity Center (formerly SSO)** for centralized federation across accounts.
-* Integrate **AWS Organizations + Identity Center** for enterprise-scale SSO.
+- Always **enforce MFA** through your IdP.
+- Limit **session duration** for federated users (e.g., 1 hour).
+- Use **tags or session policies** to track identity and restrict access.
+- **Monitor AssumeRoleWithSAML/WebIdentity** events using CloudTrail.
+- Use **AWS IAM Identity Center (formerly SSO)** for centralized federation across accounts.
+- Integrate **AWS Organizations + Identity Center** for enterprise-scale SSO.
 
 ---
 
@@ -2439,7 +2456,8 @@ IAM Role with OIDC trust policy:
 **IAM Federation** lets external users (corporate or web app) **access AWS securely** using their existing credentials — no IAM user creation needed.
 ✅ It leverages **STS** and protocols like **SAML** or **OIDC** to provide **temporary, federated access** with centralized authentication and minimal credential risk.
 
-----
+---
+
 ## Q: What is an IAM Permission Boundary?
 
 ---
@@ -2453,13 +2471,14 @@ Think of it as a **“guardrail”** or **upper limit** that restricts what a us
 
 ### ⚙️ Purpose / How It Works
 
-* Normally, IAM permissions come from **attached policies** (identity or managed).
-* A **permission boundary** sets a **limit** on those permissions.
-* AWS evaluates *both*:
+- Normally, IAM permissions come from **attached policies** (identity or managed).
+- A **permission boundary** sets a **limit** on those permissions.
+- AWS evaluates _both_:
 
   1. The **user’s/role’s policies** (what’s allowed).
   2. The **permission boundary** (the ceiling).
-* The **effective permissions** = Intersection of the two.
+
+- The **effective permissions** = Intersection of the two.
 
 **Formula:**
 
@@ -2480,10 +2499,7 @@ If a user’s policy allows `s3:*`, but the permission boundary allows only `s3:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:GetObject", "s3:ListBucket"],
       "Resource": "*"
     }
   ]
@@ -2536,11 +2552,11 @@ aws iam create-role \
 
 ### ✅ Best Practices
 
-* Always **attach a permission boundary** when allowing IAM role or policy creation by non-admin users.
-* Use **managed policies** as reusable permission boundaries.
-* Combine boundaries with **IAM Access Analyzer** for compliance checks.
-* Apply **least privilege principle** even within the boundary.
-* Track boundary usage with **AWS Config rule: iam-permissions-boundary-attached**.
+- Always **attach a permission boundary** when allowing IAM role or policy creation by non-admin users.
+- Use **managed policies** as reusable permission boundaries.
+- Combine boundaries with **IAM Access Analyzer** for compliance checks.
+- Apply **least privilege principle** even within the boundary.
+- Track boundary usage with **AWS Config rule: iam-permissions-boundary-attached**.
 
 ---
 
@@ -2549,7 +2565,8 @@ aws iam create-role \
 An **IAM Permission Boundary** is a **limit** on the maximum permissions an IAM user or role can have.
 ✅ It’s ideal for **delegated admin control** — ensuring no entity can exceed the permissions explicitly approved by your security team.
 
-----
+---
+
 ## Q: What is an IAM Policy Condition?
 
 ---
@@ -2563,10 +2580,10 @@ It adds **context-based control** — allowing fine-grained access decisions bas
 
 ### ⚙️ Purpose / How It Works
 
-* Each IAM policy statement can include a **`Condition`** block.
-* Conditions are evaluated **after** `Effect`, `Action`, and `Resource`.
-* They use **condition operators** (e.g., `StringEquals`, `Bool`, `IpAddress`) and **condition keys** (e.g., `aws:SourceIp`, `aws:MultiFactorAuthPresent`).
-* The policy statement is effective **only if the condition evaluates to true**.
+- Each IAM policy statement can include a **`Condition`** block.
+- Conditions are evaluated **after** `Effect`, `Action`, and `Resource`.
+- They use **condition operators** (e.g., `StringEquals`, `Bool`, `IpAddress`) and **condition keys** (e.g., `aws:SourceIp`, `aws:MultiFactorAuthPresent`).
+- The policy statement is effective **only if the condition evaluates to true**.
 
 **Flow Example:**
 
@@ -2597,7 +2614,7 @@ Else → Skip Statement
 }
 ```
 
-✅ *Allows access to S3 only from the given corporate IP range.*
+✅ _Allows access to S3 only from the given corporate IP range._
 
 ---
 
@@ -2621,7 +2638,7 @@ Else → Skip Statement
 }
 ```
 
-✅ *Grants EC2 start permissions only if the user has MFA enabled.*
+✅ _Grants EC2 start permissions only if the user has MFA enabled._
 
 ---
 
@@ -2645,7 +2662,7 @@ Else → Skip Statement
 }
 ```
 
-✅ *Allows terminating EC2 instances only if they are tagged `Environment=Dev`.*
+✅ _Allows terminating EC2 instances only if they are tagged `Environment=Dev`._
 
 ---
 
@@ -2679,21 +2696,22 @@ Else → Skip Statement
 
 ### ✅ Best Practices
 
-* Always use **conditions** to add **context-aware restrictions**.
-* Enforce **MFA** and **HTTPS-only access** (`aws:SecureTransport`).
-* Combine **tag-based** and **IP-based** conditions for multi-layered security.
-* Apply **region-based restrictions** to limit unauthorized region usage.
-* Use **`BoolIfExists`** to avoid policy failures if a key is missing.
-* Test conditions with **IAM Policy Simulator** before deployment.
+- Always use **conditions** to add **context-aware restrictions**.
+- Enforce **MFA** and **HTTPS-only access** (`aws:SecureTransport`).
+- Combine **tag-based** and **IP-based** conditions for multi-layered security.
+- Apply **region-based restrictions** to limit unauthorized region usage.
+- Use **`BoolIfExists`** to avoid policy failures if a key is missing.
+- Test conditions with **IAM Policy Simulator** before deployment.
 
 ---
 
 ### 💡 In short
 
-An **IAM Policy Condition** adds **contextual control** to your IAM permissions — defining *when, where, or how* an action is allowed.
+An **IAM Policy Condition** adds **contextual control** to your IAM permissions — defining _when, where, or how_ an action is allowed.
 ✅ It enables **fine-grained, conditional access** based on attributes like **MFA, IP, time, or tags**, making your IAM policies far more secure and flexible.
 
-----
+---
+
 ## Q: What’s the Difference Between Identity-Based and Resource-Based Policies?
 
 ---
@@ -2707,8 +2725,8 @@ They differ mainly in **where** they are attached and **who** they apply to — 
 
 ### ⚙️ Purpose / How It Works
 
-* **Identity-based policies** are attached to IAM entities (users, groups, roles) and define **what actions they can perform** on which resources.
-* **Resource-based policies** are attached directly to AWS resources and define **who (principal)** can access that resource and **what actions** they can take.
+- **Identity-based policies** are attached to IAM entities (users, groups, roles) and define **what actions they can perform** on which resources.
+- **Resource-based policies** are attached directly to AWS resources and define **who (principal)** can access that resource and **what actions** they can take.
 
 Both are evaluated together during authorization, along with permission boundaries, SCPs, and session policies.
 
@@ -2716,17 +2734,17 @@ Both are evaluated together during authorization, along with permission boundari
 
 ### 📋 Comparison Table
 
-| Feature                            | **Identity-Based Policy**             | **Resource-Based Policy**                          |
-| ---------------------------------- | ------------------------------------- | -------------------------------------------------- |
-| **Attached To**                    | IAM user, group, or role              | AWS resource (e.g., S3 bucket, KMS key, SQS queue) |
-| **Defines**                        | What the identity can do (actions)    | Who can access the resource and how                |
-| **Specifies Principal?**           | ❌ No (applies to the identity itself) | ✅ Yes (explicitly lists allowed principals)        |
-| **Common Use Cases**               | User, role, or service permissions    | Cross-account or public access control             |
-| **Cross-Account Access**           | Requires `AssumeRole` via STS         | Can directly allow access from another account     |
-| **Evaluation Location**            | IAM system                            | Resource service (e.g., S3, KMS)                   |
-| **Supports Deny Rules**            | ✅ Yes                                 | ✅ Yes                                              |
-| **Example Services Supporting It** | All IAM entities                      | S3, KMS, SNS, SQS, Lambda, Secrets Manager         |
-| **Example Focus**                  | *“What can Vasu do?”*                 | *“Who can access my S3 bucket?”*                   |
+| Feature                            | **Identity-Based Policy**              | **Resource-Based Policy**                          |
+| ---------------------------------- | -------------------------------------- | -------------------------------------------------- |
+| **Attached To**                    | IAM user, group, or role               | AWS resource (e.g., S3 bucket, KMS key, SQS queue) |
+| **Defines**                        | What the identity can do (actions)     | Who can access the resource and how                |
+| **Specifies Principal?**           | ❌ No (applies to the identity itself) | ✅ Yes (explicitly lists allowed principals)       |
+| **Common Use Cases**               | User, role, or service permissions     | Cross-account or public access control             |
+| **Cross-Account Access**           | Requires `AssumeRole` via STS          | Can directly allow access from another account     |
+| **Evaluation Location**            | IAM system                             | Resource service (e.g., S3, KMS)                   |
+| **Supports Deny Rules**            | ✅ Yes                                 | ✅ Yes                                             |
+| **Example Services Supporting It** | All IAM entities                       | S3, KMS, SNS, SQS, Lambda, Secrets Manager         |
+| **Example Focus**                  | _“What can Vasu do?”_                  | _“Who can access my S3 bucket?”_                   |
 
 ---
 
@@ -2745,7 +2763,7 @@ Both are evaluated together during authorization, along with permission boundari
 }
 ```
 
-📘 *Allows the IAM user to read from the S3 bucket.*
+📘 _Allows the IAM user to read from the S3 bucket._
 
 ---
 
@@ -2765,7 +2783,7 @@ Both are evaluated together during authorization, along with permission boundari
 }
 ```
 
-📘 *Allows a user in another AWS account to access this bucket’s objects.*
+📘 _Allows a user in another AWS account to access this bucket’s objects._
 
 ---
 
@@ -2773,31 +2791,32 @@ Both are evaluated together during authorization, along with permission boundari
 
 | Step | Policy Type               | Description                                                                               |
 | ---- | ------------------------- | ----------------------------------------------------------------------------------------- |
-| 1️⃣  | Identity-Based Policy     | Checks what the user/role is allowed to do.                                               |
-| 2️⃣  | Resource-Based Policy     | Checks if the resource explicitly allows the principal.                                   |
-| 3️⃣  | Permission Boundary / SCP | Restricts max allowed permissions.                                                        |
-| 4️⃣  | Final Decision            | Access is allowed **only if at least one Allow** exists and **no explicit Deny** applies. |
+| 1️⃣   | Identity-Based Policy     | Checks what the user/role is allowed to do.                                               |
+| 2️⃣   | Resource-Based Policy     | Checks if the resource explicitly allows the principal.                                   |
+| 3️⃣   | Permission Boundary / SCP | Restricts max allowed permissions.                                                        |
+| 4️⃣   | Final Decision            | Access is allowed **only if at least one Allow** exists and **no explicit Deny** applies. |
 
 ---
 
 ### ✅ Best Practices
 
-* Use **identity-based policies** for in-account access management.
-* Use **resource-based policies** for **cross-account or public access**.
-* Combine both for **defense-in-depth** access control.
-* Always add **explicit Deny** rules for sensitive resources.
-* Audit resource-based policies using **IAM Access Analyzer** for unintended exposure.
-* Avoid using `"Principal": "*"`, unless the resource truly needs public access (e.g., a static website S3 bucket).
+- Use **identity-based policies** for in-account access management.
+- Use **resource-based policies** for **cross-account or public access**.
+- Combine both for **defense-in-depth** access control.
+- Always add **explicit Deny** rules for sensitive resources.
+- Audit resource-based policies using **IAM Access Analyzer** for unintended exposure.
+- Avoid using `"Principal": "*"`, unless the resource truly needs public access (e.g., a static website S3 bucket).
 
 ---
 
 ### 💡 In short
 
-* **Identity-Based Policy:** Attached to IAM entities → *defines what the identity can do.*
-* **Resource-Based Policy:** Attached to AWS resources → *defines who can access the resource and what they can do.*
+- **Identity-Based Policy:** Attached to IAM entities → _defines what the identity can do._
+- **Resource-Based Policy:** Attached to AWS resources → _defines who can access the resource and what they can do._
   ✅ Use identity-based for internal access, and resource-based for **cross-account or external sharing** — together they form AWS’s core access control model.
 
-----
+---
+
 ## Q: What are IAM Tags Used For?
 
 ---
@@ -2813,9 +2832,9 @@ They help with **automation, governance, and fine-grained permissions** by provi
 
 Tags are **metadata attributes** (like `Environment=Dev` or `Team=DevOps`) that AWS IAM uses for:
 
-* **Access control** → define policies that allow or deny actions based on tags.
-* **Cost allocation** → track costs by team, project, or environment.
-* **Automation & compliance** → identify and manage IAM entities programmatically.
+- **Access control** → define policies that allow or deny actions based on tags.
+- **Cost allocation** → track costs by team, project, or environment.
+- **Automation & compliance** → identify and manage IAM entities programmatically.
 
 When you tag IAM resources, the tags can be evaluated by IAM **Condition keys** such as `aws:PrincipalTag` and `aws:ResourceTag`.
 
@@ -2851,7 +2870,7 @@ aws iam tag-role \
 }
 ```
 
-✅ *Allows S3 access only if the role or user has the tag `Environment=Dev`.*
+✅ _Allows S3 access only if the role or user has the tag `Environment=Dev`._
 
 ---
 
@@ -2897,17 +2916,17 @@ aws iam tag-role \
 }
 ```
 
-✅ *Denies EC2 instance creation unless the “Environment” tag is provided.*
+✅ _Denies EC2 instance creation unless the “Environment” tag is provided._
 
 ---
 
 ### ✅ Best Practices
 
-* Use **consistent tag keys** across IAM and AWS resources (e.g., `Environment`, `CostCenter`, `Owner`).
-* Combine **Principal and Resource tags** for dynamic access control.
-* Use tags for **cost allocation reports** and **compliance tracking**.
-* Restrict **tag modification** using IAM policies to prevent privilege escalation.
-* Automate tagging via **AWS Organizations Tag Policies** or **Service Control Policies (SCPs)**.
+- Use **consistent tag keys** across IAM and AWS resources (e.g., `Environment`, `CostCenter`, `Owner`).
+- Combine **Principal and Resource tags** for dynamic access control.
+- Use tags for **cost allocation reports** and **compliance tracking**.
+- Restrict **tag modification** using IAM policies to prevent privilege escalation.
+- Automate tagging via **AWS Organizations Tag Policies** or **Service Control Policies (SCPs)**.
 
 ---
 
@@ -2917,24 +2936,28 @@ aws iam tag-role \
 ✅ They’re used for **fine-grained access control**, **cost tracking**, and **automated management** — enabling scalable, tag-driven governance across AWS environments.
 
 ---
+
 ## Q: What is an IAM Credential Report?
 
 ---
 
-### 🧠 Overview  
+### 🧠 Overview
+
 An **IAM Credential Report** is a **security audit tool** in AWS IAM that provides a **CSV report of all IAM users** and the **status of their credentials** — including passwords, access keys, MFA devices, and certificate usage.  
 It helps you **identify security risks** like inactive users, old access keys, missing MFA, or expired passwords.
 
 ---
 
-### ⚙️ Purpose / How It Works  
+### ⚙️ Purpose / How It Works
+
 The Credential Report provides **account-wide visibility** into IAM credential hygiene.  
-It is generated by IAM on demand and contains one row per IAM user with detailed credential metadata.  
+It is generated by IAM on demand and contains one row per IAM user with detailed credential metadata.
 
 **Flow:**
+
 ```
-1️⃣ Admin requests report → 
-2️⃣ IAM generates it → 
+1️⃣ Admin requests report →
+2️⃣ IAM generates it →
 3️⃣ You download and review for compliance or automation →
 4️⃣ Fix any users violating security policies
 ```
@@ -2943,81 +2966,90 @@ It is generated by IAM on demand and contains one row per IAM user with detailed
 
 ### 🧩 Example: Generate and Download Report (CLI)
 
-#### 🔹 Step 1: Generate Report  
+#### 🔹 Step 1: Generate Report
+
 ```bash
 aws iam generate-credential-report
 ```
 
-#### 🔹 Step 2: Download Report  
+#### 🔹 Step 2: Download Report
+
 ```bash
 aws iam get-credential-report --query "Content" --output text | base64 --decode > credential-report.csv
 ```
 
-#### 🔹 Step 3: View in CSV Format  
+#### 🔹 Step 3: View in CSV Format
+
 Example output (simplified):
 
-| user | arn | password_enabled | password_last_used | mfa_active | access_key_1_active | access_key_1_last_used_date |
-|------|-----|------------------|--------------------|-------------|----------------------|-----------------------------|
-| devops-user | arn:aws:iam::123456789012:user/devops-user | TRUE | 2025-11-10 | TRUE | TRUE | 2025-11-11 |
-| old-user | arn:aws:iam::123456789012:user/old-user | FALSE | N/A | FALSE | FALSE | N/A |
+| user        | arn                                        | password_enabled | password_last_used | mfa_active | access_key_1_active | access_key_1_last_used_date |
+| ----------- | ------------------------------------------ | ---------------- | ------------------ | ---------- | ------------------- | --------------------------- |
+| devops-user | arn:aws:iam::123456789012:user/devops-user | TRUE             | 2025-11-10         | TRUE       | TRUE                | 2025-11-11                  |
+| old-user    | arn:aws:iam::123456789012:user/old-user    | FALSE            | N/A                | FALSE      | FALSE               | N/A                         |
 
-✅ *Helps identify inactive or noncompliant users instantly.*
+✅ _Helps identify inactive or noncompliant users instantly._
 
 ---
 
-### 📋 Key Columns in Credential Report  
+### 📋 Key Columns in Credential Report
 
-| Field | Description |
-|--------|-------------|
-| **user** | IAM username |
-| **arn** | ARN of the IAM user |
-| **user_creation_time** | When the IAM user was created |
-| **password_enabled** | Whether a console password is set |
-| **password_last_used** | When the password was last used |
-| **password_last_changed** | When the password was last changed |
-| **mfa_active** | Whether MFA is enabled |
-| **access_key_1_active / access_key_2_active** | Whether access keys are active |
-| **access_key_1_last_used_date** | When the key was last used |
-| **cert_1_active** | Whether an X.509 certificate is active |
-| **password_next_rotation** | When the password must be rotated |
+| Field                                         | Description                            |
+| --------------------------------------------- | -------------------------------------- |
+| **user**                                      | IAM username                           |
+| **arn**                                       | ARN of the IAM user                    |
+| **user_creation_time**                        | When the IAM user was created          |
+| **password_enabled**                          | Whether a console password is set      |
+| **password_last_used**                        | When the password was last used        |
+| **password_last_changed**                     | When the password was last changed     |
+| **mfa_active**                                | Whether MFA is enabled                 |
+| **access_key_1_active / access_key_2_active** | Whether access keys are active         |
+| **access_key_1_last_used_date**               | When the key was last used             |
+| **cert_1_active**                             | Whether an X.509 certificate is active |
+| **password_next_rotation**                    | When the password must be rotated      |
 
 ---
 
 ### 🧩 Example Use Case – Detect Inactive Keys
+
 You can easily parse and identify old or inactive credentials:
+
 ```bash
 cat credential-report.csv | grep "FALSE"
 ```
-📘 *Shows users without MFA, inactive passwords, or disabled keys.*
+
+📘 _Shows users without MFA, inactive passwords, or disabled keys._
 
 ---
 
-### 📋 Credential Report Access Details  
+### 📋 Credential Report Access Details
 
-| Property | Description |
-|-----------|--------------|
-| **Available To** | IAM users and roles with `iam:GenerateCredentialReport` and `iam:GetCredentialReport` permissions |
-| **Format** | Base64-encoded CSV |
-| **Refresh Interval** | ~4 hours (AWS caches the latest report) |
-| **Scope** | Account-wide — includes all IAM users |
-
----
-
-### ✅ Best Practices  
-- Generate and **review credential reports weekly or monthly**.  
-- Ensure **MFA is active** for all console users.  
-- Rotate access keys every **90 days**.  
-- Remove **inactive IAM users** or credentials immediately.  
-- Automate checks using **AWS Config**, **Security Hub**, or custom Lambda functions.  
-- Store reports securely (e.g., encrypted S3 bucket) for audit tracking.  
+| Property             | Description                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| **Available To**     | IAM users and roles with `iam:GenerateCredentialReport` and `iam:GetCredentialReport` permissions |
+| **Format**           | Base64-encoded CSV                                                                                |
+| **Refresh Interval** | ~4 hours (AWS caches the latest report)                                                           |
+| **Scope**            | Account-wide — includes all IAM users                                                             |
 
 ---
 
-### 💡 In short  
+### ✅ Best Practices
+
+- Generate and **review credential reports weekly or monthly**.
+- Ensure **MFA is active** for all console users.
+- Rotate access keys every **90 days**.
+- Remove **inactive IAM users** or credentials immediately.
+- Automate checks using **AWS Config**, **Security Hub**, or custom Lambda functions.
+- Store reports securely (e.g., encrypted S3 bucket) for audit tracking.
+
+---
+
+### 💡 In short
+
 An **IAM Credential Report** is a **CSV audit file** listing all IAM users and their credential states — passwords, keys, and MFA.  
 ✅ Use it regularly to **enforce security hygiene**, **detect unused credentials**, and **maintain compliance** across your AWS accounts.
 
-----
+---
+
 ## Q: What is AWS Organizations SCP (Service Control Policy)?
 
 ---
@@ -3031,9 +3063,9 @@ SCPs **do not grant permissions** — instead, they **restrict the maximum avail
 
 ### ⚙️ Purpose / How It Works
 
-* SCPs act as **guardrails** at the **organization or OU (Organizational Unit)** level.
-* They **filter permissions** granted by IAM policies — an **implicit deny** applies if an action is not explicitly allowed in the SCP.
-* SCPs apply to **all IAM entities (users, roles)** in the target accounts, including the root user (except in the management account).
+- SCPs act as **guardrails** at the **organization or OU (Organizational Unit)** level.
+- They **filter permissions** granted by IAM policies — an **implicit deny** applies if an action is not explicitly allowed in the SCP.
+- SCPs apply to **all IAM entities (users, roles)** in the target accounts, including the root user (except in the management account).
 
 **Evaluation Logic:**
 
@@ -3069,17 +3101,14 @@ if the SCP doesn’t include that action → ❌ it’s denied.
     {
       "Sid": "AllowOnlyS3AndCloudWatch",
       "Effect": "Allow",
-      "Action": [
-        "s3:*",
-        "cloudwatch:*"
-      ],
+      "Action": ["s3:*", "cloudwatch:*"],
       "Resource": "*"
     }
   ]
 }
 ```
 
-✅ *Attached to a dev OU — this SCP restricts all actions except S3 and CloudWatch.*
+✅ _Attached to a dev OU — this SCP restricts all actions except S3 and CloudWatch._
 
 ---
 
@@ -3099,7 +3128,7 @@ if the SCP doesn’t include that action → ❌ it’s denied.
 }
 ```
 
-✅ *Prevents anyone from terminating EC2 instances, regardless of IAM permissions.*
+✅ _Prevents anyone from terminating EC2 instances, regardless of IAM permissions._
 
 ---
 
@@ -3109,8 +3138,8 @@ if the SCP doesn’t include that action → ❌ it’s denied.
 | ---------------------- | ------------------------------------ | ------------------------------- |
 | **Attached To**        | Org root, OU, or AWS account         | IAM user, group, or role        |
 | **Purpose**            | Restrict permissions across accounts | Grant permissions to identities |
-| **Grants Access?**     | ❌ No                                 | ✅ Yes                           |
-| **Affects Root User?** | ✅ Yes (in member accounts)           | ❌ No                            |
+| **Grants Access?**     | ❌ No                                | ✅ Yes                          |
+| **Affects Root User?** | ✅ Yes (in member accounts)          | ❌ No                           |
 | **Evaluation Level**   | Organization-wide                    | Account-level                   |
 | **Best For**           | Central governance and compliance    | Local identity access control   |
 
@@ -3149,18 +3178,18 @@ if the SCP doesn’t include that action → ❌ it’s denied.
 }
 ```
 
-✅ *Prevents resource creation in unapproved AWS regions.*
+✅ _Prevents resource creation in unapproved AWS regions._
 
 ---
 
 ### ✅ Best Practices
 
-* Always **test SCPs** in a non-production OU first.
-* Use **whitelist-based SCPs** (explicit allow) for tighter control.
-* Combine SCPs with **IAM Permission Boundaries** for multi-layered governance.
-* Monitor SCP impact with **CloudTrail** and **Access Analyzer**.
-* Don’t apply restrictive SCPs to the **management account** — it can block administrative functions.
-* Maintain **centralized SCP templates** for different OUs (e.g., Prod, Dev, Sandbox).
+- Always **test SCPs** in a non-production OU first.
+- Use **whitelist-based SCPs** (explicit allow) for tighter control.
+- Combine SCPs with **IAM Permission Boundaries** for multi-layered governance.
+- Monitor SCP impact with **CloudTrail** and **Access Analyzer**.
+- Don’t apply restrictive SCPs to the **management account** — it can block administrative functions.
+- Maintain **centralized SCP templates** for different OUs (e.g., Prod, Dev, Sandbox).
 
 ---
 
@@ -3170,6 +3199,7 @@ An **SCP (Service Control Policy)** is an **AWS Organizations guardrail** that *
 ✅ SCPs enforce **organization-wide least privilege**, preventing unauthorized actions even if local IAM policies allow them — making them critical for multi-account security governance.
 
 ---
+
 ## Q: How Can You Limit API Calls per IAM Role?
 
 ---
@@ -3185,10 +3215,10 @@ The idea is to **restrict when, how, and how often** a role can make API calls t
 
 You can control API calls from a role by combining multiple AWS mechanisms:
 
-* **IAM conditions** → restrict *who*, *when*, *where*, and *how* APIs are called.
-* **Service Quotas / Rate limits** → cap API frequency for specific services.
-* **CloudWatch + EventBridge monitoring** → detect excessive API activity.
-* **AWS WAF / Lambda / SCPs** → block, throttle, or alert on excessive calls.
+- **IAM conditions** → restrict _who_, _when_, _where_, and _how_ APIs are called.
+- **Service Quotas / Rate limits** → cap API frequency for specific services.
+- **CloudWatch + EventBridge monitoring** → detect excessive API activity.
+- **AWS WAF / Lambda / SCPs** → block, throttle, or alert on excessive calls.
 
 There’s no single “rate limit per role” feature, but you can **simulate it using policies and automation**.
 
@@ -3208,10 +3238,7 @@ Limit when a role can call APIs (e.g., only during working hours).
       "Resource": "*",
       "Condition": {
         "DateNotBetween": {
-          "aws:CurrentTime": [
-            "2025-11-12T05:00:00Z",
-            "2025-11-12T17:00:00Z"
-          ]
+          "aws:CurrentTime": ["2025-11-12T05:00:00Z", "2025-11-12T17:00:00Z"]
         }
       }
     }
@@ -3219,7 +3246,7 @@ Limit when a role can call APIs (e.g., only during working hours).
 }
 ```
 
-✅ *Prevents API calls outside 10 AM–10 PM IST.*
+✅ _Prevents API calls outside 10 AM–10 PM IST._
 
 ---
 
@@ -3243,7 +3270,7 @@ Block or limit APIs organization-wide, per account or OU.
 }
 ```
 
-✅ *Can simulate quota enforcement using tagging conventions.*
+✅ _Can simulate quota enforcement using tagging conventions._
 
 ---
 
@@ -3279,7 +3306,7 @@ if api_call_count(role) > 1000:
     iam.update_assume_role_policy(RoleName="DevOpsRole", PolicyDocument="deny-all")
 ```
 
-✅ *Automatically throttles a role if it exceeds API thresholds.*
+✅ _Automatically throttles a role if it exceeds API thresholds._
 
 ---
 
@@ -3293,7 +3320,7 @@ aws apigateway create-usage-plan \
   --throttle burstLimit=10 rateLimit=100
 ```
 
-✅ *Restricts role-based API traffic to 100 requests per second.*
+✅ _Restricts role-based API traffic to 100 requests per second._
 
 ---
 
@@ -3311,11 +3338,11 @@ aws apigateway create-usage-plan \
 
 ### ✅ Best Practices
 
-* Use **CloudTrail + CloudWatch dashboards** to monitor per-role API usage.
-* Define **SCPs** and **IAM policies** to prevent resource abuse.
-* Combine **Service Quotas** + **AWS Budgets** for cost and usage control.
-* Rotate or disable roles showing suspicious API spikes.
-* Enforce **MFA and IP-based access** for sensitive roles.
+- Use **CloudTrail + CloudWatch dashboards** to monitor per-role API usage.
+- Define **SCPs** and **IAM policies** to prevent resource abuse.
+- Combine **Service Quotas** + **AWS Budgets** for cost and usage control.
+- Rotate or disable roles showing suspicious API spikes.
+- Enforce **MFA and IP-based access** for sensitive roles.
 
 ---
 
@@ -3325,7 +3352,9 @@ AWS doesn’t have a direct “per-role API rate limit,” but you can enforce i
 ✅ **IAM conditions**, **SCPs**, **Service Quotas**, and **CloudWatch-based automation** — giving you **fine-grained, controlled API governance** across IAM roles and accounts.
 
 ---
+
 # Scenario Questions
+
 ## Q: Need EC2 to access S3 without keys
 
 ---
@@ -3338,10 +3367,10 @@ Give an EC2 instance **keyless, secure access** to S3 by attaching an **IAM role
 
 ### ⚙️ Purpose / How it works
 
-* Create an **IAM role** with a trust policy for `ec2.amazonaws.com`.
-* Attach a **permission policy** (least-privilege) that allows the needed S3 actions on specific bucket ARNs.
-* Put the role into an **instance profile** and attach it to the EC2 instance (at launch or to a running instance).
-* EC2 uses **IMDSv2** to retrieve short-lived credentials (AWS SDK/CLI auto-uses them).
+- Create an **IAM role** with a trust policy for `ec2.amazonaws.com`.
+- Attach a **permission policy** (least-privilege) that allows the needed S3 actions on specific bucket ARNs.
+- Put the role into an **instance profile** and attach it to the EC2 instance (at launch or to a running instance).
+- EC2 uses **IMDSv2** to retrieve short-lived credentials (AWS SDK/CLI auto-uses them).
 
 Flow:
 `EC2` → IMDSv2 → temporary creds (STS) → S3 API calls
@@ -3359,15 +3388,8 @@ Flow:
     {
       "Sid": "AllowSpecificBucketAccess",
       "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::my-app-bucket",
-        "arn:aws:s3:::my-app-bucket/*"
-      ]
+      "Action": ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
+      "Resource": ["arn:aws:s3:::my-app-bucket", "arn:aws:s3:::my-app-bucket/*"]
     }
   ]
 }
@@ -3480,11 +3502,11 @@ resource "aws_instance" "app" {
 
 ### ✅ Best Practices
 
-* Use **fine-grained S3 policies** (bucket + prefix).
-* Enforce **IMDSv2** to prevent SSRF credential theft.
-* Use **VPC endpoints (Gateway VPC Endpoint for S3)** to keep S3 traffic inside AWS network.
-* Monitor access via **CloudTrail** and S3 access logs.
-* Avoid broad managed policies (like `AmazonS3FullAccess`) in production — create scoped customer-managed policies.
+- Use **fine-grained S3 policies** (bucket + prefix).
+- Enforce **IMDSv2** to prevent SSRF credential theft.
+- Use **VPC endpoints (Gateway VPC Endpoint for S3)** to keep S3 traffic inside AWS network.
+- Monitor access via **CloudTrail** and S3 access logs.
+- Avoid broad managed policies (like `AmazonS3FullAccess`) in production — create scoped customer-managed policies.
 
 ---
 
@@ -3493,7 +3515,8 @@ resource "aws_instance" "app" {
 Attach an **IAM role (instance profile)** to the EC2 instance so it gets **temporary credentials from IMDSv2** and can access S3 without long-term keys.
 Scope the role’s policy to the specific bucket/prefix and use VPC endpoints + CloudTrail for secure, auditable access.
 
-----
+---
+
 ## Q: Developer used root account for API — what to do?
 
 ---
@@ -3506,10 +3529,10 @@ Using the **root account** for programmatic/API access is a critical security ri
 
 ### ⚙️ Purpose / How it works
 
-* **Contain**: remove/disable root programmatic access and rotate credentials.
-* **Audit**: find what was done using CloudTrail, credential reports and access logs.
-* **Remediate**: create proper IAM identities/roles, update apps to use roles (no keys), and enforce policies (MFA, least privilege).
-* **Prevent**: enforce guards (no root for day-to-day use, SCPs, monitoring, automation).
+- **Contain**: remove/disable root programmatic access and rotate credentials.
+- **Audit**: find what was done using CloudTrail, credential reports and access logs.
+- **Remediate**: create proper IAM identities/roles, update apps to use roles (no keys), and enforce policies (MFA, least privilege).
+- **Prevent**: enforce guards (no root for day-to-day use, SCPs, monitoring, automation).
 
 ---
 
@@ -3517,22 +3540,23 @@ Using the **root account** for programmatic/API access is a critical security ri
 
 1. **Revoke root programmatic credentials**
 
-   * Console (recommended): Sign in as root → **My Security Credentials** → **Access keys** → Deactivate/Delete keys.
-   * CLI (if you have root creds):
+   - Console (recommended): Sign in as root → **My Security Credentials** → **Access keys** → Deactivate/Delete keys.
+   - CLI (if you have root creds):
 
      ```bash
      aws iam delete-access-key --access-key-id <ROOT_ACCESS_KEY_ID> --user-name root
      ```
-   * If you cannot access root console, escalate to account owner/AWS support.
+
+   - If you cannot access root console, escalate to account owner/AWS support.
 
 2. **Rotate root console password & enable MFA**
 
-   * Console: Root account → **Security Credentials** → change password → assign virtual or hardware MFA.
-   * CLI to check MFA devices (if using credentials): `aws iam list-mfa-devices --user-name <username>` (root MFA shown only in console).
+   - Console: Root account → **Security Credentials** → change password → assign virtual or hardware MFA.
+   - CLI to check MFA devices (if using credentials): `aws iam list-mfa-devices --user-name <username>` (root MFA shown only in console).
 
 3. **Stop any running automated processes using root keys**
 
-   * Find systems using the key (CI jobs, servers, scripts) and disable them or update to temporary creds/roles.
+   - Find systems using the key (CI jobs, servers, scripts) and disable them or update to temporary creds/roles.
 
 4. **Create an admin IAM user / role for recovery**
 
@@ -3543,19 +3567,20 @@ Using the **root account** for programmatic/API access is a critical security ri
    aws iam create-login-profile --user-name emergency-admin --password 'TempP@ssw0rd!' --password-reset-required
    ```
 
-   * Immediately enable MFA for this IAM admin.
+   - Immediately enable MFA for this IAM admin.
 
 ---
 
 ### 🧩 Investigation (Audit) — next 30–60 minutes
 
-* **Generate credential report**
+- **Generate credential report**
 
   ```bash
   aws iam generate-credential-report
   aws iam get-credential-report --query "Content" --output text | base64 --decode > credential-report.csv
   ```
-* **Search CloudTrail for root activity / specific root access key**
+
+- **Search CloudTrail for root activity / specific root access key**
 
   ```bash
   # If you have the root access key ID that was used:
@@ -3563,13 +3588,15 @@ Using the **root account** for programmatic/API access is a critical security ri
   # Or search events where username contains "root"
   aws cloudtrail lookup-events --lookup-attributes AttributeKey=Username,AttributeValue=root
   ```
-* **Check resource changes** (S3 bucket policy edits, IAM changes, security groups, instance creation). Example S3 and IAM events:
+
+- **Check resource changes** (S3 bucket policy edits, IAM changes, security groups, instance creation). Example S3 and IAM events:
 
   ```bash
   aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=PutBucketPolicy
   aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=CreateUser
   ```
-* **Collect indicators**: list of resources modified, IP addresses, timestamps, actors.
+
+- **Collect indicators**: list of resources modified, IP addresses, timestamps, actors.
 
 ---
 
@@ -3578,9 +3605,10 @@ Using the **root account** for programmatic/API access is a critical security ri
 1. **Delete root access keys** (if not already) and **keep root idle** — use only for billing or account-critical tasks.
 2. **Migrate workloads to IAM roles**:
 
-   * For EC2 → attach IAM role (instance profile).
-   * For CI/CD → let pipelines `AssumeRole` to scoped deployment role.
-   * For serverless → use Lambda role.
+   - For EC2 → attach IAM role (instance profile).
+   - For CI/CD → let pipelines `AssumeRole` to scoped deployment role.
+   - For serverless → use Lambda role.
+
 3. **Create least-privilege IAM policies** and roles. Example minimal S3 role (Terraform/CLI examples in previous messages).
 4. **Rotate any impacted credentials** (other IAM user keys, service tokens) discovered during audit.
 5. **Revoke temporary sessions** (optional): identify active STS sessions and revoke by rotating role policies or disabling principal.
@@ -3611,13 +3639,13 @@ aws iam attach-role-policy --role-name DeployRole --policy-arn arn:aws:iam::aws:
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Effect":"Deny",
-      "Action":"*",
-      "Resource":"*",
-      "Condition":{"BoolIfExists":{"aws:MultiFactorAuthPresent":"false"}}
+      "Effect": "Deny",
+      "Action": "*",
+      "Resource": "*",
+      "Condition": { "BoolIfExists": { "aws:MultiFactorAuthPresent": "false" } }
     }
   ]
 }
@@ -3647,12 +3675,12 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=SourceIPAddress,At
 
 ### ✅ Best Practices (post-incident)
 
-* **Never use root** for API/CLI — remove any root keys immediately.
-* Use **IAM roles** (temporary STS) for services and automation.
-* Enforce **MFA** for root and all privileged IAM users.
-* Implement **CloudTrail, Config, GuardDuty, Access Analyzer** and alerting for anomalous root/API usage.
-* Use **AWS Organizations SCPs** to restrict risky actions across accounts.
-* Automate credential hygiene: **credential reports**, access key rotation automation, and periodic audits.
+- **Never use root** for API/CLI — remove any root keys immediately.
+- Use **IAM roles** (temporary STS) for services and automation.
+- Enforce **MFA** for root and all privileged IAM users.
+- Implement **CloudTrail, Config, GuardDuty, Access Analyzer** and alerting for anomalous root/API usage.
+- Use **AWS Organizations SCPs** to restrict risky actions across accounts.
+- Automate credential hygiene: **credential reports**, access key rotation automation, and periodic audits.
 
 ---
 
@@ -3660,7 +3688,8 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=SourceIPAddress,At
 
 If a developer used root keys: **immediately remove/deactivate root keys, enable MFA, create scoped IAM identities/roles**, audit via CloudTrail and credential reports, rotate any exposed credentials, and migrate workloads to role-based access. Implement strong guardrails so root is never used again.
 
-----
+---
+
 ## Q: S3 Bucket Made Public Accidentally — What to Do?
 
 ---
@@ -3676,10 +3705,10 @@ The goal is to **immediately block public access**, **audit what happened**, **v
 
 AWS S3 buckets can become public via:
 
-* Bucket policy (`"Principal": "*"`)
-* Public ACLs (`AllUsers` or `AuthenticatedUsers`)
-* Disabled **Block Public Access** settings
-* Cross-account misconfiguration
+- Bucket policy (`"Principal": "*"`)
+- Public ACLs (`AllUsers` or `AuthenticatedUsers`)
+- Disabled **Block Public Access** settings
+- Cross-account misconfiguration
 
 AWS provides **Account-Level** and **Bucket-Level Public Access Blocks**, **Access Analyzer**, and **CloudTrail** to detect and prevent such exposure.
 
@@ -3691,13 +3720,13 @@ AWS provides **Account-Level** and **Bucket-Level Public Access Blocks**, **Acce
 
 **Console:**
 
-* Go to **S3 → Bucket → Permissions → Block Public Access (Bucket settings)**
-* Enable **all four options** ✅
+- Go to **S3 → Bucket → Permissions → Block Public Access (Bucket settings)**
+- Enable **all four options** ✅
 
-  * Block public ACLs
-  * Ignore public ACLs
-  * Block new public bucket policies
-  * Block public and cross-account access
+  - Block public ACLs
+  - Ignore public ACLs
+  - Block new public bucket policies
+  - Block public and cross-account access
 
 **CLI:**
 
@@ -3712,7 +3741,7 @@ aws s3api put-public-access-block \
   }'
 ```
 
-✅ *This immediately cuts off all anonymous access.*
+✅ _This immediately cuts off all anonymous access._
 
 ---
 
@@ -3822,7 +3851,7 @@ Check for `"GetObject"` events from unknown IPs or anonymous principals.
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": {"AWS": "arn:aws:iam::111111111111:role/AppAccessRole"},
+      "Principal": { "AWS": "arn:aws:iam::111111111111:role/AppAccessRole" },
       "Action": ["s3:GetObject"],
       "Resource": ["arn:aws:s3:::my-secure-bucket/*"]
     }
@@ -3838,7 +3867,7 @@ Check for `"GetObject"` events from unknown IPs or anonymous principals.
   "Principal": "*",
   "Action": "s3:*",
   "Resource": ["arn:aws:s3:::*", "arn:aws:s3:::*/*"],
-  "Condition": {"Bool": {"aws:SecureTransport": "false"}}
+  "Condition": { "Bool": { "aws:SecureTransport": "false" } }
 }
 ```
 
@@ -3867,7 +3896,7 @@ Example SCP (prevent public S3 access in all accounts):
       "Action": ["s3:PutBucketAcl", "s3:PutBucketPolicy"],
       "Resource": "*",
       "Condition": {
-        "StringLike": {"s3:x-amz-acl": ["public-read", "public-read-write"]}
+        "StringLike": { "s3:x-amz-acl": ["public-read", "public-read-write"] }
       }
     }
   ]
@@ -3878,12 +3907,12 @@ Example SCP (prevent public S3 access in all accounts):
 
 ### ✅ Best Practices
 
-* **Always enable “Block Public Access”** globally for your account.
-* Use **IAM roles and VPC endpoints** for controlled private access.
-* Enforce **S3 bucket policies with conditions** (`aws:SourceVpc`, `aws:SecureTransport`).
-* Monitor with **AWS Config, Access Analyzer, GuardDuty, and Security Hub**.
-* Apply **SCPs** in multi-account setups to deny public exposure organization-wide.
-* Run regular **S3 bucket audits** via CLI or AWS Trusted Advisor.
+- **Always enable “Block Public Access”** globally for your account.
+- Use **IAM roles and VPC endpoints** for controlled private access.
+- Enforce **S3 bucket policies with conditions** (`aws:SourceVpc`, `aws:SecureTransport`).
+- Monitor with **AWS Config, Access Analyzer, GuardDuty, and Security Hub**.
+- Apply **SCPs** in multi-account setups to deny public exposure organization-wide.
+- Run regular **S3 bucket audits** via CLI or AWS Trusted Advisor.
 
 ---
 
@@ -3895,9 +3924,10 @@ If an S3 bucket becomes public:
 3️⃣ Audit CloudTrail for exposure →
 4️⃣ Enable Access Analyzer & Config Rules →
 5️⃣ Lock down future access with SCPs and automation.
-✅ *Never rely on manual control — enforce least privilege and automated public access prevention.*
+✅ _Never rely on manual control — enforce least privilege and automated public access prevention._
 
-----
+---
+
 ## Q: Audit Requires User MFA Enforcement — How to Enforce MFA for IAM Users
 
 ---
@@ -3947,7 +3977,7 @@ aws iam enable-mfa-device \
 
 #### **2️⃣ Enforce MFA with a Deny Policy**
 
-Attach this policy (inline or managed) to *all users or groups*:
+Attach this policy (inline or managed) to _all users or groups_:
 
 ```json
 {
@@ -3966,7 +3996,7 @@ Attach this policy (inline or managed) to *all users or groups*:
 }
 ```
 
-✅ *Any request made without MFA (Console or CLI) will be denied.*
+✅ _Any request made without MFA (Console or CLI) will be denied._
 
 ---
 
@@ -3997,8 +4027,8 @@ aws configservice put-config-rule \
   --source "Owner=AWS,SourceIdentifier=IAM_USER_MFA_ENABLED"
 ```
 
-* Non-compliant users appear in **Config Dashboard**.
-* You can trigger **SNS/EventBridge** → Lambda → alert or auto-disable user.
+- Non-compliant users appear in **Config Dashboard**.
+- You can trigger **SNS/EventBridge** → Lambda → alert or auto-disable user.
 
 ---
 
@@ -4049,8 +4079,8 @@ export AWS_SESSION_TOKEN=TOKENEXAMPLE
 
 ### 📋 Compliance Verification Checklist
 
-| Check                                 | Tool                       | Expected               |
-| ------------------------------------- | -------------------------- | ---------------------- |
+| Check                                 | Tool                       | Expected                |
+| ------------------------------------- | -------------------------- | ----------------------- |
 | All IAM users have MFA enabled        | Credential Report / Config | ✅ `mfa_active=TRUE`    |
 | Root account has MFA enabled          | Console                    | ✅ Enabled              |
 | IAM policy denies actions without MFA | IAM Policy                 | ✅ Active               |
@@ -4061,11 +4091,11 @@ export AWS_SESSION_TOKEN=TOKENEXAMPLE
 
 ### ✅ Best Practices
 
-* Enforce MFA for **root** and **all IAM users** immediately.
-* Prefer **AWS SSO (IAM Identity Center)** or **federation with MFA** for enterprise logins.
-* Monitor compliance via **Config Rules**, **Security Hub**, and **CloudWatch Alarms**.
-* Automate remediation: disable or notify non-MFA users.
-* Rotate all credentials periodically and remove inactive users.
+- Enforce MFA for **root** and **all IAM users** immediately.
+- Prefer **AWS SSO (IAM Identity Center)** or **federation with MFA** for enterprise logins.
+- Monitor compliance via **Config Rules**, **Security Hub**, and **CloudWatch Alarms**.
+- Automate remediation: disable or notify non-MFA users.
+- Rotate all credentials periodically and remove inactive users.
 
 ---
 
@@ -4078,6 +4108,7 @@ To satisfy audit MFA requirements:
 ✅ Ensures only **MFA-authenticated** sessions can access AWS, meeting both **security and compliance** mandates.
 
 ---
+
 ## Q: How to Allow Cross-Account Lambda Invocation (Secure Setup)
 
 ---
@@ -4097,7 +4128,7 @@ You grant the **calling account (A)** permission to invoke your **Lambda functio
 **Flow:**
 
 ```
-Account A (Caller) → Assume Role / Service → Invoke API → 
+Account A (Caller) → Assume Role / Service → Invoke API →
 Lambda Function (Account B) → Executes Function Code
 ```
 
@@ -4110,8 +4141,8 @@ Lambda Function (Account B) → Executes Function Code
 
 #### 🧩 Scenario
 
-* **Account A** → `arn:aws:iam::111111111111:user/devops-user`
-* **Account B** → Lambda `arn:aws:lambda:ap-south-1:222222222222:function:process-data`
+- **Account A** → `arn:aws:iam::111111111111:user/devops-user`
+- **Account B** → Lambda `arn:aws:lambda:ap-south-1:222222222222:function:process-data`
 
 ---
 
@@ -4140,7 +4171,7 @@ aws lambda add-permission \
     {
       "Sid": "AllowInvokeFromAccountA",
       "Effect": "Allow",
-      "Principal": {"AWS": "arn:aws:iam::111111111111:root"},
+      "Principal": { "AWS": "arn:aws:iam::111111111111:root" },
       "Action": "lambda:InvokeFunction",
       "Resource": "arn:aws:lambda:ap-south-1:222222222222:function:process-data"
     }
@@ -4186,8 +4217,8 @@ aws lambda invoke \
 
 You can narrow invocation rights using:
 
-* **source ARN** (if invoked from a specific AWS service, like EventBridge)
-* **Condition** for stricter access
+- **source ARN** (if invoked from a specific AWS service, like EventBridge)
+- **Condition** for stricter access
 
 Example (only EventBridge rule in Account A allowed):
 
@@ -4224,12 +4255,12 @@ aws lambda get-policy --function-name process-data
 
 ### ✅ Best Practices
 
-* **Use resource-based policies**, not static keys, for cross-account Lambda access.
-* Limit `Principal` to specific accounts or roles (never `*`).
-* Use **Condition** to restrict invocation source (`aws:SourceArn`).
-* Enable **CloudTrail** to track who invoked the function.
-* Avoid giving `root` principal blanket access — always scope to specific IAM roles.
-* Regularly audit Lambda resource policies via:
+- **Use resource-based policies**, not static keys, for cross-account Lambda access.
+- Limit `Principal` to specific accounts or roles (never `*`).
+- Use **Condition** to restrict invocation source (`aws:SourceArn`).
+- Enable **CloudTrail** to track who invoked the function.
+- Avoid giving `root` principal blanket access — always scope to specific IAM roles.
+- Regularly audit Lambda resource policies via:
 
   ```bash
   aws lambda get-policy --function-name <function-name> | jq .
@@ -4243,9 +4274,10 @@ To allow **cross-account Lambda invocation**:
 1️⃣ Add a **resource-based policy** on the target Lambda (Account B).
 2️⃣ Grant `lambda:InvokeFunction` in caller’s IAM (Account A).
 3️⃣ Optionally restrict using **SourceArn** or **Conditions**.
-✅ *This approach is secure, keyless, and fully auditable through IAM and CloudTrail.*
+✅ _This approach is secure, keyless, and fully auditable through IAM and CloudTrail._
 
-----
+---
+
 ## Q: Least privilege policy needed
 
 ---
@@ -4258,9 +4290,9 @@ Provide minimal, scoped IAM policies that grant **only the actions required** on
 
 ### ⚙️ Purpose / How it works
 
-* Limit blast radius: `Effective = IdentityPolicy ∩ PermissionBoundary ∩ SCP`.
-* Build policies by enumerating required actions, scoping resources (ARNs/prefixes), and adding Conditions (MFA, SourceIp, VPC, tags).
-* Test with IAM Policy Simulator and run in a limited pilot before wide deployment.
+- Limit blast radius: `Effective = IdentityPolicy ∩ PermissionBoundary ∩ SCP`.
+- Build policies by enumerating required actions, scoping resources (ARNs/prefixes), and adding Conditions (MFA, SourceIp, VPC, tags).
+- Test with IAM Policy Simulator and run in a limited pilot before wide deployment.
 
 ---
 
@@ -4270,20 +4302,20 @@ Provide minimal, scoped IAM policies that grant **only the actions required** on
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowListBucket",
-      "Effect":"Allow",
-      "Action":["s3:ListBucket"],
-      "Resource":["arn:aws:s3:::my-app-bucket"],
-      "Condition":{"StringLike":{"s3:prefix":"app-data/*"}}
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::my-app-bucket"],
+      "Condition": { "StringLike": { "s3:prefix": "app-data/*" } }
     },
     {
-      "Sid":"AllowGetObjects",
-      "Effect":"Allow",
-      "Action":["s3:GetObject"],
-      "Resource":["arn:aws:s3:::my-app-bucket/app-data/*"]
+      "Sid": "AllowGetObjects",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::my-app-bucket/app-data/*"]
     }
   ]
 }
@@ -4300,21 +4332,21 @@ aws iam attach-role-policy --role-name AppRole --policy-arn arn:aws:iam::1234567
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"DescribeEC2",
-      "Effect":"Allow",
-      "Action":["ec2:DescribeInstances","ec2:DescribeTags"],
-      "Resource":"*"
+      "Sid": "DescribeEC2",
+      "Effect": "Allow",
+      "Action": ["ec2:DescribeInstances", "ec2:DescribeTags"],
+      "Resource": "*"
     },
     {
-      "Sid":"StartStopTaggedInstances",
-      "Effect":"Allow",
-      "Action":["ec2:StartInstances","ec2:StopInstances"],
-      "Resource":"arn:aws:ec2:ap-south-1:123456789012:instance/*",
-      "Condition":{
-        "StringEquals":{"ec2:ResourceTag/Environment":"Dev"}
+      "Sid": "StartStopTaggedInstances",
+      "Effect": "Allow",
+      "Action": ["ec2:StartInstances", "ec2:StopInstances"],
+      "Resource": "arn:aws:ec2:ap-south-1:123456789012:instance/*",
+      "Condition": {
+        "StringEquals": { "ec2:ResourceTag/Environment": "Dev" }
       }
     }
   ]
@@ -4325,16 +4357,16 @@ aws iam attach-role-policy --role-name AppRole --policy-arn arn:aws:iam::1234567
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowInvokeFromSpecificRole",
-      "Effect":"Allow",
-      "Action":"lambda:InvokeFunction",
-      "Resource":"arn:aws:lambda:ap-south-1:222222222222:function:process-data",
-      "Condition":{
-        "StringEquals":{
-          "aws:PrincipalArn":"arn:aws:iam::111111111111:role/AllowedInvokerRole"
+      "Sid": "AllowInvokeFromSpecificRole",
+      "Effect": "Allow",
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:ap-south-1:222222222222:function:process-data",
+      "Condition": {
+        "StringEquals": {
+          "aws:PrincipalArn": "arn:aws:iam::111111111111:role/AllowedInvokerRole"
         }
       }
     }
@@ -4346,16 +4378,16 @@ aws iam attach-role-policy --role-name AppRole --policy-arn arn:aws:iam::1234567
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"TemplateStatement",
-      "Effect":"Allow",
-      "Action":["service:Action1","service:Action2"],
-      "Resource":["arn:aws:service:region:account:resource-type/resource-id"],
-      "Condition":{
-        "BoolIfExists":{"aws:MultiFactorAuthPresent":"true"},
-        "StringEqualsIfExists":{"aws:RequestedRegion":"ap-south-1"}
+      "Sid": "TemplateStatement",
+      "Effect": "Allow",
+      "Action": ["service:Action1", "service:Action2"],
+      "Resource": ["arn:aws:service:region:account:resource-type/resource-id"],
+      "Condition": {
+        "BoolIfExists": { "aws:MultiFactorAuthPresent": "true" },
+        "StringEqualsIfExists": { "aws:RequestedRegion": "ap-south-1" }
       }
     }
   ]
@@ -4379,22 +4411,22 @@ aws iam attach-role-policy --role-name AppRole --policy-arn arn:aws:iam::1234567
 
 ### ✅ Best Practices (practical rollout)
 
-* Start with a **deny-all mindset**: list required actions and add only those.
-* **Record required APIs** by instrumenting existing runs (CloudTrail) rather than guessing.
-* Use **resource tags** to scope actions (e.g., allow `ec2:StopInstances` only for `Environment=Dev`).
-* Combine **permission boundaries** for builders who create roles to prevent privilege escalation.
-* Use **session tags** and STS AssumeRole to carry identity context for audits.
-* Automate verification: run **Policy Simulator** and a small pilot role for 1–2 weeks.
-* Maintain a **policy versioning** process (naming convention + changelog).
-* Avoid attaching policies directly to users; prefer roles + groups.
-* Periodically run **Access Advisor** to remove unused privileges.
+- Start with a **deny-all mindset**: list required actions and add only those.
+- **Record required APIs** by instrumenting existing runs (CloudTrail) rather than guessing.
+- Use **resource tags** to scope actions (e.g., allow `ec2:StopInstances` only for `Environment=Dev`).
+- Combine **permission boundaries** for builders who create roles to prevent privilege escalation.
+- Use **session tags** and STS AssumeRole to carry identity context for audits.
+- Automate verification: run **Policy Simulator** and a small pilot role for 1–2 weeks.
+- Maintain a **policy versioning** process (naming convention + changelog).
+- Avoid attaching policies directly to users; prefer roles + groups.
+- Periodically run **Access Advisor** to remove unused privileges.
 
 ---
 
 ### ⚠️ How to test quickly
 
-* IAM Policy Simulator (Console) — simulate principal + action + resource.
-* `aws iam simulate-principal-policy` (CLI):
+- IAM Policy Simulator (Console) — simulate principal + action + resource.
+- `aws iam simulate-principal-policy` (CLI):
 
 ```bash
 aws iam simulate-principal-policy \
@@ -4403,7 +4435,7 @@ aws iam simulate-principal-policy \
   --resource-arns arn:aws:s3:::my-app-bucket arn:aws:s3:::my-app-bucket/app-data/file.txt
 ```
 
-* Search CloudTrail for expensive/wide actions to validate necessity:
+- Search CloudTrail for expensive/wide actions to validate necessity:
 
 ```bash
 aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=DeleteBucket
@@ -4415,7 +4447,8 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 Define least-privilege policies by enumerating exact actions, scoping resources tightly (ARNs/tags), and adding conditions (MFA, IP, region). Test with the IAM Policy Simulator and pilot roles, then monitor with CloudTrail/Access Analyzer — iterate to minimize privileges continuously.
 
-----
+---
+
 ## Q: Need to restrict IAM access by IP
 
 ---
@@ -4428,14 +4461,15 @@ Restricting IAM access by IP means adding **conditions** (e.g., `aws:SourceIp`) 
 
 ### ⚙️ Purpose / How it works
 
-* Use **IAM policy conditions** to allow or **explicitly deny** requests not coming from specified IP CIDRs.
-* Apply at multiple layers for defense-in-depth:
+- Use **IAM policy conditions** to allow or **explicitly deny** requests not coming from specified IP CIDRs.
+- Apply at multiple layers for defense-in-depth:
 
-  * **Identity-based policies** (users/roles) — block API calls from unknown IPs.
-  * **Resource-based policies** (S3, KMS, etc.) — limit resource access by source IP or VPC endpoint.
-  * **SCPs** (AWS Organizations) — org-level guardrails.
-  * **VPC Endpoints** — keep traffic internal and combine with `aws:SourceVpce`.
-* Policy evaluation: explicit Deny (e.g., NotIpAddress) will always override Allows.
+  - **Identity-based policies** (users/roles) — block API calls from unknown IPs.
+  - **Resource-based policies** (S3, KMS, etc.) — limit resource access by source IP or VPC endpoint.
+  - **SCPs** (AWS Organizations) — org-level guardrails.
+  - **VPC Endpoints** — keep traffic internal and combine with `aws:SourceVpce`.
+
+- Policy evaluation: explicit Deny (e.g., NotIpAddress) will always override Allows.
 
 ---
 
@@ -4456,10 +4490,7 @@ Use `NotIpAddress` to **deny** requests not from allowed CIDRs (safer than Allow
       "Resource": "*",
       "Condition": {
         "NotIpAddress": {
-          "aws:SourceIp": [
-            "203.0.113.0/24",
-            "198.51.100.10/32"
-          ]
+          "aws:SourceIp": ["203.0.113.0/24", "198.51.100.10/32"]
         }
       }
     }
@@ -4485,13 +4516,13 @@ aws iam attach-user-policy --user-name devops-user --policy-arn arn:aws:iam::123
     {
       "Sid": "DenyConsoleUnlessFromCorpAndMFA",
       "Effect": "Deny",
-      "Action": "aws-portal:ViewBilling",            /* example; use "*" for full block */
+      "Action": "aws-portal:ViewBilling" /* example; use "*" for full block */,
       "Resource": "*",
       "Condition": {
         "ForAnyValue:StringNotEquals": {
           "aws:SourceIp": ["203.0.113.0/24"]
         },
-        "Bool": {"aws:MultiFactorAuthPresent":"false"}
+        "Bool": { "aws:MultiFactorAuthPresent": "false" }
       }
     }
   ]
@@ -4506,16 +4537,16 @@ aws iam attach-user-policy --user-name devops-user --policy-arn arn:aws:iam::123
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowGetFromVpcEndpoint",
-      "Effect":"Allow",
-      "Principal":"*",
-      "Action":"s3:GetObject",
-      "Resource":"arn:aws:s3:::my-bucket/*",
-      "Condition":{
-        "StringEquals": {"aws:SourceVpce":"vpce-0abc1234def567890"}
+      "Sid": "AllowGetFromVpcEndpoint",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-bucket/*",
+      "Condition": {
+        "StringEquals": { "aws:SourceVpce": "vpce-0abc1234def567890" }
       }
     }
   ]
@@ -4536,7 +4567,7 @@ aws iam attach-user-policy --user-name devops-user --policy-arn arn:aws:iam::123
       "Action": "*",
       "Resource": "*",
       "Condition": {
-        "NotIpAddress": {"aws:SourceIp": ["203.0.113.0/24"]}
+        "NotIpAddress": { "aws:SourceIp": ["203.0.113.0/24"] }
       }
     }
   ]
@@ -4572,14 +4603,14 @@ aws iam simulate-principal-policy \
 
 ### ✅ Best Practices
 
-* **Roll out gradually**: start with a deny-policy in `Test` group/role to validate.
-* Prefer **explicit Deny with NotIpAddress** (safer for rollbacks).
-* Combine **IP restrictions + MFA + permission boundaries** for strong defense.
-* Use **VPC endpoints** and `aws:SourceVpce` for service access to S3/Secrets Manager.
-* **Exclude admin break-glass** account/role (protected by separate allow list) and keep recovery process documented.
-* Monitor and alert with **CloudTrail** / CloudWatch when denied requests spike.
-* Use **IAM Policy Simulator** and automated tests before applying at scale.
-* For mobile/federated users, prefer **federation + conditional checks** (e.g., require SSO that enforces IP rules).
+- **Roll out gradually**: start with a deny-policy in `Test` group/role to validate.
+- Prefer **explicit Deny with NotIpAddress** (safer for rollbacks).
+- Combine **IP restrictions + MFA + permission boundaries** for strong defense.
+- Use **VPC endpoints** and `aws:SourceVpce` for service access to S3/Secrets Manager.
+- **Exclude admin break-glass** account/role (protected by separate allow list) and keep recovery process documented.
+- Monitor and alert with **CloudTrail** / CloudWatch when denied requests spike.
+- Use **IAM Policy Simulator** and automated tests before applying at scale.
+- For mobile/federated users, prefer **federation + conditional checks** (e.g., require SSO that enforces IP rules).
 
 ---
 
@@ -4588,6 +4619,7 @@ aws iam simulate-principal-policy \
 Restrict IAM access by IP via policy **conditions** (`aws:SourceIp`, `aws:SourceVpce`) applied as identity policies, resource policies, or SCPs. Prefer **explicit Deny (NotIpAddress)**, test in a pilot, combine with MFA and VPC endpoints, and monitor CloudTrail for denied attempts.
 
 ---
+
 ## Q: Developer created too many access keys — how to remediate & prevent
 
 ---
@@ -4600,10 +4632,10 @@ When a user has multiple active access keys it increases risk (leakage, orphaned
 
 ### ⚙️ Purpose / How it works
 
-* **Contain**: remove unnecessary keys so only tracked, rotated keys remain.
-* **Audit**: use CloudTrail + Credential Report to find usage and implicated systems.
-* **Harden**: restrict who can create keys and automate detection (Config/EventBridge/Lambda).
-* **Migrate**: prefer roles/STS for apps (no long-term keys).
+- **Contain**: remove unnecessary keys so only tracked, rotated keys remain.
+- **Audit**: use CloudTrail + Credential Report to find usage and implicated systems.
+- **Harden**: restrict who can create keys and automate detection (Config/EventBridge/Lambda).
+- **Migrate**: prefer roles/STS for apps (no long-term keys).
 
 ---
 
@@ -4663,16 +4695,16 @@ Tag approved users with `CanCreateAccessKey=true` and attach this policy **to ev
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"DenyCreateAccessKeyUnlessTagged",
-      "Effect":"Deny",
-      "Action":"iam:CreateAccessKey",
-      "Resource":"arn:aws:iam::*:user/*",
-      "Condition":{
-        "StringNotEquals":{
-          "aws:PrincipalTag/CanCreateAccessKey":"true"
+      "Sid": "DenyCreateAccessKeyUnlessTagged",
+      "Effect": "Deny",
+      "Action": "iam:CreateAccessKey",
+      "Resource": "arn:aws:iam::*:user/*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:PrincipalTag/CanCreateAccessKey": "true"
         }
       }
     }
@@ -4680,8 +4712,8 @@ Tag approved users with `CanCreateAccessKey=true` and attach this policy **to ev
 }
 ```
 
-* Admins tag specific users or a service account when keys are legitimately required.
-* This prevents uncontrolled key creation while allowing exceptions.
+- Admins tag specific users or a service account when keys are legitimately required.
+- This prevents uncontrolled key creation while allowing exceptions.
 
 #### B) Prevent creation via SCP (org-wide) — optional high-impact guard
 
@@ -4689,23 +4721,24 @@ Use an SCP to block `iam:CreateAccessKey` in child accounts (test first).
 
 #### C) Auto-detect & remediate with CloudWatch/EventBridge + Lambda
 
-* EventBridge rule: scheduled (daily) or on `CreateAccessKey` CloudTrail event → Lambda that:
+- EventBridge rule: scheduled (daily) or on `CreateAccessKey` CloudTrail event → Lambda that:
 
-  * counts active keys for the user,
-  * notifies Slack/SNS if >1, optionally **deactivates** oldest key after approval.
-* Use AWS Config custom rule that checks `credential-report` for active key count and flags noncompliance.
+  - counts active keys for the user,
+  - notifies Slack/SNS if >1, optionally **deactivates** oldest key after approval.
+
+- Use AWS Config custom rule that checks `credential-report` for active key count and flags noncompliance.
 
 ---
 
 ### ✅ Best Practices (practical, production-ready)
 
-* **Prefer IAM Roles & STS** for services (EC2, Lambda, CI/CD) — eliminate long-term keys.
-* Enforce **max 1 active key** per user in process/policy, but AWS allows up to 2 (use the other only for rotation).
-* **Rotate** keys via automation (store secrets in Secrets Manager; update apps automatically).
-* Use **Credential Reports** and **Access Advisor** regularly; schedule weekly checks.
-* **Log & monitor** access-key usage with CloudTrail; alert on unusual sources or spikes.
-* Keep an **“emergency admin”** procedure: break-glass role not key-based.
-* Securely store new secrets (Secrets Manager/Parameter Store with encryption) and avoid plaintext exports.
+- **Prefer IAM Roles & STS** for services (EC2, Lambda, CI/CD) — eliminate long-term keys.
+- Enforce **max 1 active key** per user in process/policy, but AWS allows up to 2 (use the other only for rotation).
+- **Rotate** keys via automation (store secrets in Secrets Manager; update apps automatically).
+- Use **Credential Reports** and **Access Advisor** regularly; schedule weekly checks.
+- **Log & monitor** access-key usage with CloudTrail; alert on unusual sources or spikes.
+- Keep an **“emergency admin”** procedure: break-glass role not key-based.
+- Securely store new secrets (Secrets Manager/Parameter Store with encryption) and avoid plaintext exports.
 
 ---
 
@@ -4724,20 +4757,20 @@ for user in $(awk -F, 'NR>1{print $1}' credential-report.csv); do
 done
 ```
 
-*(Deploy as Lambda with proper IAM permissions + approval flow.)*
+_(Deploy as Lambda with proper IAM permissions + approval flow.)_
 
 ---
 
 ### 📋 Quick checklist (incident → long-term)
 
-* [ ] Inventory all active keys (credential report).
-* [ ] Identify keys created recently / unused / suspicious (CloudTrail).
-* [ ] Deactivate extra keys; test systems that break.
-* [ ] Delete deactivated, unnecessary keys.
-* [ ] Rotate required keys and store in Secrets Manager.
-* [ ] Attach a deny-policy (or tag-based allow) to prevent uncontrolled creation.
-* [ ] Automate detection (EventBridge + Lambda / AWS Config).
-* [ ] Educate developers: use roles/AssumeRole, not long-term keys.
+- [ ] Inventory all active keys (credential report).
+- [ ] Identify keys created recently / unused / suspicious (CloudTrail).
+- [ ] Deactivate extra keys; test systems that break.
+- [ ] Delete deactivated, unnecessary keys.
+- [ ] Rotate required keys and store in Secrets Manager.
+- [ ] Attach a deny-policy (or tag-based allow) to prevent uncontrolled creation.
+- [ ] Automate detection (EventBridge + Lambda / AWS Config).
+- [ ] Educate developers: use roles/AssumeRole, not long-term keys.
 
 ---
 
@@ -4745,7 +4778,8 @@ done
 
 Immediately **list → deactivate → delete** excess keys, audit usage via CloudTrail/credential reports, rotate required keys into secure storage, and prevent recurrence with a tag-based deny policy plus automated detection (EventBridge/Lambda or AWS Config). Prefer **roles/STS** over long-term keys.
 
-----
+---
+
 ## Q: Org-wide restriction on EC2 creation
 
 ---
@@ -4758,10 +4792,10 @@ You can **prevent EC2 instance creation across an AWS Organization** by applying
 
 ### ⚙️ Purpose / How it works
 
-* **SCP** placed on an OU/account enforces a deny for EC2 launch APIs (`ec2:RunInstances`, `ec2:RunInstancesWithLaunchTemplate`, etc.).
-* Evaluation: `Effective = IAM Policy Allow ∩ SCP Allow`. If SCP denies an action, it’s denied regardless of local IAM.
-* Use **conditions** to allow exceptions (e.g., allow launches from a specific role, or only with required tags, or only in approved regions).
-* Recommended rollout: **test in a sandbox OU → narrow production OU → org-wide**. Don’t lock out management account admin tasks.
+- **SCP** placed on an OU/account enforces a deny for EC2 launch APIs (`ec2:RunInstances`, `ec2:RunInstancesWithLaunchTemplate`, etc.).
+- Evaluation: `Effective = IAM Policy Allow ∩ SCP Allow`. If SCP denies an action, it’s denied regardless of local IAM.
+- Use **conditions** to allow exceptions (e.g., allow launches from a specific role, or only with required tags, or only in approved regions).
+- Recommended rollout: **test in a sandbox OU → narrow production OU → org-wide**. Don’t lock out management account admin tasks.
 
 ---
 
@@ -4826,7 +4860,7 @@ aws organizations attach-policy \
 }
 ```
 
-* Attach the `Org-EC2-Admin-Role` only to the accounts/roles you trust as break-glass.
+- Attach the `Org-EC2-Admin-Role` only to the accounts/roles you trust as break-glass.
 
 ---
 
@@ -4849,7 +4883,7 @@ aws organizations attach-policy \
 }
 ```
 
-* This denies launches that **do not** provide `CostCenter` tag on creation; combine with tagging enforcement and automation.
+- This denies launches that **do not** provide `CostCenter` tag on creation; combine with tagging enforcement and automation.
 
 ---
 
@@ -4865,7 +4899,9 @@ aws organizations attach-policy \
       "Action": "ec2:RunInstances",
       "Resource": "*",
       "Condition": {
-        "StringNotEquals": { "aws:RequestedRegion": ["ap-south-1","us-east-1"] }
+        "StringNotEquals": {
+          "aws:RequestedRegion": ["ap-south-1", "us-east-1"]
+        }
       }
     }
   ]
@@ -4888,21 +4924,21 @@ aws organizations attach-policy \
 
 ### ✅ Best Practices
 
-* **Test before org-wide**: deploy the SCP to a sandbox OU first and validate.
-* **Cover all launch APIs**: block `ec2:RunInstances`, `CreateFleet`, `RunInstancesWithLaunchTemplate`, and any service used to launch instances (CloudFormation, Autoscaling `CreateAutoScalingGroup` may also create instances).
-* **Use least-privilege exceptions**: prefer `Condition`-based exceptions (specific role or required request tags) over `Principal: "*"`.
-* **Keep a documented break-glass process**: use a tightly-scoped role (PrincipalArn) that can bypass the deny; audit its use via CloudTrail.
-* **Combine controls**: SCP + permission boundaries + IAM policies + CloudFormation Guardrails (e.g., deny in CFN) + AWS Config rules.
-* **Monitor**: alert on `CreateFleet`/`RunInstances` CloudTrail events to detect attempts.
-* **Avoid locking management account**: don’t attach restrictive SCPs to the management account; test removal steps beforehand.
+- **Test before org-wide**: deploy the SCP to a sandbox OU first and validate.
+- **Cover all launch APIs**: block `ec2:RunInstances`, `CreateFleet`, `RunInstancesWithLaunchTemplate`, and any service used to launch instances (CloudFormation, Autoscaling `CreateAutoScalingGroup` may also create instances).
+- **Use least-privilege exceptions**: prefer `Condition`-based exceptions (specific role or required request tags) over `Principal: "*"`.
+- **Keep a documented break-glass process**: use a tightly-scoped role (PrincipalArn) that can bypass the deny; audit its use via CloudTrail.
+- **Combine controls**: SCP + permission boundaries + IAM policies + CloudFormation Guardrails (e.g., deny in CFN) + AWS Config rules.
+- **Monitor**: alert on `CreateFleet`/`RunInstances` CloudTrail events to detect attempts.
+- **Avoid locking management account**: don’t attach restrictive SCPs to the management account; test removal steps beforehand.
 
 ---
 
 ### ⚠️ Caveats & gotchas
 
-* SCPs **only restrict** — they don’t grant access. Make sure necessary automation (e.g., patching or approved autoscaling) has exceptions.
-* SCPs apply to all principals in the target accounts (including root) — a too-tight SCP can break automation or admin tasks. Always have a rollback plan.
-* When using `aws:RequestTag` conditions, callers **must supply the tag** on the API request (e.g., `--tag-specifications` for `run-instances` or CloudFormation template tags).
+- SCPs **only restrict** — they don’t grant access. Make sure necessary automation (e.g., patching or approved autoscaling) has exceptions.
+- SCPs apply to all principals in the target accounts (including root) — a too-tight SCP can break automation or admin tasks. Always have a rollback plan.
+- When using `aws:RequestTag` conditions, callers **must supply the tag** on the API request (e.g., `--tag-specifications` for `run-instances` or CloudFormation template tags).
 
 ---
 
@@ -4929,8 +4965,9 @@ This ensures **keyless, auditable, and auto-expiring** access with minimal blast
 
 1. You (Account A) create a **dedicated IAM role** with:
 
-   * **Trust policy** that allows the third-party AWS account (Account B) or their external ID.
-   * **Permission policy** scoped to required actions (e.g., S3 read, CloudWatch metrics, etc.).
+   - **Trust policy** that allows the third-party AWS account (Account B) or their external ID.
+   - **Permission policy** scoped to required actions (e.g., S3 read, CloudWatch metrics, etc.).
+
 2. The third-party assumes the role using **STS:AssumeRole**.
 3. AWS issues **temporary credentials** (valid for up to 1 hour, extendable to 12 with session duration).
 4. You monitor, log, and revoke access instantly by removing the trust.
@@ -4990,10 +5027,7 @@ aws iam put-role-policy \
       "Sid": "ReadSpecificBucketOnly",
       "Effect": "Allow",
       "Action": ["s3:ListBucket", "s3:GetObject"],
-      "Resource": [
-        "arn:aws:s3:::project-logs",
-        "arn:aws:s3:::project-logs/*"
-      ]
+      "Resource": ["arn:aws:s3:::project-logs", "arn:aws:s3:::project-logs/*"]
     }
   ]
 }
@@ -5031,13 +5065,14 @@ Response:
 
 #### 🧩 Step 4 — Monitor and Revoke
 
-* **Revoke:** `aws iam delete-role-policy` or modify the trust to remove vendor principal.
-* **Audit:**
+- **Revoke:** `aws iam delete-role-policy` or modify the trust to remove vendor principal.
+- **Audit:**
 
   ```bash
   aws cloudtrail lookup-events --lookup-attributes AttributeKey=Username,AttributeValue=ThirdPartyReadOnlyRole
   ```
-* **Set max duration:**
+
+- **Set max duration:**
 
   ```bash
   aws iam update-role --role-name ThirdPartyReadOnlyRole --max-session-duration 3600
@@ -5049,13 +5084,14 @@ Response:
 
 If vendor doesn’t have an AWS account but needs CLI/console access:
 
-* Use **`sts:GetFederationToken`** or **AWS Identity Center** (temporary console login).
-* Example (1-hour federated console access for external script):
+- Use **`sts:GetFederationToken`** or **AWS Identity Center** (temporary console login).
+- Example (1-hour federated console access for external script):
 
   ```bash
   aws sts get-federation-token --name vendor-user --policy file://permissions.json --duration-seconds 3600
   ```
-* Share the **federated sign-in URL** with the vendor — no IAM user needed.
+
+- Share the **federated sign-in URL** with the vendor — no IAM user needed.
 
 ---
 
@@ -5074,13 +5110,13 @@ If vendor doesn’t have an AWS account but needs CLI/console access:
 
 ### ✅ Best Practices
 
-* Create **dedicated vendor roles per third party** — don’t reuse.
-* Scope policies tightly (resources + actions).
-* Always use **`sts:ExternalId`** for vendor-initiated AssumeRole.
-* Set **short session duration** (≤ 1 hour, renew if needed).
-* Enable **CloudTrail, GuardDuty, Access Analyzer** to monitor cross-account access.
-* Rotate or delete vendor roles once engagement ends.
-* Use **IAM Access Analyzer** to verify roles aren’t over-permissive or public.
+- Create **dedicated vendor roles per third party** — don’t reuse.
+- Scope policies tightly (resources + actions).
+- Always use **`sts:ExternalId`** for vendor-initiated AssumeRole.
+- Set **short session duration** (≤ 1 hour, renew if needed).
+- Enable **CloudTrail, GuardDuty, Access Analyzer** to monitor cross-account access.
+- Rotate or delete vendor roles once engagement ends.
+- Use **IAM Access Analyzer** to verify roles aren’t over-permissive or public.
 
 ---
 
@@ -5089,7 +5125,8 @@ If vendor doesn’t have an AWS account but needs CLI/console access:
 Use **STS-based cross-account roles** with a **trust policy + ExternalId** to give third-party vendors **temporary, scoped, auditable access**.
 ✅ No static keys, minimal permissions, and revocable instantly — aligning with least-privilege and compliance best practices.
 
-----
+---
+
 ## Q: IAM Architecture Overview
 
 ---
@@ -5107,9 +5144,9 @@ IAM is global, secure, and highly granular — forming the foundation for **leas
 
 IAM provides:
 
-* **Authentication** → Verifies *who* the entity is (User, Role, Federated Identity).
-* **Authorization** → Determines *what* that entity can do (via policies).
-* **Auditing** → Tracks *what happened* (via CloudTrail, IAM Access Analyzer, Config).
+- **Authentication** → Verifies _who_ the entity is (User, Role, Federated Identity).
+- **Authorization** → Determines _what_ that entity can do (via policies).
+- **Auditing** → Tracks _what happened_ (via CloudTrail, IAM Access Analyzer, Config).
 
 All access decisions are based on **policy evaluation logic** combining:
 
@@ -5129,7 +5166,7 @@ Explicit Deny > Allow > Implicit Deny
 | **Policies**                        | JSON documents defining permissions (Allow/Deny)                                   | `AmazonS3ReadOnlyAccess`          |
 | **Permission Boundaries**           | Max permission limit for a user/role                                               | Restrict devs to non-prod actions |
 | **Resource-Based Policies**         | Attached directly to AWS resources (e.g., S3, Lambda)                              | Allow cross-account S3 access     |
-| **Trust Policies**                  | Define *who can assume* a role                                                     | `Principal: ec2.amazonaws.com`    |
+| **Trust Policies**                  | Define _who can assume_ a role                                                     | `Principal: ec2.amazonaws.com`    |
 | **Identity Providers (Federation)** | External identity systems (SAML, OIDC, Cognito)                                    | Okta, Azure AD                    |
 | **Access Analyzer**                 | Detects unintended public or cross-account access                                  | `Public S3 bucket alert`          |
 
@@ -5176,12 +5213,12 @@ Explicit Deny > Allow > Implicit Deny
 
 | Step | Evaluation Component         | Description                                              |
 | ---- | ---------------------------- | -------------------------------------------------------- |
-| 1️⃣  | Resource-based policy        | Check if resource explicitly allows or denies the action |
-| 2️⃣  | SCP (Service Control Policy) | Check if org-level policy permits the action             |
-| 3️⃣  | Permission boundary          | Check if within allowed scope                            |
-| 4️⃣  | Identity-based policy        | Check user/group/role policies                           |
-| 5️⃣  | Session policies             | Temporary session limits (STS/AssumeRole)                |
-| 6️⃣  | Final Decision               | Allow only if at least one Allow and no explicit Deny    |
+| 1️⃣   | Resource-based policy        | Check if resource explicitly allows or denies the action |
+| 2️⃣   | SCP (Service Control Policy) | Check if org-level policy permits the action             |
+| 3️⃣   | Permission boundary          | Check if within allowed scope                            |
+| 4️⃣   | Identity-based policy        | Check user/group/role policies                           |
+| 5️⃣   | Session policies             | Temporary session limits (STS/AssumeRole)                |
+| 6️⃣   | Final Decision               | Allow only if at least one Allow and no explicit Deny    |
 
 ---
 
@@ -5214,12 +5251,12 @@ Explicit Deny > Allow > Implicit Deny
 
 ### ✅ Best Practices in Production
 
-* **Disable root access keys** (use only for billing if needed).
-* **Use IAM roles for EC2, ECS, Lambda** instead of embedding keys.
-* **Set IAM Access Analyzer + AWS Config rules** to detect misconfigurations.
-* **Rotate access keys every ≤ 90 days** if absolutely needed.
-* **Use session tagging & CloudTrail logs** for identity traceability.
-* **Restrict high-privilege roles by IP, MFA, and approval workflows.**
+- **Disable root access keys** (use only for billing if needed).
+- **Use IAM roles for EC2, ECS, Lambda** instead of embedding keys.
+- **Set IAM Access Analyzer + AWS Config rules** to detect misconfigurations.
+- **Rotate access keys every ≤ 90 days** if absolutely needed.
+- **Use session tagging & CloudTrail logs** for identity traceability.
+- **Restrict high-privilege roles by IP, MFA, and approval workflows.**
 
 ---
 
@@ -5227,19 +5264,20 @@ Explicit Deny > Allow > Implicit Deny
 
 AWS IAM is the **central identity and access layer** of AWS — controlling authentication, authorization, and auditing across all services.
 ✅ Use **roles (not users)** for workloads, **policies** for least privilege, and **SCPs + federation** for org-wide governance.
-IAM = *“Who can do what, where, and when”* — the backbone of AWS security architecture.
+IAM = _“Who can do what, where, and when”_ — the backbone of AWS security architecture.
 
------
+---
+
 ## 🧭 IAM Best Practices Overview
 
 | **Category**                | **Recommendation**                                                                                                                                                                            |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🧑‍💼 **Root Account**      | 🔒 Disable root access keys immediately, enable MFA, and never use the root account for daily operations. Use it **only for billing or account recovery**.                                    |
+| 🧑‍💼 **Root Account**         | 🔒 Disable root access keys immediately, enable MFA, and never use the root account for daily operations. Use it **only for billing or account recovery**.                                    |
 | 👥 **Users**                | 🚫 Avoid long-term IAM users. Prefer **IAM roles** or **SSO/federation (SAML/OIDC)** for human and application access.                                                                        |
 | 🔑 **Access Keys**          | 🔄 Rotate access keys **every 90 days** (or less). Store securely in **AWS Secrets Manager** or **Parameter Store**, not in code or config files.                                             |
 | 📜 **Policies**             | 🧩 Implement **least privilege** — grant only required actions on specific resources. Avoid `"Action": "*"` and `"Resource": "*"`. Use **permission boundaries** and **SCPs** for governance. |
 | 🧾 **Auditing**             | 👀 Enable **AWS CloudTrail**, **Access Analyzer**, and **AWS Config** across all accounts for visibility, logging, and compliance monitoring. Send logs to a **centralized logging account**. |
-| 🛡️ **Security**            | ✅ Enforce **MFA** for all IAM users, secure sensitive API calls with **AWS KMS**, and restrict actions via **IP-based or VPC-based** conditions (`aws:SourceIp`, `aws:SourceVpce`).           |
+| 🛡️ **Security**             | ✅ Enforce **MFA** for all IAM users, secure sensitive API calls with **AWS KMS**, and restrict actions via **IP-based or VPC-based** conditions (`aws:SourceIp`, `aws:SourceVpce`).          |
 | ⚙️ **Automation**           | 🧱 Use **Terraform**, **AWS CDK**, or **CloudFormation** to automate IAM resource creation, enforce naming conventions, and maintain version control for policies and roles.                  |
 | 🔁 **Cross-Account Access** | 🔐 Use **STS AssumeRole** for temporary access instead of sharing access keys. Add **ExternalId** in trust policies to prevent confused-deputy attacks.                                       |
 

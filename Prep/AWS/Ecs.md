@@ -1,9 +1,6 @@
-
-# ECS(Elastic Container Service) 
+# ECS(Elastic Container Service)
 
 ## Q: What is **Amazon ECS (Elastic Container Service)?**
-
----
 
 ### 🧠 Overview
 
@@ -16,23 +13,17 @@ ECS manages **cluster scheduling, scaling, networking, IAM, and service discover
 
 ### ⚙️ Purpose / How It Works
 
-* You define **Tasks** (container definitions) and **Services** (long-running apps).
-* ECS **scheduler** places containers (tasks) on EC2 instances or runs them on **Fargate** (no servers).
-* ECS integrates with **ALB/NLB**, **ECR** (image storage), **CloudWatch** (logs/metrics), and **IAM** for access control.
-* Supports two launch types:
+- You define **Tasks** (container definitions) and **Services** (long-running apps).
+- ECS **scheduler** places containers (tasks) on EC2 instances or runs them on **Fargate** (no servers).
+- ECS integrates with **ALB/NLB**, **ECR** (image storage), **CloudWatch** (logs/metrics), and **IAM** for access control.
+- Supports two launch types:
 
-  * **EC2 launch type** → run containers on your EC2 cluster.
-  * **Fargate launch type** → AWS runs containers serverlessly.
+  - **EC2 launch type** → run containers on your EC2 cluster.
+  - **Fargate launch type** → AWS runs containers serverlessly.
 
 ---
+
 ## 🧩 **Amazon ECS Architecture Overview** 🏗️🐳
-
----
-
-### 🧠 **Overview**
-
-**Amazon Elastic Container Service (ECS)** is a **fully managed container orchestration platform** that runs Docker containers on **AWS Fargate (serverless)** or **EC2 instances**.
-It automates container scheduling, scaling, networking, and integration with other AWS services (ECR, ALB, IAM, CloudWatch, etc.).
 
 > 🧩 **Think of ECS as:**
 > “A control plane that schedules and manages your containers on AWS infrastructure — securely, automatically, and at scale.”
@@ -114,9 +105,9 @@ It automates container scheduling, scaling, networking, and integration with oth
 
 💡 **Best Practice:**
 
-* Run tasks in **private subnets**.
-* Use **ALB** in public subnets for inbound HTTP/HTTPS traffic.
-* Restrict DB ports via SGs.
+- Run tasks in **private subnets**.
+- Use **ALB** in public subnets for inbound HTTP/HTTPS traffic.
+- Restrict DB ports via SGs.
 
 ---
 
@@ -201,15 +192,15 @@ Code Commit → Build (Docker) → Push (ECR) → Deploy (ECS Service) → Monit
 
 ### ✅ **Best Practices**
 
-* Use **Fargate** for serverless isolation unless EC2 optimization is needed.
-* Keep **task definitions versioned** and stored in Git.
-* Run tasks in **private subnets**; use **VPC endpoints** for AWS APIs.
-* Enable **Container Insights** for observability.
-* Store credentials in **Secrets Manager**, not env vars.
-* Implement **Auto Scaling** with CPU/memory metrics.
-* Use **Blue/Green deployments** for zero downtime.
-* Restrict IAM permissions — separate **execution** and **task** roles.
-* Enable **ECR scanning** and **CloudTrail** for audit.
+- Use **Fargate** for serverless isolation unless EC2 optimization is needed.
+- Keep **task definitions versioned** and stored in Git.
+- Run tasks in **private subnets**; use **VPC endpoints** for AWS APIs.
+- Enable **Container Insights** for observability.
+- Store credentials in **Secrets Manager**, not env vars.
+- Implement **Auto Scaling** with CPU/memory metrics.
+- Use **Blue/Green deployments** for zero downtime.
+- Restrict IAM permissions — separate **execution** and **task** roles.
+- Enable **ECR scanning** and **CloudTrail** for audit.
 
 ---
 
@@ -217,20 +208,19 @@ Code Commit → Build (Docker) → Push (ECR) → Deploy (ECS Service) → Monit
 
 ECS = AWS-native container orchestration platform that manages **containers → services → scaling → networking**.
 
-* Control Plane: **Schedules & orchestrates tasks**
-* Data Plane: **Fargate / EC2 runs containers**
-* Integration Plane: **ALB, IAM, CloudWatch, ECR handle access, visibility, and security**
+- Control Plane: **Schedules & orchestrates tasks**
+- Data Plane: **Fargate / EC2 runs containers**
+- Integration Plane: **ALB, IAM, CloudWatch, ECR handle access, visibility, and security**
 
 ✅ **Result:**
 A **scalable, secure, and fully managed** container environment — perfect for production-grade microservices on AWS.
-
 
 ---
 
 ### 🧩 Example — Basic ECS Workflow
 
-| Step                             | Action                                                        | Example                                                                                |
-| -------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Step                            | Action                                                        | Example                                                                                |
+| ------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | **1️⃣ Create cluster**           | Logical group of compute (EC2/Fargate).                       | `aws ecs create-cluster --cluster-name demo-cluster`                                   |
 | **2️⃣ Register task definition** | Define container image, CPU, memory, ports, and env vars.     | JSON task definition with Docker image + resource limits.                              |
 | **3️⃣ Create service**           | Run and maintain desired number of task copies.               | `aws ecs create-service --service-name web --task-definition mytask --desired-count 3` |
@@ -253,9 +243,7 @@ A **scalable, secure, and fully managed** container environment — perfect for 
     {
       "name": "nginx",
       "image": "nginx:latest",
-      "portMappings": [
-        { "containerPort": 80, "protocol": "tcp" }
-      ],
+      "portMappings": [{ "containerPort": 80, "protocol": "tcp" }],
       "essential": true
     }
   ]
@@ -298,7 +286,7 @@ aws ecs create-service \
 
 | Feature               | **ECS**               | **EKS**                         | **Docker Swarm**         |
 | --------------------- | --------------------- | ------------------------------- | ------------------------ |
-| Managed Control Plane | ✅ Fully managed       | ✅ Fully managed (by AWS)        | ❌ Self-managed           |
+| Managed Control Plane | ✅ Fully managed      | ✅ Fully managed (by AWS)       | ❌ Self-managed          |
 | API Compatibility     | AWS-native            | CNCF Kubernetes API             | Docker CLI               |
 | Complexity            | Low                   | Medium-High                     | Low                      |
 | Ecosystem Integration | Tight AWS integration | Broader ecosystem (multi-cloud) | Simple local deployments |
@@ -309,16 +297,16 @@ aws ecs create-service \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **Fargate** to eliminate node management.
-* Store images in **Amazon ECR** with lifecycle policies.
-* Enable **CloudWatch Logs** in task definition (`awslogs` driver).
-* Configure **ECS Service Auto Scaling** for CPU/memory-based scaling.
-* Use **Application Load Balancer (ALB)** with `awsvpc` mode for dynamic IP registration.
-* Use **IAM Task Roles** for least-privilege container permissions.
-* Encrypt environment variables & secrets using **AWS Secrets Manager**.
-* Enable **Container Insights** for metrics and tracing.
-* Define **Capacity Providers** to mix EC2 + Fargate workloads.
-* Use **ECS Exec** for secure shell access:
+- Use **Fargate** to eliminate node management.
+- Store images in **Amazon ECR** with lifecycle policies.
+- Enable **CloudWatch Logs** in task definition (`awslogs` driver).
+- Configure **ECS Service Auto Scaling** for CPU/memory-based scaling.
+- Use **Application Load Balancer (ALB)** with `awsvpc` mode for dynamic IP registration.
+- Use **IAM Task Roles** for least-privilege container permissions.
+- Encrypt environment variables & secrets using **AWS Secrets Manager**.
+- Enable **Container Insights** for metrics and tracing.
+- Define **Capacity Providers** to mix EC2 + Fargate workloads.
+- Use **ECS Exec** for secure shell access:
 
   ```bash
   aws ecs execute-command --cluster demo-cluster --task <task-id> --container nginx --interactive --command "/bin/sh"
@@ -343,11 +331,13 @@ aws ecs create-service \
 
 ### 💡 In short
 
-* **ECS** is AWS’s **native container orchestration** — simpler than Kubernetes, deeply integrated with AWS.
-* Runs containers on **EC2 or Fargate**, managed via **Tasks**, **Services**, and **Clusters**.
-* Integrates seamlessly with **ECR, ALB, IAM, CloudWatch**, and **Secrets Manager**.
-* Ideal for teams focused on AWS ecosystem and want **less operational overhead** than EKS.
+- **ECS** is AWS’s **native container orchestration** — simpler than Kubernetes, deeply integrated with AWS.
+- Runs containers on **EC2 or Fargate**, managed via **Tasks**, **Services**, and **Clusters**.
+- Integrates seamlessly with **ECR, ALB, IAM, CloudWatch**, and **Secrets Manager**.
+- Ideal for teams focused on AWS ecosystem and want **less operational overhead** than EKS.
+
 ---
+
 ## Q: What’s the Difference Between **Amazon ECS** and **Amazon EKS**? ☁️🐳
 
 ---
@@ -393,11 +383,13 @@ but they differ in **ecosystem, flexibility, and management model**.
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
   "memory": "512",
-  "containerDefinitions": [{
-    "name": "web",
-    "image": "nginx:latest",
-    "portMappings": [{ "containerPort": 80 }]
-  }]
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "nginx:latest",
+      "portMappings": [{ "containerPort": 80 }]
+    }
+  ]
 }
 ```
 
@@ -414,9 +406,9 @@ spec:
     metadata: { labels: { app: web } }
     spec:
       containers:
-      - name: web
-        image: nginx:latest
-        ports: [{ containerPort: 80 }]
+        - name: web
+          image: nginx:latest
+          ports: [{ containerPort: 80 }]
 ```
 
 ---
@@ -443,8 +435,8 @@ spec:
 
 ### ✅ Best Practices (Choosing Between ECS vs EKS)
 
-| Use Case                                                     | Recommendation                                     |
-| ------------------------------------------------------------ | -------------------------------------------------- |
+| Use Case                                                     | Recommendation                                      |
+| ------------------------------------------------------------ | --------------------------------------------------- |
 | **Fully AWS-centric workloads** (microservices, batch jobs)  | ✅ **Use ECS** — simpler, fully managed, fast setup |
 | **Multi-cloud or hybrid workloads**                          | ✅ **Use EKS** — Kubernetes portability             |
 | **Heavy use of open-source K8s tools (Helm, Istio, ArgoCD)** | ✅ **Use EKS**                                      |
@@ -470,13 +462,14 @@ spec:
 
 ### 💡 In short
 
-* **ECS** → AWS-native, simple, opinionated, no Kubernetes required. Best for **AWS-only teams** who want minimal management.
-* **EKS** → Fully managed Kubernetes. Best for **multi-cloud**, **open-source tooling**, and **advanced workloads**.
-* Both support **Fargate**, **ECR**, **CloudWatch**, and **IAM integration**, but differ in **control, flexibility, and portability**.
+- **ECS** → AWS-native, simple, opinionated, no Kubernetes required. Best for **AWS-only teams** who want minimal management.
+- **EKS** → Fully managed Kubernetes. Best for **multi-cloud**, **open-source tooling**, and **advanced workloads**.
+- Both support **Fargate**, **ECR**, **CloudWatch**, and **IAM integration**, but differ in **control, flexibility, and portability**.
 
-👉 Think of **ECS** as *“Kubernetes simplified by AWS”*, and **EKS** as *“Kubernetes managed by AWS”*.
+👉 Think of **ECS** as _“Kubernetes simplified by AWS”_, and **EKS** as _“Kubernetes managed by AWS”_.
 
 ---
+
 ## Q: What are **ECS Task Definitions**?
 
 ---
@@ -492,14 +485,14 @@ A **Task Definition** is a **JSON document** stored in ECS and versioned automat
 
 ### ⚙️ Purpose / How It Works
 
-* You **register** a Task Definition → ECS stores it as a **template (family + revision)**.
-* You **run Tasks** or create **Services** using that Task Definition.
-* When you update it (e.g., new image tag), ECS creates a **new revision** — you can roll back easily.
-* ECS **scheduler** uses it to decide how to place containers on EC2/Fargate.
+- You **register** a Task Definition → ECS stores it as a **template (family + revision)**.
+- You **run Tasks** or create **Services** using that Task Definition.
+- When you update it (e.g., new image tag), ECS creates a **new revision** — you can roll back easily.
+- ECS **scheduler** uses it to decide how to place containers on EC2/Fargate.
 
 Think of it as:
 
-> 🧩 *“Docker Compose + resource limits + IAM + logging + networking — all in one file.”*
+> 🧩 _“Docker Compose + resource limits + IAM + logging + networking — all in one file.”_
 
 ---
 
@@ -518,12 +511,8 @@ Think of it as:
     {
       "name": "nginx",
       "image": "nginx:latest",
-      "portMappings": [
-        { "containerPort": 80, "protocol": "tcp" }
-      ],
-      "environment": [
-        { "name": "ENV", "value": "prod" }
-      ],
+      "portMappings": [{ "containerPort": 80, "protocol": "tcp" }],
+      "environment": [{ "name": "ENV", "value": "prod" }],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -597,7 +586,7 @@ aws ecs register-task-definition \
 | ------------------- | ------------------------------------------------------- |
 | **Task**            | One running instance of a Task Definition (like a Pod). |
 | **Service**         | Maintains desired count of tasks (like a Deployment).   |
-| **Task Definition** | Template defining *how* tasks run (like a PodSpec).     |
+| **Task Definition** | Template defining _how_ tasks run (like a PodSpec).     |
 
 ---
 
@@ -619,25 +608,27 @@ aws ecs update-service --service myweb --task-definition nginx-task:2
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **Fargate** for serverless, managed compute.
-* Split **executionRole** (AWS system tasks) and **taskRole** (app permissions).
-* Use **`awslogs` log driver** for CloudWatch logging.
-* Define **CPU/memory limits per container** to prevent noisy neighbors.
-* Use **environment variables** + **Secrets Manager/SSM** for secrets.
-* Version-control your task definitions (JSON in Git).
-* Use **ECR lifecycle policies** to clean up unused images.
-* Automate task definition registration via **CI/CD pipeline** (e.g., CodePipeline/Terraform).
-* For multiple containers, use `dependsOn` for startup sequencing (e.g., app after db).
+- Use **Fargate** for serverless, managed compute.
+- Split **executionRole** (AWS system tasks) and **taskRole** (app permissions).
+- Use **`awslogs` log driver** for CloudWatch logging.
+- Define **CPU/memory limits per container** to prevent noisy neighbors.
+- Use **environment variables** + **Secrets Manager/SSM** for secrets.
+- Version-control your task definitions (JSON in Git).
+- Use **ECR lifecycle policies** to clean up unused images.
+- Automate task definition registration via **CI/CD pipeline** (e.g., CodePipeline/Terraform).
+- For multiple containers, use `dependsOn` for startup sequencing (e.g., app after db).
 
 ---
 
 ### 💡 In short
 
-* **Task Definition = ECS container blueprint** 🧩
-* Defines **images, resources, IAM roles, logging, networking**, etc.
-* Each new update creates a **new revision** — used by **Tasks** and **Services** to deploy containers.
-* It’s the **core unit of configuration** in ECS — comparable to a **Pod spec** in Kubernetes.
+- **Task Definition = ECS container blueprint** 🧩
+- Defines **images, resources, IAM roles, logging, networking**, etc.
+- Each new update creates a **new revision** — used by **Tasks** and **Services** to deploy containers.
+- It’s the **core unit of configuration** in ECS — comparable to a **Pod spec** in Kubernetes.
+
 ---
+
 ## Q: What is a **Task** in Amazon ECS? 🚀
 
 ---
@@ -647,7 +638,7 @@ aws ecs update-service --service myweb --task-definition nginx-task:2
 An **ECS Task** is a **running instance of a Task Definition** — essentially a live container (or group of containers) managed by ECS.
 Think of it like a **Pod in Kubernetes**:
 
-> The **Task Definition** is the *blueprint*, and the **Task** is the *running instance* of that blueprint.
+> The **Task Definition** is the _blueprint_, and the **Task** is the _running instance_ of that blueprint.
 
 Each Task runs one or more containers defined in the Task Definition, with its own networking, IAM role, and resource allocation.
 
@@ -659,9 +650,10 @@ Each Task runs one or more containers defined in the Task Definition, with its o
 2. ECS launches a **Task** based on that definition — on **EC2** or **Fargate**.
 3. ECS assigns:
 
-   * **Network interface (ENI)** (in `awsvpc` mode),
-   * **IAM Task Role** (for permissions),
-   * **CPU/memory resources** (per Task or per container).
+   - **Network interface (ENI)** (in `awsvpc` mode),
+   - **IAM Task Role** (for permissions),
+   - **CPU/memory resources** (per Task or per container).
+
 4. The ECS **Agent** (on EC2) or Fargate runtime **monitors and reports** Task health to the ECS control plane.
 
 ---
@@ -678,10 +670,10 @@ aws ecs run-task \
 
 ✅ This command:
 
-* Launches 1 Task using `nginx-task:1` definition,
-* Creates a network interface in the subnet,
-* Runs the container in Fargate,
-* Returns a Task ID you can inspect.
+- Launches 1 Task using `nginx-task:1` definition,
+- Creates a network interface in the subnet,
+- Runs the container in Fargate,
+- Returns a Task ID you can inspect.
 
 ---
 
@@ -705,9 +697,7 @@ Output snippet:
         {
           "name": "nginx",
           "lastStatus": "RUNNING",
-          "networkInterfaces": [
-            { "privateIpv4Address": "10.0.1.5" }
-          ]
+          "networkInterfaces": [{ "privateIpv4Address": "10.0.1.5" }]
         }
       ]
     }
@@ -739,8 +729,8 @@ Output snippet:
 
 🧩 **Analogy:**
 
-* `Task` → “Container instance”
-* `Service` → “Deployment controller that maintains desired Tasks”
+- `Task` → “Container instance”
+- `Service` → “Deployment controller that maintains desired Tasks”
 
 ---
 
@@ -775,25 +765,26 @@ VPC
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **Fargate Tasks** for short-lived or isolated workloads (cron, migrations).
-* Assign an **IAM Task Role** per task for least-privilege access.
-* Enable **CloudWatch Logs** (`awslogs` driver) in Task Definition.
-* Monitor **Task metrics** (CPU, memory, exit codes) with CloudWatch Container Insights.
-* Use **Capacity Providers** to mix EC2 and Fargate for cost optimization.
-* Store secrets in **AWS Secrets Manager** and reference via environment variables.
-* Use **awsvpc networking** (one ENI per Task) for secure VPC-native access.
-* For batch jobs, integrate with **AWS Batch on ECS**.
+- Use **Fargate Tasks** for short-lived or isolated workloads (cron, migrations).
+- Assign an **IAM Task Role** per task for least-privilege access.
+- Enable **CloudWatch Logs** (`awslogs` driver) in Task Definition.
+- Monitor **Task metrics** (CPU, memory, exit codes) with CloudWatch Container Insights.
+- Use **Capacity Providers** to mix EC2 and Fargate for cost optimization.
+- Store secrets in **AWS Secrets Manager** and reference via environment variables.
+- Use **awsvpc networking** (one ENI per Task) for secure VPC-native access.
+- For batch jobs, integrate with **AWS Batch on ECS**.
 
 ---
 
 ### 💡 In short
 
-* An **ECS Task** = a **running instance** of your **Task Definition**.
-* Tasks can run on **EC2 or Fargate**, and can be **standalone (run-task)** or **managed by a Service**.
-* Each Task includes all container runtime details, networking, IAM roles, and lifecycle tracking —
+- An **ECS Task** = a **running instance** of your **Task Definition**.
+- Tasks can run on **EC2 or Fargate**, and can be **standalone (run-task)** or **managed by a Service**.
+- Each Task includes all container runtime details, networking, IAM roles, and lifecycle tracking —
   making it the **fundamental execution unit in ECS**, similar to a **Pod in Kubernetes**.
 
 ---
+
 ## Q: What is an **ECS Service**? ⚙️
 
 ---
@@ -811,18 +802,18 @@ It’s comparable to a **Kubernetes Deployment** — you define how many copies 
 1. You define a **Task Definition** (container specs).
 2. You create an **ECS Service** that references that Task Definition and sets:
 
-   * Desired task count (replicas)
-   * Load balancer (optional)
-   * Deployment strategy (rolling or blue/green)
-   * Launch type (EC2/Fargate)
+   - Desired task count (replicas)
+   - Load balancer (optional)
+   - Deployment strategy (rolling or blue/green)
+   - Launch type (EC2/Fargate)
+
 3. ECS scheduler ensures:
 
-   * Exactly N Tasks are always running.
-   * Failed Tasks are automatically replaced.
-   * Tasks are spread across Availability Zones for high availability.
+   - Exactly N Tasks are always running.
+   - Failed Tasks are automatically replaced.
+   - Tasks are spread across Availability Zones for high availability.
 
-> 💡 **Think of it as:**
-> *“Run and maintain N copies of my container forever — with auto-healing, scaling, and optional load balancing.”*
+> 💡 **Think of it as:** > _“Run and maintain N copies of my container forever — with auto-healing, scaling, and optional load balancing.”_
 
 ---
 
@@ -841,9 +832,9 @@ aws ecs create-service \
 
 ✅ This Service will:
 
-* Run 3 Tasks from the `nginx-task:3` definition.
-* Attach them to the target group behind an ALB.
-* Replace any failed Task automatically.
+- Run 3 Tasks from the `nginx-task:3` definition.
+- Attach them to the target group behind an ALB.
+- Replace any failed Task automatically.
 
 ---
 
@@ -943,38 +934,41 @@ aws application-autoscaling put-scaling-policy \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **Fargate** for serverless compute (no EC2 management).
-* Integrate **ALB** for external traffic and health checks.
-* Enable **Service Auto Scaling** using CloudWatch metrics.
-* Deploy via **CodeDeploy Blue/Green** for zero downtime.
-* Store secrets in **AWS Secrets Manager** or **SSM Parameter Store**.
-* Use **task placement constraints** to spread across AZs for HA.
-* Enable **Container Insights** for metrics and logging.
-* Use **Cloud Map** for service discovery in microservice architectures.
-* Version Task Definitions → reference latest revision in Service updates.
+- Use **Fargate** for serverless compute (no EC2 management).
+- Integrate **ALB** for external traffic and health checks.
+- Enable **Service Auto Scaling** using CloudWatch metrics.
+- Deploy via **CodeDeploy Blue/Green** for zero downtime.
+- Store secrets in **AWS Secrets Manager** or **SSM Parameter Store**.
+- Use **task placement constraints** to spread across AZs for HA.
+- Enable **Container Insights** for metrics and logging.
+- Use **Cloud Map** for service discovery in microservice architectures.
+- Version Task Definitions → reference latest revision in Service updates.
 
 ---
 
 ### 💡 In short
 
-* An **ECS Service** keeps your application **running, scalable, and load-balanced** — it’s the **controller** that ensures Tasks stay healthy and at desired count.
-* Think of it as a **Deployment + AutoScaler + LoadBalancer** combined:
+- An **ECS Service** keeps your application **running, scalable, and load-balanced** — it’s the **controller** that ensures Tasks stay healthy and at desired count.
+- Think of it as a **Deployment + AutoScaler + LoadBalancer** combined:
 
-  * **Tasks** = running containers
-  * **Service** = manages them
-* It’s the backbone for **high availability**, **auto scaling**, and **zero-downtime deployments** in Amazon ECS.
+  - **Tasks** = running containers
+  - **Service** = manages them
+
+- It’s the backbone for **high availability**, **auto scaling**, and **zero-downtime deployments** in Amazon ECS.
+
 ---
+
 ## Q: What’s the Difference Between **EC2** and **Fargate** Launch Types in ECS? ☁️⚙️
 
 ---
 
 ### 🧠 Overview
 
-In Amazon ECS, **launch types** define *where and how your containers run*.
+In Amazon ECS, **launch types** define _where and how your containers run_.
 You can choose between:
 
-* **EC2 Launch Type** → You manage the underlying EC2 instances (cluster capacity, scaling, patching).
-* **Fargate Launch Type** → AWS runs containers **serverlessly** (no instance management at all).
+- **EC2 Launch Type** → You manage the underlying EC2 instances (cluster capacity, scaling, patching).
+- **Fargate Launch Type** → AWS runs containers **serverlessly** (no instance management at all).
 
 ---
 
@@ -1073,17 +1067,17 @@ aws ecs run-task \
 
 #### ✅ Use **EC2** when:
 
-* You need **full control** over infrastructure (custom AMIs, Daemons).
-* You want to **run background agents** (e.g., FluentBit, Prometheus).
-* Workloads are **steady and predictable** (cost-optimized).
-* You require **specialized instance types** (GPU, high-memory).
+- You need **full control** over infrastructure (custom AMIs, Daemons).
+- You want to **run background agents** (e.g., FluentBit, Prometheus).
+- Workloads are **steady and predictable** (cost-optimized).
+- You require **specialized instance types** (GPU, high-memory).
 
 #### ✅ Use **Fargate** when:
 
-* You want **serverless simplicity** (no EC2 management).
-* You have **bursty, short-lived, or unpredictable** workloads.
-* You require **strong isolation** per Task (Firecracker microVM).
-* You want to **scale instantly** without capacity planning.
+- You want **serverless simplicity** (no EC2 management).
+- You have **bursty, short-lived, or unpredictable** workloads.
+- You require **strong isolation** per Task (Firecracker microVM).
+- You want to **scale instantly** without capacity planning.
 
 ---
 
@@ -1091,8 +1085,8 @@ aws ecs run-task \
 
 You can **mix EC2 and Fargate** in the same ECS cluster:
 
-* Define Capacity Providers for EC2 and Fargate.
-* ECS chooses where to place Tasks automatically based on policies.
+- Define Capacity Providers for EC2 and Fargate.
+- ECS chooses where to place Tasks automatically based on policies.
 
 ```bash
 aws ecs create-capacity-provider \
@@ -1117,6 +1111,7 @@ aws ecs create-capacity-provider \
 👉 **Use Fargate** for simplicity, isolation, and scalability without infrastructure ops.
 
 ---
+
 ## Q: What is an **ECS Cluster**? 🧩
 
 ---
@@ -1134,13 +1129,14 @@ Think of it as:
 
 ### ⚙️ Purpose / How It Works
 
-* A **Cluster** organizes and manages ECS capacity:
+- A **Cluster** organizes and manages ECS capacity:
 
-  * **EC2 launch type:** ECS Agent registers EC2 instances into the cluster.
-  * **Fargate launch type:** AWS manages compute capacity behind the scenes (no EC2 nodes).
-* ECS **Scheduler** places Tasks onto available capacity in the cluster.
-* You can have multiple clusters (e.g., `dev`, `staging`, `prod`) — each isolated from others.
-* Clusters are **region-specific** and can span multiple **Availability Zones**.
+  - **EC2 launch type:** ECS Agent registers EC2 instances into the cluster.
+  - **Fargate launch type:** AWS manages compute capacity behind the scenes (no EC2 nodes).
+
+- ECS **Scheduler** places Tasks onto available capacity in the cluster.
+- You can have multiple clusters (e.g., `dev`, `staging`, `prod`) — each isolated from others.
+- Clusters are **region-specific** and can span multiple **Availability Zones**.
 
 ---
 
@@ -1213,8 +1209,9 @@ aws ecs describe-clusters --clusters demo-cluster
 2. ECS Agent registers instance to the Cluster.
 3. ECS Scheduler places Tasks based on:
 
-   * CPU/memory requirements
-   * Placement strategies (`spread`, `binpack`, `random`)
+   - CPU/memory requirements
+   - Placement strategies (`spread`, `binpack`, `random`)
+
 4. Tasks run as Docker containers on those EC2 hosts.
 5. ECS monitors Task health and reschedules on failure.
 
@@ -1261,19 +1258,21 @@ aws ecs run-task \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Create **separate clusters per environment** (e.g., `dev`, `staging`, `prod`).
-* Use **Capacity Providers** for hybrid scaling (mix EC2 + Fargate).
-* Enable **Cluster Auto Scaling** to right-size compute dynamically.
-* Enable **CloudWatch Container Insights** for metrics & troubleshooting.
-* For EC2:
+- Create **separate clusters per environment** (e.g., `dev`, `staging`, `prod`).
+- Use **Capacity Providers** for hybrid scaling (mix EC2 + Fargate).
+- Enable **Cluster Auto Scaling** to right-size compute dynamically.
+- Enable **CloudWatch Container Insights** for metrics & troubleshooting.
+- For EC2:
 
-  * Run latest ECS-optimized AMI.
-  * Use placement strategies for balanced workload distribution.
-* For Fargate:
+  - Run latest ECS-optimized AMI.
+  - Use placement strategies for balanced workload distribution.
 
-  * Use **FARGATE_SPOT** for cost optimization (non-critical workloads).
-* Tag clusters for **cost allocation** and **resource tracking**.
-* Use **Service Discovery (AWS Cloud Map)** for internal DNS.
+- For Fargate:
+
+  - Use **FARGATE_SPOT** for cost optimization (non-critical workloads).
+
+- Tag clusters for **cost allocation** and **resource tracking**.
+- Use **Service Discovery (AWS Cloud Map)** for internal DNS.
 
 ---
 
@@ -1295,14 +1294,17 @@ Example:
 
 ### 💡 In short
 
-* An **ECS Cluster** is the **logical container** for all ECS workloads — Tasks, Services, and compute resources.
-* It can host:
+- An **ECS Cluster** is the **logical container** for all ECS workloads — Tasks, Services, and compute resources.
+- It can host:
 
-  * **EC2 instances** (self-managed capacity)
-  * **Fargate tasks** (serverless capacity)
-  * **or both (hybrid via Capacity Providers)**
-* ECS schedules and scales workloads inside the cluster, integrates with **CloudWatch**, **ALB/NLB**, and **IAM**, making it the **core execution environment** for containerized apps on AWS.
+  - **EC2 instances** (self-managed capacity)
+  - **Fargate tasks** (serverless capacity)
+  - **or both (hybrid via Capacity Providers)**
+
+- ECS schedules and scales workloads inside the cluster, integrates with **CloudWatch**, **ALB/NLB**, and **IAM**, making it the **core execution environment** for containerized apps on AWS.
+
 ---
+
 ## Q: What is an **ECS Container Agent**? ⚙️🐳
 
 ---
@@ -1312,9 +1314,9 @@ Example:
 The **Amazon ECS Container Agent** is a lightweight daemon that runs on **each EC2 instance** in an **ECS cluster**.
 It acts as the **bridge between your EC2 instance (host)** and the **ECS control plane**, managing:
 
-* Task lifecycle (start/stop/update)
-* Health/status reporting
-* Container metadata and logs
+- Task lifecycle (start/stop/update)
+- Health/status reporting
+- Container metadata and logs
 
 > 🧩 **Think of it as:**
 > “The ECS worker node agent — it listens to ECS instructions and executes them on the host.”
@@ -1325,14 +1327,15 @@ It acts as the **bridge between your EC2 instance (host)** and the **ECS control
 
 1. When an EC2 instance boots with the ECS-optimized AMI or ECS Agent installed:
 
-   * The Agent **registers the instance** to a specific ECS cluster.
+   - The Agent **registers the instance** to a specific ECS cluster.
+
 2. ECS Control Plane communicates with the Agent over HTTPS (secured via IAM).
 3. The Agent:
 
-   * Starts and stops containers using Docker or Containerd runtime.
-   * Reports Task/container status (RUNNING, STOPPED, etc.) back to ECS.
-   * Sends resource metrics (CPU, memory) to ECS for scheduling decisions.
-   * Handles log streaming (to CloudWatch, if configured).
+   - Starts and stops containers using Docker or Containerd runtime.
+   - Reports Task/container status (RUNNING, STOPPED, etc.) back to ECS.
+   - Sends resource metrics (CPU, memory) to ECS for scheduling decisions.
+   - Handles log streaming (to CloudWatch, if configured).
 
 ---
 
@@ -1360,11 +1363,11 @@ It acts as the **bridge between your EC2 instance (host)** and the **ECS control
 
 ✅ **ECS Agent responsibilities:**
 
-* Pull task definitions and container images
-* Configure environment variables, ports, volumes
-* Start/stop containers using Docker
-* Report health and exit codes
-* Clean up stopped containers
+- Pull task definitions and container images
+- Configure environment variables, ports, volumes
+- Start/stop containers using Docker
+- Report health and exit codes
+- Clean up stopped containers
 
 ---
 
@@ -1457,16 +1460,16 @@ https://s3.amazonaws.com/amazon-ecs-agent/ecs-agent-latest.tar
 
 You can monitor ECS agent activity and host metrics using:
 
-* **CloudWatch Container Insights**
-* **ECS Agent logs (/var/log/ecs/ecs-agent.log)**
-* **ECS Console → Cluster → Instances tab**
+- **CloudWatch Container Insights**
+- **ECS Agent logs (/var/log/ecs/ecs-agent.log)**
+- **ECS Console → Cluster → Instances tab**
 
 Sample metrics:
 
-* `CPUReservation`
-* `MemoryReservation`
-* `RunningTasksCount`
-* `PendingTasksCount`
+- `CPUReservation`
+- `MemoryReservation`
+- `RunningTasksCount`
+- `PendingTasksCount`
 
 ---
 
@@ -1483,13 +1486,13 @@ Sample metrics:
 
 ### ✅ Best Practices (Production-Ready)
 
-* Always use the **latest ECS-optimized AMI** (keeps agent updated).
-* Configure **CloudWatch logging** for ECS Agent and Tasks.
-* Use **auto-scaling groups** to replace unhealthy instances automatically.
-* Enable **Task IAM Role support** (`ECS_ENABLE_TASK_IAM_ROLE=true`).
-* Regularly patch and restart the ECS Agent during maintenance windows.
-* For custom AMIs, verify ECS Agent version compatibility with cluster.
-* Monitor `/var/log/ecs/ecs-agent.log` for task placement or Docker errors.
+- Always use the **latest ECS-optimized AMI** (keeps agent updated).
+- Configure **CloudWatch logging** for ECS Agent and Tasks.
+- Use **auto-scaling groups** to replace unhealthy instances automatically.
+- Enable **Task IAM Role support** (`ECS_ENABLE_TASK_IAM_ROLE=true`).
+- Regularly patch and restart the ECS Agent during maintenance windows.
+- For custom AMIs, verify ECS Agent version compatibility with cluster.
+- Monitor `/var/log/ecs/ecs-agent.log` for task placement or Docker errors.
 
 ---
 
@@ -1507,12 +1510,13 @@ Sample metrics:
 
 ### 💡 In short
 
-* The **ECS Container Agent** is the **control bridge** between ECS and your EC2 hosts.
-* It registers instances, launches containers, monitors health, and reports status to the ECS control plane.
-* On **Fargate**, AWS runs this agent invisibly.
-* On **EC2**, **you manage it** — so keeping it updated and healthy ensures reliable ECS operations.
+- The **ECS Container Agent** is the **control bridge** between ECS and your EC2 hosts.
+- It registers instances, launches containers, monitors health, and reports status to the ECS control plane.
+- On **Fargate**, AWS runs this agent invisibly.
+- On **EC2**, **you manage it** — so keeping it updated and healthy ensures reliable ECS operations.
 
 ---
+
 ## Q: How do you **register a container image in Amazon ECS**? 🐳⚙️
 
 ---
@@ -1600,9 +1604,7 @@ docker push 123456789012.dkr.ecr.ap-south-1.amazonaws.com/myapp:latest
     {
       "name": "myapp",
       "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/myapp:latest",
-      "portMappings": [
-        { "containerPort": 8080, "protocol": "tcp" }
-      ],
+      "portMappings": [{ "containerPort": 8080, "protocol": "tcp" }],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -1638,9 +1640,9 @@ aws ecs run-task \
 
 ECS will automatically:
 
-* Pull the image from ECR
-* Create a Task
-* Start the container
+- Pull the image from ECR
+- Create a Task
+- Start the container
 
 ---
 
@@ -1684,35 +1686,36 @@ Reference in Task Definition:
 
 ### ⚙️ ECS Image Pull Behavior
 
-* ECS automatically pulls images **before each task launch** (unless cached).
-* ECS honors `:latest` tag but using **immutable tags (e.g., `:v1.0.0`)** is best practice.
-* ECS re-pulls images when:
+- ECS automatically pulls images **before each task launch** (unless cached).
+- ECS honors `:latest` tag but using **immutable tags (e.g., `:v1.0.0`)** is best practice.
+- ECS re-pulls images when:
 
-  * Task definition is updated with new tag/digest.
-  * The old container image cache is cleared.
+  - Task definition is updated with new tag/digest.
+  - The old container image cache is cleared.
 
 ---
 
 ### ✅ Best Practices
 
-* ✅ Store all private images in **Amazon ECR**.
-* ✅ Use **versioned tags** or **image digests** (avoid `:latest`).
-* ✅ Assign an **ECS Execution Role** with `ecr:GetAuthorizationToken`.
-* ✅ Automate builds + pushes using **CI/CD pipelines** (e.g., CodeBuild → ECR → ECS Deploy).
-* ✅ Enable **image scanning** in ECR for vulnerabilities.
-* ✅ Use **ECR lifecycle policies** to clean old images.
-* ✅ For hybrid workloads, mirror ECR to other registries if needed.
+- ✅ Store all private images in **Amazon ECR**.
+- ✅ Use **versioned tags** or **image digests** (avoid `:latest`).
+- ✅ Assign an **ECS Execution Role** with `ecr:GetAuthorizationToken`.
+- ✅ Automate builds + pushes using **CI/CD pipelines** (e.g., CodeBuild → ECR → ECS Deploy).
+- ✅ Enable **image scanning** in ECR for vulnerabilities.
+- ✅ Use **ECR lifecycle policies** to clean old images.
+- ✅ For hybrid workloads, mirror ECR to other registries if needed.
 
 ---
 
 ### 💡 In short
 
-* You “register” a container image in ECS **indirectly via a Task Definition**.
-* The image typically lives in **Amazon ECR** and is referenced by its **URI**.
-* ECS automatically **pulls, runs, and manages** the image when you start Tasks or Services.
-* Use versioned tags, proper IAM roles, and CI/CD integration for a secure, production-grade setup.
+- You “register” a container image in ECS **indirectly via a Task Definition**.
+- The image typically lives in **Amazon ECR** and is referenced by its **URI**.
+- ECS automatically **pulls, runs, and manages** the image when you start Tasks or Services.
+- Use versioned tags, proper IAM roles, and CI/CD integration for a secure, production-grade setup.
 
 ---
+
 ## Q: How do you **view running ECS Tasks**? 🕵️‍♂️🐳
 
 ---
@@ -1729,9 +1732,9 @@ You can view running Tasks to monitor status, health, and logs via **AWS CLI**, 
 ECS manages Tasks under either a **Service** (long-running) or **Standalone (run-task)** mode.
 You can:
 
-* List all running Tasks per cluster
-* View details (status, container health, IP, node)
-* Inspect Task logs via CloudWatch
+- List all running Tasks per cluster
+- View details (status, container health, IP, node)
+- Inspect Task logs via CloudWatch
 
 ---
 
@@ -1800,9 +1803,7 @@ aws ecs describe-tasks \
         {
           "name": "myapp",
           "lastStatus": "RUNNING",
-          "networkInterfaces": [
-            { "privateIpv4Address": "10.0.2.45" }
-          ]
+          "networkInterfaces": [{ "privateIpv4Address": "10.0.2.45" }]
         }
       ]
     }
@@ -1812,9 +1813,9 @@ aws ecs describe-tasks \
 
 🧾 Key fields:
 
-* `lastStatus` → current runtime status (e.g., `RUNNING`, `STOPPED`)
-* `taskDefinitionArn` → version of task definition used
-* `networkInterfaces` → IP details for debugging connectivity
+- `lastStatus` → current runtime status (e.g., `RUNNING`, `STOPPED`)
+- `taskDefinitionArn` → version of task definition used
+- `networkInterfaces` → IP details for debugging connectivity
 
 ---
 
@@ -1824,11 +1825,11 @@ aws ecs describe-tasks \
 
 You can view:
 
-* Task status (RUNNING / STOPPED)
-* Launch type (EC2 / Fargate)
-* Task definition + revision
-* Network details (VPC, subnets, ENI)
-* Container logs (if using awslogs driver)
+- Task status (RUNNING / STOPPED)
+- Launch type (EC2 / Fargate)
+- Task definition + revision
+- Network details (VPC, subnets, ENI)
+- Container logs (if using awslogs driver)
 
 ✅ Click any Task → see container logs and metadata in **“Logs”** or **“Configuration”** tabs.
 
@@ -1883,10 +1884,10 @@ for t in details['tasks']:
 ### 📋 Common CLI Parameters for `list-tasks`
 
 | Parameter          | Description                      | Example           |
-| ------------------ | -------------------------------- | ----------------- |
+| ------------------ | -------------------------------- | ----------------- | --------- |
 | `--cluster`        | ECS cluster name or ARN          | `demo-cluster`    |
 | `--service-name`   | Filter by ECS Service            | `web-service`     |
-| `--desired-status` | `RUNNING` | `STOPPED`            | `RUNNING`         |
+| `--desired-status` | `RUNNING`                        | `STOPPED`         | `RUNNING` |
 | `--family`         | Filter by Task Definition Family | `myapp-task`      |
 | `--launch-type`    | Filter by compute type           | `FARGATE` / `EC2` |
 
@@ -1894,27 +1895,29 @@ for t in details['tasks']:
 
 ### ✅ Best Practices (Production Monitoring)
 
-* Use **CloudWatch Container Insights** to monitor Task-level CPU, memory, and network metrics.
-* Stream container logs to **CloudWatch Logs** using the `awslogs` driver.
-* Set up **ECS Service Auto Scaling** for high-traffic workloads.
-* Use **AWS CLI + jq** for quick operational checks:
+- Use **CloudWatch Container Insights** to monitor Task-level CPU, memory, and network metrics.
+- Stream container logs to **CloudWatch Logs** using the `awslogs` driver.
+- Set up **ECS Service Auto Scaling** for high-traffic workloads.
+- Use **AWS CLI + jq** for quick operational checks:
 
   ```bash
   aws ecs list-tasks --cluster prod | jq -r '.taskArns[]'
   ```
-* Integrate with **Datadog**, **Prometheus**, or **Grafana** for advanced observability.
-* Create CloudWatch alarms for `RunningTaskCount` or abnormal Task restarts.
+
+- Integrate with **Datadog**, **Prometheus**, or **Grafana** for advanced observability.
+- Create CloudWatch alarms for `RunningTaskCount` or abnormal Task restarts.
 
 ---
 
 ### 💡 In short
 
-* Use `aws ecs list-tasks` and `aws ecs describe-tasks` to **view running ECS Tasks**.
-* In the **ECS Console**, check the **Tasks tab** for runtime info and logs.
-* For deeper visibility, use **CloudWatch Logs** and **Container Insights**.
-* ECS Tasks = **the actual running containers**, so monitoring them ensures app health and deployment success.
+- Use `aws ecs list-tasks` and `aws ecs describe-tasks` to **view running ECS Tasks**.
+- In the **ECS Console**, check the **Tasks tab** for runtime info and logs.
+- For deeper visibility, use **CloudWatch Logs** and **Container Insights**.
+- ECS Tasks = **the actual running containers**, so monitoring them ensures app health and deployment success.
 
 ---
+
 ## Q: How to **Deploy an Application to Amazon ECS** 🐳🚀
 
 ---
@@ -1931,12 +1934,12 @@ ECS then schedules and runs the containers automatically, either on **Fargate (s
 
 | Step | Action                       | Description                                        |
 | ---- | ---------------------------- | -------------------------------------------------- |
-| 1️⃣  | **Build container image**    | Package your app using Docker                      |
-| 2️⃣  | **Push image to ECR**        | Store securely in AWS Elastic Container Registry   |
-| 3️⃣  | **Create ECS Cluster**       | Logical grouping of compute (Fargate or EC2)       |
-| 4️⃣  | **Register Task Definition** | Define container specs (CPU, memory, ports, logs)  |
-| 5️⃣  | **Create ECS Service**       | Maintain desired Task count, enable load balancing |
-| 6️⃣  | **Deploy and verify**        | ECS launches containers and handles scaling/health |
+| 1️⃣   | **Build container image**    | Package your app using Docker                      |
+| 2️⃣   | **Push image to ECR**        | Store securely in AWS Elastic Container Registry   |
+| 3️⃣   | **Create ECS Cluster**       | Logical grouping of compute (Fargate or EC2)       |
+| 4️⃣   | **Register Task Definition** | Define container specs (CPU, memory, ports, logs)  |
+| 5️⃣   | **Create ECS Service**       | Maintain desired Task count, enable load balancing |
+| 6️⃣   | **Deploy and verify**        | ECS launches containers and handles scaling/health |
 
 ---
 
@@ -2005,9 +2008,7 @@ Create a file `taskdef.json`:
     {
       "name": "myapp",
       "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/myapp:latest",
-      "portMappings": [
-        { "containerPort": 8080, "protocol": "tcp" }
-      ],
+      "portMappings": [{ "containerPort": 8080, "protocol": "tcp" }],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -2080,6 +2081,7 @@ To expose the service publicly:
    ```bash
    --load-balancers "targetGroupArn=<arn>,containerName=myapp,containerPort=8080"
    ```
+
 3. ECS automatically registers Tasks to ALB targets.
 4. ALB performs **health checks** and routes traffic to healthy Tasks.
 
@@ -2099,9 +2101,9 @@ To expose the service publicly:
 
 For automated deployments:
 
-* **CodePipeline** + **CodeBuild** → Build Docker image, push to ECR
-* **CodeDeploy (Blue/Green)** → Update ECS Service with new Task Definition
-* **Trigger ECS Service Update**:
+- **CodePipeline** + **CodeBuild** → Build Docker image, push to ECR
+- **CodeDeploy (Blue/Green)** → Update ECS Service with new Task Definition
+- **Trigger ECS Service Update**:
 
   ```bash
   aws ecs update-service --cluster demo-cluster --service myapp-service --force-new-deployment
@@ -2111,9 +2113,9 @@ For automated deployments:
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **immutable image tags** (`myapp:v1.0.1`) instead of `latest`.
-* Configure **CloudWatch Logs** for observability.
-* Enable **Service Auto Scaling**:
+- Use **immutable image tags** (`myapp:v1.0.1`) instead of `latest`.
+- Configure **CloudWatch Logs** for observability.
+- Enable **Service Auto Scaling**:
 
   ```bash
   aws application-autoscaling register-scalable-target \
@@ -2122,10 +2124,11 @@ For automated deployments:
     --scalable-dimension ecs:service:DesiredCount \
     --min-capacity 2 --max-capacity 10
   ```
-* Secure access with **IAM Task Roles**.
-* Run in **private subnets** with **ALB in public subnets** for security.
-* Use **Fargate Spot** for cost optimization (non-critical tasks).
-* Implement **Blue/Green deployments** with CodeDeploy for zero downtime.
+
+- Secure access with **IAM Task Roles**.
+- Run in **private subnets** with **ALB in public subnets** for security.
+- Use **Fargate Spot** for cost optimization (non-critical tasks).
+- Implement **Blue/Green deployments** with CodeDeploy for zero downtime.
 
 ---
 
@@ -2142,6 +2145,7 @@ To deploy an app to ECS:
 ✅ Result: ECS automatically runs, scales, and monitors your containers — no servers to manage.
 
 ---
+
 ## Q: What is a **Target Group** in Amazon ECS? 🎯
 
 ---
@@ -2159,9 +2163,9 @@ It’s used when you attach a **Load Balancer** (ALB or NLB) to an ECS **Service
 
 ### ⚙️ Purpose / How It Works
 
-* The **ECS Service** automatically **registers and deregisters** containers in a **Target Group** when Tasks start or stop.
-* The **Load Balancer (ALB/NLB)** sends incoming requests to the **Target Group**, which forwards them to ECS Tasks running behind it.
-* Health checks determine if a Task should stay in the rotation.
+- The **ECS Service** automatically **registers and deregisters** containers in a **Target Group** when Tasks start or stop.
+- The **Load Balancer (ALB/NLB)** sends incoming requests to the **Target Group**, which forwards them to ECS Tasks running behind it.
+- Health checks determine if a Task should stay in the rotation.
 
 Flow:
 
@@ -2186,9 +2190,9 @@ aws ecs create-service \
 
 ✅ ECS will:
 
-* Launch 2 Tasks (`web-task:3`)
-* Register both container IPs in `web-tg`
-* Route all ALB traffic to those containers
+- Launch 2 Tasks (`web-task:3`)
+- Register both container IPs in `web-tg`
+- Route all ALB traffic to those containers
 
 ---
 
@@ -2265,10 +2269,10 @@ For EC2-based Tasks, you can use **target_type = "instance"**.
 
 ### 🧩 Health Check Example (in ALB)
 
-* **Path:** `/health`
-* **Success Codes:** `200-399`
-* **Interval:** `30s`
-* **Timeout:** `5s`
+- **Path:** `/health`
+- **Success Codes:** `200-399`
+- **Interval:** `30s`
+- **Timeout:** `5s`
 
 ECS Service only routes traffic to Tasks **passing** the ALB health check.
 
@@ -2288,28 +2292,31 @@ ECS Service only routes traffic to Tasks **passing** the ALB health check.
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **`target_type = ip`** for modern ECS/Fargate setups.
-* Configure **proper health checks** (`/health` endpoint, 200 response).
-* Use **HTTPS listeners (443)** with ACM-managed TLS certificates.
-* Use **stickiness** only if session affinity is required.
-* Register separate **Target Groups per ECS Service**.
-* For **Blue/Green deployments**, create **two Target Groups**:
+- Use **`target_type = ip`** for modern ECS/Fargate setups.
+- Configure **proper health checks** (`/health` endpoint, 200 response).
+- Use **HTTPS listeners (443)** with ACM-managed TLS certificates.
+- Use **stickiness** only if session affinity is required.
+- Register separate **Target Groups per ECS Service**.
+- For **Blue/Green deployments**, create **two Target Groups**:
 
-  * One for **production (blue)**
-  * One for **new version (green)**
+  - One for **production (blue)**
+  - One for **new version (green)**
     → Use **CodeDeploy** to shift traffic gradually.
-* Set **deregistration delay** appropriately (e.g., 30 seconds) for graceful shutdowns.
-* Enable **access logs** on ALB for visibility.
+
+- Set **deregistration delay** appropriately (e.g., 30 seconds) for graceful shutdowns.
+- Enable **access logs** on ALB for visibility.
 
 ---
 
 ### 💡 In short
 
-* A **Target Group** is the **bridge between ECS Tasks and the Load Balancer**.
-* ECS automatically **registers/deregisters** containers in it.
-* You can attach one or more **Target Groups** per ECS Service for traffic routing and health management.
-* It ensures **only healthy containers** receive traffic — enabling **high availability, scalability, and zero-downtime deployments**.
+- A **Target Group** is the **bridge between ECS Tasks and the Load Balancer**.
+- ECS automatically **registers/deregisters** containers in it.
+- You can attach one or more **Target Groups** per ECS Service for traffic routing and health management.
+- It ensures **only healthy containers** receive traffic — enabling **high availability, scalability, and zero-downtime deployments**.
+
 ---
+
 ## Q: How does **Amazon ECS integrate with IAM (Identity and Access Management)?** 🔒⚙️
 
 ---
@@ -2326,9 +2333,9 @@ There are **three primary IAM integrations** in ECS:
 
 > 🧩 **Think of it as:**
 >
-> * **Task Role:** what your app can access.
-> * **Execution Role:** what ECS needs to do its job.
-> * **User/Service Role:** who can deploy and manage ECS resources.
+> - **Task Role:** what your app can access.
+> - **Execution Role:** what ECS needs to do its job.
+> - **User/Service Role:** who can deploy and manage ECS resources.
 
 ---
 
@@ -2356,10 +2363,12 @@ Example: Your app in ECS needs to read from an S3 bucket.
   "family": "app-task",
   "taskRoleArn": "arn:aws:iam::123456789012:role/AppTaskRole",
   "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
-  "containerDefinitions": [{
-    "name": "app",
-    "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/app:latest"
-  }]
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/app:latest"
+    }
+  ]
 }
 ```
 
@@ -2371,8 +2380,8 @@ Example: Your app in ECS needs to read from an S3 bucket.
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [ "s3:GetObject" ],
-      "Resource": [ "arn:aws:s3:::myapp-bucket/*" ]
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::myapp-bucket/*"]
     }
   ]
 }
@@ -2393,9 +2402,9 @@ Response → temporary credentials valid for a few hours.
 
 Allows ECS itself to:
 
-* Pull images from **ECR**
-* Write logs to **CloudWatch Logs**
-* Create ENIs (Fargate networking)
+- Pull images from **ECR**
+- Write logs to **CloudWatch Logs**
+- Create ENIs (Fargate networking)
 
 #### **Role Creation Example**
 
@@ -2430,9 +2439,9 @@ aws iam attach-role-policy \
 
 If using **EC2 launch type**, each container instance needs an IAM role to:
 
-* Register with ECS
-* Pull images from ECR
-* Send telemetry and logs
+- Register with ECS
+- Pull images from ECR
+- Send telemetry and logs
 
 #### **Attach Role to EC2 Instance Profile**
 
@@ -2515,28 +2524,29 @@ Attach to IAM users, groups, or roles (for CI/CD pipelines).
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **least privilege**: narrow Task Role permissions (resource-specific ARNs).
-* Separate **Task Role** (app access) from **Execution Role** (ECS system ops).
-* Rotate credentials automatically (ECS does this via metadata service).
-* Avoid hardcoding credentials — rely on IAM Roles instead.
-* Use **IRSA (IAM Roles for Service Accounts)** if integrating with **EKS/K8s** later.
-* Monitor with **CloudTrail** for ECS IAM usage events.
-* Use **resource tags + IAM condition keys** (`ecs:cluster`, `ecs:service`) for fine-grained access.
-* Review **AWS IAM Access Analyzer** regularly for role over-permissioning.
+- Use **least privilege**: narrow Task Role permissions (resource-specific ARNs).
+- Separate **Task Role** (app access) from **Execution Role** (ECS system ops).
+- Rotate credentials automatically (ECS does this via metadata service).
+- Avoid hardcoding credentials — rely on IAM Roles instead.
+- Use **IRSA (IAM Roles for Service Accounts)** if integrating with **EKS/K8s** later.
+- Monitor with **CloudTrail** for ECS IAM usage events.
+- Use **resource tags + IAM condition keys** (`ecs:cluster`, `ecs:service`) for fine-grained access.
+- Review **AWS IAM Access Analyzer** regularly for role over-permissioning.
 
 ---
 
 ### 💡 In short
 
-* ECS uses **IAM Roles** to manage **who controls ECS** and **what containers can access**.
-* 🧩 **Task Role** → App permissions (e.g., S3, DynamoDB).
-* ⚙️ **Execution Role** → ECS system permissions (ECR, CloudWatch).
-* 💻 **Instance Role** → EC2 agent registration & telemetry.
-* 👤 **User/Service Role** → Developers or pipelines controlling ECS.
+- ECS uses **IAM Roles** to manage **who controls ECS** and **what containers can access**.
+- 🧩 **Task Role** → App permissions (e.g., S3, DynamoDB).
+- ⚙️ **Execution Role** → ECS system permissions (ECR, CloudWatch).
+- 💻 **Instance Role** → EC2 agent registration & telemetry.
+- 👤 **User/Service Role** → Developers or pipelines controlling ECS.
 
 ✅ Together, IAM + ECS provide **secure, fine-grained, and auditable access control** for both **management** and **runtime** operations.
 
 ---
+
 ## Q: What is **ECS Auto Scaling**? ⚙️📈
 
 ---
@@ -2559,9 +2569,9 @@ ECS supports **two types** of Auto Scaling:
 
 #### 1️⃣ **Service Auto Scaling (Task-Level)**
 
-* Dynamically adjusts **Task count** in an ECS **Service**.
-* Uses **CloudWatch metrics** (e.g., CPUUtilization, RequestCount).
-* Keeps service performance steady while optimizing cost.
+- Dynamically adjusts **Task count** in an ECS **Service**.
+- Uses **CloudWatch metrics** (e.g., CPUUtilization, RequestCount).
+- Keeps service performance steady while optimizing cost.
 
 > 💡 ECS tells the **Application Auto Scaling** service to modify the Service’s `desiredCount`.
 
@@ -2576,10 +2586,10 @@ Traffic ↓ → CPU ↓ → ECS scales in Tasks
 
 #### 2️⃣ **Cluster Auto Scaling (Infrastructure-Level)**
 
-* Works only for **EC2 launch type** clusters.
-* Automatically scales EC2 instances (in your Auto Scaling Group).
-* If Tasks are pending (no capacity), ECS adds new EC2s.
-* If Tasks are stopped (idle EC2s), ECS removes instances.
+- Works only for **EC2 launch type** clusters.
+- Automatically scales EC2 instances (in your Auto Scaling Group).
+- If Tasks are pending (no capacity), ECS adds new EC2s.
+- If Tasks are stopped (idle EC2s), ECS removes instances.
 
 Flow:
 
@@ -2617,8 +2627,8 @@ aws application-autoscaling put-scaling-policy \
 
 ✅ Result:
 
-* When average CPU > 70% → ECS adds more Tasks.
-* When CPU < 70% → ECS removes Tasks.
+- When average CPU > 70% → ECS adds more Tasks.
+- When CPU < 70% → ECS removes Tasks.
 
 ---
 
@@ -2633,8 +2643,8 @@ aws ecs put-cluster-capacity-providers \
   --default-capacity-provider-strategy capacityProvider=EC2Provider,weight=1
 ```
 
-* ECS integrates with **Auto Scaling Groups (ASG)**.
-* CAS adds/removes EC2s automatically depending on Task load.
+- ECS integrates with **Auto Scaling Groups (ASG)**.
+- CAS adds/removes EC2s automatically depending on Task load.
 
 ✅ Works with placement strategies (spread/binpack).
 ✅ Respects cooldown periods and min/max ASG limits.
@@ -2691,19 +2701,21 @@ aws ecs put-cluster-capacity-providers \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Set **minCapacity** ≥ 2 for HA.
-* Use **Target Tracking Scaling** (simpler and adaptive).
-* Avoid flapping: add **scale-in cooldowns** (e.g., 300s).
-* Monitor ECS metrics in **CloudWatch Container Insights**.
-* For EC2 clusters:
+- Set **minCapacity** ≥ 2 for HA.
+- Use **Target Tracking Scaling** (simpler and adaptive).
+- Avoid flapping: add **scale-in cooldowns** (e.g., 300s).
+- Monitor ECS metrics in **CloudWatch Container Insights**.
+- For EC2 clusters:
 
-  * Use **Capacity Providers** for balanced scaling.
-  * Use **mixed instance ASGs** for flexibility.
-* For Fargate:
+  - Use **Capacity Providers** for balanced scaling.
+  - Use **mixed instance ASGs** for flexibility.
 
-  * Combine **Service Auto Scaling** with **Fargate Spot** for cost efficiency.
-* Always tag scaling resources for cost tracking.
-* Test scaling policies under simulated load before production.
+- For Fargate:
+
+  - Combine **Service Auto Scaling** with **Fargate Spot** for cost efficiency.
+
+- Always tag scaling resources for cost tracking.
+- Test scaling policies under simulated load before production.
 
 ---
 
@@ -2711,23 +2723,25 @@ aws ecs put-cluster-capacity-providers \
 
 You can combine Auto Scaling with **CodeDeploy Blue/Green**:
 
-* Auto scaling ensures both versions handle traffic correctly.
-* CodeDeploy switches Target Groups when scaling stabilizes.
+- Auto scaling ensures both versions handle traffic correctly.
+- CodeDeploy switches Target Groups when scaling stabilizes.
 
 ---
 
 ### 💡 In short
 
-* **ECS Auto Scaling** dynamically adjusts compute resources to match load.
-* Two types:
+- **ECS Auto Scaling** dynamically adjusts compute resources to match load.
+- Two types:
 
-  * ⚙️ **Service Auto Scaling** → adjusts **Task count**.
-  * 🖥️ **Cluster Auto Scaling (CAS)** → adjusts **EC2 instance count**.
-* Driven by **CloudWatch metrics** for efficient, cost-optimized, and resilient container workloads.
+  - ⚙️ **Service Auto Scaling** → adjusts **Task count**.
+  - 🖥️ **Cluster Auto Scaling (CAS)** → adjusts **EC2 instance count**.
+
+- Driven by **CloudWatch metrics** for efficient, cost-optimized, and resilient container workloads.
 
 ✅ Result: ECS scales **containers and infrastructure automatically**, ensuring high availability and performance — **without manual intervention**.
 
 ---
+
 ## Q: What’s the Difference Between **Service Auto Scaling** and **Cluster Auto Scaling** in ECS? ⚙️📈
 
 ---
@@ -2743,8 +2757,8 @@ Both **Service Auto Scaling (SAS)** and **Cluster Auto Scaling (CAS)** help Amaz
 
 > 🧩 **In short:**
 >
-> * SAS = *“How many containers do I need?”*
-> * CAS = *“How many EC2s do I need to run those containers?”*
+> - SAS = _“How many containers do I need?”_
+> - CAS = _“How many EC2s do I need to run those containers?”_
 
 ---
 
@@ -2752,10 +2766,10 @@ Both **Service Auto Scaling (SAS)** and **Cluster Auto Scaling (CAS)** help Amaz
 
 #### **Service Auto Scaling (SAS)**
 
-* Adjusts **Task count** in an ECS **Service** based on metrics like CPU, memory, or ALB requests.
-* Uses **Application Auto Scaling** under the hood.
-* Works for **Fargate** *and* **EC2 launch types**.
-* Ensures your app scales to meet demand, not your infrastructure.
+- Adjusts **Task count** in an ECS **Service** based on metrics like CPU, memory, or ALB requests.
+- Uses **Application Auto Scaling** under the hood.
+- Works for **Fargate** _and_ **EC2 launch types**.
+- Ensures your app scales to meet demand, not your infrastructure.
 
 🧩 Flow:
 
@@ -2767,9 +2781,9 @@ High CPU → CloudWatch Alarm → Application Auto Scaling → ECS Service adds 
 
 #### **Cluster Auto Scaling (CAS)**
 
-* Adjusts the number of **EC2 instances** in your ECS Cluster’s **Auto Scaling Group (ASG)**.
-* Works **only for EC2 launch type** (Fargate has no instances to scale).
-* Ensures the cluster has **enough compute capacity** for your desired Tasks.
+- Adjusts the number of **EC2 instances** in your ECS Cluster’s **Auto Scaling Group (ASG)**.
+- Works **only for EC2 launch type** (Fargate has no instances to scale).
+- Ensures the cluster has **enough compute capacity** for your desired Tasks.
 
 🧩 Flow:
 
@@ -2833,8 +2847,8 @@ aws ecs put-cluster-capacity-providers \
 
 ✅ CAS adjusts the underlying EC2 **Auto Scaling Group (ASG)** size when:
 
-* ECS can’t place new Tasks (scale-out)
-* EC2 instances become idle (scale-in)
+- ECS can’t place new Tasks (scale-out)
+- EC2 instances become idle (scale-in)
 
 ---
 
@@ -2860,8 +2874,8 @@ aws ecs put-cluster-capacity-providers \
 
 ### ⚙️ Fargate vs EC2 Summary
 
-| Launch Type | SAS                  | CAS                                  |
-| ----------- | -------------------- | ------------------------------------ |
+| Launch Type | SAS                   | CAS                                   |
+| ----------- | --------------------- | ------------------------------------- |
 | **Fargate** | ✅ Yes (Task scaling) | ❌ Not applicable (serverless)        |
 | **EC2**     | ✅ Yes                | ✅ Yes (via ASG & Capacity Providers) |
 
@@ -2869,15 +2883,15 @@ aws ecs put-cluster-capacity-providers \
 
 ### ✅ Best Practices (Production-Ready)
 
-* **Always enable both** (SAS + CAS) for EC2 clusters.
-* For **Fargate**, only SAS applies (AWS handles infra).
-* Use **Target Tracking Policies** (simpler, adaptive).
-* Define realistic **min/max limits** to avoid thrashing.
-* Monitor **CloudWatch alarms** and scaling history.
-* Combine with **Capacity Providers** for hybrid scaling (EC2 + Fargate).
-* Use **Container Insights** to visualize scaling metrics.
-* For web workloads → use **ALB RequestCountPerTarget** metric for SAS.
-* For batch jobs → use custom CloudWatch metrics (queue depth, latency).
+- **Always enable both** (SAS + CAS) for EC2 clusters.
+- For **Fargate**, only SAS applies (AWS handles infra).
+- Use **Target Tracking Policies** (simpler, adaptive).
+- Define realistic **min/max limits** to avoid thrashing.
+- Monitor **CloudWatch alarms** and scaling history.
+- Combine with **Capacity Providers** for hybrid scaling (EC2 + Fargate).
+- Use **Container Insights** to visualize scaling metrics.
+- For web workloads → use **ALB RequestCountPerTarget** metric for SAS.
+- For batch jobs → use custom CloudWatch metrics (queue depth, latency).
 
 ---
 
@@ -2885,16 +2899,17 @@ aws ecs put-cluster-capacity-providers \
 
 | **Feature**      | **Service Auto Scaling** | **Cluster Auto Scaling**  |
 | ---------------- | ------------------------ | ------------------------- |
-| **What scales?** | 🧱 Tasks (containers)    | 🖥️ EC2 instances         |
+| **What scales?** | 🧱 Tasks (containers)    | 🖥️ EC2 instances          |
 | **Goal**         | Maintain app performance | Maintain compute capacity |
 | **Scope**        | Per Service              | Per Cluster               |
 | **Launch Type**  | EC2 & Fargate            | EC2 only                  |
 
-✅ **SAS** = Scales *applications* dynamically.
-✅ **CAS** = Scales *infrastructure* automatically.
+✅ **SAS** = Scales _applications_ dynamically.
+✅ **CAS** = Scales _infrastructure_ automatically.
 Together, they deliver **end-to-end elasticity** for ECS workloads — **apps and infra scale together** seamlessly.
 
 ---
+
 ## Q: How do you **log container output in Amazon ECS**? 🪵📊
 
 ---
@@ -2917,9 +2932,9 @@ You configure this via the container’s **log driver** in the **Task Definition
 3. The log driver (like `awslogs`) forwards them to **CloudWatch Logs**, **S3**, or custom destinations (via Fluent Bit).
 4. You can then view logs in:
 
-   * CloudWatch Console
-   * `aws logs` CLI
-   * Monitoring dashboards (Grafana, Datadog, etc.)
+   - CloudWatch Console
+   - `aws logs` CLI
+   - Monitoring dashboards (Grafana, Datadog, etc.)
 
 ---
 
@@ -2951,8 +2966,8 @@ You configure this via the container’s **log driver** in the **Task Definition
 
 ✅ This configuration:
 
-* Creates a **CloudWatch Log Group** `/ecs/web-app`
-* ECS streams logs under streams like `ecs/web/<task-id>`
+- Creates a **CloudWatch Log Group** `/ecs/web-app`
+- ECS streams logs under streams like `ecs/web/<task-id>`
 
 ---
 
@@ -2960,8 +2975,8 @@ You configure this via the container’s **log driver** in the **Task Definition
 
 Attach policy `AmazonECSTaskExecutionRolePolicy` to your ECS **execution role** — it allows:
 
-* Creating log streams
-* Writing logs to CloudWatch
+- Creating log streams
+- Writing logs to CloudWatch
 
 ✅ Example:
 
@@ -3068,27 +3083,28 @@ Logs stored locally under `/var/lib/docker/containers/<container-id>/*.log`.
 
 ### ✅ Best Practices (Production-Ready)
 
-* Always use **`awslogs`** or **`firelens`** for centralized logging.
-* Standardize log group naming: `/ecs/<service-name>`.
-* Set **log retention policies** in CloudWatch (avoid cost bloat).
-* Include **task metadata (Task ID, container name)** in log prefix.
-* Use **structured logs (JSON)** for better searchability.
-* Enable **FireLens** if integrating with ELK, Splunk, or Datadog.
-* Monitor ECS logs using **CloudWatch Insights** for pattern analysis.
-* Use **IAM Execution Role** with least privileges (`logs:CreateLogStream`, `logs:PutLogEvents`).
+- Always use **`awslogs`** or **`firelens`** for centralized logging.
+- Standardize log group naming: `/ecs/<service-name>`.
+- Set **log retention policies** in CloudWatch (avoid cost bloat).
+- Include **task metadata (Task ID, container name)** in log prefix.
+- Use **structured logs (JSON)** for better searchability.
+- Enable **FireLens** if integrating with ELK, Splunk, or Datadog.
+- Monitor ECS logs using **CloudWatch Insights** for pattern analysis.
+- Use **IAM Execution Role** with least privileges (`logs:CreateLogStream`, `logs:PutLogEvents`).
 
 ---
 
 ### 💡 In short
 
-* ECS container logs are managed via **log drivers** defined in **Task Definitions**.
-* Most common setup → `awslogs` → **CloudWatch Logs**.
-* For advanced pipelines → use **FireLens (Fluent Bit)** to send logs to **S3, Elasticsearch, Splunk**, etc.
-* ECS automatically streams `stdout` and `stderr` — no agent setup needed in Fargate.
+- ECS container logs are managed via **log drivers** defined in **Task Definitions**.
+- Most common setup → `awslogs` → **CloudWatch Logs**.
+- For advanced pipelines → use **FireLens (Fluent Bit)** to send logs to **S3, Elasticsearch, Splunk**, etc.
+- ECS automatically streams `stdout` and `stderr` — no agent setup needed in Fargate.
 
 ✅ Result: centralized, scalable, and secure container logging — ready for production observability.
 
 ---
+
 ## Q: How do you **perform a rolling update in Amazon ECS?** 🔁🚀
 
 ---
@@ -3114,8 +3130,8 @@ ECS handles rolling updates **natively** when you update a **Service** (not stan
 
 This is governed by **deployment configuration** parameters:
 
-* `minimumHealthyPercent`
-* `maximumPercent`
+- `minimumHealthyPercent`
+- `maximumPercent`
 
 ---
 
@@ -3171,8 +3187,8 @@ In your **ECS Service definition** (JSON or CloudFormation):
 💡 Example:
 If desired count = 4
 
-* ECS can start up to 8 tasks (`200%`)
-* Will never go below 4 healthy ones (`100%`)
+- ECS can start up to 8 tasks (`200%`)
+- Will never go below 4 healthy ones (`100%`)
 
 ---
 
@@ -3181,15 +3197,16 @@ If desired count = 4
 1. Open **ECS → Clusters → Services → Update**
 2. Choose:
 
-   * New **Task Definition Revision**
-   * (Optional) Change count or network config
+   - New **Task Definition Revision**
+   - (Optional) Change count or network config
+
 3. Click **Deploy**
 4. ECS:
 
-   * Launches new tasks
-   * Waits for **ALB health checks**
-   * Stops old ones
-   * Marks deployment **COMPLETED**
+   - Launches new tasks
+   - Waits for **ALB health checks**
+   - Stops old ones
+   - Marks deployment **COMPLETED**
 
 ---
 
@@ -3208,9 +3225,9 @@ aws ecs describe-services \
 
 ✅ Output shows:
 
-* Running deployments (PRIMARY/ACTIVE)
-* Pending tasks
-* Desired/Running/Healthy counts
+- Running deployments (PRIMARY/ACTIVE)
+- Pending tasks
+- Desired/Running/Healthy counts
 
 #### **Console:**
 
@@ -3263,31 +3280,33 @@ This command is often part of a **CodeBuild or Jenkins pipeline** after a succes
 
 ### ✅ Best Practices (Production-Ready)
 
-* Use **ALB/NLB health checks** to control task readiness.
-* Set **`minimumHealthyPercent=100`** to ensure no downtime.
-* Tag each **Task Definition revision** for easy rollback.
-* Automate with CI/CD (CodePipeline, Jenkins, or GitLab).
-* Monitor with:
+- Use **ALB/NLB health checks** to control task readiness.
+- Set **`minimumHealthyPercent=100`** to ensure no downtime.
+- Tag each **Task Definition revision** for easy rollback.
+- Automate with CI/CD (CodePipeline, Jenkins, or GitLab).
+- Monitor with:
 
-  * `aws ecs describe-services`
-  * CloudWatch → `ECSServiceDeploymentController` metrics
-* Log to **CloudWatch Logs** for container startup validation.
-* Test deployment on **staging ECS Service** before production rollout.
-* For mission-critical apps → use **Blue/Green (CodeDeploy)**.
+  - `aws ecs describe-services`
+  - CloudWatch → `ECSServiceDeploymentController` metrics
+
+- Log to **CloudWatch Logs** for container startup validation.
+- Test deployment on **staging ECS Service** before production rollout.
+- For mission-critical apps → use **Blue/Green (CodeDeploy)**.
 
 ---
 
 ### 💡 In short
 
-* A **Rolling Update** in ECS gradually replaces old Tasks with new ones **without downtime**.
-* Managed automatically by ECS when you update a Service or Task Definition.
-* Controlled via `minimumHealthyPercent` & `maximumPercent`.
-* Works for both **EC2** and **Fargate** launch types.
+- A **Rolling Update** in ECS gradually replaces old Tasks with new ones **without downtime**.
+- Managed automatically by ECS when you update a Service or Task Definition.
+- Controlled via `minimumHealthyPercent` & `maximumPercent`.
+- Works for both **EC2** and **Fargate** launch types.
 
 ✅ **Rolling = simpler, reliable, zero-downtime updates**
 For mission-critical apps, combine with **CodeDeploy Blue/Green** for full safety and fast rollback.
 
 ---
+
 ## Q: How to **store environment variables securely**?
 
 ---
@@ -3300,10 +3319,10 @@ Secure environment variable management means **no plaintext secrets in source co
 
 ### ⚙️ Purpose / How it works
 
-* **Secrets store** holds sensitive values encrypted at rest.
-* **Injection** happens at runtime via: TaskDefinition `secrets` (ECS), Kubernetes Secret/CSI driver, CI secret variables, or ephemeral tokens from Vault.
-* **Access control** enforced via IAM/RBAC, service roles, or Vault policies.
-* **Rotation & audit** via provider features (Secrets Manager rotation, Vault leases, CloudTrail logging).
+- **Secrets store** holds sensitive values encrypted at rest.
+- **Injection** happens at runtime via: TaskDefinition `secrets` (ECS), Kubernetes Secret/CSI driver, CI secret variables, or ephemeral tokens from Vault.
+- **Access control** enforced via IAM/RBAC, service roles, or Vault policies.
+- **Rotation & audit** via provider features (Secrets Manager rotation, Vault leases, CloudTrail logging).
 
 ---
 
@@ -3323,7 +3342,7 @@ Secure environment variable management means **no plaintext secrets in source co
 ]
 ```
 
-* **Notes:** `executionRole` must allow `secretsmanager:GetSecretValue`. ECS injects the secret as an env var `DB_PASSWORD` at container start.
+- **Notes:** `executionRole` must allow `secretsmanager:GetSecretValue`. ECS injects the secret as an env var `DB_PASSWORD` at container start.
 
 ---
 
@@ -3351,7 +3370,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 ```
 
-* **Notes:** avoid putting `var.db_password` in plain `.tfvars` — use CI injected secrets or Terraform Cloud variables.
+- **Notes:** avoid putting `var.db_password` in plain `.tfvars` — use CI injected secrets or Terraform Cloud variables.
 
 ---
 
@@ -3363,7 +3382,7 @@ kind: Secret
 metadata: { name: app-secret }
 type: Opaque
 stringData:
-  DB_PASSWORD: "super-secret"   # create via kubectl create secret instead of in YAML repo
+  DB_PASSWORD: "super-secret" # create via kubectl create secret instead of in YAML repo
 
 ---
 apiVersion: apps/v1
@@ -3372,17 +3391,17 @@ spec:
   template:
     spec:
       containers:
-      - name: api
-        image: myapp:latest
-        env:
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: DB_PASSWORD
+        - name: api
+          image: myapp:latest
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
 ```
 
-* **Caveats:** Kubernetes Secrets are base64-encoded; enable **encryption at rest** (`EncryptionConfiguration`) and use RBAC. Consider CSI Secrets Store for Secrets Manager integration.
+- **Caveats:** Kubernetes Secrets are base64-encoded; enable **encryption at rest** (`EncryptionConfiguration`) and use RBAC. Consider CSI Secrets Store for Secrets Manager integration.
 
 ---
 
@@ -3406,20 +3425,20 @@ Mounts secret as a file; combine with `kubernetes.io/secret` sync or use sidecar
 
 #### E — HashiCorp Vault (best for dynamic secrets)
 
-* App authenticates via IAM role, Kubernetes auth, or AppRole, then requests short-lived credentials:
+- App authenticates via IAM role, Kubernetes auth, or AppRole, then requests short-lived credentials:
 
 ```bash
 # Example: issue DB creds (dynamic)
 vault read database/creds/readonly
 ```
 
-* In Kubernetes use Vault Agent Injector or CSI driver for injection.
+- In Kubernetes use Vault Agent Injector or CSI driver for injection.
 
 ---
 
 #### F — CI/CD secrets examples
 
-* **GitHub Actions**
+- **GitHub Actions**
 
 ```yaml
 jobs:
@@ -3432,7 +3451,7 @@ jobs:
         run: ./deploy.sh
 ```
 
-* **GitLab CI**
+- **GitLab CI**
 
 ```yaml
 variables:
@@ -3442,7 +3461,7 @@ variables:
     protected: true
 ```
 
-* **Jenkins (Pipeline using credentials)**
+- **Jenkins (Pipeline using credentials)**
 
 ```groovy
 withCredentials([string(credentialsId: 'db-pass', variable: 'DB_PASSWORD')]) {
@@ -3468,36 +3487,37 @@ withCredentials([string(credentialsId: 'db-pass', variable: 'DB_PASSWORD')]) {
 
 ### ✅ Best Practices (production-ready, actionable)
 
-* **Never commit secrets to Git.** Use sops/encryption if you must store in repo.
-* **Prefer provider-managed secrets** (Secrets Manager, Vault) over raw K8s Secrets.
-* **Use least-privilege IAM/RBAC**: grant each service only needed `GetSecretValue` access. Use IRSA for EKS.
-* **Inject secrets at runtime** (ECS `secrets`, K8s `valueFrom`, Vault leases) — avoid baked-in env files.
-* **Rotate secrets** automatically (Secrets Manager rotation or Vault leases) and test rotation flows.
-* **Encrypt at rest & transit**: enable KMS for Secrets Manager and `encryptionConfiguration` for EKS etcd.
-* **Audit & monitor access** (CloudTrail, Vault audit logs) and alert on anomalous reads.
-* **Avoid logging secrets** (redact them in app logs and audit).
-* **Treat Terraform state as sensitive** — use remote backends (S3 + encryption + restricted IAM + DynamoDB locks) and avoid storing plain secrets in variables; mark `sensitive = true`.
-* **Use short-lived credentials** where possible (Vault dynamic creds, STS-assumed roles) to limit blast radius.
-* **Use Secret Sync patterns** carefully — prefer referencing a single source-of-truth rather than duplicating secrets everywhere.
-* **Document runbook** for rotation, revocation, and incident response.
+- **Never commit secrets to Git.** Use sops/encryption if you must store in repo.
+- **Prefer provider-managed secrets** (Secrets Manager, Vault) over raw K8s Secrets.
+- **Use least-privilege IAM/RBAC**: grant each service only needed `GetSecretValue` access. Use IRSA for EKS.
+- **Inject secrets at runtime** (ECS `secrets`, K8s `valueFrom`, Vault leases) — avoid baked-in env files.
+- **Rotate secrets** automatically (Secrets Manager rotation or Vault leases) and test rotation flows.
+- **Encrypt at rest & transit**: enable KMS for Secrets Manager and `encryptionConfiguration` for EKS etcd.
+- **Audit & monitor access** (CloudTrail, Vault audit logs) and alert on anomalous reads.
+- **Avoid logging secrets** (redact them in app logs and audit).
+- **Treat Terraform state as sensitive** — use remote backends (S3 + encryption + restricted IAM + DynamoDB locks) and avoid storing plain secrets in variables; mark `sensitive = true`.
+- **Use short-lived credentials** where possible (Vault dynamic creds, STS-assumed roles) to limit blast radius.
+- **Use Secret Sync patterns** carefully — prefer referencing a single source-of-truth rather than duplicating secrets everywhere.
+- **Document runbook** for rotation, revocation, and incident response.
 
 ---
 
 ### ⚠️ Gotchas & mitigation
 
-* **K8s Secret `subPath` + updates:** use CSI or reloader sidecar; env vars do not update without restart.
-* **Terraform state contains secrets:** encrypt backend and limit access; consider using `vault` provider to inject at apply time rather than writing to state.
-* **Excessive IAM permissions:** use resource-level conditions (e.g., `aws:ResourceTag`) and `kms:ViaService` where applicable.
+- **K8s Secret `subPath` + updates:** use CSI or reloader sidecar; env vars do not update without restart.
+- **Terraform state contains secrets:** encrypt backend and limit access; consider using `vault` provider to inject at apply time rather than writing to state.
+- **Excessive IAM permissions:** use resource-level conditions (e.g., `aws:ResourceTag`) and `kms:ViaService` where applicable.
 
 ---
 
 ### 💡 In short
 
-* **Store secrets in a purpose-built store** (AWS Secrets Manager / Vault / SSM) and **inject at runtime** (ECS `secrets`, K8s `valueFrom` or CSI).
-* Use **least privilege**, **KMS encryption**, **rotation**, and **audit logs**.
-* For CI, use provider secret stores (masked & protected); never bake secrets into images or Git.
+- **Store secrets in a purpose-built store** (AWS Secrets Manager / Vault / SSM) and **inject at runtime** (ECS `secrets`, K8s `valueFrom` or CSI).
+- Use **least privilege**, **KMS encryption**, **rotation**, and **audit logs**.
+- For CI, use provider secret stores (masked & protected); never bake secrets into images or Git.
 
 ---
+
 ## Q: How does **Amazon ECS handle container networking?** 🌐🐳
 
 ---
@@ -3514,13 +3534,13 @@ ECS networking is powered by **Amazon VPC networking modes** (`awsvpc`, `bridge`
 
 ### ⚙️ Purpose / How It Works
 
-* Each ECS **Task** (or container) gets **network interfaces (ENIs)** depending on the **network mode**.
-* ECS uses these modes to define how containers access:
+- Each ECS **Task** (or container) gets **network interfaces (ENIs)** depending on the **network mode**.
+- ECS uses these modes to define how containers access:
 
-  * **VPC subnets and security groups**
-  * **Other ECS tasks**
-  * **Load balancers (ALB/NLB)**
-  * **External services / internet**
+  - **VPC subnets and security groups**
+  - **Other ECS tasks**
+  - **Load balancers (ALB/NLB)**
+  - **External services / internet**
 
 ---
 
@@ -3549,9 +3569,9 @@ VPC
 
 ✅ **Benefits:**
 
-* Fine-grained **security group isolation** per task.
-* Native integration with **VPC routing**, **Cloud Map**, and **PrivateLink**.
-* Simplified service discovery — tasks behave like first-class VPC resources.
+- Fine-grained **security group isolation** per task.
+- Native integration with **VPC routing**, **Cloud Map**, and **PrivateLink**.
+- Simplified service discovery — tasks behave like first-class VPC resources.
 
 Example task networking config:
 
@@ -3567,9 +3587,9 @@ Example task networking config:
 
 ### 🧩 2️⃣ `bridge` Mode (EC2 Only)
 
-* Containers are attached to the **Docker bridge** (`docker0`) on the host.
-* Outbound traffic uses **NAT** through the EC2 instance.
-* Containers can communicate with each other via **port mappings**.
+- Containers are attached to the **Docker bridge** (`docker0`) on the host.
+- Outbound traffic uses **NAT** through the EC2 instance.
+- Containers can communicate with each other via **port mappings**.
 
 ```json
 "portMappings": [
@@ -3579,8 +3599,8 @@ Example task networking config:
 
 ✅ Good for:
 
-* Simple containerized apps
-* Internal EC2-only environments
+- Simple containerized apps
+- Internal EC2-only environments
 
 ⚠️ Not supported on **Fargate**.
 
@@ -3588,28 +3608,28 @@ Example task networking config:
 
 ### 🧩 3️⃣ `host` Mode (EC2 Only)
 
-* Containers use the **same network namespace as the EC2 host**.
-* No port mapping — containers directly bind to host ports.
+- Containers use the **same network namespace as the EC2 host**.
+- No port mapping — containers directly bind to host ports.
 
 ✅ **High performance, low latency** (no NAT or overlay).
 ⚠️ **No port isolation** — two containers can’t bind the same port.
 
 Used for:
 
-* Performance-critical services (e.g., real-time gaming, telemetry, load balancers).
-* Sidecar containers that share host’s IP.
+- Performance-critical services (e.g., real-time gaming, telemetry, load balancers).
+- Sidecar containers that share host’s IP.
 
 ---
 
 ### 🧩 4️⃣ `none` Mode
 
-* Containers are completely isolated — no networking.
-* Can still use **volumes** or **IPC** for internal communication.
+- Containers are completely isolated — no networking.
+- Can still use **volumes** or **IPC** for internal communication.
 
 Used for:
 
-* Batch processing or security-hardened jobs.
-* Offline tasks.
+- Batch processing or security-hardened jobs.
+- Offline tasks.
 
 ---
 
@@ -3617,18 +3637,19 @@ Used for:
 
 #### **Within Same VPC**
 
-* Tasks communicate using **private IPs (awsvpc)**.
-* Use **Service Discovery (AWS Cloud Map)** for DNS-based resolution:
+- Tasks communicate using **private IPs (awsvpc)**.
+- Use **Service Discovery (AWS Cloud Map)** for DNS-based resolution:
 
   ```
   web-service.demo.local → 10.0.2.15
   ```
-* Define namespace in ECS Service config.
+
+- Define namespace in ECS Service config.
 
 #### **Between Services via ALB/NLB**
 
-* Each ECS Service registers its tasks to a **Target Group**.
-* **ALB listener** routes HTTP/S requests to healthy ECS tasks.
+- Each ECS Service registers its tasks to a **Target Group**.
+- **ALB listener** routes HTTP/S requests to healthy ECS tasks.
 
 Flow:
 
@@ -3672,16 +3693,16 @@ User → ALB → Target Group → ECS Task ENI (awsvpc)
 
 ### ✅ Best Practices (Production-Ready)
 
-* **Always use `awsvpc` mode** for new ECS deployments (native VPC, better isolation).
-* Assign **security groups per service** for least privilege.
-* Use **private subnets** for backend tasks; attach **ALB** in public subnets.
-* Use **AWS Cloud Map** for internal service discovery instead of hardcoding IPs.
-* Enable **VPC Flow Logs** for auditing traffic.
-* Configure **CloudWatch Container Insights** for network metrics.
-* For Fargate public-facing apps → `assignPublicIp=ENABLED` or use **ALB/NLB**.
-* Avoid `host` mode unless latency-sensitive and isolated environment.
-* Use **VPC endpoints** for private AWS service access (no internet route).
-* Monitor **ENI usage limits** — each task consumes one ENI in `awsvpc` mode.
+- **Always use `awsvpc` mode** for new ECS deployments (native VPC, better isolation).
+- Assign **security groups per service** for least privilege.
+- Use **private subnets** for backend tasks; attach **ALB** in public subnets.
+- Use **AWS Cloud Map** for internal service discovery instead of hardcoding IPs.
+- Enable **VPC Flow Logs** for auditing traffic.
+- Configure **CloudWatch Container Insights** for network metrics.
+- For Fargate public-facing apps → `assignPublicIp=ENABLED` or use **ALB/NLB**.
+- Avoid `host` mode unless latency-sensitive and isolated environment.
+- Use **VPC endpoints** for private AWS service access (no internet route).
+- Monitor **ENI usage limits** — each task consumes one ENI in `awsvpc` mode.
 
 ---
 
@@ -3689,12 +3710,13 @@ User → ALB → Target Group → ECS Task ENI (awsvpc)
 
 | **Launch Type** | **Networking Mode**          | **IP per Task?** | **Best For**                         |
 | --------------- | ---------------------------- | ---------------- | ------------------------------------ |
-| **Fargate**     | `awsvpc`                     | ✅ Yes            | Modern, secure, VPC-native workloads |
+| **Fargate**     | `awsvpc`                     | ✅ Yes           | Modern, secure, VPC-native workloads |
 | **EC2**         | `bridge` / `host` / `awsvpc` | Depends          | Legacy or high-performance workloads |
 
 ✅ **ECS networking = native AWS VPC networking for containers** — secure, scalable, and fully integrated with AWS services like ALB, Cloud Map, and CloudWatch.
 
 ---
+
 ## Q: How do you **expose ECS services publicly?** 🌐🚀
 
 ---
@@ -3779,9 +3801,9 @@ aws ecs create-service \
 
 ✅ ECS automatically:
 
-* Registers task ENIs in the target group
-* Health checks tasks before routing traffic
-* Scales target registration dynamically
+- Registers task ENIs in the target group
+- Health checks tasks before routing traffic
+- Scales target registration dynamically
 
 ---
 
@@ -3801,8 +3823,8 @@ Attach NLB target group with `--target-type ip` and point ECS Service to it.
 
 ✅ **Best for:**
 
-* High-performance, low-latency workloads
-* gRPC, database proxies, message brokers
+- High-performance, low-latency workloads
+- gRPC, database proxies, message brokers
 
 ---
 
@@ -3830,8 +3852,8 @@ http://<public-ip>:8080
 
 ### 📋 Comparison — ECS Exposure Options
 
-| Method                  | Type     | Public Access    | Best For                          | Notes                                    |
-| ----------------------- | -------- | ---------------- | --------------------------------- | ---------------------------------------- |
+| Method                  | Type     | Public Access     | Best For                          | Notes                                    |
+| ----------------------- | -------- | ----------------- | --------------------------------- | ---------------------------------------- |
 | **ALB (HTTP/HTTPS)**    | L7       | ✅ Yes            | Web apps, APIs                    | Supports SSL, path routing, host routing |
 | **NLB (TCP/UDP)**       | L4       | ✅ Yes            | Low-latency or non-HTTP workloads | Static IPs, high performance             |
 | **Public IP (Fargate)** | Direct   | ✅ Yes            | Dev/testing                       | No load balancing or health checks       |
@@ -3875,32 +3897,33 @@ aws route53 change-resource-record-sets \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Always use **ALB or NLB**, not direct public IPs.
-* Keep **tasks in private subnets**, ALB in **public subnets**.
-* Restrict access with **security groups** (ALB → ECS SG).
-* Use **HTTPS (port 443)** with **ACM certificates**.
-* Use **AWS WAF** for DDoS protection.
-* Enable **health checks** (path `/health`) in target group.
-* Set **stickiness** only when session persistence is needed.
-* Combine with **ECS Service Auto Scaling** for dynamic traffic handling.
-* Monitor via **CloudWatch (TargetResponseTime, HTTPCode_Target_5XX)**.
+- Always use **ALB or NLB**, not direct public IPs.
+- Keep **tasks in private subnets**, ALB in **public subnets**.
+- Restrict access with **security groups** (ALB → ECS SG).
+- Use **HTTPS (port 443)** with **ACM certificates**.
+- Use **AWS WAF** for DDoS protection.
+- Enable **health checks** (path `/health`) in target group.
+- Set **stickiness** only when session persistence is needed.
+- Combine with **ECS Service Auto Scaling** for dynamic traffic handling.
+- Monitor via **CloudWatch (TargetResponseTime, HTTPCode_Target_5XX)**.
 
 ---
 
 ### 💡 In short
 
-* ECS services are exposed **via Load Balancers** (ALB/NLB).
-* ECS automatically **registers task IPs** to **Target Groups**.
-* ALB → public traffic | NLB → low-latency | Public IP → dev only.
-* For production:
+- ECS services are exposed **via Load Balancers** (ALB/NLB).
+- ECS automatically **registers task IPs** to **Target Groups**.
+- ALB → public traffic | NLB → low-latency | Public IP → dev only.
+- For production:
 
-  * ALB (HTTP/S)
-  * Private subnets for tasks
-  * HTTPS + WAF + Security Groups
+  - ALB (HTTP/S)
+  - Private subnets for tasks
+  - HTTPS + WAF + Security Groups
 
 ✅ **Result:** Highly available, secure, and scalable public access to your ECS services — the AWS-native way.
 
 ---
+
 ## Q: How do you **expose ECS services publicly?** 🌐🚀
 
 ---
@@ -3985,9 +4008,9 @@ aws ecs create-service \
 
 ✅ ECS automatically:
 
-* Registers task ENIs in the target group
-* Health checks tasks before routing traffic
-* Scales target registration dynamically
+- Registers task ENIs in the target group
+- Health checks tasks before routing traffic
+- Scales target registration dynamically
 
 ---
 
@@ -4007,8 +4030,8 @@ Attach NLB target group with `--target-type ip` and point ECS Service to it.
 
 ✅ **Best for:**
 
-* High-performance, low-latency workloads
-* gRPC, database proxies, message brokers
+- High-performance, low-latency workloads
+- gRPC, database proxies, message brokers
 
 ---
 
@@ -4036,8 +4059,8 @@ http://<public-ip>:8080
 
 ### 📋 Comparison — ECS Exposure Options
 
-| Method                  | Type     | Public Access    | Best For                          | Notes                                    |
-| ----------------------- | -------- | ---------------- | --------------------------------- | ---------------------------------------- |
+| Method                  | Type     | Public Access     | Best For                          | Notes                                    |
+| ----------------------- | -------- | ----------------- | --------------------------------- | ---------------------------------------- |
 | **ALB (HTTP/HTTPS)**    | L7       | ✅ Yes            | Web apps, APIs                    | Supports SSL, path routing, host routing |
 | **NLB (TCP/UDP)**       | L4       | ✅ Yes            | Low-latency or non-HTTP workloads | Static IPs, high performance             |
 | **Public IP (Fargate)** | Direct   | ✅ Yes            | Dev/testing                       | No load balancing or health checks       |
@@ -4081,28 +4104,28 @@ aws route53 change-resource-record-sets \
 
 ### ✅ Best Practices (Production-Ready)
 
-* Always use **ALB or NLB**, not direct public IPs.
-* Keep **tasks in private subnets**, ALB in **public subnets**.
-* Restrict access with **security groups** (ALB → ECS SG).
-* Use **HTTPS (port 443)** with **ACM certificates**.
-* Use **AWS WAF** for DDoS protection.
-* Enable **health checks** (path `/health`) in target group.
-* Set **stickiness** only when session persistence is needed.
-* Combine with **ECS Service Auto Scaling** for dynamic traffic handling.
-* Monitor via **CloudWatch (TargetResponseTime, HTTPCode_Target_5XX)**.
+- Always use **ALB or NLB**, not direct public IPs.
+- Keep **tasks in private subnets**, ALB in **public subnets**.
+- Restrict access with **security groups** (ALB → ECS SG).
+- Use **HTTPS (port 443)** with **ACM certificates**.
+- Use **AWS WAF** for DDoS protection.
+- Enable **health checks** (path `/health`) in target group.
+- Set **stickiness** only when session persistence is needed.
+- Combine with **ECS Service Auto Scaling** for dynamic traffic handling.
+- Monitor via **CloudWatch (TargetResponseTime, HTTPCode_Target_5XX)**.
 
 ---
 
 ### 💡 In short
 
-* ECS services are exposed **via Load Balancers** (ALB/NLB).
-* ECS automatically **registers task IPs** to **Target Groups**.
-* ALB → public traffic | NLB → low-latency | Public IP → dev only.
-* For production:
+- ECS services are exposed **via Load Balancers** (ALB/NLB).
+- ECS automatically **registers task IPs** to **Target Groups**.
+- ALB → public traffic | NLB → low-latency | Public IP → dev only.
+- For production:
 
-  * ALB (HTTP/S)
-  * Private subnets for tasks
-  * HTTPS + WAF + Security Groups
+  - ALB (HTTP/S)
+  - Private subnets for tasks
+  - HTTPS + WAF + Security Groups
 
 ✅ **Result:** Highly available, secure, and scalable public access to your ECS services — the AWS-native way.
 
@@ -4116,13 +4139,13 @@ aws route53 change-resource-record-sets \
 
 Both **Amazon ECS** and **AWS Fargate** let you run containers — but their **pricing models differ fundamentally**:
 
-* **ECS (on EC2)** → You pay for **EC2 instances** running your containers.
-* **Fargate** → You pay for **vCPU + Memory per task/second** (serverless).
+- **ECS (on EC2)** → You pay for **EC2 instances** running your containers.
+- **Fargate** → You pay for **vCPU + Memory per task/second** (serverless).
 
 > 🧩 **Think of it as:**
 >
-> * **ECS (EC2)** = “You manage & pay for servers.”
-> * **Fargate** = “AWS manages servers; you pay per container runtime.”
+> - **ECS (EC2)** = “You manage & pay for servers.”
+> - **Fargate** = “AWS manages servers; you pay per container runtime.”
 
 ---
 
@@ -4139,9 +4162,9 @@ Both **Amazon ECS** and **AWS Fargate** let you run containers — but their **p
 
 #### 💵 **You pay for:**
 
-* EC2 instances (per-hour or per-second)
-* EBS volumes attached to instances
-* Optional: Load Balancers, ECR, CloudWatch logs
+- EC2 instances (per-hour or per-second)
+- EBS volumes attached to instances
+- Optional: Load Balancers, ECR, CloudWatch logs
 
 #### 🧩 Example:
 
@@ -4158,12 +4181,12 @@ If your ECS cluster runs 3 instances (24x7):
 
 ✅ You can:
 
-* Use **Reserved / Spot instances** for savings (up to 70–90%).
-* Run **multiple containers per EC2** (cost-efficient).
+- Use **Reserved / Spot instances** for savings (up to 70–90%).
+- Run **multiple containers per EC2** (cost-efficient).
 
 ⚠️ But:
 
-* You manage patching, scaling, AMIs, and instance lifecycle.
+- You manage patching, scaling, AMIs, and instance lifecycle.
 
 ---
 
@@ -4171,8 +4194,8 @@ If your ECS cluster runs 3 instances (24x7):
 
 #### 💵 **You pay for:**
 
-* **vCPU & Memory** requested per Task (by second, min 1 min)
-* Optionally: Ephemeral storage, Load Balancer, ECR, Logs
+- **vCPU & Memory** requested per Task (by second, min 1 min)
+- Optionally: Ephemeral storage, Load Balancer, ECR, Logs
 
 #### 📊 Pricing Example (ap-south-1 as of 2025):
 
@@ -4194,14 +4217,14 @@ Cost = (0.5 * 0.04048 + 1 * 0.004445) * 720
 
 ✅ Benefits:
 
-* No EC2 management, no capacity planning.
-* Auto-scales seamlessly.
-* Pay only while tasks run.
+- No EC2 management, no capacity planning.
+- Auto-scales seamlessly.
+- Pay only while tasks run.
 
 ⚠️ Drawbacks:
 
-* Can be **2–3× costlier** for always-on workloads.
-* Limited control over networking and instance tuning.
+- Can be **2–3× costlier** for always-on workloads.
+- Limited control over networking and instance tuning.
 
 ---
 
@@ -4226,8 +4249,8 @@ Cost = (0.5 * 0.04048 + 1 * 0.004445) * 720
 
 You can mix both pricing models using **Capacity Providers**:
 
-* Run baseline load on **EC2 (cheap)**
-* Handle bursts on **Fargate (elastic)**
+- Run baseline load on **EC2 (cheap)**
+- Handle bursts on **Fargate (elastic)**
 
 Example Strategy:
 
@@ -4245,17 +4268,17 @@ Example Strategy:
 
 **For ECS (EC2):**
 
-* Use **Spot Instances** for non-critical workloads.
-* Use **Auto Scaling Groups** to match demand.
-* Choose smaller instance types for better bin-packing.
-* Use **Savings Plans** for predictable load.
+- Use **Spot Instances** for non-critical workloads.
+- Use **Auto Scaling Groups** to match demand.
+- Choose smaller instance types for better bin-packing.
+- Use **Savings Plans** for predictable load.
 
 **For Fargate:**
 
-* Use **Fargate Spot** for fault-tolerant jobs (70% cheaper).
-* Use right-sizing: request exact CPU/memory per container.
-* Stop idle tasks quickly.
-* Group small services into a single task definition if feasible.
+- Use **Fargate Spot** for fault-tolerant jobs (70% cheaper).
+- Use right-sizing: request exact CPU/memory per container.
+- Stop idle tasks quickly.
+- Group small services into a single task definition if feasible.
 
 ---
 
@@ -4273,24 +4296,25 @@ Example Strategy:
 
 ### 💡 In short
 
-* **ECS on EC2** → Pay for **instances**, cheaper for steady traffic but manage servers.
-* **Fargate** → Pay per **vCPU + memory per second**, great for scaling, higher cost.
-* **Fargate = convenience**, **ECS (EC2) = cost control**.
-* Mix both with **Capacity Providers** to balance cost & flexibility.
+- **ECS on EC2** → Pay for **instances**, cheaper for steady traffic but manage servers.
+- **Fargate** → Pay per **vCPU + memory per second**, great for scaling, higher cost.
+- **Fargate = convenience**, **ECS (EC2) = cost control**.
+- Mix both with **Capacity Providers** to balance cost & flexibility.
 
 ✅ **Rule of thumb:**
 
-> * 🏷️ If you’re cost-optimizing steady workloads → use **ECS on EC2**
-> * ⚡ If you want hands-free scaling → use **Fargate**
+> - 🏷️ If you’re cost-optimizing steady workloads → use **ECS on EC2**
+> - ⚡ If you want hands-free scaling → use **Fargate**
 
 ---
+
 ## Q: What is a **Capacity Provider** in Amazon ECS? ⚙️🧠
 
 ---
 
 ### 🧠 Overview
 
-A **Capacity Provider** in **Amazon ECS** defines *how and where* your ECS tasks get the compute capacity they need — whether on **EC2 instances** or **AWS Fargate**.
+A **Capacity Provider** in **Amazon ECS** defines _how and where_ your ECS tasks get the compute capacity they need — whether on **EC2 instances** or **AWS Fargate**.
 It allows ECS to automatically choose the **right infrastructure** (and scaling behavior) for running containers, improving cost optimization and flexibility.
 
 > 🧩 **Think of it as:**
@@ -4300,12 +4324,12 @@ It allows ECS to automatically choose the **right infrastructure** (and scaling 
 
 ### ⚙️ Purpose / How It Works
 
-* ECS **Clusters** can have multiple **Capacity Providers** (e.g., EC2, Fargate, Fargate Spot).
-* When you deploy a **Service** or run a **Task**, you specify a **Capacity Provider Strategy**:
+- ECS **Clusters** can have multiple **Capacity Providers** (e.g., EC2, Fargate, Fargate Spot).
+- When you deploy a **Service** or run a **Task**, you specify a **Capacity Provider Strategy**:
 
-  * Which provider(s) to use
-  * How to weight them (distribution)
-  * Whether to use fallback (failover)
+  - Which provider(s) to use
+  - How to weight them (distribution)
+  - Whether to use fallback (failover)
 
 ECS then automatically:
 
@@ -4351,8 +4375,8 @@ aws ecs create-service \
 
 🔹 ECS will launch:
 
-* 75% of tasks on **Fargate (on-demand)**
-* 25% of tasks on **Fargate Spot**
+- 75% of tasks on **Fargate (on-demand)**
+- 25% of tasks on **Fargate Spot**
 
 💡 If Spot capacity is unavailable, ECS automatically falls back to on-demand.
 
@@ -4409,10 +4433,10 @@ aws ecs run-task \
 | Feature                | **Launch Type** (Old)                       | **Capacity Provider** (New)                     |
 | ---------------------- | ------------------------------------------- | ----------------------------------------------- |
 | **Selection**          | Specify at launch (`--launch-type FARGATE`) | Strategy-based (`--capacity-provider-strategy`) |
-| **Mix EC2 + Fargate**  | ❌ Not supported                             | ✅ Yes                                           |
-| **Auto Scaling (EC2)** | Manual or ASG-based                         | ✅ Integrated (Managed Scaling)                  |
-| **Spot Support**       | Manual setup                                | ✅ Native via FARGATE_SPOT                       |
-| **Recommended?**       | Deprecated for new workloads                | ✅ Yes                                           |
+| **Mix EC2 + Fargate**  | ❌ Not supported                            | ✅ Yes                                          |
+| **Auto Scaling (EC2)** | Manual or ASG-based                         | ✅ Integrated (Managed Scaling)                 |
+| **Spot Support**       | Manual setup                                | ✅ Native via FARGATE_SPOT                      |
+| **Recommended?**       | Deprecated for new workloads                | ✅ Yes                                          |
 
 ---
 
@@ -4462,31 +4486,32 @@ aws ecs run-task \
 
 ### ✅ Best Practices
 
-* Always define a **default Capacity Provider Strategy** for each ECS Cluster.
-* Use **FARGATE_SPOT** for dev, test, and fault-tolerant workloads.
-* Combine **EC2 + Fargate** to balance cost & control.
-* Enable **Managed Scaling** for EC2 ASGs (target 70–80%).
-* Avoid mixing old `--launch-type` and new `--capacity-provider-strategy`.
-* Monitor scaling metrics in **CloudWatch → ECS/CapacityProvider**.
-* Tag providers with environment identifiers (`env=prod`, `env=dev`).
-* Test Spot interruption handling (graceful shutdown hooks).
+- Always define a **default Capacity Provider Strategy** for each ECS Cluster.
+- Use **FARGATE_SPOT** for dev, test, and fault-tolerant workloads.
+- Combine **EC2 + Fargate** to balance cost & control.
+- Enable **Managed Scaling** for EC2 ASGs (target 70–80%).
+- Avoid mixing old `--launch-type` and new `--capacity-provider-strategy`.
+- Monitor scaling metrics in **CloudWatch → ECS/CapacityProvider**.
+- Tag providers with environment identifiers (`env=prod`, `env=dev`).
+- Test Spot interruption handling (graceful shutdown hooks).
 
 ---
 
 ### 💡 In short
 
-* A **Capacity Provider** defines *where ECS runs your containers* (EC2, Fargate, Fargate Spot).
-* **Strategy** = how tasks are distributed and scaled across providers.
-* **Managed Scaling** = ECS automatically adds/removes EC2 capacity.
-* Use them for **cost optimization**, **flexibility**, and **auto-scaling intelligence**.
+- A **Capacity Provider** defines _where ECS runs your containers_ (EC2, Fargate, Fargate Spot).
+- **Strategy** = how tasks are distributed and scaled across providers.
+- **Managed Scaling** = ECS automatically adds/removes EC2 capacity.
+- Use them for **cost optimization**, **flexibility**, and **auto-scaling intelligence**.
 
 ✅ **Simple rule:**
 
-> * Use **FARGATE / FARGATE_SPOT** for serverless scaling.
-> * Use **EC2 Capacity Providers** when you want cost control or custom instances.
-> * Mix both for the **best of cost + performance + automation**.
+> - Use **FARGATE / FARGATE_SPOT** for serverless scaling.
+> - Use **EC2 Capacity Providers** when you want cost control or custom instances.
+> - Mix both for the **best of cost + performance + automation**.
 
-----
+---
+
 ## Q: How does **Amazon ECS integrate with CI/CD pipelines?** ⚙️🚀
 
 ---
@@ -4509,8 +4534,8 @@ Typical ECS CI/CD pipeline flow:
 Developer Commit → CI Build → Docker Image → ECR → ECS Service Update → Rolling Deployment
 ```
 
-| Stage           | Action                                  | Tool                                |
-| --------------- | --------------------------------------- | ----------------------------------- |
+| Stage          | Action                                  | Tool                                |
+| -------------- | --------------------------------------- | ----------------------------------- |
 | 1️⃣ **Source**  | Detect code changes                     | GitHub / CodeCommit / GitLab        |
 | 2️⃣ **Build**   | Build + test Docker image               | CodeBuild / Jenkins / GitLab Runner |
 | 3️⃣ **Push**    | Push image to registry                  | Amazon ECR                          |
@@ -4560,9 +4585,9 @@ artifacts:
 
 **Stages:**
 
-* **Source:** GitHub or CodeCommit webhook
-* **Build:** CodeBuild (runs `buildspec.yml`)
-* **Deploy:** ECS (uses new image URI)
+- **Source:** GitHub or CodeCommit webhook
+- **Build:** CodeBuild (runs `buildspec.yml`)
+- **Deploy:** ECS (uses new image URI)
 
 **ECS Deployment Action (example snippet):**
 
@@ -4597,8 +4622,8 @@ artifacts:
 
 Use AWS **CodeDeploy ECS** for zero-downtime deployments.
 
-* Two **Target Groups** (Blue & Green) behind the same **ALB**
-* ECS automatically switches traffic when new version passes health checks
+- Two **Target Groups** (Blue & Green) behind the same **ALB**
+- ECS automatically switches traffic when new version passes health checks
 
 ```json
 "deploymentController": { "type": "CODE_DEPLOY" }
@@ -4650,8 +4675,8 @@ pipeline {
 
 ✅ Jenkins:
 
-* Builds image → pushes to ECR → updates ECS Service automatically.
-* Triggers rolling update → zero downtime.
+- Builds image → pushes to ECR → updates ECS Service automatically.
+- Triggers rolling update → zero downtime.
 
 ---
 
@@ -4663,7 +4688,7 @@ pipeline {
 name: Deploy to ECS
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -4697,8 +4722,8 @@ jobs:
 
 ✅ Each code push triggers:
 
-* Build → Push → ECS Deploy
-* Fully automated with rollback and logs in GitHub Actions console.
+- Build → Push → ECS Deploy
+- Fully automated with rollback and logs in GitHub Actions console.
 
 ---
 
@@ -4717,35 +4742,36 @@ jobs:
 
 ### ✅ Best Practices (Production-Ready)
 
-* Store **AWS credentials** in secure CI/CD secrets (not hardcoded).
-* Use **ECR immutable tags** (`myapp:v1.2.3`), not `latest`.
-* Use **IAM roles for CI/CD** with least privilege.
-* Automate **ECS Task Definition updates** in the pipeline.
-* Validate new images with **integration tests** before deploy.
-* Enable **CodeDeploy Blue/Green** for zero downtime.
-* Use **CloudWatch / X-Ray** for monitoring deployments.
-* Integrate **Slack / SNS** notifications for deploy status.
-* Tag builds and ECS services for traceability (`build_id`, `git_sha`).
+- Store **AWS credentials** in secure CI/CD secrets (not hardcoded).
+- Use **ECR immutable tags** (`myapp:v1.2.3`), not `latest`.
+- Use **IAM roles for CI/CD** with least privilege.
+- Automate **ECS Task Definition updates** in the pipeline.
+- Validate new images with **integration tests** before deploy.
+- Enable **CodeDeploy Blue/Green** for zero downtime.
+- Use **CloudWatch / X-Ray** for monitoring deployments.
+- Integrate **Slack / SNS** notifications for deploy status.
+- Tag builds and ECS services for traceability (`build_id`, `git_sha`).
 
 ---
 
 ### 💡 In short
 
-* ECS integrates with **CI/CD pipelines** to automate build → push → deploy.
-* Use **CodePipeline + CodeBuild** for native AWS CI/CD.
-* Or integrate **Jenkins / GitHub Actions / GitLab CI/CD** via AWS CLI or APIs.
-* Pipelines update ECS **Task Definitions**, triggering **rolling updates or blue/green deployments** automatically.
+- ECS integrates with **CI/CD pipelines** to automate build → push → deploy.
+- Use **CodePipeline + CodeBuild** for native AWS CI/CD.
+- Or integrate **Jenkins / GitHub Actions / GitLab CI/CD** via AWS CLI or APIs.
+- Pipelines update ECS **Task Definitions**, triggering **rolling updates or blue/green deployments** automatically.
 
 ✅ **Result:** Reliable, zero-downtime, fully automated ECS deployments — from commit to production.
 
-----
+---
+
 ## Q: How to **perform Blue/Green deployment in Amazon ECS?** 💙💚🚀
 
 ---
 
 ### 🧠 Overview
 
-A **Blue/Green deployment** in ECS ensures **zero-downtime releases** by running **two versions of your application simultaneously** — the old (🟦 *blue*) and the new (🟩 *green*) — and **shifting traffic gradually** after verifying the new version’s health.
+A **Blue/Green deployment** in ECS ensures **zero-downtime releases** by running **two versions of your application simultaneously** — the old (🟦 _blue_) and the new (🟩 _green_) — and **shifting traffic gradually** after verifying the new version’s health.
 
 ECS integrates with **AWS CodeDeploy** and **Application Load Balancer (ALB)** to automate traffic shifting, rollback, and monitoring.
 
@@ -4787,10 +4813,10 @@ ECS integrates with **AWS CodeDeploy** and **Application Load Balancer (ALB)** t
 
 ### 🧩 1️⃣ Prerequisites
 
-* **ECS Cluster** (Fargate or EC2)
-* **ECS Service** linked to an **ALB Target Group**
-* **IAM Roles** for CodeDeploy & ECS
-* **AWS CodeDeploy App + Deployment Group** configured
+- **ECS Cluster** (Fargate or EC2)
+- **ECS Service** linked to an **ALB Target Group**
+- **IAM Roles** for CodeDeploy & ECS
+- **AWS CodeDeploy App + Deployment Group** configured
 
 ---
 
@@ -4836,8 +4862,8 @@ aws deploy create-deployment-group \
 
 ✅ Defines:
 
-* Two target groups (`blue-tg` and `green-tg`)
-* Production listener (80/443) and test listener (optional)
+- Two target groups (`blue-tg` and `green-tg`)
+- Production listener (80/443) and test listener (optional)
 
 ---
 
@@ -4872,10 +4898,10 @@ aws deploy create-deployment \
 
 ✅ CodeDeploy:
 
-* Launches *green* tasks using new task definition
-* Registers them in *green target group*
-* Runs ALB health checks
-* Shifts traffic (gradually or all-at-once)
+- Launches _green_ tasks using new task definition
+- Registers them in _green target group_
+- Runs ALB health checks
+- Shifts traffic (gradually or all-at-once)
 
 ---
 
@@ -4911,8 +4937,8 @@ Output:
 
 If new deployment fails:
 
-* CodeDeploy **auto-rolls back** to previous (blue) version.
-* Or rollback manually:
+- CodeDeploy **auto-rolls back** to previous (blue) version.
+- Or rollback manually:
 
   ```bash
   aws deploy stop-deployment --deployment-id d-ABCDEFGHIJK --auto-rollback-enabled
@@ -4972,27 +4998,28 @@ If new deployment fails:
 
 ### ✅ Best Practices (Production-Ready)
 
-* Always use **separate Target Groups** for Blue and Green.
-* Use **ALB Health Checks** (`/health`) for traffic readiness.
-* Implement **CloudWatch alarms** for rollback triggers.
-* Tag Task Definitions with version/build info (`build_id`, `git_sha`).
-* For HTTPS → use **ACM-managed certificates** on ALB listeners.
-* Store ECS + CodeDeploy IAM roles securely with least privilege.
-* Automate via **CodePipeline** for continuous deployment.
-* Monitor **CodeDeploy Events**, **ALB Target Group Health**, and **CloudWatch metrics**.
+- Always use **separate Target Groups** for Blue and Green.
+- Use **ALB Health Checks** (`/health`) for traffic readiness.
+- Implement **CloudWatch alarms** for rollback triggers.
+- Tag Task Definitions with version/build info (`build_id`, `git_sha`).
+- For HTTPS → use **ACM-managed certificates** on ALB listeners.
+- Store ECS + CodeDeploy IAM roles securely with least privilege.
+- Automate via **CodePipeline** for continuous deployment.
+- Monitor **CodeDeploy Events**, **ALB Target Group Health**, and **CloudWatch metrics**.
 
 ---
 
 ### 💡 In short
 
-* ECS Blue/Green = **zero-downtime deployment** using **CodeDeploy + ALB Target Groups**.
-* ECS runs *two environments* → verifies → shifts traffic safely.
-* Supports **gradual, canary, or all-at-once** deployments.
-* Rollback is **automatic** on failure.
+- ECS Blue/Green = **zero-downtime deployment** using **CodeDeploy + ALB Target Groups**.
+- ECS runs _two environments_ → verifies → shifts traffic safely.
+- Supports **gradual, canary, or all-at-once** deployments.
+- Rollback is **automatic** on failure.
 
 ✅ **Best for production systems** where uptime and reliability are non-negotiable.
 
 ---
+
 ## Q: How to Handle **Zero-Downtime Deployments** in Amazon ECS 🚀🟢
 
 ---
@@ -5001,7 +5028,7 @@ If new deployment fails:
 
 **Zero-downtime deployment** in ECS means updating your application **without interrupting existing users** — no failed requests, no downtime, and safe rollback if something goes wrong.
 
-ECS achieves this using **rolling updates** or **blue/green deployments** (via **CodeDeploy** + **ALB**), ensuring new containers go live *only after they’re healthy*.
+ECS achieves this using **rolling updates** or **blue/green deployments** (via **CodeDeploy** + **ALB**), ensuring new containers go live _only after they’re healthy_.
 
 > 🧩 **Think of it as:**
 > “ECS spins up the new version → health-checks it → gradually replaces the old one → without dropping a single request.”
@@ -5019,9 +5046,9 @@ Two main ECS strategies for zero-downtime:
 
 Both methods rely on:
 
-* **Load Balancer (ALB/NLB)** for traffic routing
-* **Health checks** for task readiness
-* **Service Auto Scaling** to manage capacity during rollout
+- **Load Balancer (ALB/NLB)** for traffic routing
+- **Health checks** for task readiness
+- **Service Auto Scaling** to manage capacity during rollout
 
 ---
 
@@ -5096,10 +5123,10 @@ aws deploy create-deployment \
 
 ✅ ECS + CodeDeploy automatically:
 
-* Creates new tasks (green)
-* Performs ALB health checks
-* Shifts traffic gradually
-* Rolls back if errors occur
+- Creates new tasks (green)
+- Performs ALB health checks
+- Shifts traffic gradually
+- Rolls back if errors occur
 
 💡 Ideal for: mission-critical apps and high-traffic production environments.
 
@@ -5199,30 +5226,32 @@ Example:
 
 ### ✅ Best Practices (Production-Ready)
 
-* ✅ Always use **health checks + ALB integration**
-* ✅ Keep **`minimumHealthyPercent=100`** for rolling deploys
-* ✅ Automate **traffic shifting** with CodeDeploy Blue/Green
-* ✅ Store image tags as **immutable** (no `:latest`)
-* ✅ Use **CI/CD pipelines** (CodePipeline, Jenkins, GitHub Actions)
-* ✅ Enable **rollback alarms** using CloudWatch metrics
-* ✅ Test deploys in **staging ECS service** before production
-* ✅ Use **CloudWatch Container Insights** for deploy metrics (CPU, errors)
+- ✅ Always use **health checks + ALB integration**
+- ✅ Keep **`minimumHealthyPercent=100`** for rolling deploys
+- ✅ Automate **traffic shifting** with CodeDeploy Blue/Green
+- ✅ Store image tags as **immutable** (no `:latest`)
+- ✅ Use **CI/CD pipelines** (CodePipeline, Jenkins, GitHub Actions)
+- ✅ Enable **rollback alarms** using CloudWatch metrics
+- ✅ Test deploys in **staging ECS service** before production
+- ✅ Use **CloudWatch Container Insights** for deploy metrics (CPU, errors)
 
 ---
 
 ### 💡 In short
 
-* ECS handles zero-downtime deploys via:
+- ECS handles zero-downtime deploys via:
 
-  * 🌀 **Rolling Updates** (native ECS)
-  * 💙💚 **Blue/Green Deployments** (via CodeDeploy)
-* Key enablers: **ALB**, **health checks**, **auto scaling**, **CI/CD automation**
-* Rolling = simple & fast → small apps
-* Blue/Green = safest → critical workloads
+  - 🌀 **Rolling Updates** (native ECS)
+  - 💙💚 **Blue/Green Deployments** (via CodeDeploy)
+
+- Key enablers: **ALB**, **health checks**, **auto scaling**, **CI/CD automation**
+- Rolling = simple & fast → small apps
+- Blue/Green = safest → critical workloads
 
 ✅ **Goal:** Always deploy new versions safely, automatically, and **without user disruption**.
 
 ---
+
 ## Q: What is **Amazon ECS Exec**? 🐚⚙️
 
 ---
@@ -5370,8 +5399,8 @@ And for your **user/role** running `aws ecs execute-command`:
 
 You can stream ECS Exec session logs to:
 
-* **Amazon CloudWatch Logs**, or
-* **S3 Bucket**
+- **Amazon CloudWatch Logs**, or
+- **S3 Bucket**
 
 Example config:
 
@@ -5393,12 +5422,12 @@ Or via AWS Console:
 
 | Feature               | **ECS Exec**                  | **SSH Access (Legacy)**   |
 | --------------------- | ----------------------------- | ------------------------- |
-| Requires open ports   | ❌ No                          | ✅ Yes (port 22)           |
-| Uses key pairs        | ❌ No                          | ✅ Yes                     |
-| Works on Fargate      | ✅ Yes                         | ❌ No                      |
-| Encrypted via KMS     | ✅ Yes                         | ❌ Manual                  |
-| Auditable (logs)      | ✅ CloudWatch/S3               | ❌ Difficult               |
-| Multi-container tasks | ✅ Supported                   | ✅ Manual setup required   |
+| Requires open ports   | ❌ No                         | ✅ Yes (port 22)          |
+| Uses key pairs        | ❌ No                         | ✅ Yes                    |
+| Works on Fargate      | ✅ Yes                        | ❌ No                     |
+| Encrypted via KMS     | ✅ Yes                        | ❌ Manual                 |
+| Auditable (logs)      | ✅ CloudWatch/S3              | ❌ Difficult              |
+| Multi-container tasks | ✅ Supported                  | ✅ Manual setup required  |
 | Recommended for       | Debugging containers securely | Legacy EC2-only debugging |
 
 ---
@@ -5425,12 +5454,12 @@ curl localhost:8080/health
 
 ### ✅ Best Practices
 
-* Always **enable ECS Exec only temporarily** for debugging (disable afterward).
-* **Restrict IAM permissions** (`ecs:ExecuteCommand`) to ops team only.
-* **Encrypt logs with KMS** and send to CloudWatch for audit trails.
-* **Rotate ECS Exec session credentials** via SSM policies.
-* For Fargate workloads, **enable CloudWatch Agent** for deeper inspection.
-* Disable ECS Exec when not needed:
+- Always **enable ECS Exec only temporarily** for debugging (disable afterward).
+- **Restrict IAM permissions** (`ecs:ExecuteCommand`) to ops team only.
+- **Encrypt logs with KMS** and send to CloudWatch for audit trails.
+- **Rotate ECS Exec session credentials** via SSM policies.
+- For Fargate workloads, **enable CloudWatch Agent** for deeper inspection.
+- Disable ECS Exec when not needed:
 
   ```bash
   aws ecs update-service --cluster prod-cluster --service web-service --no-enable-execute-command
@@ -5440,17 +5469,19 @@ curl localhost:8080/health
 
 ### 💡 In short
 
-* **ECS Exec** = Secure, audited `docker exec` via **AWS Systems Manager**.
-* Works on **EC2 and Fargate** without SSH.
-* Great for debugging, inspecting env vars, and testing app behavior.
-* Fully **encrypted, logged, and IAM-controlled** — production-safe alternative to SSH.
+- **ECS Exec** = Secure, audited `docker exec` via **AWS Systems Manager**.
+- Works on **EC2 and Fargate** without SSH.
+- Great for debugging, inspecting env vars, and testing app behavior.
+- Fully **encrypted, logged, and IAM-controlled** — production-safe alternative to SSH.
 
 ✅ **Command to remember:**
 
 ```bash
 aws ecs execute-command --cluster <cluster> --task <id> --container <name> --interactive --command "/bin/bash"
 ```
+
 ---
+
 ## Q: How do you **monitor ECS tasks and performance**? 📊🧠
 
 ---
@@ -5490,11 +5521,11 @@ ECS → Cluster → **Monitoring Tab** → Enable **Container Insights**
 
 ✅ Enables:
 
-* CPUUtilization
-* MemoryUtilization
-* RunningTaskCount
-* NetworkBytesIn/Out
-* StorageRead/WriteBytes
+- CPUUtilization
+- MemoryUtilization
+- RunningTaskCount
+- NetworkBytesIn/Out
+- StorageRead/WriteBytes
 
 Metrics are sent every 1 minute to CloudWatch.
 
@@ -5559,9 +5590,9 @@ aws logs tail /ecs/app --follow
 
 ✅ Captures:
 
-* Application logs (`stdout`/`stderr`)
-* ECS agent/system events
-* Container lifecycle logs
+- Application logs (`stdout`/`stderr`)
+- ECS agent/system events
+- Container lifecycle logs
 
 ---
 
@@ -5591,13 +5622,14 @@ aws cloudwatch put-metric-alarm \
 
 To analyze latency and dependencies:
 
-* Add X-Ray SDK to your app containers.
-* Grant ECS task role permission:
+- Add X-Ray SDK to your app containers.
+- Grant ECS task role permission:
 
   ```json
   "xray:PutTraceSegments", "xray:PutTelemetryRecords"
   ```
-* Run X-Ray Daemon as a **sidecar container** in the task.
+
+- Run X-Ray Daemon as a **sidecar container** in the task.
 
 **Task Definition Example:**
 
@@ -5643,10 +5675,10 @@ aws cloudwatch put-dashboard \
 
 ✅ Add widgets for:
 
-* ECS Service health
-* ALB 5xx/4xx errors
-* Task restarts
-* Network traffic
+- ECS Service health
+- ALB 5xx/4xx errors
+- Task restarts
+- Network traffic
 
 ---
 
@@ -5660,15 +5692,15 @@ aws ecs describe-services --cluster prod-cluster --services web-service
 
 📋 Example events:
 
-* Task started/stopped
-* Service scaled up/down
-* Deployment completed
+- Task started/stopped
+- Service scaled up/down
+- Deployment completed
 
 **CloudTrail** tracks:
 
-* Who deployed what
-* Configuration changes
-* ECS API activity
+- Who deployed what
+- Configuration changes
+- ECS API activity
 
 ---
 
@@ -5700,22 +5732,22 @@ aws ecs describe-services --cluster prod-cluster --services web-service
 
 ### ✅ Best Practices (Production-Ready)
 
-* Enable **Container Insights** in all ECS clusters.
-* Set **CloudWatch Alarms** for CPU > 80%, Memory > 90%, and Task restarts.
-* Stream **application logs** via `awslogs` or **FireLens → ELK/S3**.
-* Use **AWS X-Ray** for tracing slow endpoints.
-* Enable **ECS Exec** for live debugging instead of SSH.
-* Tag resources (`env`, `app`, `team`) for organized dashboards.
-* Automate alerting via **SNS → Slack / PagerDuty**.
-* Regularly review **CloudWatch Cost and Usage Reports**.
+- Enable **Container Insights** in all ECS clusters.
+- Set **CloudWatch Alarms** for CPU > 80%, Memory > 90%, and Task restarts.
+- Stream **application logs** via `awslogs` or **FireLens → ELK/S3**.
+- Use **AWS X-Ray** for tracing slow endpoints.
+- Enable **ECS Exec** for live debugging instead of SSH.
+- Tag resources (`env`, `app`, `team`) for organized dashboards.
+- Automate alerting via **SNS → Slack / PagerDuty**.
+- Regularly review **CloudWatch Cost and Usage Reports**.
 
 ---
 
 ### 💡 In short
 
-* ECS integrates with **CloudWatch**, **Container Insights**, and **X-Ray** for monitoring.
-* You can track **CPU, memory, network, logs, and latency** at task or service level.
-* Use **alarms, dashboards, and tracing** for proactive performance management.
+- ECS integrates with **CloudWatch**, **Container Insights**, and **X-Ray** for monitoring.
+- You can track **CPU, memory, network, logs, and latency** at task or service level.
+- Use **alarms, dashboards, and tracing** for proactive performance management.
 
 ✅ **Golden Command Set:**
 
@@ -5729,6 +5761,7 @@ aws ecs execute-command --interactive --command "top"
 🟢 **Goal:** Always know what your containers are doing — in real time, securely, and with zero downtime.
 
 ---
+
 ## Q: How do you **troubleshoot ECS task failures?** 🛠️🐳
 
 ---
@@ -5739,7 +5772,7 @@ When an **ECS task fails**, it usually means the container couldn’t start, cra
 Troubleshooting involves checking **task logs, events, IAM roles, networking, and resource settings** to identify root causes.
 
 > 🧩 **Think of it as:**
-> “Find *why* the task stopped — look at events, logs, permissions, and resource limits step by step.”
+> “Find _why_ the task stopped — look at events, logs, permissions, and resource limits step by step.”
 
 ---
 
@@ -5759,7 +5792,7 @@ Troubleshooting involves checking **task logs, events, IAM roles, networking, an
 
 #### 🔹 1️⃣ Check Task and Service Events
 
-View the recent events to see *why* ECS stopped or failed to start a task.
+View the recent events to see _why_ ECS stopped or failed to start a task.
 
 ```bash
 aws ecs describe-services \
@@ -5821,9 +5854,9 @@ aws logs tail /ecs/web-service --follow
 
 ✅ Look for:
 
-* App startup errors (`module not found`, `database connection refused`)
-* Port binding issues (`address already in use`)
-* Config/env issues (`missing ENV var`)
+- App startup errors (`module not found`, `database connection refused`)
+- Port binding issues (`address already in use`)
+- Config/env issues (`missing ENV var`)
 
 If logs are missing → verify the task’s **logConfiguration** block:
 
@@ -5863,8 +5896,8 @@ curl localhost:8080/health
 
 ⚠️ Requires:
 
-* `--enable-execute-command` set on service
-* IAM permissions for `ecs:ExecuteCommand`
+- `--enable-execute-command` set on service
+- IAM permissions for `ecs:ExecuteCommand`
 
 ---
 
@@ -5885,9 +5918,9 @@ aws elbv2 describe-target-health \
 
 **Fix:**
 
-* Correct health check path in ALB (`/health` → `/api/healthz`)
-* Ensure app listens on containerPort specified in task definition
-* Match containerPort ↔ ALB target port mapping
+- Correct health check path in ALB (`/health` → `/api/healthz`)
+- Ensure app listens on containerPort specified in task definition
+- Match containerPort ↔ ALB target port mapping
 
 ---
 
@@ -5903,9 +5936,9 @@ aws ecs describe-task-definition \
 
 If task exits with OOM (`137`):
 
-* Increase memory (`memoryReservation` or `memory`)
-* Use `--cpu`/`--memory` flags for Fargate right-sizing
-* Monitor via **CloudWatch ContainerInsights**
+- Increase memory (`memoryReservation` or `memory`)
+- Use `--cpu`/`--memory` flags for Fargate right-sizing
+- Monitor via **CloudWatch ContainerInsights**
 
 ---
 
@@ -5954,9 +5987,9 @@ sudo docker logs <container-id>
 
 ✅ Common EC2 agent errors:
 
-* `CannotPullContainerError`
-* `No space left on device`
-* `Task failed to start due to ENI quota`
+- `CannotPullContainerError`
+- `No space left on device`
+- `Task failed to start due to ENI quota`
 
 ---
 
@@ -5964,9 +5997,9 @@ sudo docker logs <container-id>
 
 Use **Container Insights** to correlate task failures with resource spikes:
 
-* `CPUUtilization` > 90% → CPU throttling
-* `MemoryUtilization` > 95% → OOM kills
-* `NetworkTxBytes` drops → connectivity issues
+- `CPUUtilization` > 90% → CPU throttling
+- `MemoryUtilization` > 95% → OOM kills
+- `NetworkTxBytes` drops → connectivity issues
 
 ---
 
@@ -5974,10 +6007,10 @@ Use **Container Insights** to correlate task failures with resource spikes:
 
 Check for:
 
-* Incorrect **image tag** (use immutable tags)
-* Mismatched **containerPort** and ALB target port
-* Invalid **environment variables**
-* Missing **secrets** or wrong ARNs
+- Incorrect **image tag** (use immutable tags)
+- Mismatched **containerPort** and ALB target port
+- Invalid **environment variables**
+- Missing **secrets** or wrong ARNs
 
 ✅ Example:
 
@@ -6004,26 +6037,26 @@ Check for:
 
 ### ✅ Best Practices for Preventing Failures
 
-* ✅ Use **CloudWatch Container Insights** for proactive monitoring
-* ✅ Always push Docker images to **Amazon ECR**
-* ✅ Use **ALB health checks** with retry thresholds
-* ✅ Enable **ECS Exec** for real-time debugging
-* ✅ Use **immutable image tags** (`myapp:v1.3.4`)
-* ✅ Configure **Service Auto Scaling** to prevent overload
-* ✅ Validate task definition changes in **staging** before prod
-* ✅ Automate **rollbacks** using **CodeDeploy Blue/Green**
-* ✅ Set **CloudWatch Alarms** for high CPU/memory thresholds
-* ✅ Rotate IAM roles & secrets regularly
+- ✅ Use **CloudWatch Container Insights** for proactive monitoring
+- ✅ Always push Docker images to **Amazon ECR**
+- ✅ Use **ALB health checks** with retry thresholds
+- ✅ Enable **ECS Exec** for real-time debugging
+- ✅ Use **immutable image tags** (`myapp:v1.3.4`)
+- ✅ Configure **Service Auto Scaling** to prevent overload
+- ✅ Validate task definition changes in **staging** before prod
+- ✅ Automate **rollbacks** using **CodeDeploy Blue/Green**
+- ✅ Set **CloudWatch Alarms** for high CPU/memory thresholds
+- ✅ Rotate IAM roles & secrets regularly
 
 ---
 
 ### 💡 In short
 
-* Start with **ECS Events → Task stoppedReason → Logs → Health checks**.
-* Use **ECS Exec** to inspect live containers.
-* Validate **IAM**, **network**, and **resource allocations**.
-* Monitor via **CloudWatch** and **Container Insights**.
-* Fix common culprits: bad image, low memory, health check mismatch, or IAM issues.
+- Start with **ECS Events → Task stoppedReason → Logs → Health checks**.
+- Use **ECS Exec** to inspect live containers.
+- Validate **IAM**, **network**, and **resource allocations**.
+- Monitor via **CloudWatch** and **Container Insights**.
+- Fix common culprits: bad image, low memory, health check mismatch, or IAM issues.
 
 ✅ **Golden Commands:**
 
@@ -6037,6 +6070,7 @@ aws elbv2 describe-target-health --target-group-arn <tg-arn>
 🟢 **Goal:** Detect, debug, and fix ECS task failures fast — without downtime or guesswork.
 
 ---
+
 ## Q: How to **connect ECS to private services (like RDS)**? 🔒🔗
 
 ---
@@ -6050,11 +6084,11 @@ Key ideas: **awsvpc networking**, **private subnets (no public IP)**, **tight SG
 
 ### ⚙️ Purpose / How it works
 
-* ECS tasks in **awsvpc** get ENIs in specified private subnets → they receive VPC-private IPs and attach task-level security groups.
-* RDS sits in private subnets with a security group that permits inbound DB port **only** from the ECS tasks’ security group (least privilege).
-* App reads DB credentials from **Secrets Manager** (or SSM) — no secrets in images or git.
-* If tasks need to pull images or fetch secrets without internet, use **VPC endpoints** (ECR, ECR API, SSM, Secrets Manager) or NAT gateway for egress.
-* Use TLS for DB connections and optional **IAM DB authentication** (Postgres/MySQL) for extra security.
+- ECS tasks in **awsvpc** get ENIs in specified private subnets → they receive VPC-private IPs and attach task-level security groups.
+- RDS sits in private subnets with a security group that permits inbound DB port **only** from the ECS tasks’ security group (least privilege).
+- App reads DB credentials from **Secrets Manager** (or SSM) — no secrets in images or git.
+- If tasks need to pull images or fetch secrets without internet, use **VPC endpoints** (ECR, ECR API, SSM, Secrets Manager) or NAT gateway for egress.
+- Use TLS for DB connections and optional **IAM DB authentication** (Postgres/MySQL) for extra security.
 
 ---
 
@@ -6095,22 +6129,34 @@ aws ec2 authorize-security-group-ingress \
     {
       "name": "api",
       "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/api:1.2.3",
-      "portMappings":[{"containerPort":8080}],
+      "portMappings": [{ "containerPort": 8080 }],
       "secrets": [
-        { "name": "DB_PASSWORD", "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db-pass-abc" },
-        { "name": "DB_USER",     "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db-user-xyz" }
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db-pass-abc"
+        },
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db-user-xyz"
+        }
       ],
       "environment": [
-        { "name": "DB_HOST", "value": "mydb.abcdefghijkl.ap-south-1.rds.amazonaws.com" },
+        {
+          "name": "DB_HOST",
+          "value": "mydb.abcdefghijkl.ap-south-1.rds.amazonaws.com"
+        },
         { "name": "DB_PORT", "value": "5432" }
       ],
-      "logConfiguration": { "logDriver": "awslogs", "options": { "awslogs-group": "/ecs/api" } }
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": { "awslogs-group": "/ecs/api" }
+      }
     }
   ]
 }
 ```
 
-* **Note:** `secrets` requires the **task execution role** / task role to have `secretsmanager:GetSecretValue` permission.
+- **Note:** `secrets` requires the **task execution role** / task role to have `secretsmanager:GetSecretValue` permission.
 
 #### 4) Terraform example — SGs + RDS allow-from-ECS
 
@@ -6151,7 +6197,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
 
 Create endpoints for:
 
-* `secretsmanager`, `ssm`, `ssmmessages`, `ecr.api`, `ecr.dkr`, `logs` as required.
+- `secretsmanager`, `ssm`, `ssmmessages`, `ecr.api`, `ecr.dkr`, `logs` as required.
 
 #### 6) App connection sample (Java JDBC)
 
@@ -6179,17 +6225,17 @@ jdbc:postgresql://${DB_HOST}:${DB_PORT}/mydb?sslmode=require
 
 ### ✅ Best Practices
 
-* **Use `awsvpc` + private subnets** — task-level SGs for fine control.
-* **Never expose RDS publicly** — set `publicly_accessible = false`.
-* **Security groups by role** — create separate SGs for ECS tasks, RDS, ALB; allow only necessary ports.
-* **Inject secrets at runtime** (Secrets Manager / SSM) and grant minimal IAM to execution/task role.
-* **Provision VPC endpoints** for Secrets Manager, SSM and ECR if your cluster has no Internet/NAT.
-* **Use TLS and verify certificates** when connecting to RDS.
-* **Consider IAM DB authentication** (supported for RDS Postgres/MySQL) for rotating, short-lived creds.
-* **Right-size connection pools** and use pooling libraries (pgBouncer) for RDS scaling.
-* **Monitor network/ENI quotas** — each Fargate task consumes an ENI; plan IP capacity per subnet.
-* **Test in staging** with the same private networking layout before production rollout.
-* **Audit and log** access to secrets (CloudTrail) and DB connections (RDS logs).
+- **Use `awsvpc` + private subnets** — task-level SGs for fine control.
+- **Never expose RDS publicly** — set `publicly_accessible = false`.
+- **Security groups by role** — create separate SGs for ECS tasks, RDS, ALB; allow only necessary ports.
+- **Inject secrets at runtime** (Secrets Manager / SSM) and grant minimal IAM to execution/task role.
+- **Provision VPC endpoints** for Secrets Manager, SSM and ECR if your cluster has no Internet/NAT.
+- **Use TLS and verify certificates** when connecting to RDS.
+- **Consider IAM DB authentication** (supported for RDS Postgres/MySQL) for rotating, short-lived creds.
+- **Right-size connection pools** and use pooling libraries (pgBouncer) for RDS scaling.
+- **Monitor network/ENI quotas** — each Fargate task consumes an ENI; plan IP capacity per subnet.
+- **Test in staging** with the same private networking layout before production rollout.
+- **Audit and log** access to secrets (CloudTrail) and DB connections (RDS logs).
 
 ---
 
@@ -6198,6 +6244,7 @@ jdbc:postgresql://${DB_HOST}:${DB_PORT}/mydb?sslmode=require
 Run ECS tasks in **private subnets (awsvpc)**, use **task-level security groups** that are allowed in the **RDS security group**, inject DB credentials from **Secrets Manager**, and use **VPC endpoints or NAT** so tasks can pull images and secrets without exposing resources publicly. Secure with TLS, least-privilege IAM, and connection pooling for production readiness.
 
 ---
+
 ## Q: How do you **secure ECS workloads**? 🔒🐳
 
 ---
@@ -6210,12 +6257,12 @@ Securing ECS workloads is a multi-layered discipline: **image supply chain, clus
 
 ### ⚙️ Purpose / How it works
 
-* **Prevent risky images** (scan & sign).
-* **Control access** (task roles, execution roles, IAM least privilege).
-* **Limit blast radius** (awsvpc, SGs, private subnets, separate clusters/envs).
-* **Protect secrets** (Secrets Manager/SSM + IAM).
-* **Harden runtime** (resource limits, read-only FS, no privileged mode).
-* **Audit & respond** (CloudWatch, Container Insights, CloudTrail, ECR image scan events).
+- **Prevent risky images** (scan & sign).
+- **Control access** (task roles, execution roles, IAM least privilege).
+- **Limit blast radius** (awsvpc, SGs, private subnets, separate clusters/envs).
+- **Protect secrets** (Secrets Manager/SSM + IAM).
+- **Harden runtime** (resource limits, read-only FS, no privileged mode).
+- **Audit & respond** (CloudWatch, Container Insights, CloudTrail, ECR image scan events).
 
 Security is achieved by combining config (Task Definitions, SGs, IAM), infra (VPC, endpoints), processes (CI gating, image signing), and monitoring.
 
@@ -6231,27 +6278,32 @@ Security is achieved by combining config (Task Definitions, SGs, IAM), infra (VP
   "networkMode": "awsvpc",
   "taskRoleArn": "arn:aws:iam::123456789012:role/AppTaskRole",
   "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
-  "containerDefinitions": [{
-    "name": "api",
-    "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/api:1.2.3",
-    "cpu": 256,
-    "memory": 512,
-    "readonlyRootFilesystem": true,
-    "essential": true,
-    "privileged": false,
-    "environment": [],
-    "secrets": [
-      { "name": "DB_PASSWORD", "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db" }
-    ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "/ecs/api",
-        "awslogs-region": "ap-south-1",
-        "awslogs-stream-prefix": "ecs"
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "123456789012.dkr.ecr.ap-south-1.amazonaws.com/api:1.2.3",
+      "cpu": 256,
+      "memory": 512,
+      "readonlyRootFilesystem": true,
+      "essential": true,
+      "privileged": false,
+      "environment": [],
+      "secrets": [
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/api",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
       }
     }
-  }]
+  ]
 }
 ```
 
@@ -6259,17 +6311,19 @@ Security is achieved by combining config (Task Definitions, SGs, IAM), infra (VP
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Effect":"Allow",
-      "Action":[ "s3:GetObject" ],
-      "Resource":[ "arn:aws:s3:::myapp-config/*" ]
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::myapp-config/*"]
     },
     {
-      "Effect":"Allow",
-      "Action":[ "secretsmanager:GetSecretValue" ],
-      "Resource":[ "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db" ]
+      "Effect": "Allow",
+      "Action": ["secretsmanager:GetSecretValue"],
+      "Resource": [
+        "arn:aws:secretsmanager:ap-south-1:123456789012:secret:prod/db"
+      ]
     }
   ]
 }
@@ -6351,72 +6405,72 @@ ENTRYPOINT ["gunicorn","app:app","-b","0.0.0.0:8080"]
 
 ### ✅ Best Practices (production-ready, checklist)
 
-* **Image security**
+- **Image security**
 
-  * Scan images on push (`scanOnPush`) and fail CI on HIGH/CRITICAL findings.
-  * Use **immutable tags** (semantic tags) and avoid `:latest`.
-  * Sign images with **cosign** and verify in deploy pipeline.
+  - Scan images on push (`scanOnPush`) and fail CI on HIGH/CRITICAL findings.
+  - Use **immutable tags** (semantic tags) and avoid `:latest`.
+  - Sign images with **cosign** and verify in deploy pipeline.
 
-* **Identity & least privilege**
+- **Identity & least privilege**
 
-  * Separate **executionRole** (ECS) and **taskRole** (app).
-  * Grant minimal `secretsmanager:GetSecretValue`, `s3:GetObject`, etc.
-  * Use **role chaining** for CI (assume-role) instead of long-lived keys.
+  - Separate **executionRole** (ECS) and **taskRole** (app).
+  - Grant minimal `secretsmanager:GetSecretValue`, `s3:GetObject`, etc.
+  - Use **role chaining** for CI (assume-role) instead of long-lived keys.
 
-* **Network isolation**
+- **Network isolation**
 
-  * Use **awsvpc** networking + private subnets for tasks.
-  * ALB in public subnets; tasks in private subnets.
-  * SGs: ALB → Task SG; Task SG → DB SG (only needed ports).
+  - Use **awsvpc** networking + private subnets for tasks.
+  - ALB in public subnets; tasks in private subnets.
+  - SGs: ALB → Task SG; Task SG → DB SG (only needed ports).
 
-* **Secrets & keys**
+- **Secrets & keys**
 
-  * Store secrets in **Secrets Manager** or **SSM Parameter Store (SecureString)**.
-  * Inject via Task Definition `secrets` or Secrets Store CSI for EKS.
-  * Rotate secrets and monitor access via CloudTrail.
+  - Store secrets in **Secrets Manager** or **SSM Parameter Store (SecureString)**.
+  - Inject via Task Definition `secrets` or Secrets Store CSI for EKS.
+  - Rotate secrets and monitor access via CloudTrail.
 
-* **Runtime hardening**
+- **Runtime hardening**
 
-  * Disable **privileged**, **capabilities**; set `readonlyRootFilesystem`.
-  * Limit container CPU/memory to avoid noisy neighbors.
-  * Use AppArmor/SELinux / seccomp profiles if available.
+  - Disable **privileged**, **capabilities**; set `readonlyRootFilesystem`.
+  - Limit container CPU/memory to avoid noisy neighbors.
+  - Use AppArmor/SELinux / seccomp profiles if available.
 
-* **Host & agent**
+- **Host & agent**
 
-  * Use **ECS-optimized AMIs** and automated image updates for EC2.
-  * Prefer **Fargate** for stronger isolation when ops cost acceptable.
+  - Use **ECS-optimized AMIs** and automated image updates for EC2.
+  - Prefer **Fargate** for stronger isolation when ops cost acceptable.
 
-* **Monitoring & alerting**
+- **Monitoring & alerting**
 
-  * Enable **CloudWatch Container Insights**, centralize logs (awslogs / FireLens).
-  * Audit API calls with **CloudTrail**; monitor ECR scan findings.
-  * Create alarms for task restarts, high CPU/memory, and unhealthy targets.
+  - Enable **CloudWatch Container Insights**, centralize logs (awslogs / FireLens).
+  - Audit API calls with **CloudTrail**; monitor ECR scan findings.
+  - Create alarms for task restarts, high CPU/memory, and unhealthy targets.
 
-* **Deployment & rollback**
+- **Deployment & rollback**
 
-  * Use **immutable deployments** (new task definition revisions) and CodeDeploy Blue/Green for critical apps.
-  * Gated deploy: only proceed after successful image scan & integration tests.
+  - Use **immutable deployments** (new task definition revisions) and CodeDeploy Blue/Green for critical apps.
+  - Gated deploy: only proceed after successful image scan & integration tests.
 
-* **Network egress control**
+- **Network egress control**
 
-  * Use **VPC endpoints** for ECR, Secrets Manager, SSM to avoid internet egress or provision limited NATs.
-  * Use egress SG rules and flow logs for detection.
+  - Use **VPC endpoints** for ECR, Secrets Manager, SSM to avoid internet egress or provision limited NATs.
+  - Use egress SG rules and flow logs for detection.
 
-* **Operational readiness**
+- **Operational readiness**
 
-  * Use **ECS Exec** for controlled debugging; restrict via IAM.
-  * Maintain runbooks for compromise, rotation, and incident response.
+  - Use **ECS Exec** for controlled debugging; restrict via IAM.
+  - Maintain runbooks for compromise, rotation, and incident response.
 
 ---
 
 ### ⚠️ Common Mistakes / Gotchas
 
-* Storing secrets in `.env` or `.tfvars` → readable in repo or TF state.
-* `:latest` image usage → drift and unpredictable deployments.
-* Wide SG rules (`0.0.0.0/0`) on task security groups.
-* Over-permissive IAM roles attached to tasks or CI.
-* Not enabling image scanning or ignoring scan results.
-* Not monitoring ENI/IP capacity for `awsvpc` (task placement failures).
+- Storing secrets in `.env` or `.tfvars` → readable in repo or TF state.
+- `:latest` image usage → drift and unpredictable deployments.
+- Wide SG rules (`0.0.0.0/0`) on task security groups.
+- Over-permissive IAM roles attached to tasks or CI.
+- Not enabling image scanning or ignoring scan results.
+- Not monitoring ENI/IP capacity for `awsvpc` (task placement failures).
 
 ---
 
@@ -6426,6 +6480,7 @@ Secure ECS workloads by **locking the image supply chain, applying least-privile
 Apply these controls in CI/CD (prevent bad images) and runtime (detect and contain incidents) for production-grade security.
 
 ---
+
 ## ⚙️ Common **Amazon ECS CLI & CDK Commands** 🐳🚀
 
 ---
@@ -6439,32 +6494,32 @@ Below is a **DevOps quick reference** — commonly used commands for **deploymen
 
 ## 🧩 **ECS AWS CLI Commands** 🧰
 
-| Category                           | Command                                                                                                                                                                                                                                                      | Description                                                                              |                            |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | -------------------------- |
-| 🔧 **Cluster Management**          | `aws ecs create-cluster --cluster-name demo`                                                                                                                                                                                                                 | Create ECS cluster                                                                       |                            |
-|                                    | `aws ecs list-clusters`                                                                                                                                                                                                                                      | List ECS clusters                                                                        |                            |
-|                                    | `aws ecs delete-cluster --cluster-name demo`                                                                                                                                                                                                                 | Delete ECS cluster                                                                       |                            |
-| 🚀 **Task Definition**             | `aws ecs register-task-definition --cli-input-json file://taskdef.json`                                                                                                                                                                                      | Register new task definition                                                             |                            |
-|                                    | `aws ecs list-task-definitions`                                                                                                                                                                                                                              | View available task definitions                                                          |                            |
-|                                    | `aws ecs describe-task-definition --task-definition web-task`                                                                                                                                                                                                | View details of a task definition                                                        |                            |
+| Category                          | Command                                                                                                                                                                                                                                                      | Description                                                                              |                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | -------------------------- |
+| 🔧 **Cluster Management**         | `aws ecs create-cluster --cluster-name demo`                                                                                                                                                                                                                 | Create ECS cluster                                                                       |                            |
+|                                   | `aws ecs list-clusters`                                                                                                                                                                                                                                      | List ECS clusters                                                                        |                            |
+|                                   | `aws ecs delete-cluster --cluster-name demo`                                                                                                                                                                                                                 | Delete ECS cluster                                                                       |                            |
+| 🚀 **Task Definition**            | `aws ecs register-task-definition --cli-input-json file://taskdef.json`                                                                                                                                                                                      | Register new task definition                                                             |                            |
+|                                   | `aws ecs list-task-definitions`                                                                                                                                                                                                                              | View available task definitions                                                          |                            |
+|                                   | `aws ecs describe-task-definition --task-definition web-task`                                                                                                                                                                                                | View details of a task definition                                                        |                            |
 | 🏗️ **Service Management**         | `aws ecs create-service --cluster prod --service-name api --task-definition api-task:12 --desired-count 3 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-1,subnet-2],securityGroups=[sg-ecs],assignPublicIp=DISABLED}"` | Deploy ECS service                                                                       |                            |
-|                                    | `aws ecs update-service --cluster prod --service web --force-new-deployment`                                                                                                                                                                                 | Redeploy service with latest task definition                                             |                            |
-|                                    | `aws ecs delete-service --cluster prod --service web --force`                                                                                                                                                                                                | Delete ECS service                                                                       |                            |
-|                                    | `aws ecs list-services --cluster prod`                                                                                                                                                                                                                       | List all ECS services in a cluster                                                       |                            |
-| ⚙️ **Task Management**             | `aws ecs run-task --cluster prod --task-definition batch-task:3 --launch-type FARGATE --count 1 --network-configuration awsvpcConfiguration={subnets=[subnet-a],securityGroups=[sg-ecs],assignPublicIp=DISABLED}`                                            | Run one-off ECS task                                                                     |                            |
-|                                    | `aws ecs stop-task --cluster prod --task-id <task-id>`                                                                                                                                                                                                       | Stop a running task                                                                      |                            |
-|                                    | `aws ecs list-tasks --cluster prod`                                                                                                                                                                                                                          | List all running tasks                                                                   |                            |
-|                                    | `aws ecs describe-tasks --cluster prod --tasks <task-id>`                                                                                                                                                                                                    | Get task details and stopped reason                                                      |                            |
-| 🧩 **ECS Exec (Debugging)**        | `aws ecs execute-command --cluster prod --task <task-id> --container api --interactive --command "/bin/bash"`                                                                                                                                                | Open interactive shell in container                                                      |                            |
-| 📜 **Logs & Monitoring**           | `aws logs tail /ecs/api --follow`                                                                                                                                                                                                                            | View ECS container logs (CloudWatch)                                                     |                            |
-|                                    | `aws ecs describe-services --cluster prod --services api --query "services[0].events[0:5]"`                                                                                                                                                                  | Check latest ECS events                                                                  |                            |
-| 🧠 **Scaling**                     | `aws ecs update-service --cluster prod --service api --desired-count 5`                                                                                                                                                                                      | Scale ECS service manually                                                               |                            |
-|                                    | `aws application-autoscaling describe-scalable-targets --service-namespace ecs`                                                                                                                                                                              | View ECS auto-scaling configuration                                                      |                            |
+|                                   | `aws ecs update-service --cluster prod --service web --force-new-deployment`                                                                                                                                                                                 | Redeploy service with latest task definition                                             |                            |
+|                                   | `aws ecs delete-service --cluster prod --service web --force`                                                                                                                                                                                                | Delete ECS service                                                                       |                            |
+|                                   | `aws ecs list-services --cluster prod`                                                                                                                                                                                                                       | List all ECS services in a cluster                                                       |                            |
+| ⚙️ **Task Management**            | `aws ecs run-task --cluster prod --task-definition batch-task:3 --launch-type FARGATE --count 1 --network-configuration awsvpcConfiguration={subnets=[subnet-a],securityGroups=[sg-ecs],assignPublicIp=DISABLED}`                                            | Run one-off ECS task                                                                     |                            |
+|                                   | `aws ecs stop-task --cluster prod --task-id <task-id>`                                                                                                                                                                                                       | Stop a running task                                                                      |                            |
+|                                   | `aws ecs list-tasks --cluster prod`                                                                                                                                                                                                                          | List all running tasks                                                                   |                            |
+|                                   | `aws ecs describe-tasks --cluster prod --tasks <task-id>`                                                                                                                                                                                                    | Get task details and stopped reason                                                      |                            |
+| 🧩 **ECS Exec (Debugging)**       | `aws ecs execute-command --cluster prod --task <task-id> --container api --interactive --command "/bin/bash"`                                                                                                                                                | Open interactive shell in container                                                      |                            |
+| 📜 **Logs & Monitoring**          | `aws logs tail /ecs/api --follow`                                                                                                                                                                                                                            | View ECS container logs (CloudWatch)                                                     |                            |
+|                                   | `aws ecs describe-services --cluster prod --services api --query "services[0].events[0:5]"`                                                                                                                                                                  | Check latest ECS events                                                                  |                            |
+| 🧠 **Scaling**                    | `aws ecs update-service --cluster prod --service api --desired-count 5`                                                                                                                                                                                      | Scale ECS service manually                                                               |                            |
+|                                   | `aws application-autoscaling describe-scalable-targets --service-namespace ecs`                                                                                                                                                                              | View ECS auto-scaling configuration                                                      |                            |
 | 🕸️ **Networking & Load Balancer** | `aws elbv2 describe-target-health --target-group-arn <tg-arn>`                                                                                                                                                                                               | Check ALB target health                                                                  |                            |
-|                                    | `aws ecs list-container-instances --cluster prod`                                                                                                                                                                                                            | List container instances (EC2 launch type)                                               |                            |
-| 🧱 **Image Management**            | `aws ecr create-repository --repository-name app`                                                                                                                                                                                                            | Create ECR repo                                                                          |                            |
-|                                    | `aws ecr get-login-password --region ap-south-1                                                                                                                                                                                                              | docker login --username AWS --password-stdin <account>.dkr.ecr.ap-south-1.amazonaws.com` | Authenticate Docker to ECR |
-|                                    | `aws ecr list-images --repository-name app`                                                                                                                                                                                                                  | List images in repository                                                                |                            |
+|                                   | `aws ecs list-container-instances --cluster prod`                                                                                                                                                                                                            | List container instances (EC2 launch type)                                               |                            |
+| 🧱 **Image Management**           | `aws ecr create-repository --repository-name app`                                                                                                                                                                                                            | Create ECR repo                                                                          |                            |
+|                                   | `aws ecr get-login-password --region ap-south-1                                                                                                                                                                                                              | docker login --username AWS --password-stdin <account>.dkr.ecr.ap-south-1.amazonaws.com` | Authenticate Docker to ECR |
+|                                   | `aws ecr list-images --repository-name app`                                                                                                                                                                                                                  | List images in repository                                                                |                            |
 
 ---
 
@@ -6487,32 +6542,45 @@ Below is a **DevOps quick reference** — commonly used commands for **deploymen
 ### 🧩 **CDK ECS Setup Example (TypeScript)**
 
 ```typescript
-import * as cdk from 'aws-cdk-lib';
-import { Cluster, ContainerImage, FargateService, FargateTaskDefinition, LogDriver } from 'aws-cdk-lib/aws-ecs';
-import { Vpc, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
-import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns';
+import * as cdk from "aws-cdk-lib";
+import {
+  Cluster,
+  ContainerImage,
+  FargateService,
+  FargateTaskDefinition,
+  LogDriver,
+} from "aws-cdk-lib/aws-ecs";
+import { Vpc, SecurityGroup } from "aws-cdk-lib/aws-ec2";
+import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 
 export class ECSStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = Vpc.fromLookup(this, 'Vpc', { vpcId: 'vpc-xxxxxxx' });
-    const cluster = new Cluster(this, 'ProdCluster', { vpc });
+    const vpc = Vpc.fromLookup(this, "Vpc", { vpcId: "vpc-xxxxxxx" });
+    const cluster = new Cluster(this, "ProdCluster", { vpc });
 
-    const fargateService = new ApplicationLoadBalancedFargateService(this, 'WebService', {
-      cluster,
-      cpu: 256,
-      memoryLimitMiB: 512,
-      desiredCount: 2,
-      publicLoadBalancer: true,
-      taskImageOptions: {
-        image: ContainerImage.fromRegistry('nginx'),
-        containerPort: 80,
-        logDriver: LogDriver.awsLogs({ streamPrefix: 'ecs' })
+    const fargateService = new ApplicationLoadBalancedFargateService(
+      this,
+      "WebService",
+      {
+        cluster,
+        cpu: 256,
+        memoryLimitMiB: 512,
+        desiredCount: 2,
+        publicLoadBalancer: true,
+        taskImageOptions: {
+          image: ContainerImage.fromRegistry("nginx"),
+          containerPort: 80,
+          logDriver: LogDriver.awsLogs({ streamPrefix: "ecs" }),
+        },
       }
-    });
+    );
 
-    fargateService.service.autoScaleTaskCount({ minCapacity: 2, maxCapacity: 10 });
+    fargateService.service.autoScaleTaskCount({
+      minCapacity: 2,
+      maxCapacity: 10,
+    });
   }
 }
 ```
@@ -6529,11 +6597,14 @@ cdk deploy
 ### 🧩 **Add Auto Scaling in CDK**
 
 ```typescript
-const scaling = fargateService.service.autoScaleTaskCount({ minCapacity: 2, maxCapacity: 10 });
-scaling.scaleOnCpuUtilization('CpuScaling', {
+const scaling = fargateService.service.autoScaleTaskCount({
+  minCapacity: 2,
+  maxCapacity: 10,
+});
+scaling.scaleOnCpuUtilization("CpuScaling", {
   targetUtilizationPercent: 70,
   scaleInCooldown: cdk.Duration.seconds(60),
-  scaleOutCooldown: cdk.Duration.seconds(60)
+  scaleOutCooldown: cdk.Duration.seconds(60),
 });
 ```
 
@@ -6542,13 +6613,13 @@ scaling.scaleOnCpuUtilization('CpuScaling', {
 ### 🧩 **Add ECS Exec & Secrets in CDK**
 
 ```typescript
-taskDefinition.addContainer('AppContainer', {
-  image: ContainerImage.fromEcrRepository(repo, 'v1.2.3'),
+taskDefinition.addContainer("AppContainer", {
+  image: ContainerImage.fromEcrRepository(repo, "v1.2.3"),
   secrets: {
-    DB_PASSWORD: ecs.Secret.fromSecretsManager(secret)
+    DB_PASSWORD: ecs.Secret.fromSecretsManager(secret),
   },
-  logging: LogDriver.awsLogs({ streamPrefix: 'ecs' }),
-  readonlyRootFilesystem: true
+  logging: LogDriver.awsLogs({ streamPrefix: "ecs" }),
+  readonlyRootFilesystem: true,
 });
 ```
 
@@ -6557,14 +6628,16 @@ taskDefinition.addContainer('AppContainer', {
 ### 🧩 **Blue/Green Deployment via CodeDeploy (CDK)**
 
 ```typescript
-import { EcsDeploymentGroup } from 'aws-cdk-lib/aws-codedeploy';
+import { EcsDeploymentGroup } from "aws-cdk-lib/aws-codedeploy";
 
-new EcsDeploymentGroup(this, 'BlueGreenGroup', {
+new EcsDeploymentGroup(this, "BlueGreenGroup", {
   service: fargateService.service,
   blueGreenDeploymentConfig: {
     terminateBlueInstancesOnDeploymentSuccess: true,
-    deploymentReadyOption: { actionOnTimeout: codedeploy.ActionOnTimeout.CONTINUE_DEPLOYMENT }
-  }
+    deploymentReadyOption: {
+      actionOnTimeout: codedeploy.ActionOnTimeout.CONTINUE_DEPLOYMENT,
+    },
+  },
 });
 ```
 
@@ -6573,17 +6646,17 @@ new EcsDeploymentGroup(this, 'BlueGreenGroup', {
 ### 🧩 **CDK: Add CloudWatch Dashboard for ECS**
 
 ```typescript
-import { Dashboard, GraphWidget } from 'aws-cdk-lib/aws-cloudwatch';
+import { Dashboard, GraphWidget } from "aws-cdk-lib/aws-cloudwatch";
 
-const dashboard = new Dashboard(this, 'EcsDashboard');
+const dashboard = new Dashboard(this, "EcsDashboard");
 dashboard.addWidgets(
   new GraphWidget({
-    title: 'ECS CPU Utilization',
-    left: [fargateService.service.metricCpuUtilization()]
+    title: "ECS CPU Utilization",
+    left: [fargateService.service.metricCpuUtilization()],
   }),
   new GraphWidget({
-    title: 'ECS Memory Utilization',
-    left: [fargateService.service.metricMemoryUtilization()]
+    title: "ECS Memory Utilization",
+    left: [fargateService.service.metricMemoryUtilization()],
   })
 );
 ```
@@ -6592,21 +6665,21 @@ dashboard.addWidgets(
 
 ### ✅ **Best Practices**
 
-* Prefer **CDK** or **Terraform** for reproducible ECS infrastructure.
-* Use **immutable image tags** (`myapp:v1.3.4`) — avoid `:latest`.
-* Enable **ECS Exec**, **Container Insights**, and **Auto Scaling**.
-* Use **`awslogs`** driver for container logs.
-* Combine **CDK + CodePipeline** for continuous deployments.
-* Keep **task definitions versioned** and reviewed in Git.
-* Always test **`cdk diff`** before `cdk deploy`.
+- Prefer **CDK** or **Terraform** for reproducible ECS infrastructure.
+- Use **immutable image tags** (`myapp:v1.3.4`) — avoid `:latest`.
+- Enable **ECS Exec**, **Container Insights**, and **Auto Scaling**.
+- Use **`awslogs`** driver for container logs.
+- Combine **CDK + CodePipeline** for continuous deployments.
+- Keep **task definitions versioned** and reviewed in Git.
+- Always test **`cdk diff`** before `cdk deploy`.
 
 ---
 
 ### 💡 **In short**
 
-* Use **AWS CLI** for operational control and debugging.
-* Use **CDK** for building and managing ECS infrastructure as code.
-* Combine both: **CDK defines** the ECS environment, **CLI operates** and troubleshoots it.
+- Use **AWS CLI** for operational control and debugging.
+- Use **CDK** for building and managing ECS infrastructure as code.
+- Combine both: **CDK defines** the ECS environment, **CLI operates** and troubleshoots it.
 
 ✅ **Quick deploy pattern:**
 
@@ -6624,6 +6697,7 @@ aws ecs execute-command --cluster prod --task <task-id> --command "/bin/bash"
 🟢 **Goal:** Speed, repeatability, and reliability — the DevOps way for ECS!
 
 ---
+
 ## 🚑 Q: Containers Failing **Health Checks in Amazon ECS** 🧩
 
 ---
@@ -6712,10 +6786,10 @@ aws logs tail /ecs/web-service --follow
 
 Look for:
 
-* Server startup delays
-* Port binding errors
-* App listening on wrong port or interface
-* Timeout or dependency failures (e.g., DB, cache)
+- Server startup delays
+- Port binding errors
+- App listening on wrong port or interface
+- Timeout or dependency failures (e.g., DB, cache)
 
 ---
 
@@ -6792,11 +6866,11 @@ aws ec2 authorize-security-group-ingress \
 
 ### 🧩 **4️⃣ Application-Level Best Practices**
 
-* ✅ Always expose a lightweight `/health` or `/ready` endpoint (returns HTTP 200).
-* ✅ Avoid DB calls in health checks — make them fast and non-blocking.
-* ✅ Return 200 only when app is **fully initialized**.
-* ✅ Log health failures to detect early app boot issues.
-* ✅ Add startup delay logic (e.g., wait-for-db.sh) if dependencies aren’t ready.
+- ✅ Always expose a lightweight `/health` or `/ready` endpoint (returns HTTP 200).
+- ✅ Avoid DB calls in health checks — make them fast and non-blocking.
+- ✅ Return 200 only when app is **fully initialized**.
+- ✅ Log health failures to detect early app boot issues.
+- ✅ Add startup delay logic (e.g., wait-for-db.sh) if dependencies aren’t ready.
 
 Example (Spring Boot):
 
@@ -6840,13 +6914,13 @@ management:
 
 ### ✅ **Best Practices**
 
-* Run tasks in **private subnets**, ALB in public subnets.
-* Use **consistent health check paths** across ALB and container.
-* Use **`healthCheckGracePeriodSeconds`** for slow apps.
-* Configure **CloudWatch Alarms** for frequent restarts or unhealthy target count.
-* Implement **graceful shutdown** (catch SIGTERM, close connections).
-* Don’t reuse `/` as a health endpoint — prefer `/health` or `/ping`.
-* Combine **Container + ALB health checks** for layered reliability.
+- Run tasks in **private subnets**, ALB in public subnets.
+- Use **consistent health check paths** across ALB and container.
+- Use **`healthCheckGracePeriodSeconds`** for slow apps.
+- Configure **CloudWatch Alarms** for frequent restarts or unhealthy target count.
+- Implement **graceful shutdown** (catch SIGTERM, close connections).
+- Don’t reuse `/` as a health endpoint — prefer `/health` or `/ping`.
+- Combine **Container + ALB health checks** for layered reliability.
 
 ---
 
@@ -6870,6 +6944,7 @@ Tune **grace periods, health intervals**, and **return codes** to match app read
 🟢 **Goal:** Keep containers **healthy, routable, and stable** — no restarts, no downtime.
 
 ---
+
 ## Q: **Task stuck in `PENDING` state** ⚠️🐳
 
 ---
@@ -6882,9 +6957,9 @@ A task in `PENDING` means ECS accepted the request but **hasn't placed the task 
 
 ### ⚙️ Purpose / How it behaves
 
-* ECS scheduler tries to place a task.
-* If it cannot (no matching host, no ENI, insufficient CPU/memory, or network issue), the task stays `PENDING`.
-* ECS emits events and logs explaining the placement failure — fix the root cause then task transitions to `RUNNING` or `STOPPED`.
+- ECS scheduler tries to place a task.
+- If it cannot (no matching host, no ENI, insufficient CPU/memory, or network issue), the task stays `PENDING`.
+- ECS emits events and logs explaining the placement failure — fix the root cause then task transitions to `RUNNING` or `STOPPED`.
 
 ---
 
@@ -6925,9 +7000,9 @@ aws ecs describe-tasks --cluster prod-cluster --tasks <task-arn> --output json
 
 Look for messages in the task JSON like:
 
-* `"Unable to place task, no container instance met all of its requirements"`
-* `"ResourceInitializationError: failed to create ENI"`
-* `"CannotPullContainerError: access denied"`.
+- `"Unable to place task, no container instance met all of its requirements"`
+- `"ResourceInitializationError: failed to create ENI"`
+- `"CannotPullContainerError: access denied"`.
 
 #### 3) Check cluster capacity (EC2 launch type)
 
@@ -6985,8 +7060,8 @@ If pull fails, ensure `taskExecutionRole` has `ecr:GetAuthorizationToken`, `ecr:
 
 #### 9) Fargate-specific — subnet routing (NAT) & public IP
 
-* Fargate tasks in private subnets need **NAT** for ECR/secrets access (or VPC endpoints).
-* If using public subnets, check `assignPublicIp` for `ENABLED` depending on your design.
+- Fargate tasks in private subnets need **NAT** for ECR/secrets access (or VPC endpoints).
+- If using public subnets, check `assignPublicIp` for `ENABLED` depending on your design.
 
 #### 10) Look at CloudWatch Events / ECS agent logs (EC2)
 
@@ -7019,26 +7094,26 @@ sudo tail -n 200 /var/log/ecs/ecs-agent.log
 
 ### ✅ Remediation examples (actionable)
 
-* **Scale EC2 ASG**
+- **Scale EC2 ASG**
 
 ```bash
 aws autoscaling update-auto-scaling-group --auto-scaling-group-name ecs-asg --desired-capacity 5
 ```
 
-* **Add a larger subnet (CIDR) or extra private subnets** and update service `networkConfiguration`.
+- **Add a larger subnet (CIDR) or extra private subnets** and update service `networkConfiguration`.
 
-* **Enable VPC Endpoints** for ECR/SSM/SecretsManager so Fargate in private subnets can pull images and secrets without NAT.
+- **Enable VPC Endpoints** for ECR/SSM/SecretsManager so Fargate in private subnets can pull images and secrets without NAT.
 
-* **Request ENI / regional quotas increase** in AWS Service Quotas console (ENI per account / ENI per instance type).
+- **Request ENI / regional quotas increase** in AWS Service Quotas console (ENI per account / ENI per instance type).
 
-* **Adjust health/placement constraints**: remove `distinctInstance` or node attribute constraints temporarily.
+- **Adjust health/placement constraints**: remove `distinctInstance` or node attribute constraints temporarily.
 
-* **Update Task Execution Role** to include ECR/SSM permissions:
+- **Update Task Execution Role** to include ECR/SSM permissions:
 
 ```json
 {
-  "Effect":"Allow",
-  "Action":[
+  "Effect": "Allow",
+  "Action": [
     "ecr:GetAuthorizationToken",
     "ecr:BatchCheckLayerAvailability",
     "ecr:GetDownloadUrlForLayer",
@@ -7046,23 +7121,23 @@ aws autoscaling update-auto-scaling-group --auto-scaling-group-name ecs-asg --de
     "ssm:GetParameters",
     "secretsmanager:GetSecretValue"
   ],
-  "Resource":"*"
+  "Resource": "*"
 }
 ```
 
-* **For Fargate**: ensure `awsvpcConfiguration` subnets are specified and `assignPublicIp` or NAT/vpc endpoints exist.
+- **For Fargate**: ensure `awsvpcConfiguration` subnets are specified and `assignPublicIp` or NAT/vpc endpoints exist.
 
 ---
 
 ### ✅ Best Practices to avoid PENDING stalls
 
-* Provision enough **subnet IP capacity** for ENIs; prefer /20+ subnets for busy clusters.
-* Use **Capacity Providers** (mix EC2 + Fargate) to avoid single-mode failures.
-* Set up **VPC endpoints** for ECR, SSM, Secrets Manager, CloudWatch Logs.
-* Monitor ENI & IP usage with CloudWatch and alerts.
-* Use **immutable tags** and pre-pull images where appropriate (EC2 AMI bake).
-* Automate ASG scaling policies based on `PendingTaskCount` metrics.
-* Track and increase **service quotas** early (ENIs per region, ENIs per instance).
+- Provision enough **subnet IP capacity** for ENIs; prefer /20+ subnets for busy clusters.
+- Use **Capacity Providers** (mix EC2 + Fargate) to avoid single-mode failures.
+- Set up **VPC endpoints** for ECR, SSM, Secrets Manager, CloudWatch Logs.
+- Monitor ENI & IP usage with CloudWatch and alerts.
+- Use **immutable tags** and pre-pull images where appropriate (EC2 AMI bake).
+- Automate ASG scaling policies based on `PendingTaskCount` metrics.
+- Track and increase **service quotas** early (ENIs per region, ENIs per instance).
 
 ---
 
@@ -7072,6 +7147,7 @@ A `PENDING` task means ECS **can’t place it** — usually due to **capacity, E
 Inspect **ECS service events → describe-tasks → subnet/ENI availability → task execution role / ECR access**, then scale capacity, fix networking (NAT/VPC endpoints), or adjust constraints to resolve.
 
 ---
+
 ## Q: Deployment causing **downtime** — how to diagnose & fix it fast? ⚠️🚑
 
 ---
@@ -7084,10 +7160,10 @@ Downtime during ECS deployments means traffic isn’t served while new tasks rep
 
 ### ⚙️ Purpose / How it works
 
-* ECS **updates a Service** by launching new tasks and stopping old ones according to `minimumHealthyPercent` / `maximumPercent`.
-* ALB/NLB health checks and target registration determine when new tasks receive traffic.
-* CodeDeploy (blue/green) provides controlled traffic shifting; native ECS rolling relies on capacity & health-check timing.
-* Correct interplay of **health checks**, **grace periods**, **deregistration**, **stopTimeout**, and **capacity** is required to avoid gaps.
+- ECS **updates a Service** by launching new tasks and stopping old ones according to `minimumHealthyPercent` / `maximumPercent`.
+- ALB/NLB health checks and target registration determine when new tasks receive traffic.
+- CodeDeploy (blue/green) provides controlled traffic shifting; native ECS rolling relies on capacity & health-check timing.
+- Correct interplay of **health checks**, **grace periods**, **deregistration**, **stopTimeout**, and **capacity** is required to avoid gaps.
 
 ---
 
@@ -7164,7 +7240,7 @@ aws elbv2 modify-target-group --target-group-arn <tg-arn> \
 
 #### 7) **Enable Blue/Green (CodeDeploy) for safe cutovers**
 
-* Create CodeDeploy deployment group linked to ECS service (two target groups). Use canary/linear configs. Then trigger deploy via CodePipeline/CodeDeploy.
+- Create CodeDeploy deployment group linked to ECS service (two target groups). Use canary/linear configs. Then trigger deploy via CodePipeline/CodeDeploy.
 
 Minimal AppSpec example (`appspec.yaml`):
 
@@ -7183,19 +7259,19 @@ Resources:
 Trigger:
 
 ```bash
-aws deploy create-deployment --application-name ecs-app --deployment-group-name ecs-bg-group --revision ... 
+aws deploy create-deployment --application-name ecs-app --deployment-group-name ecs-bg-group --revision ...
 ```
 
 ---
 
 ### 📋 Table — Deployment strategies comparison
 
-|                    Strategy |            Downtime Risk           |        Rollback Speed       |         Cost        | When to use                                  |
+|                    Strategy |           Downtime Risk            |       Rollback Speed        |        Cost         | When to use                                  |
 | --------------------------: | :--------------------------------: | :-------------------------: | :-----------------: | -------------------------------------------- |
 |             **ECS Rolling** | Low → medium (depends on capacity) | Medium (re-deploy previous) |         Low         | Simple apps, low-risk changes                |
-| **Blue/Green (CodeDeploy)** |              Near-zero             |   Fast (traffic rollback)   | Higher (dual infra) | Critical prod, DB-safe releases              |
-|         **Canary / Linear** |              Very low              |             Fast            |        Medium       | Gradual traffic verification                 |
-|   **Immutable (new infra)** |    Zero if replicated correctly    |             Fast            |         High        | Major infra changes, schema-safe deployments |
+| **Blue/Green (CodeDeploy)** |             Near-zero              |   Fast (traffic rollback)   | Higher (dual infra) | Critical prod, DB-safe releases              |
+|         **Canary / Linear** |              Very low              |            Fast             |       Medium        | Gradual traffic verification                 |
+|   **Immutable (new infra)** |    Zero if replicated correctly    |            Fast             |        High         | Major infra changes, schema-safe deployments |
 
 ---
 
@@ -7203,54 +7279,54 @@ aws deploy create-deployment --application-name ecs-app --deployment-group-name 
 
 1. **Use health vs readiness endpoints**
 
-   * `/ready` for readiness (used by ALB/container health). Keep it fast and not dependent on slow DB migrations.
-   * `/health` for liveness.
+   - `/ready` for readiness (used by ALB/container health). Keep it fast and not dependent on slow DB migrations.
+   - `/health` for liveness.
 
 2. **Tune deployment params**
 
-   * `minimumHealthyPercent=100`, `maximumPercent=200` for zero-downtime rolling updates when capacity allows.
+   - `minimumHealthyPercent=100`, `maximumPercent=200` for zero-downtime rolling updates when capacity allows.
 
 3. **Health check grace & startPeriod**
 
-   * Add `health-check-grace-period-seconds` (ECS service) and `startPeriod` (container health check) to avoid false negatives.
+   - Add `health-check-grace-period-seconds` (ECS service) and `startPeriod` (container health check) to avoid false negatives.
 
 4. **Deregistration & stopTimeout**
 
-   * Set ALB `deregistration-delay` to allow in-flight requests to drain. Set `stopTimeout` in task definition to give app time to shut down gracefully.
+   - Set ALB `deregistration-delay` to allow in-flight requests to drain. Set `stopTimeout` in task definition to give app time to shut down gracefully.
 
 5. **Pre-warm and capacity**
 
-   * Ensure enough spare capacity (desired count + headroom) or use Capacity Providers to burst to Fargate/EC2. Pre-warm new tasks before switching traffic in canary/blue-green.
+   - Ensure enough spare capacity (desired count + headroom) or use Capacity Providers to burst to Fargate/EC2. Pre-warm new tasks before switching traffic in canary/blue-green.
 
 6. **Use Blue/Green for risky changes**
 
-   * Schema migrations, major library upgrades, or traffic-shaping require CodeDeploy blue/green with test listener.
+   - Schema migrations, major library upgrades, or traffic-shaping require CodeDeploy blue/green with test listener.
 
 7. **Database migrations**
 
-   * Use backward-compatible migrations (expand-contract), run migrations separately (job), and do feature flags — never block web processes during rollout.
+   - Use backward-compatible migrations (expand-contract), run migrations separately (job), and do feature flags — never block web processes during rollout.
 
 8. **CI gating**
 
-   * Fail deploys on health-check failures, require smoke tests, and run integration tests before traffic shift.
+   - Fail deploys on health-check failures, require smoke tests, and run integration tests before traffic shift.
 
 9. **Observability & automated rollback**
 
-   * Define CloudWatch alarms (5xx rate, latency) that trigger automated CodeDeploy rollback or pipeline stop.
+   - Define CloudWatch alarms (5xx rate, latency) that trigger automated CodeDeploy rollback or pipeline stop.
 
 10. **Session handling**
 
-    * If sticky sessions exist, handle session migration or use shared session store (Redis) — avoid session affinity if possible during deploy.
+    - If sticky sessions exist, handle session migration or use shared session store (Redis) — avoid session affinity if possible during deploy.
 
 ---
 
 ### ⚠️ Common gotchas & quick remedies
 
-* **ALB checks `/` but app uses `/ready`** → update target group path.
-* **App binds to `localhost` only** → bind to `0.0.0.0` in container.
-* **Health check too strict** → relax thresholds while diagnosing.
-* **Insufficient capacity** → scale ASG or desired task count temporarily.
-* **Long DB migrations during deploy** → decouple migration from deploy; use backfill scripts and feature flags.
+- **ALB checks `/` but app uses `/ready`** → update target group path.
+- **App binds to `localhost` only** → bind to `0.0.0.0` in container.
+- **Health check too strict** → relax thresholds while diagnosing.
+- **Insufficient capacity** → scale ASG or desired task count temporarily.
+- **Long DB migrations during deploy** → decouple migration from deploy; use backfill scripts and feature flags.
 
 ---
 
@@ -7261,6 +7337,7 @@ If deployment causes downtime: **rollback or stop the deployment**, then fix the
 ✅ Quick checklist to run now: health-check path ✅, `minimumHealthyPercent=100` ✅, `health-check-grace-period` ≥ app startup ✅, ALB deregistration delay ✅, enough capacity ✅.
 
 ---
+
 ## Q: **Application can’t connect to RDS from ECS** 🔒🐳➡️🗄️
 
 ---
@@ -7363,9 +7440,9 @@ aws ecs describe-tasks --cluster prod-cluster --tasks <task-id> \
 
 ✅ Check:
 
-* `subnet-id` — should match RDS subnet or same VPC.
-* `privateIpAddress` — confirm it’s private.
-* `securityGroups` — includes correct SG.
+- `subnet-id` — should match RDS subnet or same VPC.
+- `privateIpAddress` — confirm it’s private.
+- `securityGroups` — includes correct SG.
 
 #### RDS VPC/Subnet group
 
@@ -7388,9 +7465,9 @@ nslookup mydb.cluster-abcdef.ap-south-1.rds.amazonaws.com
 
 If it fails:
 
-* Check **VPC DNS support** is enabled.
-* Check **AmazonProvidedDNS** in VPC DHCP options.
-* Ensure RDS endpoint is **not publicly accessible** if ECS is in private subnets.
+- Check **VPC DNS support** is enabled.
+- Check **AmazonProvidedDNS** in VPC DHCP options.
+- Ensure RDS endpoint is **not publicly accessible** if ECS is in private subnets.
 
 ✅ In VPC config:
 
@@ -7411,9 +7488,9 @@ aws secretsmanager get-secret-value --secret-id prod/db-creds
 
 Ensure:
 
-* ECS task role has permission `secretsmanager:GetSecretValue`.
-* Secret JSON matches expected keys (`username`, `password`, etc.).
-* Environment variables map correctly in task definition:
+- ECS task role has permission `secretsmanager:GetSecretValue`.
+- Secret JSON matches expected keys (`username`, `password`, etc.).
+- Environment variables map correctly in task definition:
 
   ```json
   "secrets": [
@@ -7455,8 +7532,8 @@ aws ec2 describe-route-tables --filters "Name=vpc-id,Values=vpc-xxxx"
 
 ### 🧩 **8️⃣ Common Root Causes & Fixes**
 
-| Problem                           | Symptom                                | Fix                                                        |
-| --------------------------------- | -------------------------------------- | ---------------------------------------------------------- |
+| Problem                            | Symptom                                | Fix                                                        |
+| ---------------------------------- | -------------------------------------- | ---------------------------------------------------------- |
 | ❌ **SG rule missing**             | Timeout, can’t reach port              | Allow ECS SG → RDS SG on DB port                           |
 | ❌ **Wrong subnet**                | Task stuck in PENDING or unreachable   | Use RDS private subnets in same VPC                        |
 | ❌ **No NAT/VPC endpoint**         | Cannot pull secrets or connect via DNS | Add NAT gateway or endpoints for Secrets Manager, RDS, ECR |
@@ -7499,15 +7576,15 @@ resource "aws_security_group" "rds" {
 
 ### ✅ **Best Practices (Production-ready)**
 
-* Run ECS & RDS **in same VPC and AZs** for lowest latency.
-* Always use **private subnets** (no public access).
-* Control access via **SG references**, never CIDR.
-* Store creds in **Secrets Manager**, not environment files.
-* Use **IAM database authentication** (optional for RDS MySQL/Postgres).
-* Enforce **SSL/TLS** for DB connections.
-* Use **Connection Pooling** (RDS Proxy or pgBouncer) for scale.
-* Enable **CloudWatch alarms** for DB connections / errors.
-* Rotate secrets regularly & verify in staging.
+- Run ECS & RDS **in same VPC and AZs** for lowest latency.
+- Always use **private subnets** (no public access).
+- Control access via **SG references**, never CIDR.
+- Store creds in **Secrets Manager**, not environment files.
+- Use **IAM database authentication** (optional for RDS MySQL/Postgres).
+- Enforce **SSL/TLS** for DB connections.
+- Use **Connection Pooling** (RDS Proxy or pgBouncer) for scale.
+- Enable **CloudWatch alarms** for DB connections / errors.
+- Rotate secrets regularly & verify in staging.
 
 ---
 
@@ -7515,11 +7592,11 @@ resource "aws_security_group" "rds" {
 
 If your ECS task can’t connect to RDS:
 
-* ✅ Check **same VPC + subnets + SG rules**
-* ✅ Confirm **RDS SG allows ECS SG** on DB port
-* ✅ Verify **DNS resolves**, **Secrets valid**, **IAM has access**
-* ✅ Ensure **private network access (no public IPs needed)**
-* ✅ Use `aws ecs execute-command` to test from inside container
+- ✅ Check **same VPC + subnets + SG rules**
+- ✅ Confirm **RDS SG allows ECS SG** on DB port
+- ✅ Verify **DNS resolves**, **Secrets valid**, **IAM has access**
+- ✅ Ensure **private network access (no public IPs needed)**
+- ✅ Use `aws ecs execute-command` to test from inside container
 
 **Command cheat sheet:**
 
@@ -7531,6 +7608,7 @@ aws ec2 authorize-security-group-ingress --group-id sg-rds --protocol tcp --port
 🟢 **Goal:** Restore ECS↔RDS connectivity via correct **network isolation, credentials, and routing** — without exposing the database publicly.
 
 ---
+
 ## Q: Why are my **ECS costs high** and how do I reduce them? 💸🐳
 
 ---
@@ -7543,9 +7621,9 @@ High ECS spend comes from compute (Fargate vCPU/memory or EC2 instances), networ
 
 ### ⚙️ Purpose / How it works
 
-* **Charge drivers:** Fargate bills vCPU+memory/sec; EC2 bills instance uptime + EBS.
-* **Inefficiencies:** over-provisioned task resources, idle tasks, too many ALBs/NLBs, long CloudWatch log retention, NAT gateway egress, unoptimized ECR images, no Spot/Reserved usage.
-* **Plan:** identify top cost sources, apply quick wins (retention, right-size, scale down), then adopt capacity strategies (Spot, Savings Plans, Capacity Providers) and CI/CD gates.
+- **Charge drivers:** Fargate bills vCPU+memory/sec; EC2 bills instance uptime + EBS.
+- **Inefficiencies:** over-provisioned task resources, idle tasks, too many ALBs/NLBs, long CloudWatch log retention, NAT gateway egress, unoptimized ECR images, no Spot/Reserved usage.
+- **Plan:** identify top cost sources, apply quick wins (retention, right-size, scale down), then adopt capacity strategies (Spot, Savings Plans, Capacity Providers) and CI/CD gates.
 
 ---
 
@@ -7654,59 +7732,59 @@ resource "aws_ecs_task_definition" "app" {
 
 ### ✅ Best Practices — Short actionable list
 
-* **Measure first**
+- **Measure first**
 
-  * Use Cost Explorer, CloudWatch Container Insights, and tag costs (env/app/team).
-  * Add cost allocation tags on ECS services/tasks.
+  - Use Cost Explorer, CloudWatch Container Insights, and tag costs (env/app/team).
+  - Add cost allocation tags on ECS services/tasks.
 
-* **Right-size tasks**
+- **Right-size tasks**
 
-  * Reduce `cpu` and `memory` request to match observed usage.
-  * Use Container Insights to find typical 95th percentile usage and set requests accordingly.
+  - Reduce `cpu` and `memory` request to match observed usage.
+  - Use Container Insights to find typical 95th percentile usage and set requests accordingly.
 
-* **Mix capacity**
+- **Mix capacity**
 
-  * Use **Capacity Providers**: baseline on EC2 reserved/spot + burst on Fargate/Spot.
-  * Use **FARGATE_SPOT** for non-critical/batch workloads.
+  - Use **Capacity Providers**: baseline on EC2 reserved/spot + burst on Fargate/Spot.
+  - Use **FARGATE_SPOT** for non-critical/batch workloads.
 
-* **Use Spot & Savings**
+- **Use Spot & Savings**
 
-  * Run background workers on Spot or Fargate Spot.
-  * Buy **Savings Plans** for stable baseline.
+  - Run background workers on Spot or Fargate Spot.
+  - Buy **Savings Plans** for stable baseline.
 
-* **Autoscale correctly**
+- **Autoscale correctly**
 
-  * Use Service Auto Scaling with target tracking (CPU/RequestCountPerTarget).
-  * For EC2, enable Cluster Auto Scaling / Managed Scaling on Capacity Providers.
+  - Use Service Auto Scaling with target tracking (CPU/RequestCountPerTarget).
+  - For EC2, enable Cluster Auto Scaling / Managed Scaling on Capacity Providers.
 
-* **Reduce networking egress**
+- **Reduce networking egress**
 
-  * Add VPC endpoints for **ECR, SSM, Secrets Manager, CloudWatch Logs**.
-  * Minimize NAT Gateway use; prefer central NAT/shared NAT if necessary.
+  - Add VPC endpoints for **ECR, SSM, Secrets Manager, CloudWatch Logs**.
+  - Minimize NAT Gateway use; prefer central NAT/shared NAT if necessary.
 
-* **Consolidate load balancers**
+- **Consolidate load balancers**
 
-  * Use host/path routing with ALB to reduce ALB count and LCUs.
+  - Use host/path routing with ALB to reduce ALB count and LCUs.
 
-* **Control logs and images**
+- **Control logs and images**
 
-  * Set CloudWatch retention policy; move old logs to S3 if needed.
-  * Enable ECR lifecycle policies (expire untagged or old tags).
-  * Scan images and delete vulnerable/old images automatically.
+  - Set CloudWatch retention policy; move old logs to S3 if needed.
+  - Enable ECR lifecycle policies (expire untagged or old tags).
+  - Scan images and delete vulnerable/old images automatically.
 
-* **Use Graviton / cheaper instances**
+- **Use Graviton / cheaper instances**
 
-  * Test and adopt **Arm (Graviton)**-based instances or Fargate Graviton for cost/perf gains.
+  - Test and adopt **Arm (Graviton)**-based instances or Fargate Graviton for cost/perf gains.
 
-* **CI/CD gating**
+- **CI/CD gating**
 
-  * Prevent accidental `desired-count` spikes by requiring approvals.
-  * Enforce immutable tags (no `:latest`) and image promotion.
+  - Prevent accidental `desired-count` spikes by requiring approvals.
+  - Enforce immutable tags (no `:latest`) and image promotion.
 
-* **Operational guardrails**
+- **Operational guardrails**
 
-  * Enforce budgets & alerts (AWS Budgets SNS triggers).
-  * Tag everything (env, team, app) and visualize by tag.
+  - Enforce budgets & alerts (AWS Budgets SNS triggers).
+  - Tag everything (env, team, app) and visualize by tag.
 
 ---
 
@@ -7733,6 +7811,7 @@ High ECS costs come from **over-provisioned tasks, idle compute, NAT/ALB/network
 2. Apply right-sizing + spot/capacity-provider strategy + log/image cleanup to cut major recurring costs.
 
 ---
+
 ## Q: **Logs missing from ECS (containers not sending logs / CloudWatch shows nothing)** 🪵❌
 
 ---
@@ -7745,10 +7824,10 @@ Missing logs usually come from one of these: **misconfigured log driver**, **wro
 
 ### ⚙️ Purpose / How it works
 
-* ECS containers write `stdout`/`stderr` → Docker log driver (e.g., `awslogs`, `awsfirelens`, `json-file`) → backend (CloudWatch, Elasticsearch, S3).
-* For **Fargate**, logging is configured in the Task Definition only (no host agent).
-* The **task execution role** must allow the driver to create log streams and put log events.
-* If in **private subnets**, tasks need NAT or VPC endpoints for CloudWatch/Secrets/ECR access.
+- ECS containers write `stdout`/`stderr` → Docker log driver (e.g., `awslogs`, `awsfirelens`, `json-file`) → backend (CloudWatch, Elasticsearch, S3).
+- For **Fargate**, logging is configured in the Task Definition only (no host agent).
+- The **task execution role** must allow the driver to create log streams and put log events.
+- If in **private subnets**, tasks need NAT or VPC endpoints for CloudWatch/Secrets/ECR access.
 
 ---
 
@@ -7800,20 +7879,20 @@ Minimal policy lines:
 
 ```json
 {
-  "Effect":"Allow",
-  "Action":[
+  "Effect": "Allow",
+  "Action": [
     "logs:CreateLogStream",
     "logs:PutLogEvents",
     "logs:CreateLogGroup"
   ],
-  "Resource":"arn:aws:logs:ap-south-1:123456789012:log-group:/ecs/*"
+  "Resource": "arn:aws:logs:ap-south-1:123456789012:log-group:/ecs/*"
 }
 ```
 
 #### 5) If using FireLens (awsfirelens) — validate router container
 
-* Ensure `logRouter` container present and has `firelensConfiguration` and correct `options`.
-* Check sidecar logs for Fluent Bit errors:
+- Ensure `logRouter` container present and has `firelensConfiguration` and correct `options`.
+- Check sidecar logs for Fluent Bit errors:
 
 ```bash
 aws logs tail "/ecs/firelens" --region ap-south-1 --follow
@@ -7828,21 +7907,21 @@ env | grep AWS_REGION
 curl -s http://169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
 ```
 
-* Verify container can access metadata and credentials.
+- Verify container can access metadata and credentials.
 
 #### 7) Network/VPC endpoints & NAT (common for private subnets)
 
-* If no NAT and no endpoints, Fargate cannot reach CloudWatch.
-* Quick check: does task have private IP and no public IP? Then ensure VPC endpoints for:
+- If no NAT and no endpoints, Fargate cannot reach CloudWatch.
+- Quick check: does task have private IP and no public IP? Then ensure VPC endpoints for:
 
-  * `com.amazonaws.<region>.logs` (Interface endpoint)
-  * `com.amazonaws.<region>.monitoring` (if needed)
-  * Or NAT gateway exists.
+  - `com.amazonaws.<region>.logs` (Interface endpoint)
+  - `com.amazonaws.<region>.monitoring` (if needed)
+  - Or NAT gateway exists.
 
 #### 8) Check CloudWatch Logs quotas / KMS issues
 
-* If log group is KMS-encrypted, confirm encryption key policy allows `logs:PutLogEvents` for execution role.
-* Check CloudWatch Logs ingestion/put errors in CloudWatch or FireLens logs.
+- If log group is KMS-encrypted, confirm encryption key policy allows `logs:PutLogEvents` for execution role.
+- Check CloudWatch Logs ingestion/put errors in CloudWatch or FireLens logs.
 
 ---
 
@@ -7863,15 +7942,15 @@ curl -s http://169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
 
 ### ✅ Best Practices (recover & prevent)
 
-* ✅ **Always** set `logConfiguration` in task definition for each container; prefer `awslogs` or `awsfirelens` for centralization.
-* ✅ Ensure **task execution role** has minimal but sufficient CloudWatch permissions. Use `AmazonECSTaskExecutionRolePolicy` as baseline.
-* ✅ Create CloudWatch log group ahead of time with correct region and KMS settings (avoid auto-create surprises).
-* ✅ If cluster in **private subnets**, create **VPC Interface Endpoints** for Logs / ECR / SecretsManager or provide NAT.
-* ✅ Use **structured logs (JSON)** and FireLens for advanced routing/transformation.
-* ✅ Add **CloudWatch Logs retention policy** to limit cost and avoid accidental deletion issues.
-* ✅ Instrument CI/CD to validate new task revisions create expected log streams (smoke test).
-* ✅ Centralize observability: dashboard `Log group existence` and `Task -> LogStream mapping` checks.
-* ✅ For troubleshooting, enable **ECS Exec** and examine container process & environment quickly.
+- ✅ **Always** set `logConfiguration` in task definition for each container; prefer `awslogs` or `awsfirelens` for centralization.
+- ✅ Ensure **task execution role** has minimal but sufficient CloudWatch permissions. Use `AmazonECSTaskExecutionRolePolicy` as baseline.
+- ✅ Create CloudWatch log group ahead of time with correct region and KMS settings (avoid auto-create surprises).
+- ✅ If cluster in **private subnets**, create **VPC Interface Endpoints** for Logs / ECR / SecretsManager or provide NAT.
+- ✅ Use **structured logs (JSON)** and FireLens for advanced routing/transformation.
+- ✅ Add **CloudWatch Logs retention policy** to limit cost and avoid accidental deletion issues.
+- ✅ Instrument CI/CD to validate new task revisions create expected log streams (smoke test).
+- ✅ Centralize observability: dashboard `Log group existence` and `Task -> LogStream mapping` checks.
+- ✅ For troubleshooting, enable **ECS Exec** and examine container process & environment quickly.
 
 ---
 

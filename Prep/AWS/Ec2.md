@@ -11,10 +11,10 @@ You can launch, configure, and manage compute capacity on-demand, without mainta
 
 ### ⚙️ Purpose / How it Works
 
-* EC2 allows you to **provision virtual machines** (VMs) with custom CPU, memory, storage, and networking configurations.
-* It supports **auto-scaling** to match capacity with demand and **load balancing** for traffic distribution.
-* You can choose OS (Linux/Windows), instance type, storage (EBS/Instance Store), and region.
-* Instances are managed using **EC2 Dashboard**, **AWS CLI**, **SDKs**, or **Terraform/IaC tools**.
+- EC2 allows you to **provision virtual machines** (VMs) with custom CPU, memory, storage, and networking configurations.
+- It supports **auto-scaling** to match capacity with demand and **load balancing** for traffic distribution.
+- You can choose OS (Linux/Windows), instance type, storage (EBS/Instance Store), and region.
+- Instances are managed using **EC2 Dashboard**, **AWS CLI**, **SDKs**, or **Terraform/IaC tools**.
 
 ---
 
@@ -65,11 +65,11 @@ resource "aws_instance" "web_server" {
 
 ### ✅ Best Practices
 
-* Use **Auto Scaling Groups** for high availability and elasticity.
-* Enable **CloudWatch monitoring** and **CloudTrail logging**.
-* Use **IAM roles** instead of storing AWS keys on EC2.
-* Regularly **patch OS and software** or automate via **SSM Patch Manager**.
-* Always **restrict SSH access** via Security Groups (e.g., only from office IP).
+- Use **Auto Scaling Groups** for high availability and elasticity.
+- Enable **CloudWatch monitoring** and **CloudTrail logging**.
+- Use **IAM roles** instead of storing AWS keys on EC2.
+- Regularly **patch OS and software** or automate via **SSM Patch Manager**.
+- Always **restrict SSH access** via Security Groups (e.g., only from office IP).
 
 ---
 
@@ -79,6 +79,7 @@ Amazon EC2 is AWS’s scalable compute service for deploying virtual servers.
 You define resources (CPU, memory, network), automate provisioning via CLI or Terraform, and manage security using IAM + Security Groups.
 
 ---
+
 ## Q: What are EC2 Instance Types?
 
 ---
@@ -92,15 +93,15 @@ Each instance type is optimized for specific workloads — such as compute, memo
 
 ### ⚙️ Purpose / How It Works
 
-* AWS groups EC2 instances into **families** based on performance characteristics.
-* Each family has **sizes** (e.g., `t3.micro`, `t3.large`, `m5.xlarge`) that scale up in vCPUs and memory.
-* You select the type depending on workload requirements — balancing performance vs cost.
+- AWS groups EC2 instances into **families** based on performance characteristics.
+- Each family has **sizes** (e.g., `t3.micro`, `t3.large`, `m5.xlarge`) that scale up in vCPUs and memory.
+- You select the type depending on workload requirements — balancing performance vs cost.
 
 Example:
 
-* `t3.micro` → low-cost, general-purpose (testing/dev)
-* `c6g.xlarge` → high CPU for compute workloads
-* `r5.2xlarge` → high memory for databases
+- `t3.micro` → low-cost, general-purpose (testing/dev)
+- `c6g.xlarge` → high CPU for compute workloads
+- `r5.2xlarge` → high memory for databases
 
 ---
 
@@ -146,11 +147,11 @@ resource "aws_instance" "app_server" {
 
 ### ✅ Best Practices
 
-* Choose **latest generation** (e.g., M7, C7, R7) for better price/performance.
-* Use **Spot Instances** for non-critical, interruptible workloads.
-* Use **Savings Plans or Reserved Instances** for long-term workloads.
-* Right-size regularly using **AWS Compute Optimizer**.
-* Always benchmark before production scaling.
+- Choose **latest generation** (e.g., M7, C7, R7) for better price/performance.
+- Use **Spot Instances** for non-critical, interruptible workloads.
+- Use **Savings Plans or Reserved Instances** for long-term workloads.
+- Right-size regularly using **AWS Compute Optimizer**.
+- Always benchmark before production scaling.
 
 ---
 
@@ -160,6 +161,7 @@ EC2 instance types define compute configurations optimized for specific workload
 Pick based on performance needs and cost-efficiency; automate provisioning with Terraform or Auto Scaling Groups.
 
 ---
+
 ## Q: What is an Amazon Machine Image (AMI)?
 
 ---
@@ -173,17 +175,18 @@ It defines the **operating system**, **application server**, and **installed sof
 
 ### ⚙️ Purpose / How It Works
 
-* When launching an EC2 instance, you **must specify an AMI**.
-* An AMI includes:
+- When launching an EC2 instance, you **must specify an AMI**.
+- An AMI includes:
 
-  * A **root volume** (OS and software)
-  * **Launch permissions** (who can use it)
-  * **Block device mappings** (attached volumes)
-* You can use:
+  - A **root volume** (OS and software)
+  - **Launch permissions** (who can use it)
+  - **Block device mappings** (attached volumes)
 
-  * **AWS-provided AMIs** (e.g., Amazon Linux 2, Ubuntu)
-  * **Marketplace AMIs** (vendor-provided)
-  * **Custom AMIs** (your own configurations, reusable templates)
+- You can use:
+
+  - **AWS-provided AMIs** (e.g., Amazon Linux 2, Ubuntu)
+  - **Marketplace AMIs** (vendor-provided)
+  - **Custom AMIs** (your own configurations, reusable templates)
 
 ---
 
@@ -234,11 +237,11 @@ resource "aws_instance" "web" {
 
 ### ✅ Best Practices
 
-* **Create AMIs after configuring baseline software** (e.g., Docker, monitoring agents).
-* **Automate AMI creation** using **Packer** or **EC2 Image Builder**.
-* **Version AMIs** for traceability (e.g., `webapp-v1.2.3`).
-* **Encrypt AMIs** containing sensitive data using **KMS**.
-* **Deregister unused AMIs** to reduce EBS snapshot costs.
+- **Create AMIs after configuring baseline software** (e.g., Docker, monitoring agents).
+- **Automate AMI creation** using **Packer** or **EC2 Image Builder**.
+- **Version AMIs** for traceability (e.g., `webapp-v1.2.3`).
+- **Encrypt AMIs** containing sensitive data using **KMS**.
+- **Deregister unused AMIs** to reduce EBS snapshot costs.
 
 ---
 
@@ -248,6 +251,7 @@ An **AMI** is the blueprint for launching EC2 instances — defining OS, configu
 You can use AWS-provided, Marketplace, or custom-built AMIs to standardize and automate server provisioning.
 
 ---
+
 ## Q: What is the Difference Between EBS and Instance Store?
 
 ---
@@ -261,8 +265,8 @@ EBS provides **persistent block storage**, while Instance Store offers **tempora
 
 ### ⚙️ Purpose / How It Works
 
-* **EBS**: Network-attached block storage that **persists independently** of the EC2 instance.
-* **Instance Store**: Disk storage **physically attached** to the host; data is **lost when the instance stops or terminates**.
+- **EBS**: Network-attached block storage that **persists independently** of the EC2 instance.
+- **Instance Store**: Disk storage **physically attached** to the host; data is **lost when the instance stops or terminates**.
 
 ---
 
@@ -308,20 +312,21 @@ resource "aws_instance" "fast_compute" {
 
 ### ✅ Best Practices
 
-* Use **EBS** for critical data or applications needing persistence.
-* Use **Instance Store** for **ephemeral workloads** (e.g., caching, scratch space).
-* Regularly **snapshot EBS volumes** for backup and disaster recovery.
-* Combine both: Instance Store for temp compute + EBS for persistent state.
+- Use **EBS** for critical data or applications needing persistence.
+- Use **Instance Store** for **ephemeral workloads** (e.g., caching, scratch space).
+- Regularly **snapshot EBS volumes** for backup and disaster recovery.
+- Combine both: Instance Store for temp compute + EBS for persistent state.
 
 ---
 
 ### 💡 In short
 
-* **EBS** = Persistent, network-attached block storage (backed by AWS infrastructure).
-* **Instance Store** = High-speed, ephemeral local storage tied to the instance’s lifecycle.
+- **EBS** = Persistent, network-attached block storage (backed by AWS infrastructure).
+- **Instance Store** = High-speed, ephemeral local storage tied to the instance’s lifecycle.
   Use EBS for data retention, and Instance Store for temporary, high-performance workloads.
 
 ---
+
 ## Q: How Do You Access an EC2 Instance?
 
 ---
@@ -335,12 +340,13 @@ Access control is managed via **key pairs**, **Security Groups**, and **IAM role
 
 ### ⚙️ Purpose / How It Works
 
-* When launching an EC2 instance, you attach an **SSH key pair** (for Linux) or **password/RDP key** (for Windows).
-* Access is allowed only if:
+- When launching an EC2 instance, you attach an **SSH key pair** (for Linux) or **password/RDP key** (for Windows).
+- Access is allowed only if:
 
-  * The **Security Group** allows inbound port 22 (SSH) or 3389 (RDP).
-  * You use the **correct private key** that matches the instance’s key pair.
-* For private instances, access is usually via **bastion host** or **Session Manager (SSM)**.
+  - The **Security Group** allows inbound port 22 (SSH) or 3389 (RDP).
+  - You use the **correct private key** that matches the instance’s key pair.
+
+- For private instances, access is usually via **bastion host** or **Session Manager (SSM)**.
 
 ---
 
@@ -353,9 +359,9 @@ chmod 400 my-key.pem
 ssh -i my-key.pem ec2-user@<Public-IP-or-DNS>
 ```
 
-* `ec2-user` → Amazon Linux
-* `ubuntu` → Ubuntu AMI
-* `centos` → CentOS AMI
+- `ec2-user` → Amazon Linux
+- `ubuntu` → Ubuntu AMI
+- `centos` → CentOS AMI
 
 #### ✅ 2. RDP Access (Windows)
 
@@ -364,6 +370,7 @@ ssh -i my-key.pem ec2-user@<Public-IP-or-DNS>
    ```bash
    aws ec2 get-password-data --instance-id i-0abcd1234efgh5678 --priv-launch-key my-key.pem
    ```
+
 2. Open **Remote Desktop Connection** → Enter **Public DNS** → Use credentials.
 
 #### ✅ 3. AWS Systems Manager (SSM) — No SSH Needed
@@ -372,8 +379,8 @@ ssh -i my-key.pem ec2-user@<Public-IP-or-DNS>
 aws ssm start-session --target i-0abcd1234efgh5678
 ```
 
-* Requires `AmazonSSMManagedInstanceCore` IAM role on EC2
-* Useful for private subnets (no public IP)
+- Requires `AmazonSSMManagedInstanceCore` IAM role on EC2
+- Useful for private subnets (no public IP)
 
 ---
 
@@ -390,11 +397,11 @@ aws ssm start-session --target i-0abcd1234efgh5678
 
 ### ✅ Best Practices
 
-* Restrict **SSH/RDP** ports to trusted IPs only.
-* Use **SSM Session Manager** instead of open SSH for better security.
-* Rotate and manage SSH keys using **AWS Secrets Manager** or **IAM policies**.
-* Disable root login and enforce key-based authentication.
-* Use **bastion host** for accessing private subnet instances.
+- Restrict **SSH/RDP** ports to trusted IPs only.
+- Use **SSM Session Manager** instead of open SSH for better security.
+- Rotate and manage SSH keys using **AWS Secrets Manager** or **IAM policies**.
+- Disable root login and enforce key-based authentication.
+- Use **bastion host** for accessing private subnet instances.
 
 ---
 
@@ -404,6 +411,7 @@ Access EC2 via **SSH (Linux)**, **RDP (Windows)**, or **SSM Session Manager**.
 Secure access by using IAM roles, private keys, restricted Security Groups, and avoiding direct public exposure where possible.
 
 ---
+
 ## Q: What is a Key Pair in EC2?
 
 ---
@@ -417,10 +425,10 @@ It consists of a **public key** (stored by AWS) and a **private key** (downloade
 
 ### ⚙️ Purpose / How It Works
 
-* When launching an EC2 instance, you specify a **key pair**.
-* AWS injects the **public key** into the instance’s metadata.
-* You use the **private key file (`.pem`)** locally to authenticate via SSH or decrypt Windows passwords.
-* Key pairs ensure **secure, encrypted login** — no need for storing static passwords.
+- When launching an EC2 instance, you specify a **key pair**.
+- AWS injects the **public key** into the instance’s metadata.
+- You use the **private key file (`.pem`)** locally to authenticate via SSH or decrypt Windows passwords.
+- Key pairs ensure **secure, encrypted login** — no need for storing static passwords.
 
 ---
 
@@ -474,11 +482,11 @@ aws ec2 run-instances \
 
 ### ✅ Best Practices
 
-* Always **store private keys securely** (never share or commit to Git).
-* Restrict key usage per environment (e.g., `dev-key`, `prod-key`).
-* Rotate keys periodically and **delete unused ones**.
-* Use **AWS Systems Manager Session Manager** or **EC2 Instance Connect** to reduce key management overhead.
-* Enforce IAM policies to control who can create or use key pairs.
+- Always **store private keys securely** (never share or commit to Git).
+- Restrict key usage per environment (e.g., `dev-key`, `prod-key`).
+- Rotate keys periodically and **delete unused ones**.
+- Use **AWS Systems Manager Session Manager** or **EC2 Instance Connect** to reduce key management overhead.
+- Enforce IAM policies to control who can create or use key pairs.
 
 ---
 
@@ -502,9 +510,9 @@ This can be used for application data, logs, or backups — separate from the ro
 
 ### ⚙️ Purpose / How It Works
 
-* EBS volumes act like **virtual hard drives** attached to EC2 instances.
-* A volume can only attach to **one instance at a time** (except multi-attach-enabled).
-* After attaching, you **mount it** to a directory on the instance to make it usable.
+- EBS volumes act like **virtual hard drives** attached to EC2 instances.
+- A volume can only attach to **one instance at a time** (except multi-attach-enabled).
+- After attaching, you **mount it** to a directory on the instance to make it usable.
 
 **Steps:**
 
@@ -594,11 +602,11 @@ resource "aws_volume_attachment" "data_attach" {
 
 ### ✅ Best Practices
 
-* Ensure **EBS and EC2 are in the same AZ**.
-* Use **gp3** for general workloads; **io1/io2** for high IOPS.
-* Always **unmount and detach** before deleting a volume.
-* Take **snapshots** for backup before modifying or detaching.
-* Tag volumes (e.g., `Name`, `Env`, `Owner`) for management and cost tracking.
+- Ensure **EBS and EC2 are in the same AZ**.
+- Use **gp3** for general workloads; **io1/io2** for high IOPS.
+- Always **unmount and detach** before deleting a volume.
+- Take **snapshots** for backup before modifying or detaching.
+- Tag volumes (e.g., `Name`, `Env`, `Owner`) for management and cost tracking.
 
 ---
 
@@ -609,6 +617,7 @@ Then format and mount it inside the instance to use as extra storage.
 Ensure same-AZ placement, tag volumes, and snapshot regularly for durability.
 
 ---
+
 ## Q: What Happens When You Stop vs Terminate an EC2 Instance?
 
 ---
@@ -624,17 +633,17 @@ When you **terminate** an instance, it’s **permanently deleted** — along wit
 
 #### 🟥 Stop:
 
-* The instance **shuts down gracefully** (like powering off a server).
-* The **EBS root volume** and attached data volumes are **preserved**.
-* You can **start** it later with the same instance ID.
-* **Instance Store volumes are lost.**
-* The **Elastic IP (if not associated to EIP resource)** is released.
+- The instance **shuts down gracefully** (like powering off a server).
+- The **EBS root volume** and attached data volumes are **preserved**.
+- You can **start** it later with the same instance ID.
+- **Instance Store volumes are lost.**
+- The **Elastic IP (if not associated to EIP resource)** is released.
 
 #### 🧨 Terminate:
 
-* The instance and **all attached EBS volumes (if DeleteOnTermination=true)** are **permanently deleted**.
-* **Elastic IPs** are released unless explicitly disassociated.
-* The instance **cannot be restarted** — termination is final.
+- The instance and **all attached EBS volumes (if DeleteOnTermination=true)** are **permanently deleted**.
+- **Elastic IPs** are released unless explicitly disassociated.
+- The instance **cannot be restarted** — termination is final.
 
 ---
 
@@ -647,7 +656,7 @@ When you **terminate** an instance, it’s **permanently deleted** — along wit
 | **Root EBS Volume**     | Retained                                  | Deleted (if `DeleteOnTermination=true`)      |
 | **Instance Store Data** | Lost                                      | Lost                                         |
 | **Elastic IP**          | Released (unless associated to EIP)       | Released                                     |
-| **Restart Possible**    | ✅ Yes                                     | ❌ No                                         |
+| **Restart Possible**    | ✅ Yes                                    | ❌ No                                        |
 | **Use Case**            | Temporary shutdown                        | Permanent deletion                           |
 
 ---
@@ -676,21 +685,22 @@ aws ec2 terminate-instances --instance-ids i-0123456789abcdef0
 
 ### ✅ Best Practices
 
-* Use **Stop** when performing maintenance or cost optimization for dev/test.
-* Use **Terminate** for instances you’ll never reuse.
-* Always **create AMI snapshots or EBS backups** before termination.
-* Check **DeleteOnTermination** flag for attached EBS volumes to prevent data loss.
-* For automation, use **Instance Lifecycle Hooks** in Auto Scaling to handle cleanup safely.
+- Use **Stop** when performing maintenance or cost optimization for dev/test.
+- Use **Terminate** for instances you’ll never reuse.
+- Always **create AMI snapshots or EBS backups** before termination.
+- Check **DeleteOnTermination** flag for attached EBS volumes to prevent data loss.
+- For automation, use **Instance Lifecycle Hooks** in Auto Scaling to handle cleanup safely.
 
 ---
 
 ### 💡 In short
 
-* **Stop** = Pause the instance (EBS data retained, reusable).
-* **Terminate** = Permanently delete the instance (data lost if not backed up).
+- **Stop** = Pause the instance (EBS data retained, reusable).
+- **Terminate** = Permanently delete the instance (data lost if not backed up).
   Use **Stop** for temporary shutdowns; **Terminate** for complete teardown.
 
 ---
+
 ## Q: What is EC2 User Data?
 
 ---
@@ -704,15 +714,15 @@ It’s often a **Bash script (Linux)** or **PowerShell script (Windows)** that i
 
 ### ⚙️ Purpose / How It Works
 
-* When launching an EC2 instance, you can pass **user data** in the configuration.
-* The script executes **only once** (by default) during the **first boot**.
-* The EC2 instance reads user data from **instance metadata service (IMDS)**.
-* Common use cases:
+- When launching an EC2 instance, you can pass **user data** in the configuration.
+- The script executes **only once** (by default) during the **first boot**.
+- The EC2 instance reads user data from **instance metadata service (IMDS)**.
+- Common use cases:
 
-  * Install packages (e.g., Nginx, Docker)
-  * Fetch configuration from S3 or Git
-  * Register instance with monitoring tools
-  * Run Cloud-Init tasks (Linux)
+  - Install packages (e.g., Nginx, Docker)
+  - Fetch configuration from S3 or Git
+  - Register instance with monitoring tools
+  - Run Cloud-Init tasks (Linux)
 
 ---
 
@@ -772,11 +782,11 @@ curl http://169.254.169.254/latest/user-data
 
 ### ✅ Best Practices
 
-* Use **Cloud-Init** for structured, repeatable setups.
-* Store scripts in **version control** (e.g., Git) and inject dynamically.
-* Keep scripts **idempotent** (safe to re-run).
-* Avoid hardcoding secrets — use **AWS Secrets Manager** or **SSM Parameter Store**.
-* Use **Base AMIs + User Data** for lightweight automation during instance launch.
+- Use **Cloud-Init** for structured, repeatable setups.
+- Store scripts in **version control** (e.g., Git) and inject dynamically.
+- Keep scripts **idempotent** (safe to re-run).
+- Avoid hardcoding secrets — use **AWS Secrets Manager** or **SSM Parameter Store**.
+- Use **Base AMIs + User Data** for lightweight automation during instance launch.
 
 ---
 
@@ -786,6 +796,7 @@ curl http://169.254.169.254/latest/user-data
 Think of it as **boot-time configuration** for EC2 provisioning.
 
 ---
+
 ## Q: How Do You Resize an EC2 Instance?
 
 ---
@@ -799,15 +810,15 @@ This process helps **optimize performance and cost** without redeploying the app
 
 ### ⚙️ Purpose / How It Works
 
-* EC2 instance type defines compute capacity (vCPUs, RAM, network).
-* You can **stop** the instance, **change its type**, and **start** it again.
-* For **EBS-backed instances**, resizing is seamless since the root volume persists.
-* You can resize via **AWS Console**, **CLI**, or **Terraform**.
+- EC2 instance type defines compute capacity (vCPUs, RAM, network).
+- You can **stop** the instance, **change its type**, and **start** it again.
+- For **EBS-backed instances**, resizing is seamless since the root volume persists.
+- You can resize via **AWS Console**, **CLI**, or **Terraform**.
 
 **Note:**
 
-* The instance must be **in “stopped” state** to change its type.
-* Instance type must be **supported in the same Availability Zone**.
+- The instance must be **in “stopped” state** to change its type.
+- Instance type must be **supported in the same Availability Zone**.
 
 ---
 
@@ -871,11 +882,11 @@ terraform apply
 
 ### ✅ Best Practices
 
-* Use **EBS-backed instances** to retain data during resize.
-* Take an **AMI or snapshot** before resizing for rollback safety.
-* Test performance and cost before scaling production workloads.
-* Use **Auto Scaling Groups** to manage dynamic resizing automatically.
-* Validate that **security groups**, **IAM roles**, and **Elastic IPs** remain attached.
+- Use **EBS-backed instances** to retain data during resize.
+- Take an **AMI or snapshot** before resizing for rollback safety.
+- Test performance and cost before scaling production workloads.
+- Use **Auto Scaling Groups** to manage dynamic resizing automatically.
+- Validate that **security groups**, **IAM roles**, and **Elastic IPs** remain attached.
 
 ---
 
@@ -886,6 +897,7 @@ EBS volumes persist, but downtime occurs.
 Always snapshot first, confirm AZ support, and consider Auto Scaling for automated right-sizing.
 
 ---
+
 ## Q: What is EC2 Instance Metadata?
 
 ---
@@ -899,14 +911,14 @@ It’s accessed locally from within the instance and is used for **automation, c
 
 ### ⚙️ Purpose / How It Works
 
-* AWS exposes metadata through a **link-local IP: `169.254.169.254`** (only accessible from within the instance).
-* The **Instance Metadata Service (IMDS)** allows applications, scripts, and agents to retrieve instance details **without requiring AWS credentials**.
-* Common uses:
+- AWS exposes metadata through a **link-local IP: `169.254.169.254`** (only accessible from within the instance).
+- The **Instance Metadata Service (IMDS)** allows applications, scripts, and agents to retrieve instance details **without requiring AWS credentials**.
+- Common uses:
 
-  * Fetching **instance identity** (for tagging, logging)
-  * Retrieving **IAM role credentials**
-  * Accessing **user data scripts**
-  * Reading **network and region information**
+  - Fetching **instance identity** (for tagging, logging)
+  - Retrieving **IAM role credentials**
+  - Accessing **user data scripts**
+  - Reading **network and region information**
 
 ---
 
@@ -962,11 +974,11 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
 
 ### ✅ Best Practices
 
-* Always use **IMDSv2** (token-based) — prevents SSRF and credential theft.
-* Restrict metadata access to trusted applications only.
-* Avoid exposing metadata responses in logs or APIs.
-* Use metadata for dynamic automation — e.g., auto-tagging instances, logging context, etc.
-* Rotate IAM roles rather than embedding credentials in AMIs or scripts.
+- Always use **IMDSv2** (token-based) — prevents SSRF and credential theft.
+- Restrict metadata access to trusted applications only.
+- Avoid exposing metadata responses in logs or APIs.
+- Use metadata for dynamic automation — e.g., auto-tagging instances, logging context, etc.
+- Rotate IAM roles rather than embedding credentials in AMIs or scripts.
 
 ---
 
@@ -976,6 +988,7 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" \
 Use **IMDSv2** for secure, token-based access to automate instance configuration and authentication safely.
 
 ---
+
 ## Q: How to Check EC2 Instance Health?
 
 ---
@@ -983,7 +996,7 @@ Use **IMDSv2** for secure, token-based access to automate instance configuration
 ### 🧠 Overview
 
 **EC2 instance health** determines whether the instance and its underlying AWS infrastructure are functioning correctly.
-AWS performs **two types of health checks** — *System Status Checks* and *Instance Status Checks* — to detect hardware or software issues.
+AWS performs **two types of health checks** — _System Status Checks_ and _Instance Status Checks_ — to detect hardware or software issues.
 
 ---
 
@@ -991,8 +1004,8 @@ AWS performs **two types of health checks** — *System Status Checks* and *Inst
 
 AWS automatically monitors instances and reports their health status:
 
-* **System Status Check**: Detects problems with AWS hardware or networking.
-* **Instance Status Check**: Detects issues inside your instance (e.g., OS crash, corrupted file system).
+- **System Status Check**: Detects problems with AWS hardware or networking.
+- **Instance Status Check**: Detects issues inside your instance (e.g., OS crash, corrupted file system).
   You can view or monitor health via **AWS Console**, **CLI**, or **CloudWatch alarms**.
 
 ---
@@ -1022,12 +1035,12 @@ aws ec2 describe-instance-status \
 
 #### ✅ 2. Using AWS Console
 
-* Navigate to **EC2 → Instances → Status Checks tab**
-* You’ll see:
+- Navigate to **EC2 → Instances → Status Checks tab**
+- You’ll see:
 
-  * ✅ **2/2 checks passed** → Healthy
-  * ⚠️ **1/2 checks passed** → Partial issue
-  * ❌ **0/2 checks passed** → Unhealthy
+  - ✅ **2/2 checks passed** → Healthy
+  - ⚠️ **1/2 checks passed** → Partial issue
+  - ❌ **0/2 checks passed** → Unhealthy
 
 #### ✅ 3. Create CloudWatch Alarm for Instance Health
 
@@ -1059,10 +1072,10 @@ aws cloudwatch put-metric-alarm \
 
 ### ✅ Best Practices
 
-* Automate health recovery using **Auto Scaling** or **AWS EC2 Auto-Recovery**.
-* Configure **CloudWatch Alarms** to notify or restart unhealthy instances.
-* Regularly patch OS and monitor app-level health with **Application Load Balancer target checks**.
-* Ensure proper IAM and network configurations to prevent false failures.
+- Automate health recovery using **Auto Scaling** or **AWS EC2 Auto-Recovery**.
+- Configure **CloudWatch Alarms** to notify or restart unhealthy instances.
+- Regularly patch OS and monitor app-level health with **Application Load Balancer target checks**.
+- Ensure proper IAM and network configurations to prevent false failures.
 
 ---
 
@@ -1073,6 +1086,7 @@ Use AWS Console, CLI, or CloudWatch to monitor — “2/2 checks passed” means
 Automate recovery using **Auto Scaling** or **EC2 Auto-Recovery** for production resilience.
 
 ---
+
 ## Q: What is an EC2 Placement Group?
 
 ---
@@ -1089,9 +1103,9 @@ It helps achieve **high performance**, **low latency**, or **fault isolation** �
 Placement Groups control the **placement strategy** of instances across physical hosts to optimize performance or availability.
 AWS offers three main strategies:
 
-* **Cluster** → Low latency, high bandwidth (HPC, real-time apps)
-* **Spread** → High availability (isolates instances across hardware)
-* **Partition** → Large-scale distributed systems (e.g., Hadoop, Kafka)
+- **Cluster** → Low latency, high bandwidth (HPC, real-time apps)
+- **Spread** → High availability (isolates instances across hardware)
+- **Partition** → Large-scale distributed systems (e.g., Hadoop, Kafka)
 
 ---
 
@@ -1145,20 +1159,20 @@ resource "aws_instance" "compute" {
 
 ### ⚙️ Additional Notes
 
-* Placement groups are **per Availability Zone** (except Partition — can span multiple).
-* Must use **supported instance types** (mostly compute/network optimized).
-* You **cannot move** an existing instance into a placement group — must relaunch.
-* Can combine placement groups with **Auto Scaling** and **EBS volumes** for performance and resilience.
+- Placement groups are **per Availability Zone** (except Partition — can span multiple).
+- Must use **supported instance types** (mostly compute/network optimized).
+- You **cannot move** an existing instance into a placement group — must relaunch.
+- Can combine placement groups with **Auto Scaling** and **EBS volumes** for performance and resilience.
 
 ---
 
 ### ✅ Best Practices
 
-* Use **Cluster** groups for network-bound workloads needing <10µs latency.
-* Use **Spread** for maximum fault tolerance (one instance per rack).
-* Use **Partition** for distributed workloads like Kafka, HDFS, or Cassandra.
-* Monitor placement constraints with `describe-placement-groups`.
-* Always **plan group strategy before deployment** — moving after launch isn’t allowed.
+- Use **Cluster** groups for network-bound workloads needing <10µs latency.
+- Use **Spread** for maximum fault tolerance (one instance per rack).
+- Use **Partition** for distributed workloads like Kafka, HDFS, or Cassandra.
+- Monitor placement constraints with `describe-placement-groups`.
+- Always **plan group strategy before deployment** — moving after launch isn’t allowed.
 
 ---
 
@@ -1167,11 +1181,12 @@ resource "aws_instance" "compute" {
 An **EC2 Placement Group** controls how instances are placed on AWS hardware to optimize **performance, fault tolerance, or scalability**.
 Use:
 
-* 🧠 *Cluster* → High performance
-* 🧱 *Spread* → Isolation & resilience
-* ⚙️ *Partition* → Distributed systems scalability
+- 🧠 _Cluster_ → High performance
+- 🧱 _Spread_ → Isolation & resilience
+- ⚙️ _Partition_ → Distributed systems scalability
 
 ---
+
 ## Q: What is EC2 Auto Recovery?
 
 ---
@@ -1185,12 +1200,12 @@ It ensures **high availability** by automatically moving the instance to healthy
 
 ### ⚙️ Purpose / How It Works
 
-* AWS monitors the **system status checks** of EC2 instances.
-* If a hardware or network issue is detected, AWS **automatically recovers** the instance to a healthy host in the same Availability Zone.
-* During recovery:
+- AWS monitors the **system status checks** of EC2 instances.
+- If a hardware or network issue is detected, AWS **automatically recovers** the instance to a healthy host in the same Availability Zone.
+- During recovery:
 
-  * Instance ID, EBS volumes, private IP, Elastic IP, and metadata **remain unchanged**.
-  * Only the **underlying physical host** is replaced.
+  - Instance ID, EBS volumes, private IP, Elastic IP, and metadata **remain unchanged**.
+  - Only the **underlying physical host** is replaced.
 
 ---
 
@@ -1260,11 +1275,11 @@ resource "aws_cloudwatch_metric_alarm" "auto_recover" {
 
 ### ✅ Best Practices
 
-* Use **EBS-backed instances** — auto recovery doesn’t work for instance-store volumes.
-* Combine with **CloudWatch alarms** for proactive monitoring.
-* Use **Auto Scaling** for app-level fault tolerance (beyond hardware).
-* Enable **detailed monitoring** for faster detection and recovery.
-* Test recovery periodically in non-prod environments.
+- Use **EBS-backed instances** — auto recovery doesn’t work for instance-store volumes.
+- Combine with **CloudWatch alarms** for proactive monitoring.
+- Use **Auto Scaling** for app-level fault tolerance (beyond hardware).
+- Enable **detailed monitoring** for faster detection and recovery.
+- Test recovery periodically in non-prod environments.
 
 ---
 
@@ -1274,6 +1289,7 @@ resource "aws_cloudwatch_metric_alarm" "auto_recover" {
 It’s an AWS-managed resilience feature for **EBS-backed EC2s**, ensuring minimal downtime without manual intervention.
 
 ---
+
 ## Q: What is EC2 Auto Scaling?
 
 ---
@@ -1287,9 +1303,9 @@ It ensures that your application always has the **right number of instances** ru
 
 ### ⚙️ Purpose / How It Works
 
-* EC2 Auto Scaling uses **Auto Scaling Groups (ASGs)** to manage instance fleets.
-* ASGs monitor metrics (like CPU, memory, requests) via **CloudWatch** and scale the number of instances **up or down automatically**.
-* It supports both **dynamic scaling** (based on policies) and **scheduled scaling** (based on time).
+- EC2 Auto Scaling uses **Auto Scaling Groups (ASGs)** to manage instance fleets.
+- ASGs monitor metrics (like CPU, memory, requests) via **CloudWatch** and scale the number of instances **up or down automatically**.
+- It supports both **dynamic scaling** (based on policies) and **scheduled scaling** (based on time).
 
 **Scaling Lifecycle:**
 
@@ -1369,11 +1385,11 @@ resource "aws_autoscaling_group" "web_asg" {
 
 ### ✅ Best Practices
 
-* Always deploy across **multiple AZs** for fault tolerance.
-* Use **Elastic Load Balancer (ALB/NLB)** for traffic distribution.
-* Combine with **Launch Templates** (not Launch Configurations — deprecated).
-* Enable **Instance Health Checks** for automatic replacement.
-* Use **CloudWatch alarms** for dynamic and predictive scaling.
+- Always deploy across **multiple AZs** for fault tolerance.
+- Use **Elastic Load Balancer (ALB/NLB)** for traffic distribution.
+- Combine with **Launch Templates** (not Launch Configurations — deprecated).
+- Enable **Instance Health Checks** for automatic replacement.
+- Use **CloudWatch alarms** for dynamic and predictive scaling.
 
 ---
 
@@ -1383,6 +1399,7 @@ resource "aws_autoscaling_group" "web_asg" {
 It dynamically adjusts capacity using **CloudWatch metrics and scaling policies** — ensuring reliability, elasticity, and operational efficiency.
 
 ---
+
 ## Q: What is the Difference Between Stop/Start and Reboot in EC2?
 
 ---
@@ -1391,8 +1408,8 @@ It dynamically adjusts capacity using **CloudWatch metrics and scaling policies*
 
 Both **Stop/Start** and **Reboot** operations restart an EC2 instance — but they differ in **behavior, downtime, and underlying host handling**.
 
-* **Stop/Start** → Shuts down the instance completely and may move it to a new physical host.
-* **Reboot** → Simply restarts the operating system without changing host hardware or configuration.
+- **Stop/Start** → Shuts down the instance completely and may move it to a new physical host.
+- **Reboot** → Simply restarts the operating system without changing host hardware or configuration.
 
 ---
 
@@ -1400,18 +1417,18 @@ Both **Stop/Start** and **Reboot** operations restart an EC2 instance — but th
 
 #### 🟥 Stop/Start
 
-* Stops the instance (like shutting down a computer).
-* **Releases underlying hardware** and may allocate new hardware upon restart.
-* The **instance ID, EBS data, and private IP** remain the same (EBS-backed).
-* The **public IP** may change unless using an **Elastic IP**.
-* Useful for patching, resizing, or applying new configurations.
+- Stops the instance (like shutting down a computer).
+- **Releases underlying hardware** and may allocate new hardware upon restart.
+- The **instance ID, EBS data, and private IP** remain the same (EBS-backed).
+- The **public IP** may change unless using an **Elastic IP**.
+- Useful for patching, resizing, or applying new configurations.
 
 #### 🔄 Reboot
 
-* Performs a **soft restart of the OS**, similar to a “Restart” button.
-* Instance stays on the **same host** — no hardware migration.
-* The **public/private IPs, instance ID, and data** all remain unchanged.
-* Used for **applying updates** or **restarting services** without full downtime.
+- Performs a **soft restart of the OS**, similar to a “Restart” button.
+- Instance stays on the **same host** — no hardware migration.
+- The **public/private IPs, instance ID, and data** all remain unchanged.
+- Used for **applying updates** or **restarting services** without full downtime.
 
 ---
 
@@ -1450,24 +1467,26 @@ aws ec2 reboot-instances --instance-ids i-0123456789abcdef0
 
 ### ✅ Best Practices
 
-* Use **Reboot** for quick restarts (OS-level maintenance).
-* Use **Stop/Start** when:
+- Use **Reboot** for quick restarts (OS-level maintenance).
+- Use **Stop/Start** when:
 
-  * Changing instance type or EBS settings.
-  * Applying updates needing hardware reassignment.
-  * Performing maintenance or recovering from host issues.
-* Always use **Elastic IPs** if you need consistent public IPs after stop/start.
-* Check for **instance-store data loss** before stopping instances.
+  - Changing instance type or EBS settings.
+  - Applying updates needing hardware reassignment.
+  - Performing maintenance or recovering from host issues.
+
+- Always use **Elastic IPs** if you need consistent public IPs after stop/start.
+- Check for **instance-store data loss** before stopping instances.
 
 ---
 
 ### 💡 In short
 
-* **Stop/Start** = Full shutdown → new host, possible new public IP, EBS data persists.
-* **Reboot** = Soft restart → same host, IPs unchanged, minimal downtime.
+- **Stop/Start** = Full shutdown → new host, possible new public IP, EBS data persists.
+- **Reboot** = Soft restart → same host, IPs unchanged, minimal downtime.
   Use **Reboot** for quick fixes and **Stop/Start** for maintenance or configuration changes.
 
 ---
+
 ## Q: How Do You Schedule EC2 Start/Stop?
 
 ---
@@ -1481,12 +1500,13 @@ You can automate it using **AWS Lambda**, **EventBridge (CloudWatch Events)**, o
 
 ### ⚙️ Purpose / How It Works
 
-* **Goal:** Automatically start and stop EC2 instances at defined times (daily/weekly).
-* **How:**
+- **Goal:** Automatically start and stop EC2 instances at defined times (daily/weekly).
+- **How:**
 
-  * Create an **EventBridge rule** to trigger a **Lambda function**.
-  * The Lambda function calls `start-instances` or `stop-instances` API for target EC2s.
-* This approach helps **save costs** in non-production environments while maintaining flexibility.
+  - Create an **EventBridge rule** to trigger a **Lambda function**.
+  - The Lambda function calls `start-instances` or `stop-instances` API for target EC2s.
+
+- This approach helps **save costs** in non-production environments while maintaining flexibility.
 
 ---
 
@@ -1533,28 +1553,32 @@ Attach a policy with:
 ```json
 {
   "Effect": "Allow",
-  "Action": ["ec2:StartInstances", "ec2:StopInstances", "ec2:DescribeInstances"],
+  "Action": [
+    "ec2:StartInstances",
+    "ec2:StopInstances",
+    "ec2:DescribeInstances"
+  ],
   "Resource": "*"
 }
 ```
 
 ##### **Step 3: Create EventBridge Rules**
 
-* **Morning Rule (Start)**
+- **Morning Rule (Start)**
 
   ```bash
   aws events put-rule --schedule-expression "cron(30 2 ? * MON-FRI *)" --name StartEC2Instances
   ```
 
-  *(Starts at 08:00 AM IST)*
+  _(Starts at 08:00 AM IST)_
 
-* **Evening Rule (Stop)**
+- **Evening Rule (Stop)**
 
   ```bash
   aws events put-rule --schedule-expression "cron(30 12 ? * MON-FRI *)" --name StopEC2Instances
   ```
 
-  *(Stops at 06:00 PM IST)*
+  _(Stops at 06:00 PM IST)_
 
 Attach the Lambda function as the **target** for both rules.
 
@@ -1579,22 +1603,22 @@ resource "aws_cloudwatch_event_target" "stop_target" {
 
 ### 📋 Options Comparison
 
-| **Method**                            | **Ease**      | **Best For**        | **Notes**                         |
-| ------------------------------------- | ------------- | ------------------- | --------------------------------- |
-| **EventBridge + Lambda**              | ✅ Easy        | Small/medium setups | Fully serverless and customizable |
+| **Method**                            | **Ease**        | **Best For**        | **Notes**                         |
+| ------------------------------------- | --------------- | ------------------- | --------------------------------- |
+| **EventBridge + Lambda**              | ✅ Easy         | Small/medium setups | Fully serverless and customizable |
 | **Instance Scheduler (AWS Solution)** | ✅✅ Simplified | Enterprise-scale    | Managed, tag-based scheduling     |
-| **Systems Manager Automation**        | Moderate      | Custom workflows    | Uses SSM runbooks                 |
-| **Custom Cron (on EC2)**              | ❌ Legacy      | Not recommended     | Adds maintenance overhead         |
+| **Systems Manager Automation**        | Moderate        | Custom workflows    | Uses SSM runbooks                 |
+| **Custom Cron (on EC2)**              | ❌ Legacy       | Not recommended     | Adds maintenance overhead         |
 
 ---
 
 ### ✅ Best Practices
 
-* Use **Instance Scheduler** for multi-account or tag-based scheduling.
-* Always tag EC2s (e.g., `Schedule=OfficeHours`) for dynamic Lambda targeting.
-* Test Lambda permissions using `dry-run`.
-* Combine with **CloudWatch alarms** for cost visibility.
-* Use **UTC time** in cron expressions and convert for your timezone (e.g., IST = UTC+5:30).
+- Use **Instance Scheduler** for multi-account or tag-based scheduling.
+- Always tag EC2s (e.g., `Schedule=OfficeHours`) for dynamic Lambda targeting.
+- Test Lambda permissions using `dry-run`.
+- Combine with **CloudWatch alarms** for cost visibility.
+- Use **UTC time** in cron expressions and convert for your timezone (e.g., IST = UTC+5:30).
 
 ---
 
@@ -1604,6 +1628,7 @@ Schedule EC2 **start/stop** using **EventBridge + Lambda** or **AWS Instance Sch
 It’s a cost-efficient way to power down non-prod instances automatically — saving compute costs while keeping control and flexibility.
 
 ---
+
 ## Q: How to Share Custom AMIs Between AWS Accounts?
 
 ---
@@ -1636,7 +1661,7 @@ aws ec2 modify-image-attribute \
   --launch-permission "Add=[{UserId=987654321012}]"
 ```
 
-* Replace `987654321012` with the **target AWS Account ID**.
+- Replace `987654321012` with the **target AWS Account ID**.
 
 #### ✅ 2. Share the Underlying EBS Snapshot
 
@@ -1679,10 +1704,10 @@ aws ec2 copy-image \
 
 ### ⚙️ Notes on Permissions
 
-* AMI sharing does **not include billing**; each account pays for its own usage.
-* The AMI must use **EBS-backed snapshots** (not instance-store).
-* Both AMI and snapshots must have **matching permissions**.
-* Encrypted AMIs require **KMS key sharing** too:
+- AMI sharing does **not include billing**; each account pays for its own usage.
+- The AMI must use **EBS-backed snapshots** (not instance-store).
+- Both AMI and snapshots must have **matching permissions**.
+- Encrypted AMIs require **KMS key sharing** too:
 
   ```bash
   aws kms create-grant \
@@ -1695,11 +1720,11 @@ aws ec2 copy-image \
 
 ### ✅ Best Practices
 
-* **Copy shared AMIs** into your own account before use for independence.
-* Always **share via specific Account IDs**, not public, unless intended.
-* Tag AMIs and snapshots for tracking (e.g., `SharedWith=Account12345`).
-* Revoke permissions when access is no longer required.
-* Use **KMS key grants** properly when sharing **encrypted** AMIs.
+- **Copy shared AMIs** into your own account before use for independence.
+- Always **share via specific Account IDs**, not public, unless intended.
+- Tag AMIs and snapshots for tracking (e.g., `SharedWith=Account12345`).
+- Revoke permissions when access is no longer required.
+- Use **KMS key grants** properly when sharing **encrypted** AMIs.
 
 ---
 
@@ -1713,6 +1738,7 @@ To share a custom AMI:
    ✅ Simple, secure, and ideal for sharing pre-configured images across teams or environments.
 
 ---
+
 ## Q: How to Enforce Patch Compliance on EC2 Instances?
 
 ---
@@ -1726,13 +1752,14 @@ AWS provides **Systems Manager (SSM) Patch Manager** and **AWS Inspector** to au
 
 ### ⚙️ Purpose / How It Works
 
-* **SSM Patch Manager** automates the **scan, install, and compliance reporting** of OS and software patches.
-* You define:
+- **SSM Patch Manager** automates the **scan, install, and compliance reporting** of OS and software patches.
+- You define:
 
-  * **Patch Baselines** → which patches to approve/deny
-  * **Maintenance Windows** → when to apply patches
-  * **Compliance Reporting** → view patch status in the SSM console
-* Optionally integrate **AWS Inspector** to identify unpatched CVEs and trigger patch automation.
+  - **Patch Baselines** → which patches to approve/deny
+  - **Maintenance Windows** → when to apply patches
+  - **Compliance Reporting** → view patch status in the SSM console
+
+- Optionally integrate **AWS Inspector** to identify unpatched CVEs and trigger patch automation.
 
 ---
 
@@ -1740,11 +1767,11 @@ AWS provides **Systems Manager (SSM) Patch Manager** and **AWS Inspector** to au
 
 #### ✅ 1. Prerequisites
 
-* EC2 instances must have:
+- EC2 instances must have:
 
-  * **SSM Agent installed and running**
-  * **IAM Role** attached with policy `AmazonSSMManagedInstanceCore`
-  * **Outbound internet access** (or SSM VPC endpoints)
+  - **SSM Agent installed and running**
+  - **IAM Role** attached with policy `AmazonSSMManagedInstanceCore`
+  - **Outbound internet access** (or SSM VPC endpoints)
 
 ---
 
@@ -1829,12 +1856,12 @@ resource "aws_iam_role_policy_attachment" "ssm_attach" {
 
 ### ✅ Best Practices
 
-* Use **Maintenance Windows** to patch during off-hours.
-* Create **custom patch baselines** for critical workloads.
-* Integrate **AWS Inspector** for CVE-based compliance validation.
-* Use **SSM State Manager** to enforce continuous patching.
-* Send compliance reports to **Security Hub** or **SNS** for visibility.
-* Always test patches in **staging** before applying to production.
+- Use **Maintenance Windows** to patch during off-hours.
+- Create **custom patch baselines** for critical workloads.
+- Integrate **AWS Inspector** for CVE-based compliance validation.
+- Use **SSM State Manager** to enforce continuous patching.
+- Send compliance reports to **Security Hub** or **SNS** for visibility.
+- Always test patches in **staging** before applying to production.
 
 ---
 
@@ -1845,6 +1872,7 @@ Combine with **AWS Inspector** for CVE scanning and **AWS Config** for complianc
 👉 Ensures EC2 fleet stays secure, compliant, and up to date — automatically.
 
 ---
+
 ## Q: How Do You Harden EC2 Instances?
 
 ---
@@ -1860,10 +1888,10 @@ It involves applying **OS-level, network-level, and AWS-level** security best pr
 
 The goal of hardening EC2 is to:
 
-* Prevent unauthorized access
-* Enforce least privilege
-* Protect data in transit and at rest
-* Maintain secure configurations
+- Prevent unauthorized access
+- Enforce least privilege
+- Protect data in transit and at rest
+- Maintain secure configurations
   AWS provides multiple tools — **IAM roles, Security Groups, SSM, Inspector, GuardDuty, and Config** — to automate and enforce hardening controls.
 
 ---
@@ -1872,9 +1900,9 @@ The goal of hardening EC2 is to:
 
 #### ✅ 1. Identity & Access Management (IAM)
 
-* Use **IAM Roles** for EC2 instead of embedding AWS keys.
-* Apply **least privilege** — attach only required policies.
-* Rotate credentials automatically using **AWS Secrets Manager**.
+- Use **IAM Roles** for EC2 instead of embedding AWS keys.
+- Apply **least privilege** — attach only required policies.
+- Rotate credentials automatically using **AWS Secrets Manager**.
 
 ```bash
 aws iam create-role --role-name EC2-SSM-Role \
@@ -1885,10 +1913,10 @@ aws iam create-role --role-name EC2-SSM-Role \
 
 #### ✅ 2. Network & Firewall Security
 
-* Use **Security Groups** as stateful firewalls — allow only necessary ports (e.g., 22, 443).
-* Restrict **SSH/RDP** to specific IPs or via Bastion/SSM Session Manager.
-* Use **Network ACLs** for subnet-level restrictions.
-* Deploy instances in **private subnets** where possible.
+- Use **Security Groups** as stateful firewalls — allow only necessary ports (e.g., 22, 443).
+- Restrict **SSH/RDP** to specific IPs or via Bastion/SSM Session Manager.
+- Use **Network ACLs** for subnet-level restrictions.
+- Deploy instances in **private subnets** where possible.
 
 Example Security Group (restrictive):
 
@@ -1902,9 +1930,9 @@ aws ec2 authorize-security-group-ingress \
 
 #### ✅ 3. OS & Patch Management
 
-* Regularly **update OS and packages** using **AWS Systems Manager Patch Manager**.
-* Enforce automatic patching and compliance scanning.
-* Disable unused services and ports.
+- Regularly **update OS and packages** using **AWS Systems Manager Patch Manager**.
+- Enforce automatic patching and compliance scanning.
+- Disable unused services and ports.
 
 ```bash
 sudo yum update -y
@@ -1916,9 +1944,9 @@ sudo systemctl stop telnet
 
 #### ✅ 4. Data Protection
 
-* Enable **EBS encryption** by default using AWS KMS.
-* Use **encrypted AMIs** and **TLS/HTTPS** for in-transit data.
-* Configure **disk encryption policies** via AWS Config rules.
+- Enable **EBS encryption** by default using AWS KMS.
+- Use **encrypted AMIs** and **TLS/HTTPS** for in-transit data.
+- Configure **disk encryption policies** via AWS Config rules.
 
 Terraform example:
 
@@ -1936,10 +1964,10 @@ resource "aws_ebs_volume" "secure_data" {
 
 #### ✅ 5. Access & Authentication Hardening
 
-* Disable password-based SSH; use **key pairs** only.
-* Rotate SSH keys regularly.
-* Use **MFA** for privileged access.
-* Leverage **SSM Session Manager** instead of open SSH ports.
+- Disable password-based SSH; use **key pairs** only.
+- Rotate SSH keys regularly.
+- Use **MFA** for privileged access.
+- Leverage **SSM Session Manager** instead of open SSH ports.
 
 ```bash
 aws ssm start-session --target i-0123456789abcdef0
@@ -1949,27 +1977,27 @@ aws ssm start-session --target i-0123456789abcdef0
 
 #### ✅ 6. Monitoring & Logging
 
-* Enable **CloudTrail**, **CloudWatch**, and **VPC Flow Logs**.
-* Stream logs to **CloudWatch Logs** or **SIEM**.
-* Use **GuardDuty** for continuous threat detection.
-* Configure **AWS Config** to detect insecure changes (e.g., open ports).
+- Enable **CloudTrail**, **CloudWatch**, and **VPC Flow Logs**.
+- Stream logs to **CloudWatch Logs** or **SIEM**.
+- Use **GuardDuty** for continuous threat detection.
+- Configure **AWS Config** to detect insecure changes (e.g., open ports).
 
 ---
 
 #### ✅ 7. Vulnerability Management
 
-* Enable **AWS Inspector** to automatically detect CVEs and insecure configurations.
-* Use **Security Hub** to aggregate findings from multiple services.
-* Remediate using **SSM Automation Documents (Runbooks)**.
+- Enable **AWS Inspector** to automatically detect CVEs and insecure configurations.
+- Use **Security Hub** to aggregate findings from multiple services.
+- Remediate using **SSM Automation Documents (Runbooks)**.
 
 ---
 
 #### ✅ 8. System-Level Hardening
 
-* Enforce **file and process auditing** with tools like `auditd`.
-* Disable root login and use `sudo` for admin actions.
-* Limit cron jobs and background daemons.
-* Enable host-based firewalls like `ufw` or `firewalld`.
+- Enforce **file and process auditing** with tools like `auditd`.
+- Disable root login and use `sudo` for admin actions.
+- Limit cron jobs and background daemons.
+- Enable host-based firewalls like `ufw` or `firewalld`.
 
 ```bash
 sudo systemctl enable firewalld
@@ -1994,11 +2022,11 @@ sudo firewall-cmd --reload
 
 ### ✅ Best Practices
 
-* Apply **CIS Benchmark for EC2** via AWS Security Hub or Inspector.
-* Automate checks with **AWS Config Rules** and **SSM Compliance**.
-* Enforce security at **AMI level** — build hardened golden images with **Packer**.
-* Never expose **port 22/3389** directly — use Bastion or SSM.
-* Regularly review logs and IAM access reports.
+- Apply **CIS Benchmark for EC2** via AWS Security Hub or Inspector.
+- Automate checks with **AWS Config Rules** and **SSM Compliance**.
+- Enforce security at **AMI level** — build hardened golden images with **Packer**.
+- Never expose **port 22/3389** directly — use Bastion or SSM.
+- Regularly review logs and IAM access reports.
 
 ---
 
@@ -2012,6 +2040,7 @@ Harden EC2 by:
    It’s a layered defense approach — from OS to network to AWS-level controls — ensuring strong, auditable EC2 security posture.
 
 ---
+
 ## Q: What’s the Difference Between On-Demand, Reserved, and Spot Instances in EC2?
 
 ---
@@ -2025,9 +2054,9 @@ The main options are **On-Demand**, **Reserved**, and **Spot Instances**, each b
 
 ### ⚙️ Purpose / How It Works
 
-* **On-Demand** — Pay only for what you use (per second/hour), no commitment.
-* **Reserved** — Commit for 1 or 3 years, get up to 72% discount.
-* **Spot** — Bid for unused EC2 capacity at up to 90% discount, but can be interrupted anytime.
+- **On-Demand** — Pay only for what you use (per second/hour), no commitment.
+- **Reserved** — Commit for 1 or 3 years, get up to 72% discount.
+- **Spot** — Bid for unused EC2 capacity at up to 90% discount, but can be interrupted anytime.
 
 These models help optimize cost depending on whether your workloads are **steady**, **predictable**, or **fault-tolerant**.
 
@@ -2041,7 +2070,7 @@ These models help optimize cost depending on whether your workloads are **steady
 | **Commitment**        | None                                | 1 or 3 years                   | None                                   |
 | **Payment Options**   | Pay-as-you-go                       | All/Partial/No Upfront         | Variable (market-based)                |
 | **Availability**      | Always available                    | Guaranteed capacity (if zonal) | Depends on spare capacity              |
-| **Interruption Risk** | ❌ None                              | ❌ None                         | ⚠️ Can be terminated with 2-min notice |
+| **Interruption Risk** | ❌ None                             | ❌ None                        | ⚠️ Can be terminated with 2-min notice |
 | **Best For**          | Short-term, unpredictable workloads | Long-running, stable workloads | Fault-tolerant, flexible jobs          |
 | **Examples**          | Dev/Test, bursts, short apps        | Web servers, DBs               | Batch jobs, CI/CD, ML training         |
 | **Billing Unit**      | Per second (Linux)                  | Reserved capacity              | Variable (market rate)                 |
@@ -2102,11 +2131,11 @@ aws ec2 request-spot-instances \
 
 ### ✅ Best Practices
 
-* Use **Savings Plans** (modern alternative to Reserved Instances).
-* Mix **Spot + On-Demand** in **Auto Scaling Groups** for cost-efficiency.
-* Use **Spot Fleet** or **EC2 Fleet** for managing spot interruptions.
-* Monitor **Spot Instance interruptions** using EventBridge.
-* Periodically review usage and convert long-running workloads to **Reserved/Savings Plans**.
+- Use **Savings Plans** (modern alternative to Reserved Instances).
+- Mix **Spot + On-Demand** in **Auto Scaling Groups** for cost-efficiency.
+- Use **Spot Fleet** or **EC2 Fleet** for managing spot interruptions.
+- Monitor **Spot Instance interruptions** using EventBridge.
+- Periodically review usage and convert long-running workloads to **Reserved/Savings Plans**.
 
 ---
 
@@ -2121,6 +2150,7 @@ aws ec2 request-spot-instances \
 💰 Combine all three — **On-Demand for base**, **Reserved for steady**, and **Spot for burst** — to achieve maximum **cost-efficiency and performance balance**.
 
 ---
+
 ## Q: How to Monitor CPU, Memory, and Disk Usage on EC2 Instances?
 
 ---
@@ -2134,17 +2164,19 @@ AWS offers **CloudWatch** for system-level metrics and **CloudWatch Agent** for 
 
 ### ⚙️ Purpose / How It Works
 
-* **Default CloudWatch metrics** (via EC2) include:
+- **Default CloudWatch metrics** (via EC2) include:
 
-  * CPU utilization
-  * Network traffic
-  * Disk read/write (for EBS)
-* **Custom CloudWatch metrics** (via CloudWatch Agent) add:
+  - CPU utilization
+  - Network traffic
+  - Disk read/write (for EBS)
 
-  * Memory usage
-  * Disk space & inode usage
-  * Swap utilization
-* Data is pushed to **CloudWatch**, where you can set **alarms, dashboards, and alerts**.
+- **Custom CloudWatch metrics** (via CloudWatch Agent) add:
+
+  - Memory usage
+  - Disk space & inode usage
+  - Swap utilization
+
+- Data is pushed to **CloudWatch**, where you can set **alarms, dashboards, and alerts**.
 
 ---
 
@@ -2174,9 +2206,9 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
 
 Follow the wizard to select:
 
-* **Metrics** → CPU, memory, disk, swap
-* **Aggregation** → 1 or 5 minutes
-* **Output** → CloudWatch
+- **Metrics** → CPU, memory, disk, swap
+- **Aggregation** → 1 or 5 minutes
+- **Output** → CloudWatch
 
 Then start the agent:
 
@@ -2241,10 +2273,10 @@ Navigate to:
 **CloudWatch → Metrics → EC2 → Per-Instance Metrics**
 You can view:
 
-* CPUUtilization
-* DiskReadOps / DiskWriteOps
-* NetworkIn / NetworkOut
-* (With agent) Memory and Disk utilization
+- CPUUtilization
+- DiskReadOps / DiskWriteOps
+- NetworkIn / NetworkOut
+- (With agent) Memory and Disk utilization
 
 ---
 
@@ -2252,34 +2284,35 @@ You can view:
 
 | **Metric**                 | **Source**       | **Agent Needed?** | **Namespace** |
 | -------------------------- | ---------------- | ----------------- | ------------- |
-| CPUUtilization             | EC2 native       | ❌ No              | `AWS/EC2`     |
-| DiskReadOps / DiskWriteOps | EC2 native       | ❌ No              | `AWS/EC2`     |
-| NetworkIn / Out            | EC2 native       | ❌ No              | `AWS/EC2`     |
-| MemoryUtilization          | CloudWatch Agent | ✅ Yes             | `CWAgent`     |
-| DiskSpaceUtilization       | CloudWatch Agent | ✅ Yes             | `CWAgent`     |
-| Swap / Processes           | CloudWatch Agent | ✅ Yes             | `CWAgent`     |
+| CPUUtilization             | EC2 native       | ❌ No             | `AWS/EC2`     |
+| DiskReadOps / DiskWriteOps | EC2 native       | ❌ No             | `AWS/EC2`     |
+| NetworkIn / Out            | EC2 native       | ❌ No             | `AWS/EC2`     |
+| MemoryUtilization          | CloudWatch Agent | ✅ Yes            | `CWAgent`     |
+| DiskSpaceUtilization       | CloudWatch Agent | ✅ Yes            | `CWAgent`     |
+| Swap / Processes           | CloudWatch Agent | ✅ Yes            | `CWAgent`     |
 
 ---
 
 ### ✅ Best Practices
 
-* Always install the **CloudWatch Agent** for complete visibility.
-* Set **CloudWatch Alarms** for key thresholds (CPU > 80%, Mem > 75%).
-* Use **CloudWatch Dashboards** for unified visibility.
-* Integrate **SNS notifications** for alerts.
-* Combine with **AWS Systems Manager** for automated remediation.
-* Collect logs using **CloudWatch Logs Agent** for deeper analysis.
+- Always install the **CloudWatch Agent** for complete visibility.
+- Set **CloudWatch Alarms** for key thresholds (CPU > 80%, Mem > 75%).
+- Use **CloudWatch Dashboards** for unified visibility.
+- Integrate **SNS notifications** for alerts.
+- Combine with **AWS Systems Manager** for automated remediation.
+- Collect logs using **CloudWatch Logs Agent** for deeper analysis.
 
 ---
 
 ### 💡 In short
 
-* **CPU** → Monitored by default via CloudWatch.
-* **Memory & Disk** → Require **CloudWatch Agent**.
-* Use **alarms + dashboards** for proactive monitoring.
+- **CPU** → Monitored by default via CloudWatch.
+- **Memory & Disk** → Require **CloudWatch Agent**.
+- Use **alarms + dashboards** for proactive monitoring.
   ✅ Combine metrics, logging, and SSM automation to keep EC2 performance and health fully observable.
 
 ---
+
 ## Q: How Do You Troubleshoot a Slow EC2 Instance?
 
 ---
@@ -2318,8 +2351,8 @@ aws cloudwatch get-metric-statistics \
   --start-time 2025-11-11T10:00:00Z --end-time 2025-11-11T11:00:00Z
 ```
 
-* High CPU → Use larger instance type or optimize app.
-* Low CPU + high memory usage → Possible memory leak or swap pressure.
+- High CPU → Use larger instance type or optimize app.
+- Low CPU + high memory usage → Possible memory leak or swap pressure.
 
 Install **CloudWatch Agent** for memory/disk metrics:
 
@@ -2366,8 +2399,8 @@ aws cloudwatch get-metric-statistics \
   --statistics Average --period 300
 ```
 
-* High queue length → EBS throttling or small IOPS limit
-* Consider switching to **gp3/io1** with provisioned IOPS
+- High queue length → EBS throttling or small IOPS limit
+- Consider switching to **gp3/io1** with provisioned IOPS
 
 Example (increase IOPS):
 
@@ -2387,16 +2420,16 @@ ping <target-ip>        # Test latency
 sudo traceroute <ip>    # Check route hops
 ```
 
-* Verify **Security Groups/NACLs** are not blocking critical ports.
-* Enable **VPC Flow Logs** to inspect packet drops or latency.
+- Verify **Security Groups/NACLs** are not blocking critical ports.
+- Enable **VPC Flow Logs** to inspect packet drops or latency.
 
 ---
 
 #### ✅ 5. Review Logs
 
-* **System Logs:** `/var/log/messages`, `/var/log/syslog`
-* **Application Logs:** app-specific (e.g., `/var/log/nginx/`, `/var/log/httpd/`)
-* **CloudWatch Logs:** integrated metrics and app logs
+- **System Logs:** `/var/log/messages`, `/var/log/syslog`
+- **Application Logs:** app-specific (e.g., `/var/log/nginx/`, `/var/log/httpd/`)
+- **CloudWatch Logs:** integrated metrics and app logs
 
 ```bash
 sudo tail -f /var/log/messages
@@ -2408,11 +2441,12 @@ Look for `OOM-killer`, disk errors, or network timeouts.
 
 #### ✅ 6. Check for AWS Infrastructure or Host Issues
 
-* In **AWS Console → EC2 → Status Checks Tab**
+- In **AWS Console → EC2 → Status Checks Tab**
 
-  * “System Status Check failed” → hardware or hypervisor issue
-  * AWS Auto Recovery or Stop/Start may fix it
-* Use **AWS Health Dashboard** for region-wide issues.
+  - “System Status Check failed” → hardware or hypervisor issue
+  - AWS Auto Recovery or Stop/Start may fix it
+
+- Use **AWS Health Dashboard** for region-wide issues.
 
 ---
 
@@ -2436,9 +2470,9 @@ aws compute-optimizer get-ec2-instance-recommendations
 
 #### ✅ 8. Test with Benchmark Tools
 
-* **CPU:** `stress-ng --cpu 4 --timeout 60`
-* **Disk:** `fio --name=test --size=1G --rw=randwrite --bs=4k`
-* **Network:** `iperf3 -c <server-ip>`
+- **CPU:** `stress-ng --cpu 4 --timeout 60`
+- **Disk:** `fio --name=test --size=1G --rw=randwrite --bs=4k`
+- **Network:** `iperf3 -c <server-ip>`
 
 These identify performance ceilings vs instance specs.
 
@@ -2458,12 +2492,12 @@ These identify performance ceilings vs instance specs.
 
 ### ✅ Best Practices
 
-* Enable **CloudWatch Agent + Alarms** for CPU/memory/disk thresholds.
-* Use **Auto Scaling** for elastic performance.
-* Keep OS and packages patched.
-* Avoid running multiple heavy processes on small instances.
-* Regularly review **AWS Compute Optimizer** recommendations.
-* Implement **performance dashboards** in CloudWatch or Grafana.
+- Enable **CloudWatch Agent + Alarms** for CPU/memory/disk thresholds.
+- Use **Auto Scaling** for elastic performance.
+- Keep OS and packages patched.
+- Avoid running multiple heavy processes on small instances.
+- Regularly review **AWS Compute Optimizer** recommendations.
+- Implement **performance dashboards** in CloudWatch or Grafana.
 
 ---
 
@@ -2473,6 +2507,7 @@ Troubleshoot slow EC2 by analyzing **CloudWatch metrics**, **system processes**,
 Use **CloudWatch Agent + SSM** for deep insight, and **resize or optimize** based on findings — ensuring stable, cost-efficient performance.
 
 ---
+
 ## Q: How Do You Create a Golden AMI (Image) for Auto Scaling in EC2?
 
 ---
@@ -2504,9 +2539,9 @@ This drastically **reduces launch time**, **improves reliability**, and **standa
 
 #### ✅ 1. Launch a Base EC2 Instance
 
-* Start from a clean, latest OS image (e.g., Amazon Linux 2, Ubuntu).
-* Choose instance type suitable for setup tasks.
-* Attach IAM Role (for SSM, CloudWatch, etc.).
+- Start from a clean, latest OS image (e.g., Amazon Linux 2, Ubuntu).
+- Choose instance type suitable for setup tasks.
+- Attach IAM Role (for SSM, CloudWatch, etc.).
 
 ```bash
 aws ec2 run-instances \
@@ -2539,11 +2574,11 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start
 
 #### ✅ 3. Harden the Instance (Security Baseline)
 
-* Disable root SSH, enforce key-based login.
-* Patch OS vulnerabilities.
-* Apply CIS hardening scripts.
-* Configure log rotation and agent heartbeat.
-* Clean sensitive data (e.g., `/home/ec2-user/.ssh/authorized_keys`).
+- Disable root SSH, enforce key-based login.
+- Patch OS vulnerabilities.
+- Apply CIS hardening scripts.
+- Configure log rotation and agent heartbeat.
+- Clean sensitive data (e.g., `/home/ec2-user/.ssh/authorized_keys`).
 
 ---
 
@@ -2562,9 +2597,9 @@ The AMI ID (e.g., `ami-0a1b2c3d4e5f6g7h8`) will be used in your **Launch Templat
 
 #### ✅ 5. Test the AMI
 
-* Launch a test EC2 using the AMI.
-* Verify application, logs, monitoring, and agents start automatically.
-* Ensure no hardcoded environment configs or credentials remain.
+- Launch a test EC2 using the AMI.
+- Verify application, logs, monitoring, and agents start automatically.
+- Ensure no hardcoded environment configs or credentials remain.
 
 ---
 
@@ -2609,13 +2644,13 @@ aws autoscaling create-auto-scaling-group \
 
 ### ✅ Best Practices
 
-* Tag AMIs with version, environment, and creation date:
+- Tag AMIs with version, environment, and creation date:
   `Name=golden-ami-v1.0, Env=Prod, Owner=DevOps`
-* Automate builds via **Packer or EC2 Image Builder**.
-* Regularly **rebuild AMIs** (monthly or per patch cycle).
-* Store AMIs in a **central account** and share across environments.
-* Clean temporary files and logs before creating AMI.
-* Test AMI in **staging** before deploying in ASG.
+- Automate builds via **Packer or EC2 Image Builder**.
+- Regularly **rebuild AMIs** (monthly or per patch cycle).
+- Store AMIs in a **central account** and share across environments.
+- Clean temporary files and logs before creating AMI.
+- Test AMI in **staging** before deploying in ASG.
 
 ---
 
@@ -2626,6 +2661,7 @@ Create once → Bake configs → Test → Use in Launch Template.
 ✅ Automate with **Packer or EC2 Image Builder** for secure, versioned image pipelines.
 
 ---
+
 ## Q: How Do You Encrypt EBS Volumes in AWS?
 
 ---
@@ -2639,14 +2675,15 @@ Encryption is handled by **AWS Key Management Service (KMS)** using **AES-256** 
 
 ### ⚙️ Purpose / How It Works
 
-* Encryption occurs **at the storage layer** — fully managed by AWS.
-* It encrypts:
+- Encryption occurs **at the storage layer** — fully managed by AWS.
+- It encrypts:
 
-  * Data at rest (on the EBS volume)
-  * Data in transit (between EC2 and EBS)
-  * Snapshots created from the volume
-* Managed by **KMS Customer Master Keys (CMKs)** (default or custom).
-* You can **enable encryption by default** at the account or region level.
+  - Data at rest (on the EBS volume)
+  - Data in transit (between EC2 and EBS)
+  - Snapshots created from the volume
+
+- Managed by **KMS Customer Master Keys (CMKs)** (default or custom).
+- You can **enable encryption by default** at the account or region level.
 
 ---
 
@@ -2739,12 +2776,12 @@ resource "aws_ebs_volume" "secure_data" {
 
 ### ✅ Best Practices
 
-* **Enable EBS encryption by default** for all new volumes.
-* Use **custom KMS CMKs** for compliance or audit control.
-* Regularly **rotate CMKs** via AWS KMS key policies.
-* **Encrypt snapshots and AMIs** that contain sensitive data.
-* Use **IAM policies** to restrict who can disable encryption.
-* Monitor compliance with **AWS Config rule: `ebs-encryption-by-default-enabled`**.
+- **Enable EBS encryption by default** for all new volumes.
+- Use **custom KMS CMKs** for compliance or audit control.
+- Regularly **rotate CMKs** via AWS KMS key policies.
+- **Encrypt snapshots and AMIs** that contain sensitive data.
+- Use **IAM policies** to restrict who can disable encryption.
+- Monitor compliance with **AWS Config rule: `ebs-encryption-by-default-enabled`**.
 
 ---
 
@@ -2752,13 +2789,14 @@ resource "aws_ebs_volume" "secure_data" {
 
 Encrypt EBS volumes using AWS-managed or custom KMS keys.
 
-* Use `--encrypted` when creating or copying volumes.
-* Enable **default encryption** for full coverage.
+- Use `--encrypted` when creating or copying volumes.
+- Enable **default encryption** for full coverage.
   ✅ Ensures all EC2 storage is secure at rest and in transit with **zero performance overhead**.
 
 ---
 
 # Scenario Questions
+
 ## Q: How Do You Troubleshoot EC2 Unreachable via SSH?
 
 ---
@@ -2786,15 +2824,15 @@ When any layer fails, SSH (`port 22`) becomes unreachable.
 
 #### ✅ 1. Check EC2 Status
 
-* **System Status Check:** Infrastructure (AWS host/hypervisor)
-* **Instance Status Check:** OS-level (boot/SSH daemon)
+- **System Status Check:** Infrastructure (AWS host/hypervisor)
+- **Instance Status Check:** OS-level (boot/SSH daemon)
 
 ```bash
 aws ec2 describe-instance-status --instance-ids i-0123456789abcdef0
 ```
 
-* If “System Status Check” fails → Try **Stop/Start** (hardware issue).
-* If “Instance Status Check” fails → OS or configuration problem.
+- If “System Status Check” fails → Try **Stop/Start** (hardware issue).
+- If “Instance Status Check” fails → OS or configuration problem.
 
 ---
 
@@ -2808,12 +2846,12 @@ aws ec2 describe-instances --instance-ids i-0123456789abcdef0 --query "Reservati
 
 If no public IP →
 
-* Assign an **Elastic IP**
-* Or connect via **SSM Session Manager** if in a private subnet.
+- Assign an **Elastic IP**
+- Or connect via **SSM Session Manager** if in a private subnet.
 
 **b. Check Route Table**
 
-* Subnet must have route to Internet Gateway (`0.0.0.0/0 → igw-xxxxxx`)
+- Subnet must have route to Internet Gateway (`0.0.0.0/0 → igw-xxxxxx`)
 
 **c. Security Group Rules**
 
@@ -2829,8 +2867,8 @@ Inbound rule must allow:
 
 **d. Network ACLs**
 
-* Inbound: Allow TCP port 22
-* Outbound: Allow ephemeral ports (1024–65535)
+- Inbound: Allow TCP port 22
+- Outbound: Allow ephemeral ports (1024–65535)
 
 ---
 
@@ -2850,10 +2888,10 @@ chmod 400 my-key.pem
 
 **c. Wrong Key or Username**
 
-* Amazon Linux → `ec2-user`
-* Ubuntu → `ubuntu`
-* CentOS → `centos`
-* RedHat → `ec2-user`
+- Amazon Linux → `ec2-user`
+- Ubuntu → `ubuntu`
+- CentOS → `centos`
+- RedHat → `ec2-user`
 
 ---
 
@@ -2892,6 +2930,7 @@ If SSM is not enabled, use **EC2 Instance Console Screenshot** (from AWS Console
    ```bash
    aws ec2 detach-volume --volume-id vol-0abcd1234efgh5678
    ```
+
 3. **Attach to another healthy EC2** as a secondary volume.
 4. Mount and fix SSH configs:
 
@@ -2901,6 +2940,7 @@ If SSM is not enabled, use **EC2 Instance Console Screenshot** (from AWS Console
    sudo vi /mnt/rescue/etc/ssh/sshd_config
    sudo vi /mnt/rescue/home/ec2-user/.ssh/authorized_keys
    ```
+
 5. **Unmount and reattach** the volume to the original instance.
 6. **Start** the original instance and try connecting again.
 
@@ -2922,11 +2962,11 @@ If SSM is not enabled, use **EC2 Instance Console Screenshot** (from AWS Console
 
 ### ✅ Best Practices
 
-* Use **SSM Session Manager** for bastion-less secure access.
-* Restrict SSH access to specific IPs (never `0.0.0.0/0`).
-* Always use **Elastic IPs** for static public connectivity.
-* Enable **CloudWatch + Config** to monitor changes to SGs/NACLs.
-* Regularly snapshot volumes for quick rollback if config breaks.
+- Use **SSM Session Manager** for bastion-less secure access.
+- Restrict SSH access to specific IPs (never `0.0.0.0/0`).
+- Always use **Elastic IPs** for static public connectivity.
+- Enable **CloudWatch + Config** to monitor changes to SGs/NACLs.
+- Regularly snapshot volumes for quick rollback if config breaks.
 
 ---
 
@@ -2942,6 +2982,7 @@ If EC2 is **unreachable via SSH**:
 🧩 **Tip:** For long-term security and reliability, migrate from SSH to **AWS SSM Session Manager** — no keys, no open ports, no headaches.
 
 ---
+
 ## Q: How Do You Fix a Full Root Volume on an EC2 Instance?
 
 ---
@@ -2950,9 +2991,9 @@ If EC2 is **unreachable via SSH**:
 
 A **full root volume** means your EC2 instance’s primary EBS disk (`/` or `/dev/xvda`) has **run out of space**, causing issues like:
 
-* SSH login failures
-* Service crashes (nginx, docker, journald)
-* “No space left on device” errors
+- SSH login failures
+- Service crashes (nginx, docker, journald)
+- “No space left on device” errors
 
 You can fix this by **freeing space** or **expanding the root volume** safely.
 
@@ -3090,6 +3131,7 @@ If volume is full and SSH doesn’t work:
    sudo du -sh /mnt/rescue/*
    sudo rm -rf /mnt/rescue/var/log/*
    ```
+
 5. Detach and reattach to the original instance, then start it.
 
 ---
@@ -3108,12 +3150,12 @@ If volume is full and SSH doesn’t work:
 
 ### ✅ Best Practices
 
-* Enable **CloudWatch Disk Utilization metrics** (via CloudWatch Agent).
-* Implement **log rotation** (`logrotate.conf`, journald cleanup).
-* Keep root volume ≥ 20 GB for OS + logs.
-* Store app data on **separate EBS volumes**.
-* Create **snapshot backups** before cleanup or resize.
-* Monitor **`EBS VolumeUtilization`** in CloudWatch alarms.
+- Enable **CloudWatch Disk Utilization metrics** (via CloudWatch Agent).
+- Implement **log rotation** (`logrotate.conf`, journald cleanup).
+- Keep root volume ≥ 20 GB for OS + logs.
+- Store app data on **separate EBS volumes**.
+- Create **snapshot backups** before cleanup or resize.
+- Monitor **`EBS VolumeUtilization`** in CloudWatch alarms.
 
 ---
 
@@ -3127,6 +3169,7 @@ If the **root volume is full**:
    ✅ Prevent it by monitoring disk space and separating app data from `/`.
 
 ---
+
 ## Q: EC2 Rebooted Unexpectedly — How to Diagnose & Fix It
 
 ---
@@ -3172,9 +3215,9 @@ sudo grep -i "kernel" /var/log/syslog
 
 **Common signs:**
 
-* `Kernel panic` → OS or driver issue
-* `Out of memory: Kill process` → RAM exhaustion
-* `Rebooted by EC2 system` → AWS infrastructure or automation
+- `Kernel panic` → OS or driver issue
+- `Out of memory: Kill process` → RAM exhaustion
+- `Rebooted by EC2 system` → AWS infrastructure or automation
 
 ---
 
@@ -3229,7 +3272,7 @@ If initiated by `ssm.amazonaws.com` or `autoscaling.amazonaws.com`, it’s autom
 
 If your instance is part of an **Auto Scaling Group (ASG)**:
 
-* It may reboot or **replace unhealthy instances** automatically.
+- It may reboot or **replace unhealthy instances** automatically.
 
 ```bash
 aws autoscaling describe-auto-scaling-instances \
@@ -3256,9 +3299,9 @@ aws cloudwatch get-metric-statistics \
 
 Also monitor:
 
-* `mem_used_percent` (via CloudWatch Agent)
-* Disk I/O spikes
-* Kernel OOM events (`/var/log/messages`)
+- `mem_used_percent` (via CloudWatch Agent)
+- Disk I/O spikes
+- Kernel OOM events (`/var/log/messages`)
 
 ---
 
@@ -3320,12 +3363,12 @@ aws cloudwatch put-metric-alarm \
 
 ### ✅ Best Practices
 
-* Enable **CloudTrail**, **CloudWatch Logs**, and **AWS Config** to trace reboots.
-* Regularly apply **kernel updates** to prevent panics.
-* Use **SSM Agent** + **CloudWatch Agent** for memory/disk metrics.
-* Schedule patching during maintenance windows.
-* Enable **Auto Recovery** for mission-critical instances.
-* Use **ASGs or Load Balancers** for redundancy if reboots impact uptime.
+- Enable **CloudTrail**, **CloudWatch Logs**, and **AWS Config** to trace reboots.
+- Regularly apply **kernel updates** to prevent panics.
+- Use **SSM Agent** + **CloudWatch Agent** for memory/disk metrics.
+- Schedule patching during maintenance windows.
+- Enable **Auto Recovery** for mission-critical instances.
+- Use **ASGs or Load Balancers** for redundancy if reboots impact uptime.
 
 ---
 
@@ -3341,6 +3384,7 @@ If EC2 **rebooted unexpectedly**:
 ✅ Combine **CloudWatch + CloudTrail + SSM** for full visibility and automated self-healing against unexpected reboots.
 
 ---
+
 ## Q: Can’t Attach EBS Volume to EC2 — How to Diagnose & Fix It
 
 ---
@@ -3384,8 +3428,8 @@ Attached: []
 
 **Fix:**
 
-* Volume must be in **`available`** state to attach.
-* If it’s still **`in-use`**, detach it first:
+- Volume must be in **`available`** state to attach.
+- If it’s still **`in-use`**, detach it first:
 
   ```bash
   aws ec2 detach-volume --volume-id vol-0123456789abcdef0
@@ -3439,8 +3483,8 @@ Your IAM role or user must have:
 
 If using **encrypted volumes**, also ensure:
 
-* Permission to use the **KMS key** (`kms:Decrypt`, `kms:CreateGrant`).
-* The **KMS key policy** allows your IAM principal and the EC2 service.
+- Permission to use the **KMS key** (`kms:Decrypt`, `kms:CreateGrant`).
+- The **KMS key policy** allows your IAM principal and the EC2 service.
 
 ---
 
@@ -3448,9 +3492,9 @@ If using **encrypted volumes**, also ensure:
 
 If the volume is **encrypted with a customer-managed KMS key**, ensure:
 
-* The instance’s IAM role can access that key.
-* The key is in the **same region**.
-* Key policy includes:
+- The instance’s IAM role can access that key.
+- The key is in the **same region**.
+- Key policy includes:
 
 ```json
 {
@@ -3494,8 +3538,8 @@ aws ec2 attach-volume \
 
 #### ✅ 6. Confirm Volume Type Compatibility
 
-* Some instance types (e.g., **i3, d2**) use **NVMe or instance-store** and cannot attach standard EBS volumes.
-* Check instance EBS support:
+- Some instance types (e.g., **i3, d2**) use **NVMe or instance-store** and cannot attach standard EBS volumes.
+- Check instance EBS support:
 
   ```bash
   aws ec2 describe-instance-types --instance-types t3.large --query "InstanceTypes[*].EbsInfo"
@@ -3544,11 +3588,11 @@ This shows **who** tried to attach, and any **policy denials or region mismatch*
 
 ### ✅ Best Practices
 
-* Always tag volumes (e.g., `Name=AppData`, `Env=Prod`) for quick identification.
-* Enable **EBS encryption by default**.
-* Keep **snapshots** before major changes.
-* Use **AWS Config rule `ebs-in-same-az-as-instance`** for compliance.
-* For automation, validate AZ compatibility before attachment in scripts.
+- Always tag volumes (e.g., `Name=AppData`, `Env=Prod`) for quick identification.
+- Enable **EBS encryption by default**.
+- Keep **snapshots** before major changes.
+- Use **AWS Config rule `ebs-in-same-az-as-instance`** for compliance.
+- For automation, validate AZ compatibility before attachment in scripts.
 
 ---
 
@@ -3565,6 +3609,7 @@ If an EBS volume can’t attach:
 ✅ Root cause: 90% of failures come from **different Availability Zones** or **KMS/IAM permission errors**.
 
 ---
+
 ## Q: EC2 Instance in Boot Loop — How to Diagnose & Fix
 
 ---
@@ -3574,11 +3619,11 @@ If an EBS volume can’t attach:
 An **EC2 boot loop** means the instance repeatedly **starts → fails to boot → reboots automatically**.
 This is often caused by:
 
-* Corrupted OS/kernel files
-* Incorrect fstab entries
-* Faulty drivers or kernel panic
-* Full or damaged root EBS volume
-* Invalid user-data scripts or misconfigurations
+- Corrupted OS/kernel files
+- Incorrect fstab entries
+- Faulty drivers or kernel panic
+- Full or damaged root EBS volume
+- Invalid user-data scripts or misconfigurations
 
 When this happens, you usually **can’t SSH or SSM into the instance**.
 
@@ -3601,15 +3646,15 @@ If any of these steps fail, the system restarts, enters **boot loop**, or halts 
 
 #### ✅ 1. Check EC2 Console Output (AWS Console)
 
-* Go to: **EC2 → Instances → Select Instance → Monitor → Get System Log**
-* Look for errors like:
+- Go to: **EC2 → Instances → Select Instance → Monitor → Get System Log**
+- Look for errors like:
 
-  * `kernel panic`
-  * `mount: can't find /dev/xvda1`
-  * `Failed to mount /etc/fstab`
-  * `Out of memory: Kill process`
-  * `Exec format error`
-  * `cloud-init user data failed`
+  - `kernel panic`
+  - `mount: can't find /dev/xvda1`
+  - `Failed to mount /etc/fstab`
+  - `Out of memory: Kill process`
+  - `Exec format error`
+  - `cloud-init user data failed`
 
 If logs show continuous reboot attempts → OS-level crash or mount issue.
 
@@ -3643,8 +3688,8 @@ aws ec2 detach-volume --volume-id vol-0123456789abcdef0
 
 #### ✅ 4. Attach Root Volume to a Rescue Instance
 
-* Launch or use another **healthy EC2** instance in the same AZ.
-* Attach the problematic root volume as a secondary disk:
+- Launch or use another **healthy EC2** instance in the same AZ.
+- Attach the problematic root volume as a secondary disk:
 
 ```bash
 aws ec2 attach-volume \
@@ -3745,15 +3790,16 @@ Check console log again to verify successful boot.
 
 If kernel panic continues:
 
-* Mount rescue volume
-* `chroot` into it:
+- Mount rescue volume
+- `chroot` into it:
 
   ```bash
   sudo chroot /mnt/rescue
   yum reinstall kernel -y
   exit
   ```
-* Then reattach and reboot.
+
+- Then reattach and reboot.
 
 ---
 
@@ -3772,12 +3818,12 @@ If kernel panic continues:
 
 ### ✅ Best Practices
 
-* Always **test new AMIs** before production rollout.
-* Keep **root EBS volumes ≥ 20 GB** to prevent log saturation.
-* Use `nofail` in `/etc/fstab` for non-critical mounts.
-* Use **CloudWatch Alarms** on `StatusCheckFailed_System`.
-* Automate backups with **EBS snapshots** or **AMI versioning**.
-* Implement **SSM Session Manager** access for emergency repairs (no SSH dependency).
+- Always **test new AMIs** before production rollout.
+- Keep **root EBS volumes ≥ 20 GB** to prevent log saturation.
+- Use `nofail` in `/etc/fstab` for non-critical mounts.
+- Use **CloudWatch Alarms** on `StatusCheckFailed_System`.
+- Automate backups with **EBS snapshots** or **AMI versioning**.
+- Implement **SSM Session Manager** access for emergency repairs (no SSH dependency).
 
 ---
 
@@ -3791,6 +3837,7 @@ If your EC2 is in a **boot loop**:
    ✅ Most boot loops are fixed by cleaning a full root volume or correcting `/etc/fstab`.
 
 ---
+
 ## Q: EC2 Instance Showing Slow Performance — How to Diagnose & Fix
 
 ---
@@ -3806,10 +3853,10 @@ Diagnosing involves analyzing system metrics, CloudWatch data, and workload char
 
 EC2 performance depends on:
 
-* **Instance type & size** (CPU, RAM, network bandwidth)
-* **Storage performance** (EBS IOPS or throughput)
-* **Application load patterns**
-* **AWS limits** (credit-based CPUs like t2/t3 instances)
+- **Instance type & size** (CPU, RAM, network bandwidth)
+- **Storage performance** (EBS IOPS or throughput)
+- **Application load patterns**
+- **AWS limits** (credit-based CPUs like t2/t3 instances)
 
 You can use **CloudWatch**, **CloudWatch Agent**, and **SSM Session Manager** to investigate and remediate performance issues in real time.
 
@@ -3831,13 +3878,14 @@ aws cloudwatch get-metric-statistics \
 
 If CPU is consistently >80%, you might:
 
-* **Upgrade instance type** (e.g., `t3.medium` → `m5.large`)
-* **Enable unlimited CPU credits** (for burstable `t2/t3`)
+- **Upgrade instance type** (e.g., `t3.medium` → `m5.large`)
+- **Enable unlimited CPU credits** (for burstable `t2/t3`)
 
   ```bash
   aws ec2 modify-instance-credit-specification --instance-id i-0123456789abcdef0 --cpu-credits unlimited
   ```
-* Check for **CPU-throttled processes** using:
+
+- Check for **CPU-throttled processes** using:
 
   ```bash
   top -o %CPU
@@ -3863,7 +3911,7 @@ vmstat 1 5
 
 **Symptoms:**
 
-* `Swap` usage or OOM (Out-Of-Memory) errors → increase instance size or optimize app memory usage.
+- `Swap` usage or OOM (Out-Of-Memory) errors → increase instance size or optimize app memory usage.
 
 ---
 
@@ -3873,8 +3921,8 @@ vmstat 1 5
 iostat -xz 1 3
 ```
 
-* **High `await` (>20ms)** → EBS throttling
-* **High `%util` (~100%)** → Disk I/O saturated
+- **High `await` (>20ms)** → EBS throttling
+- **High `%util` (~100%)** → Disk I/O saturated
 
 Check CloudWatch:
 
@@ -3888,13 +3936,14 @@ aws cloudwatch get-metric-statistics \
 
 **Fixes:**
 
-* Move to higher IOPS volume type (`gp3`, `io1`)
-* Increase provisioned IOPS:
+- Move to higher IOPS volume type (`gp3`, `io1`)
+- Increase provisioned IOPS:
 
   ```bash
   aws ec2 modify-volume --volume-id vol-0abcd1234efgh5678 --iops 6000
   ```
-* Offload logs or temp data to separate volumes.
+
+- Offload logs or temp data to separate volumes.
 
 ---
 
@@ -3907,8 +3956,8 @@ iperf3 -c <remote_ip>
 
 **Symptoms:**
 
-* High latency → overloaded network interface
-* Slow transfer → instance bandwidth limit reached
+- High latency → overloaded network interface
+- Slow transfer → instance bandwidth limit reached
 
 Check instance type’s **network bandwidth** limit in AWS docs.
 If you hit limits, move to **enhanced networking (ENA)** instance:
@@ -3927,10 +3976,10 @@ sudo modprobe ena
 
 #### ✅ 5. Check System Health & AWS Host Issues
 
-* In **AWS Console → EC2 → Status Checks**
+- In **AWS Console → EC2 → Status Checks**
 
-  * **System Status Check failed** → AWS hardware/network issue → stop/start instance
-  * **Instance Status Check failed** → OS or configuration problem
+  - **System Status Check failed** → AWS hardware/network issue → stop/start instance
+  - **Instance Status Check failed** → OS or configuration problem
 
 Command:
 
@@ -3942,9 +3991,9 @@ aws ec2 describe-instance-status --instance-ids i-0123456789abcdef0
 
 #### ✅ 6. Application-Level Issues
 
-* Check logs: `/var/log/messages`, `/var/log/syslog`, `/var/log/app.log`
-* Confirm no long-running queries or blocking threads.
-* Use APM tools (e.g., CloudWatch Application Insights, New Relic, Datadog) for profiling.
+- Check logs: `/var/log/messages`, `/var/log/syslog`, `/var/log/app.log`
+- Confirm no long-running queries or blocking threads.
+- Use APM tools (e.g., CloudWatch Application Insights, New Relic, Datadog) for profiling.
 
 ---
 
@@ -3958,9 +4007,9 @@ aws compute-optimizer get-ec2-instance-recommendations
 
 Recommendations may suggest:
 
-* Newer family (e.g., `t2 → t3a` for better cost/perf)
-* More vCPUs or memory
-* Different storage type (EBS vs. Instance Store)
+- Newer family (e.g., `t2 → t3a` for better cost/perf)
+- More vCPUs or memory
+- Different storage type (EBS vs. Instance Store)
 
 ---
 
@@ -3980,13 +4029,13 @@ Recommendations may suggest:
 
 ### ✅ Best Practices
 
-* Use **CloudWatch Dashboards** for CPU, memory, and disk trending.
-* Enable **detailed monitoring** (1-min interval).
-* Schedule **instance right-sizing reviews** monthly.
-* Separate workloads (e.g., DB vs. App) onto different instances.
-* Use **Auto Scaling Groups** to handle peak load gracefully.
-* Apply **EBS-optimized instances** for high I/O workloads.
-* Use **elastic load balancing** to distribute web load.
+- Use **CloudWatch Dashboards** for CPU, memory, and disk trending.
+- Enable **detailed monitoring** (1-min interval).
+- Schedule **instance right-sizing reviews** monthly.
+- Separate workloads (e.g., DB vs. App) onto different instances.
+- Use **Auto Scaling Groups** to handle peak load gracefully.
+- Apply **EBS-optimized instances** for high I/O workloads.
+- Use **elastic load balancing** to distribute web load.
 
 ---
 
@@ -4000,6 +4049,7 @@ If EC2 is slow:
    ✅ Most slowness comes from **CPU credit exhaustion**, **I/O throttling**, or **resource limits** — easily fixed by resizing or tuning workloads.
 
 ---
+
 ## Q: Lost SSH Key for EC2 — How to Regain Access Safely
 
 ---
@@ -4015,8 +4065,8 @@ AWS doesn’t store private keys, so recovery involves **attaching the root volu
 
 SSH keys authenticate access to EC2 Linux instances.
 
-* The public key is stored in `/home/ec2-user/.ssh/authorized_keys` (inside the instance).
-* The private key (.pem) is stored by you.
+- The public key is stored in `/home/ec2-user/.ssh/authorized_keys` (inside the instance).
+- The private key (.pem) is stored by you.
   If the private key is lost, the only way to re-access is by **injecting a new public key** manually into the instance’s authorized keys file.
 
 ---
@@ -4029,9 +4079,9 @@ SSH keys authenticate access to EC2 Linux instances.
 
 If your instance has:
 
-* IAM role with **AmazonSSMManagedInstanceCore**
-* SSM Agent installed
-* Outbound internet or VPC endpoint access
+- IAM role with **AmazonSSMManagedInstanceCore**
+- SSM Agent installed
+- Outbound internet or VPC endpoint access
 
 You can connect **without SSH**.
 
@@ -4166,11 +4216,11 @@ If the instance is unrecoverable:
 
 ### ✅ Best Practices
 
-* Always **download and back up PEM files securely** (e.g., AWS Secrets Manager or Vault).
-* Use **SSM Session Manager** instead of direct SSH for production.
-* Store SSH public keys in **AWS EC2 Launch Templates** or **Parameter Store**.
-* Rotate keys periodically and automate injection with **cloud-init** or **Terraform**.
-* Enable **EBS snapshots** regularly for recovery readiness.
+- Always **download and back up PEM files securely** (e.g., AWS Secrets Manager or Vault).
+- Use **SSM Session Manager** instead of direct SSH for production.
+- Store SSH public keys in **AWS EC2 Launch Templates** or **Parameter Store**.
+- Rotate keys periodically and automate injection with **cloud-init** or **Terraform**.
+- Enable **EBS snapshots** regularly for recovery readiness.
 
 ---
 
@@ -4185,6 +4235,7 @@ If you’ve lost your EC2 SSH key:
 ➡️ **Fastest recovery path:** `SSM Session Manager` → no downtime, no PEM headaches.
 
 ---
+
 ## Q: EC2 Instance Not Patch Compliant — How to Diagnose & Fix
 
 ---
@@ -4204,11 +4255,11 @@ SSM Patch Manager:
 2. **Scans instances** using the `AWS-RunPatchBaseline` document.
 3. Reports compliance results in **SSM → Compliance dashboard**.
 
-An instance becomes *non-compliant* if:
+An instance becomes _non-compliant_ if:
 
-* It misses security or critical patches.
-* It hasn’t run a recent scan.
-* The SSM agent or IAM permissions are missing.
+- It misses security or critical patches.
+- It hasn’t run a recent scan.
+- The SSM agent or IAM permissions are missing.
 
 ---
 
@@ -4242,8 +4293,8 @@ sudo snap install amazon-ssm-agent --classic  # Ubuntu
 
 Ensure the EC2 instance has an IAM role attached with at least:
 
-* **AmazonSSMManagedInstanceCore** policy
-* Optional: **AmazonSSMPatchAssociation** or **CloudWatchAgentServerPolicy**
+- **AmazonSSMManagedInstanceCore** policy
+- Optional: **AmazonSSMPatchAssociation** or **CloudWatchAgentServerPolicy**
 
 ```bash
 aws iam list-attached-role-policies --role-name EC2-SSM-Role
@@ -4354,8 +4405,8 @@ Operation: Scan
 
 Instances must reach:
 
-* **Amazon SSM endpoints**
-* **OS update repositories (YUM/APT)**
+- **Amazon SSM endpoints**
+- **OS update repositories (YUM/APT)**
   For Amazon Linux:
 
 ```bash
@@ -4370,8 +4421,8 @@ sudo apt-get update
 
 If repos are unreachable (private subnet), configure:
 
-* **VPC Endpoints for SSM + EC2Messages**
-* **NAT Gateway** for internet access
+- **VPC Endpoints for SSM + EC2Messages**
+- **NAT Gateway** for internet access
 
 ---
 
@@ -4390,16 +4441,17 @@ If repos are unreachable (private subnet), configure:
 
 ### ✅ Best Practices
 
-* Automate patching via **SSM Maintenance Windows** or **State Manager**.
-* Use **Patch Groups** with tags (e.g., `PatchGroup=Prod`).
-* Enforce **approval rules** for security and critical updates.
-* Send compliance reports to **Security Hub** or **SNS notifications**.
-* Regularly verify compliance using:
+- Automate patching via **SSM Maintenance Windows** or **State Manager**.
+- Use **Patch Groups** with tags (e.g., `PatchGroup=Prod`).
+- Enforce **approval rules** for security and critical updates.
+- Send compliance reports to **Security Hub** or **SNS notifications**.
+- Regularly verify compliance using:
 
   ```bash
   aws ssm list-compliance-summaries
   ```
-* Integrate patch compliance with **AWS Config** rule `EC2-PATCH-COMPLIANCE-STATUS-CHECK`.
+
+- Integrate patch compliance with **AWS Config** rule `EC2-PATCH-COMPLIANCE-STATUS-CHECK`.
 
 ---
 
@@ -4415,6 +4467,7 @@ If EC2 shows **Not Patch Compliant**:
 ✅ Compliance turns “Compliant” after successful patch install and rescan — use **CloudWatch dashboards** or **Security Hub** for continuous visibility.
 
 ---
+
 ## Q: AMI Creation Failed — How to Diagnose & Fix
 
 ---
@@ -4424,9 +4477,9 @@ If EC2 shows **Not Patch Compliant**:
 **AMI creation failure** in EC2 usually happens when AWS cannot **snapshot the instance’s EBS volumes** or **communicate with the instance** during the AMI build process.
 This can result in errors like:
 
-* `Client.InternalError: An internal error has occurred.`
-* `InvalidAMIID.NotFound`
-* `Instance is not in a valid state for CreateImage`
+- `Client.InternalError: An internal error has occurred.`
+- `InvalidAMIID.NotFound`
+- `Instance is not in a valid state for CreateImage`
 
 ---
 
@@ -4440,9 +4493,9 @@ When you run `create-image`, AWS:
 
 The process fails if:
 
-* The instance or EBS volume is **in-use, degraded, or misconfigured**
-* You lack **IAM permissions**
-* **Snapshots** can’t be created due to region, KMS, or quota issues
+- The instance or EBS volume is **in-use, degraded, or misconfigured**
+- You lack **IAM permissions**
+- **Snapshots** can’t be created due to region, KMS, or quota issues
 
 ---
 
@@ -4539,8 +4592,8 @@ Client.UnauthorizedOperation: Not authorized to perform CreateSnapshot
 
 Then:
 
-* You’re missing access to the **KMS key** used for EBS encryption.
-* Either **use AWS-managed key (`aws/ebs`)** or update the key policy.
+- You’re missing access to the **KMS key** used for EBS encryption.
+- Either **use AWS-managed key (`aws/ebs`)** or update the key policy.
 
 To update key policy:
 
@@ -4603,10 +4656,10 @@ aws cloudtrail lookup-events \
 
 Look for:
 
-* `AccessDenied`
-* `KMS key not found`
-* `Snapshot creation failed`
-* `InvalidVolumeState`
+- `AccessDenied`
+- `KMS key not found`
+- `Snapshot creation failed`
+- `InvalidVolumeState`
 
 ---
 
@@ -4626,12 +4679,12 @@ Look for:
 
 ### ✅ Best Practices
 
-* Use **EBS-backed AMIs** for persistence.
-* Always **stop the instance before AMI creation** for data consistency.
-* Tag AMIs and snapshots clearly (`Name=golden-ami`, `Env=Prod`).
-* Automate AMI builds using **EC2 Image Builder** or **Packer**.
-* Regularly delete outdated AMIs and snapshots.
-* Use **KMS grants** instead of sharing keys directly.
+- Use **EBS-backed AMIs** for persistence.
+- Always **stop the instance before AMI creation** for data consistency.
+- Tag AMIs and snapshots clearly (`Name=golden-ami`, `Env=Prod`).
+- Automate AMI builds using **EC2 Image Builder** or **Packer**.
+- Regularly delete outdated AMIs and snapshots.
+- Use **KMS grants** instead of sharing keys directly.
 
 ---
 
@@ -4648,6 +4701,7 @@ If **AMI creation fails**:
 ✅ Most AMI creation failures come from **KMS permission issues**, **EBS snapshot errors**, or **instance-store-backed volumes** — all fixable with proper IAM and volume validation.
 
 ---
+
 ## Q: How to Achieve Zero-Downtime Patching for EC2 Instances
 
 ---
@@ -4669,9 +4723,9 @@ The idea is simple:
 
 This approach leverages:
 
-* **SSM Patch Manager** for controlled patching
-* **Auto Scaling rolling updates** for instance replacement
-* **Load Balancer health checks** for seamless cutover
+- **SSM Patch Manager** for controlled patching
+- **Auto Scaling rolling updates** for instance replacement
+- **Load Balancer health checks** for seamless cutover
 
 ---
 
@@ -4683,8 +4737,8 @@ This approach leverages:
 
 ##### **Step 1. Use Auto Scaling Group (ASG) + Load Balancer**
 
-* All EC2 instances are behind an **Application Load Balancer (ALB)**.
-* Health checks ensure traffic goes only to healthy instances.
+- All EC2 instances are behind an **Application Load Balancer (ALB)**.
+- Health checks ensure traffic goes only to healthy instances.
 
 ##### **Step 2. Create a New Launch Template (with Latest Patches)**
 
@@ -4708,9 +4762,9 @@ aws autoscaling update-auto-scaling-group \
 
 ##### **Step 4. Perform Rolling Update**
 
-* Set **max surge = 1**, **min in-service = N-1** to ensure capacity remains during replacement.
-* Instances are terminated and replaced **one by one**.
-* The load balancer routes traffic only to patched, healthy nodes.
+- Set **max surge = 1**, **min in-service = N-1** to ensure capacity remains during replacement.
+- Instances are terminated and replaced **one by one**.
+- The load balancer routes traffic only to patched, healthy nodes.
 
 ##### Example (CloudFormation or Terraform Rolling Policy)
 
@@ -4738,6 +4792,7 @@ Use **SSM Patch Manager** for OS-level patching but **remove instances temporari
    ```bash
    aws elbv2 deregister-targets --target-group-arn arn:aws:... --targets Id=i-0123456789abcdef0
    ```
+
 2. **Patch using SSM:**
 
    ```bash
@@ -4746,11 +4801,13 @@ Use **SSM Patch Manager** for OS-level patching but **remove instances temporari
      --targets "Key=InstanceIds,Values=i-0123456789abcdef0" \
      --parameters '{"Operation":["Install"]}'
    ```
+
 3. **Reboot instance if needed**, then **re-register**:
 
    ```bash
    aws elbv2 register-targets --target-group-arn arn:aws:... --targets Id=i-0123456789abcdef0
    ```
+
 4. Confirm healthy via:
 
    ```bash
@@ -4771,9 +4828,9 @@ For large-scale or critical apps, use a **blue-green** approach:
 
 Use tools:
 
-* **CodeDeploy**
-* **Terraform**
-* **EC2 Image Builder + CloudFormation StackSets**
+- **CodeDeploy**
+- **Terraform**
+- **EC2 Image Builder + CloudFormation StackSets**
 
 ##### Example (CodeDeploy Strategy)
 
@@ -4800,17 +4857,18 @@ Cut traffic to green environment once health checks pass — zero downtime guara
 
 ### ✅ Best Practices
 
-* Always patch **staging** before production.
-* Use **health checks + connection draining** on ALB to prevent dropped sessions.
-* Automate AMI baking and deployment (Packer, EC2 Image Builder).
-* Tag EC2s with `PatchGroup=Prod` for targeted SSM automation.
-* Use **CloudWatch Alarms + SNS** for patching event alerts.
-* Use **SSM Maintenance Windows** for automated rolling patching:
+- Always patch **staging** before production.
+- Use **health checks + connection draining** on ALB to prevent dropped sessions.
+- Automate AMI baking and deployment (Packer, EC2 Image Builder).
+- Tag EC2s with `PatchGroup=Prod` for targeted SSM automation.
+- Use **CloudWatch Alarms + SNS** for patching event alerts.
+- Use **SSM Maintenance Windows** for automated rolling patching:
 
   ```bash
   aws ssm create-maintenance-window --name "RollingPatchWindow" --schedule "cron(0 2 ? * SUN *)"
   ```
-* Integrate with **AWS CodePipeline** for CI/CD-driven patch rollouts.
+
+- Integrate with **AWS CodePipeline** for CI/CD-driven patch rollouts.
 
 ---
 
@@ -4823,4 +4881,3 @@ To achieve **zero-downtime patching**:
 3. 🔁 Gradually replace instances (blue-green or rolling).
 
 ✅ Immutable, automated, and load-balanced patching = **no downtime, no user impact**.
-

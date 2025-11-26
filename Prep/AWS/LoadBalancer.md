@@ -1,6 +1,7 @@
 # Load Balancer
 
 ## Q: What is a Load Balancer in AWS?
+
 ### 🧠 Overview
 
 An **AWS Load Balancer (ELB)** automatically distributes incoming traffic across multiple targets (EC2 instances, containers, IPs, Lambda functions) in one or more Availability Zones.
@@ -10,11 +11,11 @@ It ensures **high availability**, **scalability**, and **fault tolerance** for a
 
 ### ⚙️ Purpose / How it Works
 
-* Detects healthy targets using **health checks** and routes traffic only to them.
-* Provides a **single DNS endpoint** for client access.
-* Supports **auto-scaling** — adjusts backend capacity dynamically.
-* Integrates tightly with **EKS, ECS, EC2, and Lambda**.
-* Can operate in **public or internal** mode depending on subnet configuration.
+- Detects healthy targets using **health checks** and routes traffic only to them.
+- Provides a **single DNS endpoint** for client access.
+- Supports **auto-scaling** — adjusts backend capacity dynamically.
+- Integrates tightly with **EKS, ECS, EC2, and Lambda**.
+- Can operate in **public or internal** mode depending on subnet configuration.
 
 ---
 
@@ -79,12 +80,12 @@ aws elbv2 create-load-balancer \
 
 ### ✅ Best Practices
 
-* Use **ALB** for HTTP/HTTPS traffic with path or host-based routing.
-* Use **NLB** for low-latency TCP/UDP traffic (databases, game servers).
-* Always enable **cross-zone load balancing** for even distribution.
-* Configure **access logs** and **CloudWatch metrics** for observability.
-* Use **target groups per service** for microservices/ECS setups.
-* Secure with **SSL certificates (ACM)** for HTTPS listeners.
+- Use **ALB** for HTTP/HTTPS traffic with path or host-based routing.
+- Use **NLB** for low-latency TCP/UDP traffic (databases, game servers).
+- Always enable **cross-zone load balancing** for even distribution.
+- Configure **access logs** and **CloudWatch metrics** for observability.
+- Use **target groups per service** for microservices/ECS setups.
+- Secure with **SSL certificates (ACM)** for HTTPS listeners.
 
 ---
 
@@ -94,6 +95,7 @@ AWS Load Balancer = single entry point + intelligent routing + fault tolerance.
 Use ALB for web apps, NLB for performance-critical traffic, and enable health checks for reliability.
 
 ---
+
 ## Q: What are the Types of Load Balancers in AWS?
 
 ---
@@ -163,12 +165,12 @@ aws elbv2 create-load-balancer \
 
 ### ✅ Best Practices
 
-* Use **ALB** for web-based microservices (HTTP/HTTPS).
-* Use **NLB** for database, streaming, or low-latency workloads.
-* Use **GLB** when chaining **security appliances** or network middleboxes.
-* Avoid **CLB** for new deployments (deprecated).
-* Always enable **cross-zone load balancing** for even traffic spread.
-* Use **AWS WAF + ALB** for application security.
+- Use **ALB** for web-based microservices (HTTP/HTTPS).
+- Use **NLB** for database, streaming, or low-latency workloads.
+- Use **GLB** when chaining **security appliances** or network middleboxes.
+- Avoid **CLB** for new deployments (deprecated).
+- Always enable **cross-zone load balancing** for even traffic spread.
+- Use **AWS WAF + ALB** for application security.
 
 ---
 
@@ -177,7 +179,8 @@ aws elbv2 create-load-balancer \
 AWS supports 4 load balancers: **ALB (Layer 7)**, **NLB (Layer 4)**, **GLB (Layer 3)**, and **CLB (legacy)**.
 Choose based on your traffic type — ALB for web, NLB for performance, GLB for security, CLB only for backward compatibility.
 
-----
+---
+
 ## Q: What is the Default Port for ALB (Application Load Balancer)?
 
 ---
@@ -191,10 +194,10 @@ It listens on **standard web ports (80 and 443)** for client requests.
 
 ### ⚙️ Purpose / How it Works
 
-* **Port 80** → Used for **HTTP** traffic (unencrypted).
-* **Port 443** → Used for **HTTPS** traffic (encrypted with SSL/TLS).
-* You can add **custom listener ports** (e.g., 8080, 8443) as needed.
-* ALB forwards incoming requests to **target groups**, which have their own backend port mappings.
+- **Port 80** → Used for **HTTP** traffic (unencrypted).
+- **Port 443** → Used for **HTTPS** traffic (encrypted with SSL/TLS).
+- You can add **custom listener ports** (e.g., 8080, 8443) as needed.
+- ALB forwards incoming requests to **target groups**, which have their own backend port mappings.
 
 ---
 
@@ -238,10 +241,10 @@ resource "aws_lb_listener" "https" {
 
 ### ✅ Best Practices
 
-* Always use **HTTPS (443)** with **ACM-managed certificates** for production.
-* Redirect all **HTTP (80)** traffic to **HTTPS (443)** for security.
-* Keep backend **target ports** (e.g., 8080) internal to your VPC.
-* Monitor listener metrics (e.g., `HTTPCode_Target_5XX_Count`) in **CloudWatch**.
+- Always use **HTTPS (443)** with **ACM-managed certificates** for production.
+- Redirect all **HTTP (80)** traffic to **HTTPS (443)** for security.
+- Keep backend **target ports** (e.g., 8080) internal to your VPC.
+- Monitor listener metrics (e.g., `HTTPCode_Target_5XX_Count`) in **CloudWatch**.
 
 ---
 
@@ -251,6 +254,7 @@ By default, **ALB listens on port 80 (HTTP)** and **443 (HTTPS)**.
 Use 443 in production for encrypted traffic, and redirect 80 → 443 for secure access.
 
 ---
+
 ## Q: What is a Target Group in AWS?
 
 ---
@@ -264,14 +268,15 @@ It acts as the connection point between your **Load Balancer** and **application
 
 ### ⚙️ Purpose / How it Works
 
-* A **Load Balancer listener** forwards requests to a **Target Group**.
-* Each Target Group defines:
+- A **Load Balancer listener** forwards requests to a **Target Group**.
+- Each Target Group defines:
 
-  * **Target type** (EC2, IP, Lambda, etc.)
-  * **Port and protocol** (e.g., HTTP:80 or HTTPS:443)
-  * **Health check path** to verify target availability.
-* Targets are registered dynamically (e.g., via Auto Scaling groups or ECS services).
-* Only **healthy targets** receive traffic.
+  - **Target type** (EC2, IP, Lambda, etc.)
+  - **Port and protocol** (e.g., HTTP:80 or HTTPS:443)
+  - **Health check path** to verify target availability.
+
+- Targets are registered dynamically (e.g., via Auto Scaling groups or ECS services).
+- Only **healthy targets** receive traffic.
 
 ---
 
@@ -339,11 +344,11 @@ aws elbv2 register-targets \
 
 ### ✅ Best Practices
 
-* Use **separate Target Groups** per microservice for better routing and scaling.
-* Always configure **health checks** with dedicated endpoints (e.g., `/health`).
-* For ECS/EKS, integrate with **service discovery** for dynamic registration.
-* Use **IP target type** for **Fargate** or cross-AZ networking.
-* Monitor **`HealthyHostCount`** and **`UnhealthyHostCount`** in CloudWatch.
+- Use **separate Target Groups** per microservice for better routing and scaling.
+- Always configure **health checks** with dedicated endpoints (e.g., `/health`).
+- For ECS/EKS, integrate with **service discovery** for dynamic registration.
+- Use **IP target type** for **Fargate** or cross-AZ networking.
+- Monitor **`HealthyHostCount`** and **`UnhealthyHostCount`** in CloudWatch.
 
 ---
 
@@ -352,7 +357,8 @@ aws elbv2 register-targets \
 A **Target Group** is where your Load Balancer sends traffic — it groups EC2s, IPs, or Lambdas and checks their health.
 Think of it as the **bridge between your ALB/NLB and application backend**.
 
-----
+---
+
 ## Q: How Does ELB Check if a Target is Healthy?
 
 ---
@@ -368,22 +374,22 @@ These checks determine whether traffic should be routed to a target — **only h
 
 1. **Health Check Configuration**
 
-   * Defined per **Target Group**, not per Load Balancer.
-   * ELB sends periodic requests (HTTP/TCP/HTTPS/GRPC) to targets.
-   * The response determines if a target is **healthy** or **unhealthy**.
+   - Defined per **Target Group**, not per Load Balancer.
+   - ELB sends periodic requests (HTTP/TCP/HTTPS/GRPC) to targets.
+   - The response determines if a target is **healthy** or **unhealthy**.
 
 2. **Health Evaluation Logic**
 
-   * ELB marks a target **healthy** after a specific number of successful checks (`healthy_threshold`).
-   * Marks a target **unhealthy** after a specific number of failures (`unhealthy_threshold`).
-   * Traffic is stopped to unhealthy targets until they recover.
+   - ELB marks a target **healthy** after a specific number of successful checks (`healthy_threshold`).
+   - Marks a target **unhealthy** after a specific number of failures (`unhealthy_threshold`).
+   - Traffic is stopped to unhealthy targets until they recover.
 
 3. **Health States**
 
-   * `healthy` → Target responds successfully.
-   * `unhealthy` → Target fails health checks.
-   * `initial` → Health check just started or re-registered.
-   * `unused` → Target not in use or deregistered.
+   - `healthy` → Target responds successfully.
+   - `unhealthy` → Target fails health checks.
+   - `initial` → Health check just started or re-registered.
+   - `unused` → Target not in use or deregistered.
 
 ---
 
@@ -448,11 +454,11 @@ Example output:
 
 ### ✅ Best Practices
 
-* Always expose a **lightweight `/health` endpoint** in applications.
-* Avoid performing DB or external calls inside health checks (keep them fast).
-* Configure **grace period** for new instances during scaling.
-* Monitor health metrics in **CloudWatch → ELB → TargetGroup metrics**.
-* Use **different health check paths** for different services (e.g., `/api/health`).
+- Always expose a **lightweight `/health` endpoint** in applications.
+- Avoid performing DB or external calls inside health checks (keep them fast).
+- Configure **grace period** for new instances during scaling.
+- Monitor health metrics in **CloudWatch → ELB → TargetGroup metrics**.
+- Use **different health check paths** for different services (e.g., `/api/health`).
 
 ---
 
@@ -461,7 +467,8 @@ Example output:
 ELB checks target health by **sending periodic requests (HTTP/TCP)** to a defined path or port.
 If a target consistently passes, it’s marked **healthy**; if it fails multiple times, it’s marked **unhealthy** and traffic stops until it recovers.
 
-----
+---
+
 ## Q: What is a Listener in ELB?
 
 ---
@@ -470,7 +477,7 @@ If a target consistently passes, it’s marked **healthy**; if it fails multiple
 
 A **Listener** in AWS Elastic Load Balancer (ELB) is a **logical component** that checks for **incoming client connection requests** using a specified **protocol and port**, and **forwards traffic** to one or more **Target Groups** based on configured **rules**.
 
-Think of a **listener** as the **entry gate** for your ELB — it defines *how clients connect* and *where the requests go*.
+Think of a **listener** as the **entry gate** for your ELB — it defines _how clients connect_ and _where the requests go_.
 
 ---
 
@@ -540,11 +547,11 @@ aws elbv2 create-listener \
 
 ### ✅ Best Practices
 
-* Always configure **HTTPS (443)** with **ACM-managed SSL** for production.
-* Use **redirect rules** from HTTP (80) → HTTPS (443).
-* Implement **path-based or host-based rules** for microservices.
-* Keep **listener rules minimal** for fast evaluation.
-* Use **CloudWatch metrics** (`ProcessedBytes`, `RequestCount`) for monitoring.
+- Always configure **HTTPS (443)** with **ACM-managed SSL** for production.
+- Use **redirect rules** from HTTP (80) → HTTPS (443).
+- Implement **path-based or host-based rules** for microservices.
+- Keep **listener rules minimal** for fast evaluation.
+- Use **CloudWatch metrics** (`ProcessedBytes`, `RequestCount`) for monitoring.
 
 ---
 
@@ -554,6 +561,7 @@ A **Listener** defines **how ELB accepts and routes traffic** — it listens on 
 Example: ALB listens on **HTTP:80 / HTTPS:443**, applies routing rules, and sends traffic to the right backend service.
 
 ---
+
 ## Q: What is Cross-Zone Load Balancing in AWS?
 
 ---
@@ -614,18 +622,18 @@ aws elbv2 modify-load-balancer-attributes \
 
 | **Load Balancer Type** | **Default State** | **Can be Modified?** | **Billing Impact**              |
 | ---------------------- | ----------------- | -------------------- | ------------------------------- |
-| **Application (ALB)**  | ✅ Enabled         | ❌ No (always on)     | No additional charge            |
-| **Network (NLB)**      | ❌ Disabled        | ✅ Yes                | Data transfer across AZs billed |
-| **Classic (CLB)**      | ❌ Disabled        | ✅ Yes                | No extra charge                 |
+| **Application (ALB)**  | ✅ Enabled        | ❌ No (always on)    | No additional charge            |
+| **Network (NLB)**      | ❌ Disabled       | ✅ Yes               | Data transfer across AZs billed |
+| **Classic (CLB)**      | ❌ Disabled       | ✅ Yes               | No extra charge                 |
 
 ---
 
 ### ✅ Best Practices
 
-* **Keep Cross-Zone enabled** to ensure balanced traffic across AZs.
-* Combine with **Auto Scaling** for full multi-AZ resilience.
-* Be aware of **inter-AZ data transfer costs** for NLBs.
-* Always register **targets in multiple AZs** to prevent single-AZ dependency.
+- **Keep Cross-Zone enabled** to ensure balanced traffic across AZs.
+- Combine with **Auto Scaling** for full multi-AZ resilience.
+- Be aware of **inter-AZ data transfer costs** for NLBs.
+- Always register **targets in multiple AZs** to prevent single-AZ dependency.
 
 ---
 
@@ -634,7 +642,8 @@ aws elbv2 modify-load-balancer-attributes \
 **Cross-Zone Load Balancing** allows ELB nodes to route traffic **across all AZs**, ensuring even load and higher resilience.
 👉 ALB → always enabled, NLB → enable manually (extra inter-AZ cost), CLB → optional.
 
-----
+---
+
 ## Q: What is a Load Balancer DNS Name in AWS?
 
 ---
@@ -648,10 +657,10 @@ It’s used by clients or applications to send requests to your load balancer �
 
 ### ⚙️ Purpose / How it Works
 
-* AWS **automatically assigns** a **unique DNS name** when the ELB is created.
-* This DNS name points to the ELB’s **entry point** — not to a static IP.
-* The DNS record resolves to **multiple IP addresses** (per Availability Zone) for redundancy.
-* You can **map this DNS name** to a custom domain via **Route 53 CNAME or Alias** record.
+- AWS **automatically assigns** a **unique DNS name** when the ELB is created.
+- This DNS name points to the ELB’s **entry point** — not to a static IP.
+- The DNS record resolves to **multiple IP addresses** (per Availability Zone) for redundancy.
+- You can **map this DNS name** to a custom domain via **Route 53 CNAME or Alias** record.
 
 > 🔁 ELB DNS names are **region-specific**, **highly available**, and **don’t change** during the LB’s lifetime.
 
@@ -727,10 +736,10 @@ my-alb-1234567890.ap-south-1.elb.amazonaws.com
 
 ### ✅ Best Practices
 
-* Always use **Route 53 Alias records** instead of hardcoding the ELB DNS name.
-* Avoid using the raw DNS in apps — map it to a friendly domain.
-* Use **internal ALBs** for private traffic (DNS name only resolvable inside VPC).
-* Monitor DNS resolution issues using **`dig` or `nslookup`** when debugging.
+- Always use **Route 53 Alias records** instead of hardcoding the ELB DNS name.
+- Avoid using the raw DNS in apps — map it to a friendly domain.
+- Use **internal ALBs** for private traffic (DNS name only resolvable inside VPC).
+- Monitor DNS resolution issues using **`dig` or `nslookup`** when debugging.
 
 ---
 
@@ -739,7 +748,8 @@ my-alb-1234567890.ap-south-1.elb.amazonaws.com
 A **Load Balancer DNS name** is the **entry URL** AWS assigns to your ELB — e.g., `my-alb-xxxx.elb.amazonaws.com`.
 You map it to your custom domain (via Route 53 Alias) so users can access your app seamlessly while AWS handles traffic routing and availability behind the scenes.
 
-----
+---
+
 ## Q: Can an ALB (Application Load Balancer) Have a Static IP?
 
 ---
@@ -754,12 +764,12 @@ This is because ALB scales horizontally and dynamically across multiple Availabi
 
 ### ⚙️ Purpose / How it Works
 
-* ALB DNS name resolves to **multiple IP addresses** behind the scenes.
-* These IPs may change due to:
+- ALB DNS name resolves to **multiple IP addresses** behind the scenes.
+- These IPs may change due to:
 
-  * Scaling events (adding/removing nodes)
-  * Maintenance or failover
-  * AZ-level adjustments
+  - Scaling events (adding/removing nodes)
+  - Maintenance or failover
+  - AZ-level adjustments
 
 To maintain connectivity, clients and systems should **use the DNS name**, not hard-coded IPs.
 
@@ -830,7 +840,7 @@ resource "aws_route53_record" "app_alias" {
 
 | **Feature**    | **Application LB (ALB)**  | **Network LB (NLB)**                       |
 | -------------- | ------------------------- | ------------------------------------------ |
-| **Static IPs** | ❌ Not supported           | ✅ Supported (EIP attachable)               |
+| **Static IPs** | ❌ Not supported          | ✅ Supported (EIP attachable)              |
 | **Layer**      | 7 (HTTP/HTTPS)            | 4 (TCP/UDP/TLS)                            |
 | **DNS Name**   | Auto-generated (constant) | Auto-generated (can resolve to static IPs) |
 | **Use Case**   | Web apps, microservices   | Fixed-IP apps, VPNs, IoT, APIs             |
@@ -839,10 +849,10 @@ resource "aws_route53_record" "app_alias" {
 
 ### ✅ Best Practices
 
-* Always use **DNS names** for ALBs — never hard-code IPs.
-* If static IPs are mandatory, **front your ALB with an NLB**.
-* Use **Route 53 Alias records** for stable custom domains.
-* Avoid directly exposing ALB IPs — they are not guaranteed to persist.
+- Always use **DNS names** for ALBs — never hard-code IPs.
+- If static IPs are mandatory, **front your ALB with an NLB**.
+- Use **Route 53 Alias records** for stable custom domains.
+- Avoid directly exposing ALB IPs — they are not guaranteed to persist.
 
 ---
 
@@ -851,7 +861,8 @@ resource "aws_route53_record" "app_alias" {
 ❌ **ALBs don’t support static IPs** — they use dynamic IPs behind a constant DNS name.
 ✅ For fixed IP requirements, **use a Network Load Balancer (NLB)** or **NLB → ALB architecture** for the best of both worlds.
 
-----
+---
+
 ## Q: What is the Difference Between Classic Load Balancer (CLB) and Application Load Balancer (ALB)?
 
 ---
@@ -865,9 +876,9 @@ CLB is **legacy (Layer 4 & 7)**, while ALB is **modern (Layer 7)** — designed 
 
 ### ⚙️ Purpose / How it Works
 
-* **CLB** distributes traffic at both Layer 4 (TCP) and Layer 7 (HTTP/HTTPS).
-* **ALB** operates purely at Layer 7 (Application Layer), enabling **content-based routing**.
-* ALB supports **modern app architectures** (ECS, EKS, Lambda), while CLB is for **legacy EC2 workloads**.
+- **CLB** distributes traffic at both Layer 4 (TCP) and Layer 7 (HTTP/HTTPS).
+- **ALB** operates purely at Layer 7 (Application Layer), enabling **content-based routing**.
+- ALB supports **modern app architectures** (ECS, EKS, Lambda), while CLB is for **legacy EC2 workloads**.
 
 ---
 
@@ -880,16 +891,16 @@ CLB is **legacy (Layer 4 & 7)**, while ALB is **modern (Layer 7)** — designed 
 | **Routing Type**              | Basic (no rules)                | Advanced (path-based, host-based)               |
 | **Target Type**               | EC2 instances only              | EC2, ECS, EKS, IPs, Lambda                      |
 | **Listener Rules**            | One listener, single action     | Multiple listeners with rule-based actions      |
-| **HTTP/2 & gRPC**             | ❌ Not supported                 | ✅ Supported                                     |
-| **WebSockets**                | ❌ Not supported                 | ✅ Supported                                     |
-| **WAF Integration**           | ❌ No                            | ✅ Yes                                           |
+| **HTTP/2 & gRPC**             | ❌ Not supported                | ✅ Supported                                    |
+| **WebSockets**                | ❌ Not supported                | ✅ Supported                                    |
+| **WAF Integration**           | ❌ No                           | ✅ Yes                                          |
 | **Cross-Zone LB**             | Optional                        | Always enabled                                  |
 | **Stickiness**                | Cookie or duration-based        | Cookie-based (app/session stickiness)           |
 | **Access Logs & Metrics**     | Basic                           | Enhanced (CloudWatch, ALB logs, target metrics) |
 | **SSL Termination**           | Supported                       | Supported (with SNI for multiple certs)         |
 | **Dynamic Host Registration** | Manual                          | Automatic via Target Groups                     |
-| **Container Support (ECS)**   | ❌ No                            | ✅ Yes                                           |
-| **Lambda Targets**            | ❌ No                            | ✅ Yes                                           |
+| **Container Support (ECS)**   | ❌ No                           | ✅ Yes                                          |
+| **Lambda Targets**            | ❌ No                           | ✅ Yes                                          |
 | **Pricing**                   | Based on hours & data processed | Based on LCUs (Load Balancer Capacity Units)    |
 
 ---
@@ -946,11 +957,11 @@ resource "aws_elb" "classic_lb" {
 
 ### ✅ Best Practices
 
-* ✅ Use **ALB** for modern workloads (ECS/EKS, HTTP routing, HTTPS offloading).
-* ⚠️ Avoid **CLB** for new projects — it’s **legacy and limited**.
-* Use **NLB** if you need **static IPs or TCP/UDP** support.
-* Enable **WAF with ALB** for security filtering.
-* Use **target groups** for flexible scaling and health checks.
+- ✅ Use **ALB** for modern workloads (ECS/EKS, HTTP routing, HTTPS offloading).
+- ⚠️ Avoid **CLB** for new projects — it’s **legacy and limited**.
+- Use **NLB** if you need **static IPs or TCP/UDP** support.
+- Enable **WAF with ALB** for security filtering.
+- Use **target groups** for flexible scaling and health checks.
 
 ---
 
@@ -960,7 +971,8 @@ resource "aws_elb" "classic_lb" {
 | **ALB** → Modern Layer 7 load balancer — supports microservices, containers, and intelligent routing. |
 👉 Always prefer **ALB** for new deployments — it’s more secure, flexible, and cloud-native.
 
-----
+---
+
 ## Q: What is Path-Based Routing in AWS ALB?
 
 ---
@@ -983,8 +995,8 @@ This allows you to run **multiple services (microservices or APIs)** behind a si
 Example Flow:
 
 ```
-/api/*  →  API Target Group  
-/images/*  →  Image Service Target Group  
+/api/*  →  API Target Group
+/images/*  →  Image Service Target Group
 /*  →  Default Web App Target Group
 ```
 
@@ -1032,9 +1044,9 @@ resource "aws_lb_listener_rule" "default" {
 
 **Listener → Add Rule → Path-based routing:**
 
-* `/api/*` → Target Group: `api-tg`
-* `/images/*` → Target Group: `img-tg`
-* Default → Target Group: `web-tg`
+- `/api/*` → Target Group: `api-tg`
+- `/images/*` → Target Group: `img-tg`
+- Default → Target Group: `web-tg`
 
 ---
 
@@ -1052,11 +1064,11 @@ resource "aws_lb_listener_rule" "default" {
 
 ### ✅ Best Practices
 
-* Always include a **default rule** (`/*`) for unmatched requests.
-* Use **priority numbers** carefully — lower = higher precedence.
-* Combine with **host-based routing** for multi-domain apps.
-* Keep path conditions specific (`/api/*` > `/app/*` > `/*`).
-* Use **health checks** per target group for isolated fault tolerance.
+- Always include a **default rule** (`/*`) for unmatched requests.
+- Use **priority numbers** carefully — lower = higher precedence.
+- Combine with **host-based routing** for multi-domain apps.
+- Keep path conditions specific (`/api/*` > `/app/*` > `/*`).
+- Use **health checks** per target group for isolated fault tolerance.
 
 ---
 
@@ -1065,9 +1077,10 @@ resource "aws_lb_listener_rule" "default" {
 **Path-Based Routing** in ALB lets you **route requests by URL path** — e.g., `/api/*` → API service, `/app/*` → Web app.
 It’s perfect for **microservice or multi-app architectures**, allowing one ALB to handle many services efficiently.
 
-----
+---
 
-----
+---
+
 ## Q: Can an ALB Forward Traffic to Lambda Functions?
 
 ---
@@ -1167,11 +1180,11 @@ resource "aws_lb_listener" "http" {
 
 ### ✅ Best Practices
 
-* Use **Lambda for lightweight, stateless** HTTP APIs.
-* Configure **reserved concurrency** to control scaling behavior.
-* Return proper **HTTP headers** (`Content-Type`, `CORS`, etc.) in Lambda response.
-* Use **custom domain + Route 53 alias** to simplify ALB access.
-* Monitor with **CloudWatch logs** and **ALB target metrics** (`TargetResponseTime`).
+- Use **Lambda for lightweight, stateless** HTTP APIs.
+- Configure **reserved concurrency** to control scaling behavior.
+- Return proper **HTTP headers** (`Content-Type`, `CORS`, etc.) in Lambda response.
+- Use **custom domain + Route 53 alias** to simplify ALB access.
+- Monitor with **CloudWatch logs** and **ALB target metrics** (`TargetResponseTime`).
 
 ---
 
@@ -1181,6 +1194,7 @@ Yes — **ALB can directly invoke Lambda functions** by defining a **Lambda targ
 It enables **serverless web APIs** behind a standard ALB endpoint, unifying EC2, ECS, and Lambda under one scalable load balancer.
 
 ---
+
 ## Q: How Do You Enable SSL Termination in AWS (ALB/ELB)?
 
 ---
@@ -1198,11 +1212,13 @@ This setup simplifies SSL management and improves backend performance since traf
 
 1. **Client → ALB:**
 
-   * Client connects via HTTPS (port 443).
-   * ALB presents the SSL certificate and decrypts the request.
+   - Client connects via HTTPS (port 443).
+   - ALB presents the SSL certificate and decrypts the request.
+
 2. **ALB → Target Group:**
 
-   * ALB forwards decrypted HTTP traffic (port 80) to backend targets.
+   - ALB forwards decrypted HTTP traffic (port 80) to backend targets.
+
 3. Optionally, you can use **re-encryption (HTTPS → HTTPS)** if you need end-to-end encryption.
 
 > 🔒 SSL termination centralizes certificate management and reduces CPU overhead on EC2/ECS instances.
@@ -1282,11 +1298,11 @@ aws elbv2 create-listener \
 
 ### ✅ Best Practices
 
-* Always use **AWS ACM** for certificate management (auto-renewal).
-* Redirect **HTTP (80)** → **HTTPS (443)** for secure access.
-* Use **modern SSL policies** (`ELBSecurityPolicy-TLS-1-2-2017-01` or newer).
-* Store and rotate **private certs securely** (if using imported ones).
-* For sensitive data, use **end-to-end encryption (HTTPS → HTTPS)**.
+- Always use **AWS ACM** for certificate management (auto-renewal).
+- Redirect **HTTP (80)** → **HTTPS (443)** for secure access.
+- Use **modern SSL policies** (`ELBSecurityPolicy-TLS-1-2-2017-01` or newer).
+- Store and rotate **private certs securely** (if using imported ones).
+- For sensitive data, use **end-to-end encryption (HTTPS → HTTPS)**.
 
 ---
 
@@ -1296,6 +1312,7 @@ aws elbv2 create-listener \
 It simplifies cert management, improves performance, and provides centralized TLS handling — the standard setup for production web apps in AWS.
 
 ---
+
 ## Q: What is SSL Passthrough?
 
 ---
@@ -1313,11 +1330,13 @@ Unlike **SSL Termination**, the Load Balancer acts purely as a **TCP proxy** —
 
 1. **Client → Load Balancer (TCP 443):**
 
-   * Client initiates an SSL/TLS handshake.
-   * The Load Balancer **forwards encrypted packets** without decrypting.
+   - Client initiates an SSL/TLS handshake.
+   - The Load Balancer **forwards encrypted packets** without decrypting.
+
 2. **Load Balancer → Backend:**
 
-   * Backend server (e.g., Nginx, Apache, ECS task) completes the SSL handshake.
+   - Backend server (e.g., Nginx, Apache, ECS task) completes the SSL handshake.
+
 3. **Decryption happens only at the backend**, preserving full end-to-end encryption.
 
 > ⚙️ Used when you need **end-to-end encryption** and want to keep private keys **only on backend servers**.
@@ -1356,8 +1375,8 @@ resource "aws_lb_listener" "tcp_443" {
 
 In this setup:
 
-* NLB forwards encrypted HTTPS traffic to backend servers.
-* Each backend must have its own **SSL certificate** and handle **TLS termination**.
+- NLB forwards encrypted HTTPS traffic to backend servers.
+- Each backend must have its own **SSL certificate** and handle **TLS termination**.
 
 ---
 
@@ -1378,11 +1397,11 @@ In this setup:
 
 ### ✅ Best Practices
 
-* Use **SSL Passthrough** when **security compliance** demands that the Load Balancer cannot see or terminate SSL traffic.
-* Ensure **backend servers** have valid and updated certificates.
-* Use **NLB with TCP listeners** for passthrough scenarios.
-* Combine with **ALB behind NLB** for mixed traffic — NLB (TLS passthrough) → ALB (app routing).
-* Monitor using **VPC Flow Logs** or **target-side metrics**, since LB cannot see decrypted data.
+- Use **SSL Passthrough** when **security compliance** demands that the Load Balancer cannot see or terminate SSL traffic.
+- Ensure **backend servers** have valid and updated certificates.
+- Use **NLB with TCP listeners** for passthrough scenarios.
+- Combine with **ALB behind NLB** for mixed traffic — NLB (TLS passthrough) → ALB (app routing).
+- Monitor using **VPC Flow Logs** or **target-side metrics**, since LB cannot see decrypted data.
 
 ---
 
@@ -1392,6 +1411,7 @@ In this setup:
 It’s used for **strict end-to-end encryption** scenarios and is supported by **Network Load Balancers (NLB)** at **Layer 4**.
 
 ---
+
 ## Q: How do you enable stickiness (session persistence)?
 
 ---
@@ -1404,12 +1424,13 @@ It’s used for **strict end-to-end encryption** scenarios and is supported by *
 
 ### ⚙️ Purpose / How it Works
 
-* **ALB (Application Load Balancer)**: stickiness is configured on the **Target Group**. Types:
+- **ALB (Application Load Balancer)**: stickiness is configured on the **Target Group**. Types:
 
-  * `lb_cookie` — ALB inserts a cookie (AWSALB…) and honors `duration_seconds`.
-  * `app_cookie` — ALB uses an application-supplied cookie name and duration. ([AWS Documentation][1])
-* **CLB (Classic Load Balancer)**: supports **load-balancer generated** (`AWSELB`) and **application-generated** cookies; configured per listener/policy. ([AWS Documentation][2])
-* **NLB (Network Load Balancer)**: supports **target-group stickiness / client IP affinity** for TCP/UDP listeners (affinity based on source IP / configured attributes). ([AWS Documentation][3])
+  - `lb_cookie` — ALB inserts a cookie (AWSALB…) and honors `duration_seconds`.
+  - `app_cookie` — ALB uses an application-supplied cookie name and duration. ([AWS Documentation][1])
+
+- **CLB (Classic Load Balancer)**: supports **load-balancer generated** (`AWSELB`) and **application-generated** cookies; configured per listener/policy. ([AWS Documentation][2])
+- **NLB (Network Load Balancer)**: supports **target-group stickiness / client IP affinity** for TCP/UDP listeners (affinity based on source IP / configured attributes). ([AWS Documentation][3])
 
 ---
 
@@ -1489,19 +1510,19 @@ aws elbv2 modify-target-group-attributes \
 
 ### ✅ Best Practices
 
-* Prefer **ALB target-group stickiness** for HTTP session affinity (cookie-based). ([AWS Documentation][1])
-* Keep **health checks light**; sticky sessions should not hide unhealthy targets.
-* Set reasonable `cookie_duration` (balance UX vs. load distribution).
-* For stateless or scalable architectures, prefer **stateless sessions (JWT / shared cache / DB)** over long stickiness.
-* If compliance requires IP affinity, use **NLB** and document implications (cross-AZ, costs). ([AWS Documentation][3])
+- Prefer **ALB target-group stickiness** for HTTP session affinity (cookie-based). ([AWS Documentation][1])
+- Keep **health checks light**; sticky sessions should not hide unhealthy targets.
+- Set reasonable `cookie_duration` (balance UX vs. load distribution).
+- For stateless or scalable architectures, prefer **stateless sessions (JWT / shared cache / DB)** over long stickiness.
+- If compliance requires IP affinity, use **NLB** and document implications (cross-AZ, costs). ([AWS Documentation][3])
 
 ---
 
 ### ⚠️ Caveats / Notes
 
-* Stickiness can reduce even load distribution — monitor `HealthyHostCount` and latency.
-* ALB `app_cookie` requires the app to set a cookie name; ALB will honor it. ([AWS Documentation][1])
-* Not all target types (e.g., some Lambda configurations) make sense with stickiness — check docs for target-type support. ([AWS Documentation][6])
+- Stickiness can reduce even load distribution — monitor `HealthyHostCount` and latency.
+- ALB `app_cookie` requires the app to set a cookie name; ALB will honor it. ([AWS Documentation][1])
+- Not all target types (e.g., some Lambda configurations) make sense with stickiness — check docs for target-type support. ([AWS Documentation][6])
 
 ---
 
@@ -1516,7 +1537,7 @@ Enable stickiness on the **target group** for ALB (use `lb_cookie` or `app_cooki
 [5]: https://docs.aws.amazon.com/cli/latest/reference/elbv2/modify-target-group-attributes.html?utm_source=chatgpt.com "modify-target-group-attributes"
 [6]: https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_TargetGroupAttribute.html?utm_source=chatgpt.com "TargetGroupAttribute - Elastic Load Balancing"
 
-----
+---
 
 ## Q: How do you integrate ALB with ECS?
 
@@ -1531,11 +1552,11 @@ Key pieces: **ALB (listener + target group)** + **ECS task definition** + **ECS 
 
 ### ⚙️ Purpose / How it Works
 
-* **ALB** receives client requests (HTTP/HTTPS) and forwards them to a **Target Group**.
-* **ECS Service** registers each running task as a target (IP or instance) in that Target Group.
-* **Health checks** on the Target Group determine target availability.
-* Use **path/host rules** to route multiple services through one ALB.
-* For **Fargate/awsvpc** use `target_type = "ip"`; for EC2 tasks use `target_type = "instance"`.
+- **ALB** receives client requests (HTTP/HTTPS) and forwards them to a **Target Group**.
+- **ECS Service** registers each running task as a target (IP or instance) in that Target Group.
+- **Health checks** on the Target Group determine target availability.
+- Use **path/host rules** to route multiple services through one ALB.
+- For **Fargate/awsvpc** use `target_type = "ip"`; for EC2 tasks use `target_type = "instance"`.
 
 ---
 
@@ -1645,8 +1666,8 @@ resource "aws_ecs_service" "web" {
 
 > Notes:
 >
-> * For **EC2** tasks (bridge/host), set `target_type = "instance"` and `portMappings` accordingly.
-> * Ensure ALB security group allows inbound 80/443 from the internet and ECS service SG allows traffic from ALB SG.
+> - For **EC2** tasks (bridge/host), set `target_type = "instance"` and `portMappings` accordingly.
+> - Ensure ALB security group allows inbound 80/443 from the internet and ECS service SG allows traffic from ALB SG.
 
 ---
 
@@ -1702,15 +1723,15 @@ ECS Service `loadBalancers` field must reference the ALB target group ARN and co
 
 ### ✅ Best Practices
 
-* Use **awsvpc** networking for predictable IPs and security group control (Fargate).
-* Use **target_type = "ip"** for Fargate services.
-* Create **one target group per service** (simpler health checks, separate scaling).
-* Keep health check endpoints lightweight and fast (avoid DB calls).
-* Use **path/host-based listener rules** to host multiple services behind one ALB.
-* Use **Route 53 alias** for a friendly domain name (point to ALB DNS).
-* Secure with **HTTPS (ACM cert)** on the ALB and optionally re-encrypt to backend if required.
-* Monitor `TargetResponseTime`, `HealthyHostCount`, and `HTTPCode_Target_5XX_Count` in CloudWatch.
-* For zero-downtime deploys, tune ECS deployment `minimum_healthy_percent` and `maximum_percent`.
+- Use **awsvpc** networking for predictable IPs and security group control (Fargate).
+- Use **target_type = "ip"** for Fargate services.
+- Create **one target group per service** (simpler health checks, separate scaling).
+- Keep health check endpoints lightweight and fast (avoid DB calls).
+- Use **path/host-based listener rules** to host multiple services behind one ALB.
+- Use **Route 53 alias** for a friendly domain name (point to ALB DNS).
+- Secure with **HTTPS (ACM cert)** on the ALB and optionally re-encrypt to backend if required.
+- Monitor `TargetResponseTime`, `HealthyHostCount`, and `HTTPCode_Target_5XX_Count` in CloudWatch.
+- For zero-downtime deploys, tune ECS deployment `minimum_healthy_percent` and `maximum_percent`.
 
 ---
 
@@ -1719,7 +1740,8 @@ ECS Service `loadBalancers` field must reference the ALB target group ARN and co
 Register each ECS task with an ALB **target group** via the ECS **service** (`load_balancer` block).
 Use `target_type="ip"` for Fargate (`awsvpc`) or `instance` for EC2, configure lightweight health checks, and secure listeners with HTTPS.
 
-----
+---
+
 ## Q: How do you handle WebSocket traffic?
 
 ---
@@ -1732,10 +1754,10 @@ WebSockets are **long-lived, bidirectional TCP connections** used for real-time 
 
 ### ⚙️ Purpose / How it Works
 
-* **ALB**: supports the HTTP `Upgrade: websocket` flow (HTTP/1.1 Upgrade). ALB terminates TLS (optional), inspects HTTP headers, and forwards the upgraded TCP stream to targets. Good when you need path/host routing, WAF, or ALB features.
-* **NLB**: acts as pure TCP proxy (passthrough). Best for lowest latency, static IPs, or when you need true end-to-end TLS/termination at backend.
-* **API Gateway (WebSocket)**: serverless WebSocket management, connection lifecycle and built-in message routing — useful for serverless backends but with different semantics and costs.
-* **Key operational concerns**: idle timeouts, connection limits, health checks, sticky sessions (if needed), TLS handling, and metrics/logging.
+- **ALB**: supports the HTTP `Upgrade: websocket` flow (HTTP/1.1 Upgrade). ALB terminates TLS (optional), inspects HTTP headers, and forwards the upgraded TCP stream to targets. Good when you need path/host routing, WAF, or ALB features.
+- **NLB**: acts as pure TCP proxy (passthrough). Best for lowest latency, static IPs, or when you need true end-to-end TLS/termination at backend.
+- **API Gateway (WebSocket)**: serverless WebSocket management, connection lifecycle and built-in message routing — useful for serverless backends but with different semantics and costs.
+- **Key operational concerns**: idle timeouts, connection limits, health checks, sticky sessions (if needed), TLS handling, and metrics/logging.
 
 ---
 
@@ -1810,14 +1832,14 @@ resource "aws_lb_target_group" "nlb_tg" {
 
 ```js
 // server.js
-const http = require('http');
-const WebSocket = require('ws');
+const http = require("http");
+const WebSocket = require("ws");
 
-const server = http.createServer((req,res)=> res.end('ok'));
+const server = http.createServer((req, res) => res.end("ok"));
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', ws => {
-  ws.on('message', msg => ws.send(`echo: ${msg}`));
+wss.on("connection", (ws) => {
+  ws.on("message", (msg) => ws.send(`echo: ${msg}`));
 });
 
 server.listen(3000);
@@ -1843,8 +1865,8 @@ wscat -c ws://nlb-static-ip:443           # NLB passthrough (if backend accepts 
 | ----------------- | --------------------------------------- | ----------------------------------- | ------------------------------------- |
 | Layer             | 7 (HTTP Upgrade)                        | 4 (TCP)                             | Managed WebSocket API                 |
 | TLS termination   | Yes (on ALB)                            | Optional (passthrough)              | Yes (managed)                         |
-| Path/Host routing | ✅                                       | ❌                                   | ❌ (message routing via routes)        |
-| Static IPs        | ❌ (DNS)                                 | ✅ (EIP)                             | ❌                                     |
+| Path/Host routing | ✅                                      | ❌                                  | ❌ (message routing via routes)       |
+| Static IPs        | ❌ (DNS)                                | ✅ (EIP)                            | ❌                                    |
 | Idle timeout      | Default 60s (configurable)              | No LB idle timeout                  | Managed                               |
 | Best for          | WebSocket apps needing HTTP routing/WAF | Low latency, static IP, backend TLS | Serverless WS with built-in lifecycle |
 | Scaling           | Managed                                 | Managed                             | Managed, but different scaling model  |
@@ -1853,25 +1875,26 @@ wscat -c ws://nlb-static-ip:443           # NLB passthrough (if backend accepts 
 
 ### ✅ Best Practices
 
-* **Choose ALB** if you need path/host routing, WAF, or certificate centralization. Use **NLB** when you need static IPs or minimal latency.
-* **Increase ALB idle timeout** if you expect long idle periods: ALB default is 60s — adjust via `modify-load-balancer-attributes` or Terraform provider attr.
-* **Backend must support connection concurrency** — size instances/tasks for concurrent sockets; use connection pooling metrics.
-* **Use sticky sessions cautiously** — WebSockets are stateful; prefer shared session store (Redis) for horizontal scaling.
-* **Health checks**: use a lightweight HTTP health endpoint; do not rely on WebSocket handshake as health check.
-* **TLS**: centralize certs on ALB for easier management; if passthrough (NLB), manage certs on targets.
-* **Logging & metrics**: monitor `ActiveConnectionCount`, `TargetResponseTime`, NLB flow logs, and backend socket errors.
-* **Connection draining / graceful shutdown**: implement SIGTERM handlers to close sockets gracefully before task termination.
-* **Limits**: be aware of per-instance and per-service connection limits; configure autoscaling appropriately.
+- **Choose ALB** if you need path/host routing, WAF, or certificate centralization. Use **NLB** when you need static IPs or minimal latency.
+- **Increase ALB idle timeout** if you expect long idle periods: ALB default is 60s — adjust via `modify-load-balancer-attributes` or Terraform provider attr.
+- **Backend must support connection concurrency** — size instances/tasks for concurrent sockets; use connection pooling metrics.
+- **Use sticky sessions cautiously** — WebSockets are stateful; prefer shared session store (Redis) for horizontal scaling.
+- **Health checks**: use a lightweight HTTP health endpoint; do not rely on WebSocket handshake as health check.
+- **TLS**: centralize certs on ALB for easier management; if passthrough (NLB), manage certs on targets.
+- **Logging & metrics**: monitor `ActiveConnectionCount`, `TargetResponseTime`, NLB flow logs, and backend socket errors.
+- **Connection draining / graceful shutdown**: implement SIGTERM handlers to close sockets gracefully before task termination.
+- **Limits**: be aware of per-instance and per-service connection limits; configure autoscaling appropriately.
 
 ---
 
 ### 💡 In short
 
-* Use **ALB** for WebSockets when you need HTTP routing/WAF and can accept ALB’s idle timeout (configurable).
-* Use **NLB** for ultra-low latency or static IPs (TLS passthrough).
-* Ensure backends handle many concurrent connections, increase idle timeouts, and implement graceful shutdown and proper health checks.
+- Use **ALB** for WebSockets when you need HTTP routing/WAF and can accept ALB’s idle timeout (configurable).
+- Use **NLB** for ultra-low latency or static IPs (TLS passthrough).
+- Ensure backends handle many concurrent connections, increase idle timeouts, and implement graceful shutdown and proper health checks.
 
-----
+---
+
 ## Q: How Does NLB Differ from ALB in Terms of Performance?
 
 ---
@@ -1906,15 +1929,15 @@ Simply put:
 
 #### **NLB Performance Case**
 
-* Used for **financial trading**, **real-time telemetry**, or **gaming servers**.
-* Handles **>1 million concurrent connections** with very low jitter.
-* Supports **static IPs / EIPs**, useful for firewall whitelisting.
+- Used for **financial trading**, **real-time telemetry**, or **gaming servers**.
+- Handles **>1 million concurrent connections** with very low jitter.
+- Supports **static IPs / EIPs**, useful for firewall whitelisting.
 
 #### **ALB Performance Case**
 
-* Used for **web applications, REST APIs, ECS/EKS services**.
-* Inspects headers for **path/host routing, authentication, redirects, WAF filtering**.
-* Slightly higher latency due to **TLS termination and L7 rule evaluation**, but **optimized for HTTP semantics**.
+- Used for **web applications, REST APIs, ECS/EKS services**.
+- Inspects headers for **path/host routing, authentication, redirects, WAF filtering**.
+- Slightly higher latency due to **TLS termination and L7 rule evaluation**, but **optimized for HTTP semantics**.
 
 ---
 
@@ -1927,8 +1950,8 @@ Simply put:
 | TLS Handshake Time               | Optional (depends if termination enabled) | Always terminated (~5–15 ms setup) |
 | CPU Utilization Impact (backend) | Higher (if backends handle SSL/TLS)       | Lower (if ALB offloads SSL)        |
 | Cross-AZ Data Cost               | Billed (inter-AZ traffic charge)          | Included                           |
-| Header/Body Inspection           | ❌ No                                      | ✅ Yes                              |
-| WAF / HTTP/2 / gRPC Support      | ❌                                         | ✅                                  |
+| Header/Body Inspection           | ❌ No                                     | ✅ Yes                             |
+| WAF / HTTP/2 / gRPC Support      | ❌                                        | ✅                                 |
 
 > ⚡ **Bottom line:** NLB is ~5–10× faster at raw packet forwarding but doesn’t understand HTTP, while ALB adds routing intelligence at the cost of ~a few ms latency.
 
@@ -1938,26 +1961,27 @@ Simply put:
 
 **For NLB:**
 
-* Use for **TCP/UDP workloads** needing ultra-low latency (e.g., game servers, FIX gateways).
-* Attach **Elastic IPs** for predictable endpoints.
-* Combine with **TLS termination on backend** for secure but high-speed traffic.
+- Use for **TCP/UDP workloads** needing ultra-low latency (e.g., game servers, FIX gateways).
+- Attach **Elastic IPs** for predictable endpoints.
+- Combine with **TLS termination on backend** for secure but high-speed traffic.
 
 **For ALB:**
 
-* Use for **HTTP/HTTPS microservices** where routing logic outweighs latency cost.
-* Keep **listener rules minimal** to reduce evaluation time.
-* Use **HTTP/2** and **gzip compression** for throughput optimization.
-* Enable **connection reuse** and **keep-alives** to reduce handshake overhead.
+- Use for **HTTP/HTTPS microservices** where routing logic outweighs latency cost.
+- Keep **listener rules minimal** to reduce evaluation time.
+- Use **HTTP/2** and **gzip compression** for throughput optimization.
+- Enable **connection reuse** and **keep-alives** to reduce handshake overhead.
 
 ---
 
 ### 💡 In short
 
-* **NLB = raw performance (L4)** — near-zero latency, static IPs, extreme throughput.
-* **ALB = smart routing (L7)** — path/host-based routing, SSL termination, WAF, at small latency cost.
+- **NLB = raw performance (L4)** — near-zero latency, static IPs, extreme throughput.
+- **ALB = smart routing (L7)** — path/host-based routing, SSL termination, WAF, at small latency cost.
   Choose **NLB for speed-sensitive TCP traffic**, and **ALB for HTTP-aware, feature-rich web apps**.
 
-----
+---
+
 ## Q: How do you log Load Balancer requests?
 
 ---
@@ -1971,10 +1995,10 @@ Use access logs for request-level details, CloudWatch for real-time metrics/alar
 
 ### ⚙️ Purpose / How it Works
 
-* **ALB / NLB / CLB access logs** — each request/connection entry is written to an S3 bucket (one object per time window). Useful for analytics, forensics, and debugging.
-* **CloudWatch metrics** — aggregated metrics (RequestCount, TargetResponseTime, HealthyHostCount) for monitoring/alerting.
-* **VPC Flow Logs** — logs ENI traffic (src/dst IP/port, bytes, action) to CloudWatch Logs or S3; good for network debugging and security.
-* **CloudTrail** — records control-plane API calls (create/delete/modify load balancer) for audit trails.
+- **ALB / NLB / CLB access logs** — each request/connection entry is written to an S3 bucket (one object per time window). Useful for analytics, forensics, and debugging.
+- **CloudWatch metrics** — aggregated metrics (RequestCount, TargetResponseTime, HealthyHostCount) for monitoring/alerting.
+- **VPC Flow Logs** — logs ENI traffic (src/dst IP/port, bytes, action) to CloudWatch Logs or S3; good for network debugging and security.
+- **CloudTrail** — records control-plane API calls (create/delete/modify load balancer) for audit trails.
 
 ---
 
@@ -2030,7 +2054,7 @@ Key fields: `type`, `timestamp`, `elb`, `client:port`, `target:port`, `request_p
 
 ```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS alb_logs (
-  type string, 
+  type string,
   time string,
   elb string,
   client_port string,
@@ -2102,8 +2126,8 @@ aws ec2 create-flow-logs \
 
 #### 7) CloudTrail (audit load balancer config changes)
 
-* Enable CloudTrail to log management API calls (`CreateLoadBalancer`, `ModifyLoadBalancerAttributes`, etc.).
-* Query CloudTrail logs in CloudWatch or S3 for change history.
+- Enable CloudTrail to log management API calls (`CreateLoadBalancer`, `ModifyLoadBalancerAttributes`, etc.).
+- Query CloudTrail logs in CloudWatch or S3 for change history.
 
 ---
 
@@ -2120,13 +2144,13 @@ aws ec2 create-flow-logs \
 
 ### ✅ Best Practices
 
-* **Enable ALB/NLB access logs** to S3 with lifecycle rules (GLACIER/expire) to control cost.
-* **Use Athena + Glue** for ad-hoc query/analytics of access logs.
-* **Create CloudWatch alarms** on key metrics (5xx, target latency, unhealthy hosts).
-* **Enable VPC Flow Logs** for network-level visibility (use sampling if cost-sensitive).
-* **Protect log buckets**: enforce encryption, restrict writes to ELB service + MFA delete if required.
-* **Instrument correlation**: include X-Request-ID / trace headers so ALB logs, app logs, and X-Ray/CloudWatch traces can be correlated.
-* **Automate retention/pipeline**: lifecycle, Glue crawler, scheduled Athena partitions, and alerts on missing logs.
+- **Enable ALB/NLB access logs** to S3 with lifecycle rules (GLACIER/expire) to control cost.
+- **Use Athena + Glue** for ad-hoc query/analytics of access logs.
+- **Create CloudWatch alarms** on key metrics (5xx, target latency, unhealthy hosts).
+- **Enable VPC Flow Logs** for network-level visibility (use sampling if cost-sensitive).
+- **Protect log buckets**: enforce encryption, restrict writes to ELB service + MFA delete if required.
+- **Instrument correlation**: include X-Request-ID / trace headers so ALB logs, app logs, and X-Ray/CloudWatch traces can be correlated.
+- **Automate retention/pipeline**: lifecycle, Glue crawler, scheduled Athena partitions, and alerts on missing logs.
 
 ---
 
@@ -2134,7 +2158,8 @@ aws ec2 create-flow-logs \
 
 Enable **ALB/NLB access logs to S3** for per-request details, use **CloudWatch metrics/alarms** for realtime monitoring, add **VPC Flow Logs** for network-level debugging, and enable **CloudTrail** for audit trails. Combine Athena + CloudWatch for analytics and set S3 lifecycle policies to control cost.
 
-----
+---
+
 ## Q: What is the Difference Between AWS Global Accelerator and ALB?
 
 ---
@@ -2143,8 +2168,8 @@ Enable **ALB/NLB access logs to S3** for per-request details, use **CloudWatch m
 
 Both **AWS Global Accelerator (GA)** and **Application Load Balancer (ALB)** distribute incoming traffic, but they operate at **different layers and scopes**:
 
-* **Global Accelerator (GA)** → **Network-layer (Layer 4)**, **global** traffic routing using **anycast static IPs**.
-* **ALB** → **Application-layer (Layer 7)**, **regional** HTTP/HTTPS routing using domain-based DNS.
+- **Global Accelerator (GA)** → **Network-layer (Layer 4)**, **global** traffic routing using **anycast static IPs**.
+- **ALB** → **Application-layer (Layer 7)**, **regional** HTTP/HTTPS routing using domain-based DNS.
 
 Think of GA as a **global traffic entry point (edge-based TCP/UDP accelerator)** that directs users to the **best ALB or endpoint** in the closest AWS Region.
 
@@ -2157,7 +2182,7 @@ Think of GA as a **global traffic entry point (edge-based TCP/UDP accelerator)**
 | **Layer**            | Layer 4 (TCP/UDP)                                               | Layer 7 (HTTP/HTTPS)                  |
 | **Scope**            | Global (multi-region)                                           | Regional (within one AWS Region)      |
 | **Routing Basis**    | Network latency & health (via AWS Global Edge Network)          | URL path, host, HTTP headers          |
-| **Static IPs**       | ✅ Yes — two global anycast IPs                                  | ❌ No — DNS name only                  |
+| **Static IPs**       | ✅ Yes — two global anycast IPs                                 | ❌ No — DNS name only                 |
 | **Protocol Support** | TCP, UDP                                                        | HTTP, HTTPS, gRPC                     |
 | **Client Proximity** | Routes users to nearest AWS Region using edge PoPs              | Routes traffic within its own Region  |
 | **Traffic Flow**     | Client → Edge Location (GA) → Optimal Region → ALB/NLB → Target | Client → ALB (in one Region) → Target |
@@ -2182,8 +2207,8 @@ AWS Global Accelerator (Static IPs)
    +--> ALB - Region B (us-east-1)
 ```
 
-* GA routes traffic to the **nearest healthy ALB** based on latency and health.
-* Each ALB then distributes HTTP requests to backend targets (EC2, ECS, Lambda, etc.) in its region.
+- GA routes traffic to the **nearest healthy ALB** based on latency and health.
+- Each ALB then distributes HTTP requests to backend targets (EC2, ECS, Lambda, etc.) in its region.
 
 ---
 
@@ -2235,32 +2260,33 @@ resource "aws_globalaccelerator_endpoint_group" "alb_group_us" {
 | **Scope**                    | Global                                   | Regional                          |
 | **Routing Criteria**         | Latency, health, geolocation             | Path, host, HTTP header           |
 | **Failover**                 | Multi-region automatic                   | Region-specific                   |
-| **Static IPs**               | ✅ Yes                                    | ❌ No                              |
+| **Static IPs**               | ✅ Yes                                   | ❌ No                             |
 | **Protocol Support**         | TCP/UDP                                  | HTTP/HTTPS                        |
 | **Performance Optimization** | Uses AWS global backbone                 | Regional routing only             |
 | **Use Case**                 | Global low-latency access (multi-region) | Web/app routing within one region |
-| **WAF Integration**          | ❌ No (but ALB behind can have WAF)       | ✅ Yes                             |
+| **WAF Integration**          | ❌ No (but ALB behind can have WAF)      | ✅ Yes                            |
 | **Pricing Unit**             | Per accelerator + data transfer          | Per LCU (capacity unit)           |
 
 ---
 
 ### ✅ Best Practices
 
-* Use **Global Accelerator** in front of **regional ALBs/NLBs** for **global** applications (multi-region active-active or DR).
-* Keep ALB regional — use it for **Layer 7 intelligent routing** within each Region.
-* **Combine both:** GA → ALB → ECS/EKS → targets.
-* Enable **cross-region failover** via GA endpoint health checks.
-* Use GA when your users are **geographically distributed** and require **consistent performance**.
+- Use **Global Accelerator** in front of **regional ALBs/NLBs** for **global** applications (multi-region active-active or DR).
+- Keep ALB regional — use it for **Layer 7 intelligent routing** within each Region.
+- **Combine both:** GA → ALB → ECS/EKS → targets.
+- Enable **cross-region failover** via GA endpoint health checks.
+- Use GA when your users are **geographically distributed** and require **consistent performance**.
 
 ---
 
 ### 💡 In short
 
-* **ALB** = Layer 7 HTTP/HTTPS routing within **one region**.
-* **Global Accelerator** = Layer 4 global routing that uses AWS’s backbone to route users to the **nearest healthy region** with **static IPs**.
+- **ALB** = Layer 7 HTTP/HTTPS routing within **one region**.
+- **Global Accelerator** = Layer 4 global routing that uses AWS’s backbone to route users to the **nearest healthy region** with **static IPs**.
   ➡️ Combine both: **Global Accelerator → ALB → Application** for optimal **global performance + intelligent request routing.**
 
-----
+---
+
 ## Q: How Do You Restrict Access to Specific IPs or Regions in AWS Load Balancers?
 
 ---
@@ -2269,10 +2295,10 @@ resource "aws_globalaccelerator_endpoint_group" "alb_group_us" {
 
 You can restrict client access to an **Application Load Balancer (ALB)** or **Network Load Balancer (NLB)** using several mechanisms:
 
-* **Security Groups (L4 — IP-based)**
-* **AWS WAF (L7 — IP and Geo-based)**
-* **Network ACLs (subnet-level filtering)**
-* **Reverse proxy / app-layer filters (for fine-grained logic)**
+- **Security Groups (L4 — IP-based)**
+- **AWS WAF (L7 — IP and Geo-based)**
+- **Network ACLs (subnet-level filtering)**
+- **Reverse proxy / app-layer filters (for fine-grained logic)**
 
 The choice depends on your **load balancer type** (ALB/NLB) and whether you need **Layer 4 (IP)** or **Layer 7 (application/geo)** filtering.
 
@@ -2436,9 +2462,9 @@ resource "aws_network_acl_rule" "deny_all" {
 
 Example:
 
-* US users → ALB in `us-east-1`
-* APAC users → ALB in `ap-south-1`
-* All others → “Access Denied” endpoint
+- US users → ALB in `us-east-1`
+- APAC users → ALB in `ap-south-1`
+- All others → “Access Denied” endpoint
 
 Route 53 automatically serves DNS responses based on the user’s **resolver location**.
 
@@ -2448,32 +2474,33 @@ Route 53 automatically serves DNS responses based on the user’s **resolver loc
 
 | **Method**               | **Layer** | **Supports Geo Restriction** | **Best For**               | **Notes**                     |
 | ------------------------ | --------- | ---------------------------- | -------------------------- | ----------------------------- |
-| **Security Groups**      | L4        | ❌                            | Allow specific IPs         | Simple, efficient             |
-| **AWS WAF**              | L7        | ✅                            | Block/allow countries, IPs | Most flexible                 |
-| **Network ACLs**         | L3        | ❌                            | Subnet-wide restrictions   | Coarse-grained                |
-| **Route 53 Geo Routing** | DNS       | ✅                            | Regional routing control   | For multi-region access logic |
+| **Security Groups**      | L4        | ❌                           | Allow specific IPs         | Simple, efficient             |
+| **AWS WAF**              | L7        | ✅                           | Block/allow countries, IPs | Most flexible                 |
+| **Network ACLs**         | L3        | ❌                           | Subnet-wide restrictions   | Coarse-grained                |
+| **Route 53 Geo Routing** | DNS       | ✅                           | Regional routing control   | For multi-region access logic |
 
 ---
 
 ### ✅ Best Practices
 
-* ✅ Use **WAF** for dynamic IP or Geo-based filtering.
-* ✅ Use **Security Groups** for static IP allowlists (VPN, office networks).
-* ⚠️ Avoid mixing too many layers of filtering unless required — manage complexity carefully.
-* 🔒 Always enforce **least privilege** — default deny, then explicitly allow.
-* 💾 Log blocked requests with **WAF sample logging → CloudWatch or Kinesis Firehose**.
-* 🧩 Combine **WAF + ALB + CloudFront** for global web app protection and access control.
+- ✅ Use **WAF** for dynamic IP or Geo-based filtering.
+- ✅ Use **Security Groups** for static IP allowlists (VPN, office networks).
+- ⚠️ Avoid mixing too many layers of filtering unless required — manage complexity carefully.
+- 🔒 Always enforce **least privilege** — default deny, then explicitly allow.
+- 💾 Log blocked requests with **WAF sample logging → CloudWatch or Kinesis Firehose**.
+- 🧩 Combine **WAF + ALB + CloudFront** for global web app protection and access control.
 
 ---
 
 ### 💡 In short
 
-* Use **Security Groups** for simple **IP-based allowlists**.
-* Use **AWS WAF** for **Geo-based** or **dynamic IP restriction** at Layer 7.
-* Combine both for strong multi-layer protection:
+- Use **Security Groups** for simple **IP-based allowlists**.
+- Use **AWS WAF** for **Geo-based** or **dynamic IP restriction** at Layer 7.
+- Combine both for strong multi-layer protection:
   👉 **Security Group (IP control)** + **WAF (geo/IP rules)** + **Route 53 (geo-routing)** for global, secure access control.
 
-----
+---
+
 ## Q: What’s the Difference Between ALB and NLB for TLS Termination?
 
 ---
@@ -2500,9 +2527,9 @@ In short:
 | **Target Protocol Post-Termination** | HTTP                                        | TCP                                                               |
 | **Re-encryption (optional)**         | Yes (HTTPS → HTTPS)                         | Yes (TLS → TLS backend)                                           |
 | **Performance**                      | Slightly higher latency (L7 parsing)        | Lower latency, higher throughput                                  |
-| **Static IP Support**                | ❌ No                                        | ✅ Yes (EIP supported)                                             |
-| **HTTP/2, gRPC Support**             | ✅ Yes                                       | ❌ No                                                              |
-| **WAF Integration**                  | ✅ Supported                                 | ❌ Not supported                                                   |
+| **Static IP Support**                | ❌ No                                       | ✅ Yes (EIP supported)                                            |
+| **HTTP/2, gRPC Support**             | ✅ Yes                                      | ❌ No                                                             |
+| **WAF Integration**                  | ✅ Supported                                | ❌ Not supported                                                  |
 | **Use Case**                         | Web/API traffic (HTTP/HTTPS)                | High-speed TCP workloads needing TLS (MQTT, RDP, custom TCP apps) |
 
 ---
@@ -2572,7 +2599,7 @@ resource "aws_lb_target_group" "tcp_tg" {
 | **Health Checks**          | HTTP-based                             | TCP or TLS-based                                  |
 | **Idle Timeout**           | Configurable (default 60s)             | No idle timeout                                   |
 | **Scaling Reaction Time**  | Fast (seconds)                         | Instant (connection-level)                        |
-| **SSL Offload CPU Relief** | ✅ Yes                                  | ✅ Yes                                             |
+| **SSL Offload CPU Relief** | ✅ Yes                                 | ✅ Yes                                            |
 | **End-to-End Encryption**  | Optional (re-encrypt)                  | Optional (TLS passthrough/termination)            |
 | **Pricing Model**          | LCU-based (requests, rules, data)      | NLCU-based (new connections, active flows, bytes) |
 
@@ -2582,16 +2609,16 @@ resource "aws_lb_target_group" "tcp_tg" {
 
 **Use ALB when:**
 
-* You need **Layer 7 features** — path-based routing, WAF, redirects, cookies.
-* You’re serving **HTTP/HTTPS** or **gRPC** apps.
-* You want **centralized SSL management** with AWS ACM.
+- You need **Layer 7 features** — path-based routing, WAF, redirects, cookies.
+- You’re serving **HTTP/HTTPS** or **gRPC** apps.
+- You want **centralized SSL management** with AWS ACM.
 
 **Use NLB when:**
 
-* You require **static IPs** or **Elastic IPs** for whitelisting.
-* You’re handling **non-HTTP protocols** (SMTP, RDP, MQTT).
-* You need **ultra-low latency** and high throughput.
-* You want **TLS termination for TCP** services with minimal overhead.
+- You require **static IPs** or **Elastic IPs** for whitelisting.
+- You’re handling **non-HTTP protocols** (SMTP, RDP, MQTT).
+- You need **ultra-low latency** and high throughput.
+- You want **TLS termination for TCP** services with minimal overhead.
 
 **Combine Both:**
 For complex architectures —
@@ -2607,6 +2634,7 @@ For complex architectures —
 👉 Choose **ALB** for web traffic intelligence, **NLB** for raw encrypted transport performance.
 
 ---
+
 ## Q: How to Protect an Application Load Balancer (ALB) from DDoS Attacks?
 
 ---
@@ -2634,9 +2662,9 @@ By combining these services, you can mitigate **volumetric (L3/L4)**, **protocol
 
 #### **1️⃣ Enable AWS Shield (Always On)**
 
-* **AWS Shield Standard**: enabled **by default** for all ALBs, NLBs, and CloudFront distributions.
+- **AWS Shield Standard**: enabled **by default** for all ALBs, NLBs, and CloudFront distributions.
   → Protects automatically against L3/L4 volumetric attacks.
-* **AWS Shield Advanced**: paid service with 24x7 DDoS response team (DRT) and enhanced mitigation.
+- **AWS Shield Advanced**: paid service with 24x7 DDoS response team (DRT) and enhanced mitigation.
 
 ```bash
 # Check Shield protection
@@ -2653,10 +2681,10 @@ Attach **AWS WAF** to the ALB to mitigate malicious HTTP(S) traffic.
 
 **Example WAF rules:**
 
-* Block requests from **known malicious IPs** or **bots**.
-* Allow only specific **countries or IP ranges**.
-* Rate-limit requests (e.g., **max 200 requests per 5 seconds per IP**).
-* Block **SQL injection**, **XSS**, and **HTTP flood** patterns.
+- Block requests from **known malicious IPs** or **bots**.
+- Allow only specific **countries or IP ranges**.
+- Rate-limit requests (e.g., **max 200 requests per 5 seconds per IP**).
+- Block **SQL injection**, **XSS**, and **HTTP flood** patterns.
 
 **Terraform Example:**
 
@@ -2719,9 +2747,9 @@ resource "aws_wafv2_web_acl_association" "attach_alb" {
 
 CloudFront provides:
 
-* **Edge caching** to absorb large traffic spikes.
-* **Global Shield integration** for edge-level protection.
-* **Web ACL integration** at edge + origin (ALB).
+- **Edge caching** to absorb large traffic spikes.
+- **Global Shield integration** for edge-level protection.
+- **Web ACL integration** at edge + origin (ALB).
 
 **Flow:**
 
@@ -2753,9 +2781,9 @@ ingress {
 
 #### **5️⃣ Configure Rate-Limiting & Timeouts**
 
-* Set **ALB idle timeout** appropriately (e.g., 60s) to prevent slowloris attacks.
-* Use **WAF rate-based rules** to throttle IPs sending excessive requests.
-* Monitor **5XX errors** and **RequestCount** metrics in CloudWatch.
+- Set **ALB idle timeout** appropriately (e.g., 60s) to prevent slowloris attacks.
+- Use **WAF rate-based rules** to throttle IPs sending excessive requests.
+- Monitor **5XX errors** and **RequestCount** metrics in CloudWatch.
 
 ---
 
@@ -2780,10 +2808,10 @@ Use **CloudWatch alarms + SNS** to alert or trigger **Lambda-based remediation**
 
 Enables:
 
-* **Automatic traffic engineering** and **attack detection.**
-* **DRT (AWS DDoS Response Team)** access during active events.
-* **Cost protection** against DDoS scaling spikes.
-* **Attack diagnostics dashboard** in AWS Shield console.
+- **Automatic traffic engineering** and **attack detection.**
+- **DRT (AWS DDoS Response Team)** access during active events.
+- **Cost protection** against DDoS scaling spikes.
+- **Attack diagnostics dashboard** in AWS Shield console.
 
 ---
 
@@ -2802,12 +2830,12 @@ Enables:
 
 ### ✅ Best Practices
 
-* ✅ Always use **CloudFront + WAF + Shield combo** for internet-facing ALBs.
-* ✅ Apply **rate-limiting** and **IP reputation** rules (AWS Managed WAF Rules).
-* ✅ Monitor **RequestCount**, **RejectedCount**, and **HTTPCode_ELB_5XX_Count** metrics.
-* ✅ Keep **ALB security group minimal** — allow only required ports (80/443).
-* ✅ Use **Shield Advanced** for mission-critical applications.
-* ✅ Automate IP blacklisting using **AWS Lambda + WAF APIs**.
+- ✅ Always use **CloudFront + WAF + Shield combo** for internet-facing ALBs.
+- ✅ Apply **rate-limiting** and **IP reputation** rules (AWS Managed WAF Rules).
+- ✅ Monitor **RequestCount**, **RejectedCount**, and **HTTPCode_ELB_5XX_Count** metrics.
+- ✅ Keep **ALB security group minimal** — allow only required ports (80/443).
+- ✅ Use **Shield Advanced** for mission-critical applications.
+- ✅ Automate IP blacklisting using **AWS Lambda + WAF APIs**.
 
 ---
 
@@ -2824,6 +2852,7 @@ Protect ALB from DDoS using **multi-layer defense**:
 ✅ Combined, these layers provide **comprehensive, scalable DDoS protection** for any ALB-hosted application.
 
 ---
+
 ## Q: How Does an Application Load Balancer (ALB) Support Microservices?
 
 ---
@@ -2950,9 +2979,9 @@ resource "aws_lb_listener_rule" "orders_rule" {
 
 ➡️ Each service (`/auth`, `/orders`) has:
 
-* Its own **target group**
-* Independent **health checks**
-* Path-based **routing rule**
+- Its own **target group**
+- Independent **health checks**
+- Path-based **routing rule**
 
 ---
 
@@ -2994,13 +3023,13 @@ ECS automatically registers tasks to the right target group via the **service de
 
 ### ✅ Best Practices
 
-* 🧩 Use **one target group per microservice** for clear health and scaling boundaries.
-* ⚙️ Combine **path** and **host-based routing** for multi-domain or multi-service deployments.
-* 🔒 Terminate SSL at ALB; internal traffic can be HTTP (or HTTPS for sensitive data).
-* 📈 Enable **access logs** and **CloudWatch metrics** per target group.
-* 🚀 Use **ECS dynamic port mapping** (`containerPort`, `hostPort = 0`) for multiple containers per host.
-* 🛡️ Apply **WAF** at ALB level for centralized web security.
-* ⚡ Integrate **Route 53** for DNS-based service discovery and versioned deployments.
+- 🧩 Use **one target group per microservice** for clear health and scaling boundaries.
+- ⚙️ Combine **path** and **host-based routing** for multi-domain or multi-service deployments.
+- 🔒 Terminate SSL at ALB; internal traffic can be HTTP (or HTTPS for sensitive data).
+- 📈 Enable **access logs** and **CloudWatch metrics** per target group.
+- 🚀 Use **ECS dynamic port mapping** (`containerPort`, `hostPort = 0`) for multiple containers per host.
+- 🛡️ Apply **WAF** at ALB level for centralized web security.
+- ⚡ Integrate **Route 53** for DNS-based service discovery and versioned deployments.
 
 ---
 
@@ -3008,14 +3037,15 @@ ECS automatically registers tasks to the right target group via the **service de
 
 The **Application Load Balancer (ALB)** enables microservice architectures by:
 
-* Providing **intelligent routing** (path, host, header)
-* Allowing **service-level isolation** via target groups
-* Supporting **containerized deployments** (ECS/EKS)
-* Centralizing **TLS termination**, **monitoring**, and **security**
+- Providing **intelligent routing** (path, host, header)
+- Allowing **service-level isolation** via target groups
+- Supporting **containerized deployments** (ECS/EKS)
+- Centralizing **TLS termination**, **monitoring**, and **security**
 
 👉 **One ALB = Many microservices**, each independently scalable, secure, and observable.
 
 ---
+
 ## Q: What is Deregistration Delay in AWS Load Balancers?
 
 ---
@@ -3032,13 +3062,13 @@ This ensures that **in-flight requests complete gracefully** instead of being ab
 
 1. When a target (e.g., EC2 instance or ECS task) is being **deregistered** (due to scaling down, deployment, or health failure):
 
-   * The load balancer **stops routing new requests** to it.
-   * But it continues to **allow existing connections to complete** for a specified period.
+   - The load balancer **stops routing new requests** to it.
+   - But it continues to **allow existing connections to complete** for a specified period.
 
 2. After the **deregistration delay** expires:
 
-   * All open connections are forcibly closed.
-   * The target is removed from the target group.
+   - All open connections are forcibly closed.
+   - The target is removed from the target group.
 
 This prevents **client errors (5xx/connection reset)** during ECS service updates, rolling deployments, or autoscaling events.
 
@@ -3116,11 +3146,11 @@ When ECS replaces old tasks during a deployment:
 
 ### ✅ Best Practices
 
-* Tune **deregistration_delay** based on **average request duration**.
-* For **ECS Fargate/EC2 rolling updates**, align deregistration delay with **container shutdown grace period**.
-* Ensure applications handle **SIGTERM** gracefully — close connections before container stop.
-* Monitor **TargetDeregistrationCount** and **HTTPCode_ELB_5XX_Count** to validate graceful draining.
-* Combine with **Connection Draining** (Classic LB) or **TargetGroup deregistration_delay** (ALB/NLB).
+- Tune **deregistration_delay** based on **average request duration**.
+- For **ECS Fargate/EC2 rolling updates**, align deregistration delay with **container shutdown grace period**.
+- Ensure applications handle **SIGTERM** gracefully — close connections before container stop.
+- Monitor **TargetDeregistrationCount** and **HTTPCode_ELB_5XX_Count** to validate graceful draining.
+- Combine with **Connection Draining** (Classic LB) or **TargetGroup deregistration_delay** (ALB/NLB).
 
 ---
 
@@ -3130,6 +3160,7 @@ When ECS replaces old tasks during a deployment:
 👉 It prevents user-facing errors during scaling or deployments and should match your app’s **request completion time** for smooth blue/green or rolling updates.
 
 ---
+
 ## Q: How to route traffic to multiple Target Groups?
 
 ---
@@ -3142,12 +3173,12 @@ ALB routes traffic to **Target Groups** using **listeners + rules**. You can for
 
 ### ⚙️ Purpose / How it Works
 
-* **Listener receives** request (HTTP/HTTPS).
-* **Rules** evaluate conditions (host, path, header, method, query-string).
-* **Action** types: `forward` (single TG), `forward` (multiple TGs with weights), `redirect`, `fixed-response`.
-* **Weighted forward** allows X% → TG-A and Y% → TG-B for gradual rollouts.
-* **Priority** determines rule evaluation order; lower number = higher precedence.
-* **Default action** is used when no rule matches.
+- **Listener receives** request (HTTP/HTTPS).
+- **Rules** evaluate conditions (host, path, header, method, query-string).
+- **Action** types: `forward` (single TG), `forward` (multiple TGs with weights), `redirect`, `fixed-response`.
+- **Weighted forward** allows X% → TG-A and Y% → TG-B for gradual rollouts.
+- **Priority** determines rule evaluation order; lower number = higher precedence.
+- **Default action** is used when no rule matches.
 
 ---
 
@@ -3264,14 +3295,14 @@ condition {
 
 ### ✅ Best Practices
 
-* Use **one target group per service/version** for clean health checks and scaling.
-* Prefer **path/host rules** for deterministic routing; use **weighted forward** for canary/A–B.
-* Keep rules **simple and prioritized** — avoid overlapping conditions that complicate debugging.
-* Use **health checks** per TG; unhealthy targets won’t receive traffic.
-* For canaries, start small (1–5%) and monitor latency/errors before increasing weight.
-* Correlate logs: inject **request-id / trace headers** so ALB logs + app logs can be matched.
-* Use **WAF** ahead of ALB if you need to filter malicious traffic before routing.
-* Automate rollbacks: if error rate > threshold, revert weights via CI/CD.
+- Use **one target group per service/version** for clean health checks and scaling.
+- Prefer **path/host rules** for deterministic routing; use **weighted forward** for canary/A–B.
+- Keep rules **simple and prioritized** — avoid overlapping conditions that complicate debugging.
+- Use **health checks** per TG; unhealthy targets won’t receive traffic.
+- For canaries, start small (1–5%) and monitor latency/errors before increasing weight.
+- Correlate logs: inject **request-id / trace headers** so ALB logs + app logs can be matched.
+- Use **WAF** ahead of ALB if you need to filter malicious traffic before routing.
+- Automate rollbacks: if error rate > threshold, revert weights via CI/CD.
 
 ---
 
@@ -3280,6 +3311,7 @@ condition {
 Use ALB **listener rules** (host/path/header/method) to route to multiple Target Groups; use **weighted forward** for traffic splits (canary/A-B). Configure priorities, keep per-service target groups, and monitor health/metrics when rolling traffic.
 
 ---
+
 ## Q: What Metrics Can Be Monitored in CloudWatch for AWS Load Balancers (ALB / NLB / CLB)?
 
 ---
@@ -3293,13 +3325,14 @@ These metrics help you **monitor traffic, performance, errors, latency, and targ
 
 ### ⚙️ Purpose / How It Works
 
-* Metrics are published automatically to CloudWatch under the namespace:
+- Metrics are published automatically to CloudWatch under the namespace:
 
-  * `AWS/ApplicationELB` for **ALB**
-  * `AWS/NetworkELB` for **NLB**
-  * `AWS/ELB` for **CLB**
-* You can view metrics in **CloudWatch console**, **AWS CLI**, or via **Grafana/Prometheus**.
-* Metrics are reported in **1-minute intervals** (standard resolution).
+  - `AWS/ApplicationELB` for **ALB**
+  - `AWS/NetworkELB` for **NLB**
+  - `AWS/ELB` for **CLB**
+
+- You can view metrics in **CloudWatch console**, **AWS CLI**, or via **Grafana/Prometheus**.
+- Metrics are reported in **1-minute intervals** (standard resolution).
 
 ---
 
@@ -3364,12 +3397,12 @@ aws cloudwatch get-metric-statistics \
 
 **Useful graphs to include:**
 
-* 📈 RequestCount (Sum) – total incoming traffic
-* ⚡ TargetResponseTime (Average) – backend latency
-* 🔴 HTTPCode_Target_5XX_Count (Sum) – app errors
-* 🔵 UnHealthyHostCount (Max) – unhealthy targets
-* 🟢 ConsumedLCUs (Average) – cost metric
-* 🟠 ActiveConnectionCount – concurrency
+- 📈 RequestCount (Sum) – total incoming traffic
+- ⚡ TargetResponseTime (Average) – backend latency
+- 🔴 HTTPCode_Target_5XX_Count (Sum) – app errors
+- 🔵 UnHealthyHostCount (Max) – unhealthy targets
+- 🟢 ConsumedLCUs (Average) – cost metric
+- 🟠 ActiveConnectionCount – concurrency
 
 You can build a **CloudWatch Dashboard**:
 
@@ -3400,9 +3433,9 @@ aws cloudwatch put-metric-alarm \
 
 ### 📋 Comparison Summary
 
-| **Metric Category** | **ALB (L7)**                       | **NLB (L4)**                   |
-| ------------------- | ---------------------------------- | ------------------------------ |
-| Request Metrics     | ✅ Yes (RequestCount, ResponseTime) | ⚠️ Limited (FlowCount)         |
+| **Metric Category** | **ALB (L7)**                        | **NLB (L4)**                    |
+| ------------------- | ----------------------------------- | ------------------------------- |
+| Request Metrics     | ✅ Yes (RequestCount, ResponseTime) | ⚠️ Limited (FlowCount)          |
 | Latency             | ✅ TargetResponseTime               | ✅ TargetResponseTime           |
 | HTTP Codes          | ✅ 2xx–5xx per target               | ❌ Not available                |
 | Connection Metrics  | ✅ Active/New Connection Count      | ✅ Active/New Flow Count        |
@@ -3415,16 +3448,17 @@ aws cloudwatch put-metric-alarm \
 
 ### ✅ Best Practices
 
-* Monitor **TargetResponseTime** and **5XX errors** — key indicators of app health.
-* Set **CloudWatch alarms** on:
+- Monitor **TargetResponseTime** and **5XX errors** — key indicators of app health.
+- Set **CloudWatch alarms** on:
 
-  * `UnHealthyHostCount` > 0
-  * `HTTPCode_Target_5XX_Count` rising
-  * `TargetResponseTime` spike
-* Track **ConsumedLCUs/NLCUs** for cost optimization.
-* Enable **access logs** (S3) for deeper request tracing.
-* Use **CloudWatch dashboards** for visualization + correlation with EC2/ECS metrics.
-* Integrate with **SNS / Slack / PagerDuty** for alerting.
+  - `UnHealthyHostCount` > 0
+  - `HTTPCode_Target_5XX_Count` rising
+  - `TargetResponseTime` spike
+
+- Track **ConsumedLCUs/NLCUs** for cost optimization.
+- Enable **access logs** (S3) for deeper request tracing.
+- Use **CloudWatch dashboards** for visualization + correlation with EC2/ECS metrics.
+- Integrate with **SNS / Slack / PagerDuty** for alerting.
 
 ---
 
@@ -3432,11 +3466,12 @@ aws cloudwatch put-metric-alarm \
 
 CloudWatch monitors key **performance, error, connection, and health metrics** for ALB/NLB.
 
-* 🧩 **ALB:** Focus on `RequestCount`, `TargetResponseTime`, `HTTPCode_*`, `UnHealthyHostCount`.
-* ⚡ **NLB:** Focus on `NewFlowCount`, `ActiveFlowCount`, `ProcessedBytes`, and `TCP_Reset_Count`.
+- 🧩 **ALB:** Focus on `RequestCount`, `TargetResponseTime`, `HTTPCode_*`, `UnHealthyHostCount`.
+- ⚡ **NLB:** Focus on `NewFlowCount`, `ActiveFlowCount`, `ProcessedBytes`, and `TCP_Reset_Count`.
   Together, these metrics provide **real-time visibility and proactive alerting** for your load-balanced workloads.
 
-----
+---
+
 ## Q: How Do You Troubleshoot 502 and 504 Errors in AWS Application Load Balancer (ALB)?
 
 ---
@@ -3446,9 +3481,9 @@ CloudWatch monitors key **performance, error, connection, and health metrics** f
 **502 (Bad Gateway)** and **504 (Gateway Timeout)** are common ALB errors indicating **communication failures between the ALB and backend targets** — not client-side issues.
 They usually happen when:
 
-* Targets **don’t respond properly**,
-* There’s a **protocol or port mismatch**,
-* Or the **application takes too long to respond**.
+- Targets **don’t respond properly**,
+- There’s a **protocol or port mismatch**,
+- Or the **application takes too long to respond**.
 
 ---
 
@@ -3474,13 +3509,13 @@ aws elbv2 describe-target-health \
 
 **Check:**
 
-* Are targets `healthy`?
-* If unhealthy → check health check path, port, SGs.
+- Are targets `healthy`?
+- If unhealthy → check health check path, port, SGs.
 
 **Common fix:**
 
-* Wrong `path` (`/health` missing or returning 404).
-* Target app listening on wrong port (e.g., app on 8080 but TG expects 80).
+- Wrong `path` (`/health` missing or returning 404).
+- Target app listening on wrong port (e.g., app on 8080 but TG expects 80).
 
 ---
 
@@ -3490,8 +3525,8 @@ Ensure **ALB → Target** communication allowed on target group port.
 
 **Example (for HTTP 80):**
 
-* ALB SG: outbound → 80 (to target SG)
-* Target SG: inbound → 80 (from ALB SG)
+- ALB SG: outbound → 80 (to target SG)
+- Target SG: inbound → 80 (from ALB SG)
 
 ```bash
 aws ec2 describe-security-groups --group-ids sg-alb sg-target
@@ -3505,9 +3540,9 @@ aws ec2 describe-security-groups --group-ids sg-alb sg-target
 
 **Misconfigurations cause 502:**
 
-* Wrong **protocol** (HTTP vs HTTPS)
-* **Target port mismatch** (e.g., app listening on 5000, TG expecting 80)
-* Target responding with **non-HTTP data** or malformed headers
+- Wrong **protocol** (HTTP vs HTTPS)
+- **Target port mismatch** (e.g., app listening on 5000, TG expecting 80)
+- Target responding with **non-HTTP data** or malformed headers
 
 **Check via Terraform / Console:**
 
@@ -3522,9 +3557,9 @@ target_group { protocol = "HTTP" port = 80 }
 
 #### 🔹 4️⃣ Check Application Logs (on Targets)
 
-* Look for request rejections, crashes, or long-running queries.
-* Use web server logs (`/var/log/nginx/access.log` or app logs).
-* A 502 may appear as:
+- Look for request rejections, crashes, or long-running queries.
+- Use web server logs (`/var/log/nginx/access.log` or app logs).
+- A 502 may appear as:
 
   ```
   upstream prematurely closed connection
@@ -3545,8 +3580,8 @@ http 2025-11-12T12:10:10Z app/my-alb/abcd 1.2.3.4:54321 10.0.1.2:80 0.001 5.002 
 
 **Interpretation:**
 
-* `target_processing_time` (second number) → backend delay (5.002s here).
-* High value → app slow → 504 timeout.
+- `target_processing_time` (second number) → backend delay (5.002s here).
+- High value → app slow → 504 timeout.
 
 ---
 
@@ -3593,9 +3628,9 @@ aws elbv2 modify-load-balancer-attributes \
 
 If your ALB connects to targets via **HTTPS**, ensure:
 
-* Correct **certificate chain** on target.
-* **TLS version/cipher** compatible with ALB policy.
-* **TargetTLSNegotiationErrorCount** metric not increasing.
+- Correct **certificate chain** on target.
+- **TLS version/cipher** compatible with ALB policy.
+- **TargetTLSNegotiationErrorCount** metric not increasing.
 
 **Metric:**
 
@@ -3630,22 +3665,22 @@ aws cloudwatch get-metric-statistics \
 
 **ECS:**
 
-* Container shutting down before draining (set deregistration_delay properly).
-* Wrong container port mapping (`containerPort ≠ target port`).
-* Health check path mismatch (`/` vs `/health`).
+- Container shutting down before draining (set deregistration_delay properly).
+- Wrong container port mapping (`containerPort ≠ target port`).
+- Health check path mismatch (`/` vs `/health`).
 
 **EKS / Ingress:**
 
-* Pod not ready or missing readiness probe.
-* Node security group blocks ALB → Pod communication.
+- Pod not ready or missing readiness probe.
+- Node security group blocks ALB → Pod communication.
 
 ---
 
 #### 🔹 🔟 Network / NAT / DNS Issues
 
-* If using **private subnets**, ensure ALB can resolve target DNS.
-* Verify **route tables** and **NAT gateways** for outbound connections.
-* Ensure no intermittent network throttling from NACLs or firewalls.
+- If using **private subnets**, ensure ALB can resolve target DNS.
+- Verify **route tables** and **NAT gateways** for outbound connections.
+- Ensure no intermittent network throttling from NACLs or firewalls.
 
 ---
 
@@ -3664,24 +3699,25 @@ aws cloudwatch get-metric-statistics \
 
 ### ✅ Best Practices
 
-* ✅ Set **proper health checks** (`/health`) with fast responses.
-* ✅ Ensure **listener and target protocols/ports match**.
-* ✅ Use **CloudWatch dashboards** for latency and 5xx monitoring.
-* ✅ Tune **idle_timeout** (30–60s) for long requests (APIs, uploads).
-* ✅ Use **AWS WAF** to block malicious slowloris / HTTP floods.
-* ✅ For ECS: match **deregistration delay** with **container shutdown grace**.
-* ✅ Collect **ALB access logs** for post-incident RCA.
+- ✅ Set **proper health checks** (`/health`) with fast responses.
+- ✅ Ensure **listener and target protocols/ports match**.
+- ✅ Use **CloudWatch dashboards** for latency and 5xx monitoring.
+- ✅ Tune **idle_timeout** (30–60s) for long requests (APIs, uploads).
+- ✅ Use **AWS WAF** to block malicious slowloris / HTTP floods.
+- ✅ For ECS: match **deregistration delay** with **container shutdown grace**.
+- ✅ Collect **ALB access logs** for post-incident RCA.
 
 ---
 
 ### 💡 In short
 
-* **502 = invalid/malformed response** from backend.
-* **504 = backend timeout** before ALB got a reply.
+- **502 = invalid/malformed response** from backend.
+- **504 = backend timeout** before ALB got a reply.
   ✅ Check **target health, ports, timeouts, and app logs** — adjust ALB idle timeout or fix backend latency.
   Use **CloudWatch + ALB access logs** for precise root cause analysis.
 
-----
+---
+
 ## Q: How Do You Attach an Application Load Balancer (ALB) to Multiple Security Groups?
 
 ---
@@ -3691,20 +3727,21 @@ aws cloudwatch get-metric-statistics \
 An **Application Load Balancer (ALB)** in AWS can be associated with **multiple security groups (SGs)** to allow flexible **network access control**.
 Each security group can define specific inbound/outbound rules — combining multiple SGs lets you **segregate responsibilities**, e.g.:
 
-* One SG for public HTTP/HTTPS traffic,
-* Another SG for internal admin or monitoring access.
+- One SG for public HTTP/HTTPS traffic,
+- Another SG for internal admin or monitoring access.
 
 ---
 
 ### ⚙️ Purpose / How It Works
 
-* ALB operates at **Layer 7** (HTTP/HTTPS) and requires at least **one security group** (for inbound traffic).
-* You can attach **multiple SGs** either:
+- ALB operates at **Layer 7** (HTTP/HTTPS) and requires at least **one security group** (for inbound traffic).
+- You can attach **multiple SGs** either:
 
   1. During ALB creation, or
   2. After creation (via console, CLI, or Terraform).
-* AWS merges the rules of all attached SGs → if **any SG allows** traffic, it’s allowed.
-* Outbound rules apply to **responses to clients** (typically open to `0.0.0.0/0`).
+
+- AWS merges the rules of all attached SGs → if **any SG allows** traffic, it’s allowed.
+- Outbound rules apply to **responses to clients** (typically open to `0.0.0.0/0`).
 
 ---
 
@@ -3766,8 +3803,8 @@ resource "aws_lb" "app_alb" {
 
 ✅ Result:
 
-* ALB accepts both **HTTP (80)** and **HTTPS (443)** traffic using two different SGs.
-* You can also mix **public** and **private** access SGs for hybrid patterns.
+- ALB accepts both **HTTP (80)** and **HTTPS (443)** traffic using two different SGs.
+- You can also mix **public** and **private** access SGs for hybrid patterns.
 
 ---
 
@@ -3805,9 +3842,9 @@ aws elbv2 set-security-groups \
 
 | **Scenario**           | **Effective Rule**                                          |
 | ---------------------- | ----------------------------------------------------------- |
-| SG-1 allows `80/tcp`   | ✅ ALB allows port 80                                        |
-| SG-2 allows `443/tcp`  | ✅ ALB allows port 443                                       |
-| Both attached          | ✅ Both ports 80 & 443 allowed                               |
+| SG-1 allows `80/tcp`   | ✅ ALB allows port 80                                       |
+| SG-2 allows `443/tcp`  | ✅ ALB allows port 443                                      |
+| Both attached          | ✅ Both ports 80 & 443 allowed                              |
 | SG-1 denies everything | ⚠️ ALB still allows 443 via SG-2 (allow rules are additive) |
 
 > 🔒 **Important:** SGs are **stateful**, meaning response traffic is automatically allowed — no need to open outbound ports for replies.
@@ -3816,18 +3853,20 @@ aws elbv2 set-security-groups \
 
 ### ✅ Best Practices
 
-* Group SGs by **purpose**, not by resource:
+- Group SGs by **purpose**, not by resource:
 
-  * `alb-public-sg` → open to world (HTTP/HTTPS)
-  * `alb-internal-sg` → restricted to corporate IPs/VPN
-* Always **restrict** admin/test SGs to known CIDR ranges.
-* Avoid using **overlapping SGs** with conflicting rules (harder to audit).
-* Regularly audit attached SGs using:
+  - `alb-public-sg` → open to world (HTTP/HTTPS)
+  - `alb-internal-sg` → restricted to corporate IPs/VPN
+
+- Always **restrict** admin/test SGs to known CIDR ranges.
+- Avoid using **overlapping SGs** with conflicting rules (harder to audit).
+- Regularly audit attached SGs using:
 
   ```bash
   aws ec2 describe-security-groups --group-ids $(aws elbv2 describe-load-balancers --query "LoadBalancers[*].SecurityGroups[]" --output text)
   ```
-* Use **AWS Config** or **Security Hub** to detect overly permissive SGs.
+
+- Use **AWS Config** or **Security Hub** to detect overly permissive SGs.
 
 ---
 
@@ -3835,11 +3874,12 @@ aws elbv2 set-security-groups \
 
 You can attach **multiple Security Groups** to an ALB for flexible network control.
 
-* Combine SGs to separate **HTTP, HTTPS, internal, or admin** traffic policies.
-* AWS **merges all SG allow rules**, enhancing modularity and manageability.
+- Combine SGs to separate **HTTP, HTTPS, internal, or admin** traffic policies.
+- AWS **merges all SG allow rules**, enhancing modularity and manageability.
   👉 Use `security_groups = [sg1, sg2, ...]` in Terraform or `set-security-groups` in CLI to attach them safely.
 
-----
+---
+
 # Scenario-Based Questions
 
 ## Q: ALB not routing traffic to targets
@@ -3854,9 +3894,9 @@ ALB not forwarding traffic usually means the ALB **is healthy and receiving requ
 
 ### ⚙️ Purpose / How it Works (quick flow)
 
-* Client → **ALB listener** (port/protocol)
-* Listener evaluates **rules** → chooses **target group(s)**
-* ALB forwards to **registered targets** (instance / IP / lambda) only if **health checks pass** and **networking allows** connections
+- Client → **ALB listener** (port/protocol)
+- Listener evaluates **rules** → chooses **target group(s)**
+- ALB forwards to **registered targets** (instance / IP / lambda) only if **health checks pass** and **networking allows** connections
 
 ---
 
@@ -3884,8 +3924,8 @@ aws elbv2 describe-listeners --load-balancer-arn <alb-arn>
 aws elbv2 describe-rules --listener-arn <listener-arn>
 ```
 
-* Ensure the listener protocol/port matches client requests (HTTP/80 or HTTPS/443).
-* Ensure rule conditions (host/path/header) match incoming requests.
+- Ensure the listener protocol/port matches client requests (HTTP/80 or HTTPS/443).
+- Ensure rule conditions (host/path/header) match incoming requests.
 
 3. **Verify target group & target registration / health**
 
@@ -3897,23 +3937,23 @@ aws elbv2 describe-target-groups --names my-tg
 aws elbv2 describe-target-health --target-group-arn <tg-arn>
 ```
 
-* If `TargetHealth.State` ≠ `healthy`, inspect target `Reason` and `Description`.
+- If `TargetHealth.State` ≠ `healthy`, inspect target `Reason` and `Description`.
 
 4. **Check health check config**
 
-* Validate `path`, `port`, `protocol`, `matcher`, `interval`, `timeout`, thresholds.
-* Example misconfigs: health path returns 404, health check using HTTPS while target listens HTTP, wrong port.
+- Validate `path`, `port`, `protocol`, `matcher`, `interval`, `timeout`, thresholds.
+- Example misconfigs: health path returns 404, health check using HTTPS while target listens HTTP, wrong port.
 
 5. **Network connectivity: Security groups / NACL / routes**
 
-* Ensure **ALB SG** outbound allows target port and **Target SG** inbound allows ALB SG (use SG-id in `source_security_group`). Example quick verification:
+- Ensure **ALB SG** outbound allows target port and **Target SG** inbound allows ALB SG (use SG-id in `source_security_group`). Example quick verification:
 
 ```bash
 # get ALB ENIs
 aws ec2 describe-network-interfaces --filters Name=description,Values="ELB app/my-alb/*" --query 'NetworkInterfaces[*].{ID:NetworkInterfaceId,Subnet:SubnetId,PrivateIp:PrivateIpAddress}'
 ```
 
-* From a bastion inside VPC, test connectivity to target IP:port:
+- From a bastion inside VPC, test connectivity to target IP:port:
 
 ```bash
 # from bastion
@@ -3923,22 +3963,22 @@ curl -v http://<target-ip>:<port>/<health-path>
 
 6. **ECS / Fargate specific checks**
 
-* If using **awsvpc** (Fargate) ensure `target_type = "ip"` and the container `portMapping.containerPort` is correct. Verify ECS service `loadBalancers` references the correct TG ARN and container name/port.
-* Check **task ENIs** and their SG allowing ALB SG.
+- If using **awsvpc** (Fargate) ensure `target_type = "ip"` and the container `portMapping.containerPort` is correct. Verify ECS service `loadBalancers` references the correct TG ARN and container name/port.
+- Check **task ENIs** and their SG allowing ALB SG.
 
 7. **Check ALB access logs & CloudWatch metrics**
 
-* Enable/inspect ALB access logs in S3 to see request → response codes and timing (target_processing_time).
-* Look for `503` or `504` returned by ALB in logs.
+- Enable/inspect ALB access logs in S3 to see request → response codes and timing (target_processing_time).
+- Look for `503` or `504` returned by ALB in logs.
 
 8. **Protocol / Header / Response correctness**
 
-* ALB expects **valid HTTP responses** from targets. A target returning non-HTTP data or closing connection early can be treated as unhealthy or produce 502/503.
-* If ALB → target uses HTTPS, verify target cert and TLS ciphers.
+- ALB expects **valid HTTP responses** from targets. A target returning non-HTTP data or closing connection early can be treated as unhealthy or produce 502/503.
+- If ALB → target uses HTTPS, verify target cert and TLS ciphers.
 
 9. **Registration delays / draining**
 
-* New targets can be `initial` until healthy thresholds met; during deployments ensure `deregistration_delay` and ECS graceful shutdown align.
+- New targets can be `initial` until healthy thresholds met; during deployments ensure `deregistration_delay` and ECS graceful shutdown align.
 
 ---
 
@@ -3992,12 +4032,12 @@ aws elbv2 modify-load-balancer-attributes \
 
 ### ✅ Best Practices (prevent recurrence)
 
-* One **target group per service/version** with its own health check.
-* Use **awsvpc + target_type=ip** for Fargate; validate containerPort mapping.
-* Use **ALB access logs + CloudWatch dashboards** for quick root-cause.
-* Always reference **ALB SG** in target SG inbound rules (not 0.0.0.0/0).
-* Automate health-check tests from CI/CD (verify endpoint before promoting).
-* Implement graceful shutdown handlers in app (SIGTERM) and tune `deregistration_delay`.
+- One **target group per service/version** with its own health check.
+- Use **awsvpc + target_type=ip** for Fargate; validate containerPort mapping.
+- Use **ALB access logs + CloudWatch dashboards** for quick root-cause.
+- Always reference **ALB SG** in target SG inbound rules (not 0.0.0.0/0).
+- Automate health-check tests from CI/CD (verify endpoint before promoting).
+- Implement graceful shutdown handlers in app (SIGTERM) and tune `deregistration_delay`.
 
 ---
 
@@ -4005,7 +4045,8 @@ aws elbv2 modify-load-balancer-attributes \
 
 Check listener rules → target group registration → target health → networking (SG/NACL/route) in that order. Use `aws elbv2 describe-target-health`, ALB access logs, and in-VPC `curl/nc` tests to find the bottleneck — usually a health-check mismatch, SG block, or wrong `target_type`/port mapping.
 
-----
+---
+
 ## Q: 504 Gateway Timeout
 
 ---
@@ -4018,18 +4059,18 @@ Check listener rules → target group registration → target health → network
 
 ### ⚙️ Purpose / How it Works
 
-* Client → ALB listener → ALB forwards to Target Group → Target must respond within LB time limits.
-* If the **target doesn’t reply** (or reply takes too long), the LB returns **504** to the client.
-* Useful signals: `target_processing_time` (ALB access logs) and CloudWatch `TargetResponseTime`/`HTTPCode_Target_5XX_Count`.
+- Client → ALB listener → ALB forwards to Target Group → Target must respond within LB time limits.
+- If the **target doesn’t reply** (or reply takes too long), the LB returns **504** to the client.
+- Useful signals: `target_processing_time` (ALB access logs) and CloudWatch `TargetResponseTime`/`HTTPCode_Target_5XX_Count`.
 
 Common root causes:
 
-* Backend request takes longer than LB idle/timeout.
-* Backend busy, stuck, or crashed (DB lock, thread exhaustion).
-* Security group / network path issues (ALB can’t reach target).
-* Misconfigured listener → target protocol mismatch (HTTPS vs HTTP).
-* NAT / route table / DNS problems in private subnets.
-* Container shutdown/draining during deployment.
+- Backend request takes longer than LB idle/timeout.
+- Backend busy, stuck, or crashed (DB lock, thread exhaustion).
+- Security group / network path issues (ALB can’t reach target).
+- Misconfigured listener → target protocol mismatch (HTTPS vs HTTP).
+- NAT / route table / DNS problems in private subnets.
+- Container shutdown/draining during deployment.
 
 ---
 
@@ -4051,9 +4092,9 @@ http 2025-11-12T12:10:10.000000Z app/my-alb/abcd 1.2.3.4:54321 10.0.1.2:80 0.001
 
 Interpretation:
 
-* `request_processing_time` = 0.001
-* `target_processing_time` = 30.005 → backend took 30s (likely timeout)
-* `elb_status_code` = 504
+- `request_processing_time` = 0.001
+- `target_processing_time` = 30.005 → backend took 30s (likely timeout)
+- `elb_status_code` = 504
 
 #### 3) Check CloudWatch metrics (example: TargetResponseTime)
 
@@ -4097,11 +4138,11 @@ resource "aws_lb" "alb" {
 }
 ```
 
-*(Note: provider/config syntax may differ; CLI is reliable.)*
+_(Note: provider/config syntax may differ; CLI is reliable.)_
 
 #### 6) Ensure listener/target protocol match
 
-* ALB listener HTTPS → TG protocol HTTP (re-encrypt optional) — verify port/protocols.
+- ALB listener HTTPS → TG protocol HTTP (re-encrypt optional) — verify port/protocols.
 
 #### 7) If using NLB and TLS passthrough, verify backend TLS handshake metrics:
 
@@ -4129,19 +4170,20 @@ aws cloudwatch get-metric-statistics --namespace AWS/NetworkELB --metric-name Ta
 
 ### ✅ Best Practices / Remediations
 
-* 🔧 **Fix slow backends**: optimize queries, add caching, increase concurrency (worker pools), or autoscale.
-* ⏱️ **Tune timeouts carefully**:
+- 🔧 **Fix slow backends**: optimize queries, add caching, increase concurrency (worker pools), or autoscale.
+- ⏱️ **Tune timeouts carefully**:
 
-  * ALB `idle_timeout` default ~**60s** for ALB — increase only if necessary.
-  * For long-running requests (file uploads, long polling), prefer chunked uploads or asynchronous jobs.
-* 🔁 **Use asynchronous processing**: return 202 and use background worker for long tasks.
-* 🧪 **Health checks**: keep them lightweight and separate from heavy endpoints.
-* 🔒 **Networking**: ensure ALB SG is allowed in target SG inbound; test from VPC.
-* 🔃 **Graceful shutdown**: implement SIGTERM handling and align ECS `deregistration_delay` with app shutdown to avoid dropped requests.
-* 🪝 **Circuit breaker / bulkhead patterns**: protect downstream DB/external services.
-* 📊 **Alerting**: create CloudWatch alarms on `TargetResponseTime` and `HTTPCode_Target_5XX_Count`.
-* 🧾 **Logs & Tracing**: correlate ALB access logs, app logs, and distributed traces (X-Request-ID / X-Ray) for RCA.
-* 🌐 **If global users**: consider edge caching (CloudFront) for static content and Global Accelerator to reduce network latency.
+  - ALB `idle_timeout` default ~**60s** for ALB — increase only if necessary.
+  - For long-running requests (file uploads, long polling), prefer chunked uploads or asynchronous jobs.
+
+- 🔁 **Use asynchronous processing**: return 202 and use background worker for long tasks.
+- 🧪 **Health checks**: keep them lightweight and separate from heavy endpoints.
+- 🔒 **Networking**: ensure ALB SG is allowed in target SG inbound; test from VPC.
+- 🔃 **Graceful shutdown**: implement SIGTERM handling and align ECS `deregistration_delay` with app shutdown to avoid dropped requests.
+- 🪝 **Circuit breaker / bulkhead patterns**: protect downstream DB/external services.
+- 📊 **Alerting**: create CloudWatch alarms on `TargetResponseTime` and `HTTPCode_Target_5XX_Count`.
+- 🧾 **Logs & Tracing**: correlate ALB access logs, app logs, and distributed traces (X-Request-ID / X-Ray) for RCA.
+- 🌐 **If global users**: consider edge caching (CloudFront) for static content and Global Accelerator to reduce network latency.
 
 ---
 
@@ -4149,7 +4191,8 @@ aws cloudwatch get-metric-statistics --namespace AWS/NetworkELB --metric-name Ta
 
 A **504** means the load balancer waited too long for a backend reply. Triage by checking **target health**, **ALB access logs (`target_processing_time`)**, **CloudWatch `TargetResponseTime`**, and **VPC connectivity (SGs, routes)**. Fix by optimizing backend response time, scaling capacity, or increasing LB timeouts only when appropriate — plus implement graceful shutdown and lightweight health checks.
 
-----
+---
+
 ## Q: ECS service unhealthy behind ALB
 
 ---
@@ -4162,9 +4205,9 @@ When an **ECS service** shows as **unhealthy behind an ALB**, the ALB’s target
 
 ### ⚙️ Purpose / How it Works
 
-* ECS Service registers tasks into the ALB **Target Group** (target_type = `ip` for Fargate/awsvpc or `instance` for EC2).
-* ALB performs **health checks** on each registered target; only `healthy` targets receive traffic.
-* Failures = ALB marks target `unhealthy` → traffic not forwarded → service appears unhealthy.
+- ECS Service registers tasks into the ALB **Target Group** (target_type = `ip` for Fargate/awsvpc or `instance` for EC2).
+- ALB performs **health checks** on each registered target; only `healthy` targets receive traffic.
+- Failures = ALB marks target `unhealthy` → traffic not forwarded → service appears unhealthy.
 
 ---
 
@@ -4176,12 +4219,12 @@ When an **ECS service** shows as **unhealthy behind an ALB**, the ALB’s target
 aws elbv2 describe-target-health --target-group-arn <tg-arn> --output table
 ```
 
-* Look at `State` and `Description` for reasons (`Health checks failed`, `Connection refused`, `Target responded with 404`, etc).
+- Look at `State` and `Description` for reasons (`Health checks failed`, `Connection refused`, `Target responded with 404`, etc).
 
 2. **Verify Health Check Path & Settings**
 
-* Ensure TG `health_check.path` returns 200 quickly (no DB calls).
-* Typical config: `path=/health`, `interval=15-30s`, `timeout=5s`, `healthy_threshold=2`, `unhealthy_threshold=2`.
+- Ensure TG `health_check.path` returns 200 quickly (no DB calls).
+- Typical config: `path=/health`, `interval=15-30s`, `timeout=5s`, `healthy_threshold=2`, `unhealthy_threshold=2`.
 
 ```bash
 aws elbv2 describe-target-groups --target-group-arns <tg-arn> --query 'TargetGroups[*].HealthCheck*'
@@ -4189,13 +4232,13 @@ aws elbv2 describe-target-groups --target-group-arns <tg-arn> --query 'TargetGro
 
 3. **Confirm target_type and ports**
 
-* Fargate (awsvpc) → `target_type = "ip"`, register container `hostPort`/`containerPort` mapping correctly.
-* EC2 → `target_type = "instance"` and TG port should match `hostPort`.
-* In ECS task definition, `containerPort` must match what ALB expects.
+- Fargate (awsvpc) → `target_type = "ip"`, register container `hostPort`/`containerPort` mapping correctly.
+- EC2 → `target_type = "instance"` and TG port should match `hostPort`.
+- In ECS task definition, `containerPort` must match what ALB expects.
 
 4. **Test connectivity from inside VPC**
 
-* From a bastion in same subnet/VPC:
+- From a bastion in same subnet/VPC:
 
 ```bash
 # HTTP
@@ -4204,14 +4247,14 @@ curl -sv http://<task-ip>:<port>/health
 nc -vz <task-ip> <port>
 ```
 
-* If connection fails → SG / route / ENI problem.
+- If connection fails → SG / route / ENI problem.
 
 5. **Security Groups**
 
-* ALB security group must allow inbound (80/443) from internet.
-* Target task ENI security group must allow inbound from **ALB SG** (use SG-id, not 0.0.0.0/0). Example rule:
+- ALB security group must allow inbound (80/443) from internet.
+- Target task ENI security group must allow inbound from **ALB SG** (use SG-id, not 0.0.0.0/0). Example rule:
 
-  * Source: `sg-ALB`, Port: target port (e.g., 8080), Protocol: TCP.
+  - Source: `sg-ALB`, Port: target port (e.g., 8080), Protocol: TCP.
 
 6. **Check ECS task ENI & assignment**
 
@@ -4220,16 +4263,16 @@ aws ecs describe-tasks --cluster <cluster> --tasks <task-id>
 # then check networkInterfaces in the response (ENI IPs)
 ```
 
-* Ensure tasks have ENIs and correct IPs; find those IPs and curl them.
+- Ensure tasks have ENIs and correct IPs; find those IPs and curl them.
 
 7. **Container startup / readiness**
 
-* Ensure app binds to `0.0.0.0` inside container (not localhost).
-* Ensure startup time < health check timeout; if slow, increase `startPeriod` in container health or adjust TG health thresholds.
+- Ensure app binds to `0.0.0.0` inside container (not localhost).
+- Ensure startup time < health check timeout; if slow, increase `startPeriod` in container health or adjust TG health thresholds.
 
 8. **ECS & ALB registration logs**
 
-* Check ECS events (service page) and CloudWatch logs for `deregister` / `registration` messages and reasons.
+- Check ECS events (service page) and CloudWatch logs for `deregister` / `registration` messages and reasons.
 
 ```bash
 aws ecs describe-services --cluster <c> --services <s> --query 'services[*].events'
@@ -4237,11 +4280,11 @@ aws ecs describe-services --cluster <c> --services <s> --query 'services[*].even
 
 9. **Health check vs Container health checks**
 
-* ALB health checks are separate from container `HEALTHCHECK` in Docker — both can be used; ensure consistency.
+- ALB health checks are separate from container `HEALTHCHECK` in Docker — both can be used; ensure consistency.
 
 10. **Task role / IAM / DNS**
 
-* If health path calls internal services by DNS, ensure task can resolve DNS and has network egress (NAT) if required.
+- If health path calls internal services by DNS, ensure task can resolve DNS and has network egress (NAT) if required.
 
 ---
 
@@ -4315,13 +4358,13 @@ resource "aws_lb_target_group" "svc_tg" {
 
 ### ✅ Best Practices (prevent recurrence)
 
-* One **target group per service** with dedicated health endpoint (`/health`) that returns 200 quickly.
-* For **Fargate/awsvpc** use `target_type="ip"` and ensure tasks get ENIs in private subnets with correct SGs.
-* Bind containers to `0.0.0.0`.
-* Keep health checks lightweight; avoid DB or network calls.
-* Align ECS **deregistration_delay** and container **graceful shutdown** (SIGTERM handling).
-* Add CloudWatch alarms for `UnHealthyHostCount` and `HTTPCode_Target_5XX_Count`.
-* Use ALB access logs + app logs + X-Request-ID to correlate failures.
+- One **target group per service** with dedicated health endpoint (`/health`) that returns 200 quickly.
+- For **Fargate/awsvpc** use `target_type="ip"` and ensure tasks get ENIs in private subnets with correct SGs.
+- Bind containers to `0.0.0.0`.
+- Keep health checks lightweight; avoid DB or network calls.
+- Align ECS **deregistration_delay** and container **graceful shutdown** (SIGTERM handling).
+- Add CloudWatch alarms for `UnHealthyHostCount` and `HTTPCode_Target_5XX_Count`.
+- Use ALB access logs + app logs + X-Request-ID to correlate failures.
 
 ---
 
@@ -4329,7 +4372,8 @@ resource "aws_lb_target_group" "svc_tg" {
 
 If ECS tasks are unhealthy behind an ALB, first check **`describe-target-health`** and the TG health-check config, then verify **SGs, target_type (ip vs instance), port mappings**, and that the container binds to `0.0.0.0`. Fix the smallest failing item (health path, SG rule, or port) then redeploy and monitor health.
 
-----
+---
+
 ## Q: Traffic uneven across AZs
 
 ---
@@ -4343,10 +4387,10 @@ Common causes: per-AZ LB node routing, unequal target counts, cross-zone load ba
 
 ### ⚙️ Purpose / How it Works
 
-* An ELB creates nodes in each enabled AZ.
-* By default **ALB** distributes across all AZs (cross-zone enabled by default). **NLB/CLB** may route only to targets in the node’s AZ unless cross-zone is enabled.
-* If AZ A has fewer targets than AZ B, a node in AZ A may route more traffic to its local targets → apparent imbalance.
-* Source-IP affinity (NLB, client IP hash, or sticky sessions) concentrates traffic from clients clustered geographically or behind NATs.
+- An ELB creates nodes in each enabled AZ.
+- By default **ALB** distributes across all AZs (cross-zone enabled by default). **NLB/CLB** may route only to targets in the node’s AZ unless cross-zone is enabled.
+- If AZ A has fewer targets than AZ B, a node in AZ A may route more traffic to its local targets → apparent imbalance.
+- Source-IP affinity (NLB, client IP hash, or sticky sessions) concentrates traffic from clients clustered geographically or behind NATs.
 
 ---
 
@@ -4431,14 +4475,14 @@ resource "aws_ecs_service" "svc" {
 
 ### ✅ Best Practices
 
-* **Enable cross-zone load balancing** for even distribution (ALB already enabled).
-* **Ensure equal healthy targets per AZ** — autoscale per-AZ or use spread placement.
-* **Avoid per-client affinity** unless necessary; prefer short cookie TTLs or stateless design.
-* **Use ALB** for HTTP L7 routing (ALB handles cross-zone by default and supports stickiness control).
-* **Monitor per-AZ metrics** (`RequestCount` by AvailabilityZone) and `HealthyHostCount`.
-* **Place targets in all enabled AZs** and ensure ALB subnets include all AZs.
-* **For NLB with static IP needs**, enable cross-zone but be aware of inter-AZ data charges.
-* **Test from synthetic clients in multiple regions/AZs** to validate distribution.
+- **Enable cross-zone load balancing** for even distribution (ALB already enabled).
+- **Ensure equal healthy targets per AZ** — autoscale per-AZ or use spread placement.
+- **Avoid per-client affinity** unless necessary; prefer short cookie TTLs or stateless design.
+- **Use ALB** for HTTP L7 routing (ALB handles cross-zone by default and supports stickiness control).
+- **Monitor per-AZ metrics** (`RequestCount` by AvailabilityZone) and `HealthyHostCount`.
+- **Place targets in all enabled AZs** and ensure ALB subnets include all AZs.
+- **For NLB with static IP needs**, enable cross-zone but be aware of inter-AZ data charges.
+- **Test from synthetic clients in multiple regions/AZs** to validate distribution.
 
 ---
 
@@ -4446,7 +4490,7 @@ resource "aws_ecs_service" "svc" {
 
 Uneven AZ traffic usually stems from **cross-zone disabled**, **unequal target counts**, or **source-IP affinity**. Fix by **enabling cross-zone**, **spreading/registering equal targets per AZ**, and removing unwanted stickiness — then verify with CloudWatch per-AZ `RequestCount` and `describe-target-health`.
 
-----
+---
 
 ## Q: ALB logs missing
 
@@ -4460,9 +4504,9 @@ ALB access logs are delivered to an **S3 bucket**. If logs are missing, the prob
 
 ### ⚙️ Purpose / How it Works
 
-* ALB writes access-log objects to the configured S3 bucket/prefix.
-* ALB must be allowed to `PutObject` into that bucket (via bucket policy or ACL) and — if the bucket uses KMS encryption — the ALB service must be allowed to use the KMS key.
-* ALB delivery is asynchronous (objects are created periodically), so check attributes, permissions, and S3 contents.
+- ALB writes access-log objects to the configured S3 bucket/prefix.
+- ALB must be allowed to `PutObject` into that bucket (via bucket policy or ACL) and — if the bucket uses KMS encryption — the ALB service must be allowed to use the KMS key.
+- ALB delivery is asynchronous (objects are created periodically), so check attributes, permissions, and S3 contents.
 
 ---
 
@@ -4476,7 +4520,7 @@ aws elbv2 describe-load-balancer-attributes \
   --query 'Attributes[?starts_with(Key, `access_logs.`)]'
 ```
 
-* Look for: `access_logs.s3.enabled` = `true`, `access_logs.s3.bucket` and `access_logs.s3.prefix`.
+- Look for: `access_logs.s3.enabled` = `true`, `access_logs.s3.bucket` and `access_logs.s3.prefix`.
 
 2. **List objects in the target S3 prefix**
 
@@ -4484,7 +4528,7 @@ aws elbv2 describe-load-balancer-attributes \
 aws s3api list-objects-v2 --bucket my-alb-logs --prefix "alb/app-my-alb/" --max-items 20
 ```
 
-* If objects exist, logs are being delivered — check timeframe and prefixes.
+- If objects exist, logs are being delivered — check timeframe and prefixes.
 
 3. **Check S3 bucket policy / ACL**
 
@@ -4493,24 +4537,24 @@ aws s3api get-bucket-policy --bucket my-alb-logs || echo "no policy"
 aws s3api get-bucket-acl --bucket my-alb-logs
 ```
 
-* Ensure policy allows ALB to `s3:PutObject` for the `access_logs.s3.prefix`. Best practice: allow PutObject with conditions `aws:SourceArn` = ALB ARN and `aws:SourceAccount` = your account id.
+- Ensure policy allows ALB to `s3:PutObject` for the `access_logs.s3.prefix`. Best practice: allow PutObject with conditions `aws:SourceArn` = ALB ARN and `aws:SourceAccount` = your account id.
 
 **Example minimal bucket policy (use your ARNs/account IDs):**
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowALBAccess",
-      "Effect":"Allow",
-      "Principal":"*",
-      "Action":"s3:PutObject",
-      "Resource":"arn:aws:s3:::my-alb-logs/alb/*",
-      "Condition":{
-        "StringEquals":{
-          "aws:SourceAccount":"123456789012",
-          "aws:SourceArn":"arn:aws:elasticloadbalancing:ap-south-1:123456789012:loadbalancer/app/my-alb/abcdef"
+      "Sid": "AllowALBAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::my-alb-logs/alb/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "123456789012",
+          "aws:SourceArn": "arn:aws:elasticloadbalancing:ap-south-1:123456789012:loadbalancer/app/my-alb/abcdef"
         }
       }
     }
@@ -4520,21 +4564,21 @@ aws s3api get-bucket-acl --bucket my-alb-logs
 
 4. **If bucket uses SSE-KMS — check KMS key policy / grants**
 
-* If S3 objects are encrypted with a customer-managed KMS key, add the ALB service principal permission to use the key. Example principal: `"Service": "elasticloadbalancing.amazonaws.com"` with condition on `aws:SourceArn`/`aws:SourceAccount`.
-* Without this, PutObject will be denied and ALB cannot write logs.
+- If S3 objects are encrypted with a customer-managed KMS key, add the ALB service principal permission to use the key. Example principal: `"Service": "elasticloadbalancing.amazonaws.com"` with condition on `aws:SourceArn`/`aws:SourceAccount`.
+- Without this, PutObject will be denied and ALB cannot write logs.
 
 5. **Check S3 Block Public Access / Ownership settings**
 
-* Ensure bucket ownership or object-ownership doesn’t interfere with ELB writes. Bucket owner preferred; if cross-account delivery is used, ensure object-ownership settings allow it.
+- Ensure bucket ownership or object-ownership doesn’t interfere with ELB writes. Bucket owner preferred; if cross-account delivery is used, ensure object-ownership settings allow it.
 
 6. **Verify ALB and S3 prefix/region**
 
-* Confirm you are looking in the *exact* bucket + prefix the ALB is configured with. Use the `describe-load-balancer-attributes` output to avoid mistakes.
+- Confirm you are looking in the _exact_ bucket + prefix the ALB is configured with. Use the `describe-load-balancer-attributes` output to avoid mistakes.
 
 7. **Check for delivery errors / CloudTrail / CloudWatch**
 
-* Look for S3 `PutObject` Deny events in CloudTrail or S3 access logs for denied PutObject attempts.
-* If you have CloudTrail or AWS Config, search for `PutObject` or `PutBucketPolicy` denied events.
+- Look for S3 `PutObject` Deny events in CloudTrail or S3 access logs for denied PutObject attempts.
+- If you have CloudTrail or AWS Config, search for `PutObject` or `PutBucketPolicy` denied events.
 
 8. **Enable/Check ALB attributes if missing**
 
@@ -4549,42 +4593,42 @@ aws elbv2 modify-load-balancer-attributes \
 
 9. **Allow time & validate cadence**
 
-* Logs are generated periodically — verify across a wider time window and check multiple prefixes (date-based). If you just enabled logging, wait a few minutes and re-check objects.
+- Logs are generated periodically — verify across a wider time window and check multiple prefixes (date-based). If you just enabled logging, wait a few minutes and re-check objects.
 
 10. **If still missing: test delivery manually**
 
-* From an IAM principal, try to `PutObject` into the bucket using the same prefix to validate permissions (this doesn’t prove ALB access, but validates the bucket policy).
+- From an IAM principal, try to `PutObject` into the bucket using the same prefix to validate permissions (this doesn’t prove ALB access, but validates the bucket policy).
 
 ```bash
 aws s3 cp /tmp/test.txt s3://my-alb-logs/alb/my-alb/test.txt
 ```
 
-* If this fails with an AccessDenied, correct the bucket/KMS policy.
+- If this fails with an AccessDenied, correct the bucket/KMS policy.
 
 ---
 
 ### 🧩 Quick commands summary
 
-* Describe ALB attributes:
+- Describe ALB attributes:
 
 ```bash
 aws elbv2 describe-load-balancer-attributes --load-balancer-arn <alb-arn>
 ```
 
-* List recent objects:
+- List recent objects:
 
 ```bash
 aws s3api list-objects-v2 --bucket my-alb-logs --prefix "alb/my-alb/" --max-items 50
 ```
 
-* Inspect bucket policy / ACL:
+- Inspect bucket policy / ACL:
 
 ```bash
 aws s3api get-bucket-policy --bucket my-alb-logs
 aws s3api get-bucket-acl --bucket my-alb-logs
 ```
 
-* Check CloudTrail for denied PutObject:
+- Check CloudTrail for denied PutObject:
 
 ```bash
 aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=PutObject --max-results 50
@@ -4606,12 +4650,12 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 ### ✅ Best Practices (prevent recurrence)
 
-* Use the ALB **attributes** block (Terraform) or `modify-load-balancer-attributes` to set bucket + prefix.
-* Use an S3 bucket policy with `aws:SourceArn` and `aws:SourceAccount` to tightly allow only your ALB to write.
-* If using KMS encryption, add **elasticloadbalancing.amazonaws.com** (service principal) to the key policy with source ARN/account conditions.
-* Enable S3 lifecycle rules to manage log retention and cost.
-* Enable CloudTrail or S3 server access logs to capture delivery failures.
-* Keep a consistent prefix pattern (e.g., `alb/<alb-name>/YYYY/MM/DD/`) to simplify queries and Athena tables.
+- Use the ALB **attributes** block (Terraform) or `modify-load-balancer-attributes` to set bucket + prefix.
+- Use an S3 bucket policy with `aws:SourceArn` and `aws:SourceAccount` to tightly allow only your ALB to write.
+- If using KMS encryption, add **elasticloadbalancing.amazonaws.com** (service principal) to the key policy with source ARN/account conditions.
+- Enable S3 lifecycle rules to manage log retention and cost.
+- Enable CloudTrail or S3 server access logs to capture delivery failures.
+- Keep a consistent prefix pattern (e.g., `alb/<alb-name>/YYYY/MM/DD/`) to simplify queries and Athena tables.
 
 ---
 
@@ -4619,7 +4663,8 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 Check `describe-load-balancer-attributes` → confirm `access_logs.s3.*` settings → verify the S3 bucket + prefix exist → check bucket policy/ACL and KMS key policy (if SSE-KMS) to ensure ALB can `PutObject`. Use CloudTrail or S3 access logs to find denied deliveries and fix permissions; once fixed, verify objects appear under the configured prefix.
 
-----
+---
+
 ## Q: How to Redirect HTTP → HTTPS in AWS Application Load Balancer (ALB)
 
 ---
@@ -4634,10 +4679,10 @@ This is handled **natively by ALB** — no need for app-level redirection (like 
 
 ### ⚙️ Purpose / How It Works
 
-* ALB listens on **port 80 (HTTP)** and **port 443 (HTTPS)**.
-* The HTTP listener’s **default action** redirects all incoming requests to HTTPS (port 443).
-* The redirect preserves host, path, and query string unless overridden.
-* The browser receives an **HTTP 301 (permanent redirect)** or **302 (temporary)** response.
+- ALB listens on **port 80 (HTTP)** and **port 443 (HTTPS)**.
+- The HTTP listener’s **default action** redirects all incoming requests to HTTPS (port 443).
+- The redirect preserves host, path, and query string unless overridden.
+- The browser receives an **HTTP 301 (permanent redirect)** or **302 (temporary)** response.
 
 ---
 
@@ -4706,10 +4751,11 @@ aws elbv2 create-listener \
 2. Open **Listeners** tab → click **Add Listener** (or edit port 80).
 3. Choose:
 
-   * **Protocol:** HTTP
-   * **Port:** 80
-   * **Default action:** Redirect to → `HTTPS://:443/`
-   * **Status code:** `HTTP_301` (permanent redirect)
+   - **Protocol:** HTTP
+   - **Port:** 80
+   - **Default action:** Redirect to → `HTTPS://:443/`
+   - **Status code:** `HTTP_301` (permanent redirect)
+
 4. Save changes.
 5. Verify using:
 
@@ -4754,12 +4800,12 @@ redirect {
 
 ### ✅ Best Practices
 
-* Always use **HTTP_301 (permanent redirect)** for SEO and browser caching.
-* Use **AWS ACM** certificates for HTTPS (auto-renewal).
-* Enable **HTTPS (port 443)** listener *before* applying redirect to avoid downtime.
-* Enforce **modern TLS policy** (e.g., `ELBSecurityPolicy-TLS-1-2-Ext-2018-06`).
-* Redirect only at **ALB layer** — don’t duplicate redirection in app code.
-* Optionally enable **HSTS** header in your app to force HTTPS at the browser level.
+- Always use **HTTP_301 (permanent redirect)** for SEO and browser caching.
+- Use **AWS ACM** certificates for HTTPS (auto-renewal).
+- Enable **HTTPS (port 443)** listener _before_ applying redirect to avoid downtime.
+- Enforce **modern TLS policy** (e.g., `ELBSecurityPolicy-TLS-1-2-Ext-2018-06`).
+- Redirect only at **ALB layer** — don’t duplicate redirection in app code.
+- Optionally enable **HSTS** header in your app to force HTTPS at the browser level.
 
 ---
 
@@ -4768,7 +4814,8 @@ redirect {
 Create an **HTTP listener (port 80)** → add a **redirect action** to `HTTPS:443` with `HTTP_301`.
 This offloads HTTPS enforcement to ALB, simplifies app config, and guarantees **secure-by-default access**.
 
-----
+---
+
 ## Q: NLB Target Showing Unhealthy
 
 ---
@@ -4782,16 +4829,16 @@ Unlike ALB, NLB operates at **Layer 4 (TCP/TLS)**, so the root cause is usually 
 
 ### ⚙️ Purpose / How It Works
 
-* NLB continuously performs **TCP or TLS health checks** on each target.
-* If a target fails a configured number of checks (default: 3), it’s marked **unhealthy**.
-* NLB will **stop routing** new connections to unhealthy targets.
-* Common culprits:
+- NLB continuously performs **TCP or TLS health checks** on each target.
+- If a target fails a configured number of checks (default: 3), it’s marked **unhealthy**.
+- NLB will **stop routing** new connections to unhealthy targets.
+- Common culprits:
 
-  * Wrong **health check port or protocol**
-  * **Security Group/NACL** blocking health probe
-  * **App not listening** on correct port or IP
-  * **Target_type mismatch** (instance vs IP)
-  * **Private link or subnet routing** issues
+  - Wrong **health check port or protocol**
+  - **Security Group/NACL** blocking health probe
+  - **App not listening** on correct port or IP
+  - **Target_type mismatch** (instance vs IP)
+  - **Private link or subnet routing** issues
 
 ---
 
@@ -4805,8 +4852,8 @@ aws elbv2 describe-target-health --target-group-arn <tg-arn> --output table
 
 ✅ Check:
 
-* **`TargetHealth.State`** — should be `healthy`.
-* **`Description`** — tells you why it’s unhealthy (`Target.Timeout`, `Connection refused`, `Health checks failed`, etc).
+- **`TargetHealth.State`** — should be `healthy`.
+- **`Description`** — tells you why it’s unhealthy (`Target.Timeout`, `Connection refused`, `Health checks failed`, etc).
 
 Example output:
 
@@ -4875,8 +4922,8 @@ Connection to <target-ip> 8080 port [tcp/*] succeeded!
 
 If it fails:
 
-* Target isn’t listening on that port → fix app config.
-* Security Group/NACL blocks → check inbound/outbound rules.
+- Target isn’t listening on that port → fix app config.
+- Security Group/NACL blocks → check inbound/outbound rules.
 
 ---
 
@@ -4903,9 +4950,9 @@ aws ec2 authorize-security-group-ingress \
 
 #### 🔹 5️⃣ Check Target App Configuration
 
-* Ensure service is **listening on correct port/IP (0.0.0.0)**.
-* For **ECS tasks (awsvpc)**: container must bind to `0.0.0.0` and **containerPort** = TG port.
-* For **EC2**: verify service running:
+- Ensure service is **listening on correct port/IP (0.0.0.0)**.
+- For **ECS tasks (awsvpc)**: container must bind to `0.0.0.0` and **containerPort** = TG port.
+- For **EC2**: verify service running:
 
   ```bash
   sudo netstat -tulnp | grep 8080
@@ -4921,9 +4968,9 @@ aws ec2 authorize-security-group-ingress \
 
 #### 🔹 6️⃣ Verify Target Registration Type
 
-* **target_type = instance** → NLB connects to instance private IP.
-* **target_type = ip** → NLB connects directly to IP address.
-* Wrong type = unreachable target.
+- **target_type = instance** → NLB connects to instance private IP.
+- **target_type = ip** → NLB connects directly to IP address.
+- Wrong type = unreachable target.
 
 Check:
 
@@ -4935,16 +4982,16 @@ aws elbv2 describe-target-groups --names my-nlb-tg --query "TargetGroups[*].Targ
 
 #### 🔹 7️⃣ Check for Network Routing / Subnet Misconfigurations
 
-* Target and NLB must be in **same VPC** and **routable subnets**.
-* For **private NLBs**, ensure route tables allow return traffic.
-* For **targets behind NAT**, ensure NAT allows internal VPC communication.
+- Target and NLB must be in **same VPC** and **routable subnets**.
+- For **private NLBs**, ensure route tables allow return traffic.
+- For **targets behind NAT**, ensure NAT allows internal VPC communication.
 
 ---
 
 #### 🔹 8️⃣ Verify Target Logs
 
-* Check your application logs for startup delays, binding errors, or TCP resets.
-* If you see “connection refused” or “bind failed,” update the service configuration.
+- Check your application logs for startup delays, binding errors, or TCP resets.
+- If you see “connection refused” or “bind failed,” update the service configuration.
 
 ---
 
@@ -4952,10 +4999,10 @@ aws elbv2 describe-target-groups --names my-nlb-tg --query "TargetGroups[*].Targ
 
 Use metrics under namespace **`AWS/NetworkELB`**:
 
-* `UnHealthyHostCount`
-* `HealthyHostCount`
-* `TCP_Target_Reset_Count`
-* `TargetTLSNegotiationErrorCount`
+- `UnHealthyHostCount`
+- `HealthyHostCount`
+- `TCP_Target_Reset_Count`
+- `TargetTLSNegotiationErrorCount`
 
 ```bash
 aws cloudwatch get-metric-statistics \
@@ -4986,13 +5033,13 @@ aws cloudwatch get-metric-statistics \
 
 ### ✅ Best Practices
 
-* Use **TCP health checks** for NLBs unless TLS termination is needed.
-* For ECS Fargate: set `target_type = ip`, ensure containerPort = TG port, and container listens on `0.0.0.0`.
-* Keep **health checks lightweight** — no app-level logic required for TCP.
-* Always allow **NLB subnet CIDRs** in the target SG inbound.
-* Use **CloudWatch alarms** for `UnHealthyHostCount` > 0.
-* Validate health check responses manually using `nc` or `telnet`.
-* Use **AWS VPC Reachability Analyzer** to test paths between NLB and target ENIs.
+- Use **TCP health checks** for NLBs unless TLS termination is needed.
+- For ECS Fargate: set `target_type = ip`, ensure containerPort = TG port, and container listens on `0.0.0.0`.
+- Keep **health checks lightweight** — no app-level logic required for TCP.
+- Always allow **NLB subnet CIDRs** in the target SG inbound.
+- Use **CloudWatch alarms** for `UnHealthyHostCount` > 0.
+- Validate health check responses manually using `nc` or `telnet`.
+- Use **AWS VPC Reachability Analyzer** to test paths between NLB and target ENIs.
 
 ---
 
@@ -5003,7 +5050,8 @@ Check **security groups**, **target port/protocol**, and **app listening state**
 ✅ Ensure health checks match actual service port, SGs allow NLB subnet CIDRs, and the app binds to `0.0.0.0`.
 Once fixed, rerun `describe-target-health` until all targets are `healthy`.
 
-----
+---
+
 ## Q: Need Static IP for ALB
 
 ---
@@ -5011,15 +5059,15 @@ Once fixed, rerun `describe-target-health` until all targets are `healthy`.
 ### 🧠 Overview
 
 **Application Load Balancer (ALB)** does **not support static IP addresses** directly — ALB endpoints are **DNS-based** and AWS dynamically manages their underlying IPs for scalability and fault tolerance.
-However, you can still achieve a *static-IP-like setup* using **AWS Global Accelerator** or by placing an **NLB in front of your ALB**.
+However, you can still achieve a _static-IP-like setup_ using **AWS Global Accelerator** or by placing an **NLB in front of your ALB**.
 
 ---
 
 ### ⚙️ Purpose / How It Works
 
-* ALB’s DNS name (e.g., `my-alb-123456.ap-south-1.elb.amazonaws.com`) resolves to **multiple IPs** that **change** when AWS replaces nodes for scaling or AZ maintenance.
-* Some firewalls or clients require **fixed IPs** (whitelisting).
-* AWS provides **two recommended solutions**:
+- ALB’s DNS name (e.g., `my-alb-123456.ap-south-1.elb.amazonaws.com`) resolves to **multiple IPs** that **change** when AWS replaces nodes for scaling or AZ maintenance.
+- Some firewalls or clients require **fixed IPs** (whitelisting).
+- AWS provides **two recommended solutions**:
 
   1. **AWS Global Accelerator (preferred)** → provides **static Anycast IPs** that route to your ALB.
   2. **NLB + ALB chaining** → use an **NLB (static IP)** to forward traffic to your ALB.
@@ -5030,9 +5078,9 @@ However, you can still achieve a *static-IP-like setup* using **AWS Global Accel
 
 #### 💡 How it works
 
-* Provides **two static Anycast IPs** (global, fault-tolerant).
-* Routes client traffic to your ALB endpoint in the closest AWS region.
-* Handles DDoS protection, latency optimization, and failover automatically.
+- Provides **two static Anycast IPs** (global, fault-tolerant).
+- Routes client traffic to your ALB endpoint in the closest AWS region.
+- Handles DDoS protection, latency optimization, and failover automatically.
 
 #### Terraform Example
 
@@ -5083,9 +5131,9 @@ You’ll get:
 
 #### 💡 How it works
 
-* Create an **NLB** with **Elastic IPs** (static).
-* The NLB listens on TCP 80/443 and forwards to the ALB’s private endpoint.
-* Provides static IPs but still uses ALB’s advanced L7 routing.
+- Create an **NLB** with **Elastic IPs** (static).
+- The NLB listens on TCP 80/443 and forwards to the ALB’s private endpoint.
+- Provides static IPs but still uses ALB’s advanced L7 routing.
 
 #### Terraform Example
 
@@ -5135,32 +5183,32 @@ resource "aws_lb_listener" "nlb_listener" {
 
 ⚠️ **Limitations:**
 
-* Adds one more hop (minor latency).
-* Target group must use ALB **private IPs** or be dynamically registered.
-* You lose Layer 7 intelligence at NLB — it’s TCP only.
+- Adds one more hop (minor latency).
+- Target group must use ALB **private IPs** or be dynamically registered.
+- You lose Layer 7 intelligence at NLB — it’s TCP only.
 
 ---
 
 ### 📋 Comparison Table
 
-| Feature         | **ALB**          | **Global Accelerator + ALB**      | **NLB → ALB**                           |
-| --------------- | ---------------- | --------------------------------- | --------------------------------------- |
-| Static IPs      | ❌ No             | ✅ Yes (2 Anycast IPs)             | ✅ Yes (Elastic IPs)                     |
-| Layer           | L7 (HTTP/HTTPS)  | L4 (TCP/UDP) → L7 (ALB)           | L4 → L7                                 |
-| Global Routing  | ❌ Regional only  | ✅ Yes                             | ❌ Regional only                         |
-| DDoS Protection | ✅ AWS Shield Std | ✅ AWS Shield Advanced built-in    | ✅ AWS Shield Std                        |
-| Cost            | Low              | Moderate (Global Accelerator)     | Moderate                                |
-| Ideal For       | Web apps         | Global or enterprise whitelisting | Region-specific apps needing static IPs |
+| Feature         | **ALB**           | **Global Accelerator + ALB**      | **NLB → ALB**                           |
+| --------------- | ----------------- | --------------------------------- | --------------------------------------- |
+| Static IPs      | ❌ No             | ✅ Yes (2 Anycast IPs)            | ✅ Yes (Elastic IPs)                    |
+| Layer           | L7 (HTTP/HTTPS)   | L4 (TCP/UDP) → L7 (ALB)           | L4 → L7                                 |
+| Global Routing  | ❌ Regional only  | ✅ Yes                            | ❌ Regional only                        |
+| DDoS Protection | ✅ AWS Shield Std | ✅ AWS Shield Advanced built-in   | ✅ AWS Shield Std                       |
+| Cost            | Low               | Moderate (Global Accelerator)     | Moderate                                |
+| Ideal For       | Web apps          | Global or enterprise whitelisting | Region-specific apps needing static IPs |
 
 ---
 
 ### ✅ Best Practices
 
-* **Prefer Global Accelerator** for global/static IP needs.
-* If using NLB fronting ALB, monitor latency and health closely.
-* Keep **DNS (Route53)** pointing to **ALB DNS**, not static IPs, when static IPs aren’t required.
-* Use **ACM Certificates** for HTTPS at the ALB — not at NLB (unless TLS pass-through).
-* Avoid hardcoding ALB IPs; AWS may change them at any time.
+- **Prefer Global Accelerator** for global/static IP needs.
+- If using NLB fronting ALB, monitor latency and health closely.
+- Keep **DNS (Route53)** pointing to **ALB DNS**, not static IPs, when static IPs aren’t required.
+- Use **ACM Certificates** for HTTPS at the ALB — not at NLB (unless TLS pass-through).
+- Avoid hardcoding ALB IPs; AWS may change them at any time.
 
 ---
 
@@ -5173,7 +5221,8 @@ To get static IPs:
 2. Or **front ALB with NLB + Elastic IPs** for regional static IPs.
    👉 Global Accelerator is simpler, faster, and fully AWS-supported for enterprise whitelisting use cases.
 
-----
+---
+
 ## Q: Restrict API Access to Internal VPCs (via ALB / AWS Network Controls)
 
 ---
@@ -5189,8 +5238,8 @@ This ensures your APIs are **not reachable from the public internet** and are on
 
 There are **3 main patterns** to restrict ALB/API access to internal traffic:
 
-| **Method**                               | **Use Case**                                 | **Key Mechanism**                                     |
-| ---------------------------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| **Method**                              | **Use Case**                                 | **Key Mechanism**                                     |
+| --------------------------------------- | -------------------------------------------- | ----------------------------------------------------- |
 | **1️⃣ Internal ALB (private)**           | For internal microservices or APIs           | ALB deployed in private subnets only                  |
 | **2️⃣ Security Groups (SGs)**            | Limit access to specific VPC resources       | Allow inbound only from trusted SGs                   |
 | **3️⃣ WAF / PrivateLink / VPC Endpoint** | Advanced control or cross-VPC private access | Use AWS WAF or PrivateLink for internal-only exposure |
@@ -5201,9 +5250,9 @@ There are **3 main patterns** to restrict ALB/API access to internal traffic:
 
 #### 💡 How it works
 
-* Set ALB **scheme = internal**.
-* ALB’s DNS name resolves to **private IPs** — no public access.
-* Only accessible from within the VPC, peered VPCs, or VPN.
+- Set ALB **scheme = internal**.
+- ALB’s DNS name resolves to **private IPs** — no public access.
+- Only accessible from within the VPC, peered VPCs, or VPN.
 
 #### Terraform Example
 
@@ -5241,13 +5290,14 @@ Attach restrictive **security groups** to both ALB and your target instances/tas
 
 #### Example SG setup:
 
-* **ALB Security Group (sg-alb)**
+- **ALB Security Group (sg-alb)**
 
-  * **Inbound:** Allow TCP 80/443 **only from trusted SGs** (like EC2/ECS SG).
-  * **Outbound:** Allow all (default).
-* **Target SG (sg-app)**
+  - **Inbound:** Allow TCP 80/443 **only from trusted SGs** (like EC2/ECS SG).
+  - **Outbound:** Allow all (default).
 
-  * **Inbound:** Allow TCP 8080 **from sg-alb** only.
+- **Target SG (sg-app)**
+
+  - **Inbound:** Allow TCP 8080 **from sg-alb** only.
 
 #### Terraform Example
 
@@ -5317,8 +5367,8 @@ resource "aws_vpc_endpoint_service" "private_alb" {
 
 ✅ Use this for:
 
-* Cross-account or cross-VPC private access
-* Internal APIs shared with limited consumers
+- Cross-account or cross-VPC private access
+- Internal APIs shared with limited consumers
 
 ---
 
@@ -5326,21 +5376,21 @@ resource "aws_vpc_endpoint_service" "private_alb" {
 
 | **Approach**       | **Scope**                 | **Best For**                           | **Internet Exposure** |
 | ------------------ | ------------------------- | -------------------------------------- | --------------------- |
-| Internal ALB       | VPC only                  | Intra-VPC APIs, internal microservices | ❌ None                |
-| Security Groups    | Fine-grained within VPC   | ECS ↔ ALB, EC2 ↔ ALB                   | ❌ None                |
+| Internal ALB       | VPC only                  | Intra-VPC APIs, internal microservices | ❌ None               |
+| Security Groups    | Fine-grained within VPC   | ECS ↔ ALB, EC2 ↔ ALB                   | ❌ None               |
 | WAF IP Restriction | Regional / CIDR-based     | Hybrid internal + limited external     | ⚠️ Controlled         |
-| PrivateLink        | Cross-VPC / Cross-Account | Shared internal APIs                   | ❌ None                |
+| PrivateLink        | Cross-VPC / Cross-Account | Shared internal APIs                   | ❌ None               |
 
 ---
 
 ### ✅ Best Practices
 
-* **Use internal ALB** whenever API is purely internal.
-* **Never** associate internal ALBs with public subnets or public route tables.
-* Combine **private subnets + SG rules** for strongest isolation.
-* Enable **access logs + CloudWatch metrics** to audit all incoming requests.
-* For hybrid environments, prefer **PrivateLink** over opening VPN CIDRs broadly.
-* Use **AWS WAF IPSet rules** only for coarse-grained IP filtering (not security-critical enforcement).
+- **Use internal ALB** whenever API is purely internal.
+- **Never** associate internal ALBs with public subnets or public route tables.
+- Combine **private subnets + SG rules** for strongest isolation.
+- Enable **access logs + CloudWatch metrics** to audit all incoming requests.
+- For hybrid environments, prefer **PrivateLink** over opening VPN CIDRs broadly.
+- Use **AWS WAF IPSet rules** only for coarse-grained IP filtering (not security-critical enforcement).
 
 ---
 
@@ -5353,7 +5403,8 @@ To restrict API access to internal traffic:
 3. For cross-VPC, use **PrivateLink** or **VPC endpoints**.
    ✅ This ensures your ALB/API is fully **isolated from the public internet** and accessible **only inside your VPC network**.
 
------
+---
+
 ## 🏗️ Load Balancer Architecture Overview
 
 | **Component**                          | **Purpose / Description**                                                                                                                                                                                                          |
@@ -5361,7 +5412,7 @@ To restrict API access to internal traffic:
 | **Listener**                           | Accepts incoming connections on a specific **protocol and port** (e.g., HTTP:80, HTTPS:443). Routes requests to appropriate **target groups** based on listener **rules** (path, host, headers, etc.).                             |
 | **Target Group**                       | A **logical group of backend resources** (EC2 instances, ECS tasks, IP addresses, or Lambda functions) that receive traffic from the load balancer. Each target group has its own **health checks** and **routing configuration**. |
 | **Health Checks**                      | Periodically **probe each target’s endpoint** to verify availability. Unhealthy targets are automatically **removed** from rotation until they recover. Configurable path, port, interval, and thresholds.                         |
-| **Cross-Zone Load Balancing**          | Distributes incoming traffic **evenly across all registered targets** in **all Availability Zones (AZs)**, improving resilience and utilization. *(Enabled by default for ALB; optional for NLB/CLB.)*                             |
+| **Cross-Zone Load Balancing**          | Distributes incoming traffic **evenly across all registered targets** in **all Availability Zones (AZs)**, improving resilience and utilization. _(Enabled by default for ALB; optional for NLB/CLB.)_                             |
 | **Access Logs**                        | Detailed **request-level logs** automatically stored in **Amazon S3**, containing client IP, request path, latency, response codes, and target info — used for debugging and analytics.                                            |
 | **Stickiness (Session Persistence)**   | Ensures requests from the same client session are consistently routed to the **same backend target**, maintaining session state (via cookies).                                                                                     |
 | **AWS WAF (Web Application Firewall)** | Protects web apps from **OWASP Top 10** attacks (SQL injection, XSS, etc.). Integrated at the ALB level to **filter, rate-limit, or block** malicious requests before reaching backends.                                           |
@@ -5375,6 +5426,7 @@ An **AWS Load Balancer** consists of key components like **listeners** (entry po
 Security and observability are ensured via **SGs, WAF, access logs**, and **stickiness** for session consistency — forming a robust, scalable entry layer for applications.
 
 ---
+
 ## Q: Best Practices for Load Balancers (ALB / NLB)
 
 ---
@@ -5387,8 +5439,8 @@ Concise, production-ready best practices for ALB/NLB covering **security, resili
 
 ### ⚙️ Purpose / How it Works
 
-* Secure ingress (TLS + WAF), robust routing (listeners → rules → target groups), and observability (access logs + metrics) together provide a protected, highly available entry layer.
-* Automation (Terraform/CDK) ensures reproducible config and safe rollouts.
+- Secure ingress (TLS + WAF), robust routing (listeners → rules → target groups), and observability (access logs + metrics) together provide a protected, highly available entry layer.
+- Automation (Terraform/CDK) ensures reproducible config and safe rollouts.
 
 ---
 
@@ -5490,24 +5542,24 @@ resource "aws_lb_listener_rule" "api" {
 
 ### ✅ Quick Operational Checklist
 
-* [ ] TLS via ACM + periodic cert validation.
-* [ ] ALB spans all AZs; cross-zone enabled (if NLB enable manually).
-* [ ] Health checks: lightweight `/health`, appropriate intervals/timeouts.
-* [ ] Access logs enabled + lifecycle (archive/delete).
-* [ ] WAF rules: rate-limit, managed rule groups, IP sets.
-* [ ] Security groups: ALB SG inbound from client; app SG inbound from ALB SG only.
-* [ ] CloudWatch alarms for `HTTPCode_Target_5XX_Count`, `TargetResponseTime`, `UnHealthyHostCount`.
-* [ ] Use Terraform/CDK with PR-based changes and automated plan/apply in non-prod first.
-* [ ] Use weighted forwarding for canary releases (10% → 50% → 100%).
+- [ ] TLS via ACM + periodic cert validation.
+- [ ] ALB spans all AZs; cross-zone enabled (if NLB enable manually).
+- [ ] Health checks: lightweight `/health`, appropriate intervals/timeouts.
+- [ ] Access logs enabled + lifecycle (archive/delete).
+- [ ] WAF rules: rate-limit, managed rule groups, IP sets.
+- [ ] Security groups: ALB SG inbound from client; app SG inbound from ALB SG only.
+- [ ] CloudWatch alarms for `HTTPCode_Target_5XX_Count`, `TargetResponseTime`, `UnHealthyHostCount`.
+- [ ] Use Terraform/CDK with PR-based changes and automated plan/apply in non-prod first.
+- [ ] Use weighted forwarding for canary releases (10% → 50% → 100%).
 
 ---
 
 ### ⚠️ Gotchas (short)
 
-* Don’t hardcode ALB IPs — use DNS/Route53 alias or Global Accelerator for static IPs.
-* Long-running requests: increase idle_timeout carefully; prefer async processing.
-* Heavy WAF rules may add latency — test rule impact.
-* Cross-AZ NLB data transfer costs may apply.
+- Don’t hardcode ALB IPs — use DNS/Route53 alias or Global Accelerator for static IPs.
+- Long-running requests: increase idle_timeout carefully; prefer async processing.
+- Heavy WAF rules may add latency — test rule impact.
+- Cross-AZ NLB data transfer costs may apply.
 
 ---
 
@@ -5515,4 +5567,4 @@ resource "aws_lb_listener_rule" "api" {
 
 Use **HTTPS + ACM + WAF**, deploy ALB across AZs with **cross-zone balancing**, enable access logs, and automate everything with Terraform. Route via host/path rules and monitor `TargetResponseTime` + 5xx errors — these steps give secure, resilient, observable, and cost-efficient LB architectures.
 
-----    
+---

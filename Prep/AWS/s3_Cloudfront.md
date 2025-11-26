@@ -1,4 +1,5 @@
 # Amazon S3 (Simple Storage Service) and Cloud Front
+
 ## Q: What is Amazon S3?
 
 ### 🧠 Overview
@@ -10,14 +11,15 @@ It’s designed for **scalability, durability (99.999999999%)**, and **availabil
 
 ### ⚙️ Purpose / How it Works
 
-* Data is stored as **objects** inside **buckets** (top-level containers).
-* Each object has:
+- Data is stored as **objects** inside **buckets** (top-level containers).
+- Each object has:
 
-  * **Key (name)**
-  * **Value (data)**
-  * **Metadata (info like Content-Type, tags, ACL)**
-* You can access objects via **REST API**, **AWS CLI**, or **SDKs**.
-* Supports **versioning, encryption, lifecycle management**, and **cross-region replication**.
+  - **Key (name)**
+  - **Value (data)**
+  - **Metadata (info like Content-Type, tags, ACL)**
+
+- You can access objects via **REST API**, **AWS CLI**, or **SDKs**.
+- Supports **versioning, encryption, lifecycle management**, and **cross-region replication**.
 
 ---
 
@@ -79,13 +81,13 @@ aws s3 sync ./uploads s3://my-app-data/uploads
 
 ### ✅ Best Practices
 
-* Enable **versioning** to prevent accidental data loss.
-* Use **SSE-S3 or SSE-KMS encryption** for sensitive data.
-* Configure **bucket policies** for least privilege access.
-* Apply **S3 Lifecycle Rules** to move old data to **Glacier** or delete automatically.
-* Enable **S3 Access Logs** or **CloudTrail Data Events** for audit trails.
-* Use **S3 Object Lock** for compliance (WORM).
-* Set **S3 Block Public Access** to avoid accidental exposure.
+- Enable **versioning** to prevent accidental data loss.
+- Use **SSE-S3 or SSE-KMS encryption** for sensitive data.
+- Configure **bucket policies** for least privilege access.
+- Apply **S3 Lifecycle Rules** to move old data to **Glacier** or delete automatically.
+- Enable **S3 Access Logs** or **CloudTrail Data Events** for audit trails.
+- Use **S3 Object Lock** for compliance (WORM).
+- Set **S3 Block Public Access** to avoid accidental exposure.
 
 ---
 
@@ -95,7 +97,8 @@ aws s3 sync ./uploads s3://my-app-data/uploads
 You store files as **objects in buckets**, manage them with IAM policies, and access via CLI, SDK, or APIs.
 It’s ideal for **backups, static sites, data lakes, and logs** — with near-infinite scalability and built-in durability.
 
-----
+---
+
 ## Q: What are S3 Buckets?
 
 ---
@@ -111,14 +114,15 @@ Each bucket can store **unlimited objects**, with each object identified by a **
 
 ### ⚙️ Purpose / How It Works
 
-* **Buckets** organize data and control access.
-* **Objects** (files) live inside buckets.
-* Each bucket belongs to **one AWS region** and is identified by a unique name:
+- **Buckets** organize data and control access.
+- **Objects** (files) live inside buckets.
+- Each bucket belongs to **one AWS region** and is identified by a unique name:
 
   ```
   s3://<bucket-name>/<object-key>
   ```
-* Buckets define **security, versioning, logging, and lifecycle** settings that apply to their contents.
+
+- Buckets define **security, versioning, logging, and lifecycle** settings that apply to their contents.
 
 ---
 
@@ -206,13 +210,13 @@ resource "aws_s3_bucket" "logs" {
 
 ### ✅ Best Practices
 
-* Use **unique bucket names** (global namespace).
-* Always enable **Block Public Access** unless public hosting is required.
-* Enable **versioning** + **SSE encryption** for critical data.
-* Configure **lifecycle policies** for cost control.
-* Enable **logging** or **CloudTrail data events** for auditing.
-* Avoid using root credentials to access buckets — use **IAM roles/policies** instead.
-* For public static sites, use **S3 + CloudFront** (not direct bucket access).
+- Use **unique bucket names** (global namespace).
+- Always enable **Block Public Access** unless public hosting is required.
+- Enable **versioning** + **SSE encryption** for critical data.
+- Configure **lifecycle policies** for cost control.
+- Enable **logging** or **CloudTrail data events** for auditing.
+- Avoid using root credentials to access buckets — use **IAM roles/policies** instead.
+- For public static sites, use **S3 + CloudFront** (not direct bucket access).
 
 ---
 
@@ -221,7 +225,8 @@ resource "aws_s3_bucket" "logs" {
 An **S3 bucket** is your **logical storage container** in AWS — it holds all your objects and defines **security, replication, and lifecycle rules**.
 Think of it as the “root folder” for your data in S3 — highly durable, region-scoped, and fully configurable.
 
-----
+---
+
 ## Q: What is the Maximum Object Size in Amazon S3?
 
 ---
@@ -235,17 +240,17 @@ However, a **single PUT upload request** (non-multipart) is limited to **5 gigab
 
 ### ⚙️ Purpose / How It Works
 
-* S3 stores data as **objects** made of:
+- S3 stores data as **objects** made of:
 
-  * **Object key (name)**
-  * **Data (content)**
-  * **Metadata (attributes, tags, ACLs)**
+  - **Object key (name)**
+  - **Data (content)**
+  - **Metadata (attributes, tags, ACLs)**
 
-* To upload large files (>5 GB), use **Multipart Upload API**:
+- To upload large files (>5 GB), use **Multipart Upload API**:
 
-  * The object is split into smaller parts (up to 10,000 parts).
-  * Each part can be **5 MB–5 GB**.
-  * After all parts are uploaded, S3 assembles them into a single object (max = 5 TB).
+  - The object is split into smaller parts (up to 10,000 parts).
+  - Each part can be **5 MB–5 GB**.
+  - After all parts are uploaded, S3 assembles them into a single object (max = 5 TB).
 
 ---
 
@@ -263,7 +268,7 @@ aws s3 cp ./data.zip s3://my-bucket/
 aws s3 cp ./backup.tar s3://my-bucket/ --storage-class STANDARD --expected-size 6000000000
 ```
 
-*(AWS CLI automatically switches to multipart for large files)*
+_(AWS CLI automatically switches to multipart for large files)_
 
 Or explicitly:
 
@@ -288,22 +293,22 @@ aws s3api complete-multipart-upload --bucket my-bucket --key bigfile.bin --uploa
 
 ### ✅ Best Practices
 
-* Always use **multipart upload** for objects >100 MB (faster and resumable).
-* If uploading from apps or CI/CD, use the **AWS SDK** or `aws s3 cp` (auto-multipart).
-* For large backups, compress and split before upload.
-* Monitor **failed multipart uploads** — they can incur storage costs until cleaned up.
-* Use **S3 Transfer Acceleration** or **S3 Multi-Region Access Points** for faster uploads across regions.
+- Always use **multipart upload** for objects >100 MB (faster and resumable).
+- If uploading from apps or CI/CD, use the **AWS SDK** or `aws s3 cp` (auto-multipart).
+- For large backups, compress and split before upload.
+- Monitor **failed multipart uploads** — they can incur storage costs until cleaned up.
+- Use **S3 Transfer Acceleration** or **S3 Multi-Region Access Points** for faster uploads across regions.
 
 ---
 
 ### 💡 In short
 
-* **Max object size:** **5 TB**
-* **Max single PUT upload:** **5 GB**
+- **Max object size:** **5 TB**
+- **Max single PUT upload:** **5 GB**
   ✅ Use **multipart upload** for anything large — it’s faster, reliable, and required for objects over 5 GB.
 
-
 ---
+
 ## Q: What are S3 Storage Classes?
 
 ---
@@ -318,14 +323,15 @@ You can choose the class **per object** or use **lifecycle rules** to transition
 
 ### ⚙️ Purpose / How It Works
 
-* Every object in S3 belongs to **one storage class**.
-* The class determines:
+- Every object in S3 belongs to **one storage class**.
+- The class determines:
 
-  * **Storage cost per GB**
-  * **Retrieval cost**
-  * **Durability & availability**
-  * **Latency (access speed)**
-* Use **S3 Lifecycle Policies** to move data between classes (e.g., from Standard → Glacier).
+  - **Storage cost per GB**
+  - **Retrieval cost**
+  - **Durability & availability**
+  - **Latency (access speed)**
+
+- Use **S3 Lifecycle Policies** to move data between classes (e.g., from Standard → Glacier).
 
 ---
 
@@ -339,7 +345,7 @@ You can choose the class **per object** or use **lifecycle rules** to transition
 | 🟣 **S3 One Zone-IA**                     | 99.999999999%  | 99.5%            | Non-critical, infrequent data in one AZ                    | Immediate          | 💸 Cheaper than Standard-IA            |
 | 🧊 **S3 Glacier Instant Retrieval**       | 99.999999999%  | 99.9%            | Archival data needing milliseconds retrieval               | Milliseconds       | 💸 Low                                 |
 | ❄️ **S3 Glacier Flexible Retrieval**      | 99.999999999%  | 99.99%           | Archival data accessed occasionally                        | Minutes–hours      | 💰 Very low                            |
-| 🕳️ **S3 Glacier Deep Archive**           | 99.999999999%  | 99.99%           | Compliance/backup data rarely accessed                     | Hours (12–48h)     | 💰 Cheapest                            |
+| 🕳️ **S3 Glacier Deep Archive**            | 99.999999999%  | 99.99%           | Compliance/backup data rarely accessed                     | Hours (12–48h)     | 💰 Cheapest                            |
 | ⚙️ **S3 Reduced Redundancy (Deprecated)** | 99.99%         | 99.99%           | Legacy, non-critical data                                  | Immediate          | —                                      |
 
 ---
@@ -384,12 +390,12 @@ aws s3 cp s3://my-bucket/data.csv s3://my-bucket/data.csv \
 
 ### ✅ Best Practices
 
-* Use **Intelligent-Tiering** for unpredictable access patterns.
-* For backups and compliance, use **Glacier Deep Archive**.
-* Avoid **One Zone-IA** for critical data (single AZ risk).
-* Automate transitions via **Lifecycle Rules**.
-* Monitor with **S3 Storage Class Analysis** to optimize costs.
-* Use **S3 Object Lock + Glacier** for long-term retention policies.
+- Use **Intelligent-Tiering** for unpredictable access patterns.
+- For backups and compliance, use **Glacier Deep Archive**.
+- Avoid **One Zone-IA** for critical data (single AZ risk).
+- Automate transitions via **Lifecycle Rules**.
+- Monitor with **S3 Storage Class Analysis** to optimize costs.
+- Use **S3 Object Lock + Glacier** for long-term retention policies.
 
 ---
 
@@ -397,14 +403,15 @@ aws s3 cp s3://my-bucket/data.csv s3://my-bucket/data.csv \
 
 S3 offers multiple **storage classes** to balance **cost, performance, and durability**:
 
-* 🔥 **Standard** for frequent use
-* 🌤️ **Intelligent-Tiering** for auto optimization
-* ❄️ **IA/One Zone-IA** for infrequent use
-* 🧊 **Glacier / Deep Archive** for archival storage
+- 🔥 **Standard** for frequent use
+- 🌤️ **Intelligent-Tiering** for auto optimization
+- ❄️ **IA/One Zone-IA** for infrequent use
+- 🧊 **Glacier / Deep Archive** for archival storage
 
 👉 Choose based on **how often and how fast** you need to access your data.
 
-----
+---
+
 ## Q: What is Versioning in Amazon S3?
 
 ---
@@ -418,10 +425,10 @@ It helps you **protect against accidental deletion or overwrites**, and enables 
 
 ### ⚙️ Purpose / How It Works
 
-* When **Versioning is enabled**, each upload or overwrite of an object gets a **unique `VersionId`**.
-* Deleting an object only creates a **delete marker** — older versions remain recoverable.
-* You can **list, retrieve, or permanently delete** specific versions if needed.
-* Versioning works at the **bucket level** and can be **enabled or suspended**, but **not disabled** once enabled.
+- When **Versioning is enabled**, each upload or overwrite of an object gets a **unique `VersionId`**.
+- Deleting an object only creates a **delete marker** — older versions remain recoverable.
+- You can **list, retrieve, or permanently delete** specific versions if needed.
+- Versioning works at the **bucket level** and can be **enabled or suspended**, but **not disabled** once enabled.
 
 ---
 
@@ -504,12 +511,12 @@ resource "aws_s3_bucket" "versioned" {
 
 ### ✅ Best Practices
 
-* Always enable **versioning** for critical or shared data.
-* Combine with **MFA Delete** to prevent accidental permanent deletions.
-* Use **lifecycle rules** to delete **noncurrent versions** after a retention period (to save cost).
-* Use **Object Lock** + Versioning for compliance (WORM).
-* When replicating buckets (CRR/SRR), enable versioning on both source and destination.
-* Monitor **storage growth** — older versions consume additional space.
+- Always enable **versioning** for critical or shared data.
+- Combine with **MFA Delete** to prevent accidental permanent deletions.
+- Use **lifecycle rules** to delete **noncurrent versions** after a retention period (to save cost).
+- Use **Object Lock** + Versioning for compliance (WORM).
+- When replicating buckets (CRR/SRR), enable versioning on both source and destination.
+- Monitor **storage growth** — older versions consume additional space.
 
 ---
 
@@ -520,6 +527,7 @@ It keeps **every version** of your objects so you can **recover from accidental 
 ✅ Enable it once — and S3 will maintain **object history automatically** with unique `VersionIds`.
 
 ---
+
 ## Q: What is an S3 Lifecycle Policy?
 
 ---
@@ -533,12 +541,13 @@ It helps you **control storage costs** and **data retention** by transitioning o
 
 ### ⚙️ Purpose / How It Works
 
-* Lifecycle policies operate at the **bucket** or **prefix** level.
-* You define **rules** with **actions** based on object **age** or **creation date**:
+- Lifecycle policies operate at the **bucket** or **prefix** level.
+- You define **rules** with **actions** based on object **age** or **creation date**:
 
-  * **Transition actions** → Move objects to cheaper storage classes.
-  * **Expiration actions** → Delete objects or old versions automatically.
-* S3 runs these policies **daily**, evaluating eligible objects.
+  - **Transition actions** → Move objects to cheaper storage classes.
+  - **Expiration actions** → Delete objects or old versions automatically.
+
+- S3 runs these policies **daily**, evaluating eligible objects.
 
 ---
 
@@ -620,12 +629,12 @@ aws s3api put-bucket-lifecycle-configuration \
 
 ### ✅ Best Practices
 
-* Use **prefix-based rules** (e.g., `logs/`, `archive/`) to target only specific folders.
-* For compliance data, use **Glacier or Deep Archive** with long retention.
-* Combine **Versioning + Lifecycle** for safe cleanup of old object versions.
-* Monitor via **S3 Storage Class Analysis** before applying transitions.
-* Avoid frequent transitions (can add minor API costs).
-* Review policies regularly — they can delete data permanently.
+- Use **prefix-based rules** (e.g., `logs/`, `archive/`) to target only specific folders.
+- For compliance data, use **Glacier or Deep Archive** with long retention.
+- Combine **Versioning + Lifecycle** for safe cleanup of old object versions.
+- Monitor via **S3 Storage Class Analysis** before applying transitions.
+- Avoid frequent transitions (can add minor API costs).
+- Review policies regularly — they can delete data permanently.
 
 ---
 
@@ -634,8 +643,8 @@ aws s3api put-bucket-lifecycle-configuration \
 An **S3 Lifecycle Policy** automates **data movement and deletion** to optimize cost and retention.
 ✅ Use it to **transition old data** to Glacier or **expire outdated objects** automatically — reducing manual cleanup and storage costs.
 
+---
 
-----
 ## Q: How Do You Make an Amazon S3 Bucket Public?
 
 ---
@@ -655,7 +664,7 @@ Making a bucket public involves **three key steps**:
 2. **Add a Bucket Policy** that grants `s3:GetObject` to everyone.
 3. (Optional) **Configure as a Static Website Host** for serving web content.
 
-> ⚠️ **Important:** Always make only the *objects* public, not the entire bucket for writes — and only when necessary. Use CloudFront for safer public distribution.
+> ⚠️ **Important:** Always make only the _objects_ public, not the entire bucket for writes — and only when necessary. Use CloudFront for safer public distribution.
 
 ---
 
@@ -665,7 +674,7 @@ Making a bucket public involves **three key steps**:
 2. Open the **Permissions** tab
 3. Under **Block public access (bucket settings)** → click **Edit**
 4. **Uncheck** “Block all public access” → Confirm ✅
-5. Add a **Bucket Policy** under *Permissions → Bucket policy*:
+5. Add a **Bucket Policy** under _Permissions → Bucket policy_:
 
 ```json
 {
@@ -744,21 +753,21 @@ http://my-public-bucket.s3-website-ap-south-1.amazonaws.com
 
 | **Step** | **Setting**                                    | **Purpose**                    |
 | -------- | ---------------------------------------------- | ------------------------------ |
-| 1️⃣      | Disable *Block Public Access*                  | Allow public ACLs and policies |
-| 2️⃣      | Add bucket policy (`s3:GetObject`)             | Permit global read access      |
-| 3️⃣      | Upload content with public-read ACL (optional) | Make individual files public   |
-| 4️⃣      | Test URL access                                | Verify from browser/cURL       |
+| 1️⃣       | Disable _Block Public Access_                  | Allow public ACLs and policies |
+| 2️⃣       | Add bucket policy (`s3:GetObject`)             | Permit global read access      |
+| 3️⃣       | Upload content with public-read ACL (optional) | Make individual files public   |
+| 4️⃣       | Test URL access                                | Verify from browser/cURL       |
 
 ---
 
 ### ✅ Best Practices
 
-* Use **CloudFront CDN** instead of making buckets public directly.
-* Always **restrict write access** (`s3:PutObject`) — allow only `GetObject`.
-* Never expose **sensitive data** or logs in public buckets.
-* Enable **S3 Access Logs** or **CloudTrail** to monitor access.
-* Set **IAM least privilege** — avoid wildcard permissions in production.
-* For temporary sharing, use **pre-signed URLs** instead of public buckets.
+- Use **CloudFront CDN** instead of making buckets public directly.
+- Always **restrict write access** (`s3:PutObject`) — allow only `GetObject`.
+- Never expose **sensitive data** or logs in public buckets.
+- Enable **S3 Access Logs** or **CloudTrail** to monitor access.
+- Set **IAM least privilege** — avoid wildcard permissions in production.
+- For temporary sharing, use **pre-signed URLs** instead of public buckets.
 
 ---
 
@@ -771,7 +780,8 @@ To make a bucket public:
 3. (Optional) enable **static website hosting**.
    ✅ Safer approach → serve public content via **CloudFront**, keeping your S3 bucket private behind the CDN.
 
-----
+---
+
 ## Q: What are Pre-Signed URLs in Amazon S3?
 
 ---
@@ -787,18 +797,19 @@ Essentially — **you sign an S3 request with your credentials**, and others can
 
 ### ⚙️ Purpose / How It Works
 
-* A pre-signed URL is generated using your **AWS credentials and permissions**.
-* The URL contains:
+- A pre-signed URL is generated using your **AWS credentials and permissions**.
+- The URL contains:
 
-  * The **bucket and object key**
-  * A **signature** (HMAC-SHA256)
-  * An **expiration time** (in seconds)
-* When accessed, S3 verifies the signature and expiration — if valid, it processes the request exactly as if the signer made it.
-* Common use cases:
+  - The **bucket and object key**
+  - A **signature** (HMAC-SHA256)
+  - An **expiration time** (in seconds)
 
-  * Temporary file downloads (user portals, reports)
-  * Secure file uploads from client apps
-  * Sharing private content without making buckets public
+- When accessed, S3 verifies the signature and expiration — if valid, it processes the request exactly as if the signer made it.
+- Common use cases:
+
+  - Temporary file downloads (user portals, reports)
+  - Secure file uploads from client apps
+  - Sharing private content without making buckets public
 
 ---
 
@@ -874,12 +885,12 @@ print("Upload URL:", upload_url)
 
 ### ✅ Best Practices
 
-* Use **short expiration times** (≤1 hour) for security.
-* **Never** share pre-signed URLs publicly or embed in long-lived apps.
-* Generate URLs server-side (not from clients).
-* Restrict IAM role permissions — least privilege (e.g., only `s3:GetObject` or `s3:PutObject`).
-* Log access with **CloudTrail data events**.
-* For repeated access, use **CloudFront signed URLs** instead (more scalable).
+- Use **short expiration times** (≤1 hour) for security.
+- **Never** share pre-signed URLs publicly or embed in long-lived apps.
+- Generate URLs server-side (not from clients).
+- Restrict IAM role permissions — least privilege (e.g., only `s3:GetObject` or `s3:PutObject`).
+- Log access with **CloudTrail data events**.
+- For repeated access, use **CloudFront signed URLs** instead (more scalable).
 
 ---
 
@@ -889,7 +900,8 @@ print("Upload URL:", upload_url)
 ✅ Use them to let users **upload/download** files privately without exposing AWS credentials or making buckets public.
 They’re perfect for **temporary, secure file sharing** in web or mobile applications.
 
-----
+---
+
 ## Q: How Does Amazon S3 Ensure Data Durability?
 
 ---
@@ -948,12 +960,12 @@ Your Data
 
 ### ✅ Best Practices
 
-* Enable **Versioning** on critical buckets.
-* Use **Cross-Region Replication (CRR)** for DR and compliance.
-* Regularly monitor with **S3 Storage Lens** or **CloudWatch metrics**.
-* Enable **Server-Side Encryption (SSE-KMS)** for data integrity + security.
-* Use **S3 Object Lock** for immutable data (financial, compliance).
-* Avoid manual deletion of data copies — rely on managed lifecycle rules.
+- Enable **Versioning** on critical buckets.
+- Use **Cross-Region Replication (CRR)** for DR and compliance.
+- Regularly monitor with **S3 Storage Lens** or **CloudWatch metrics**.
+- Enable **Server-Side Encryption (SSE-KMS)** for data integrity + security.
+- Use **S3 Object Lock** for immutable data (financial, compliance).
+- Avoid manual deletion of data copies — rely on managed lifecycle rules.
 
 ---
 
@@ -963,6 +975,7 @@ Amazon S3 ensures **11 nines of durability** by storing multiple copies of each 
 ✅ It’s designed to make data loss practically impossible — even in the event of hardware or AZ failures.
 
 ---
+
 ## Q: What Are Common Use Cases for Amazon S3?
 
 ---
@@ -985,7 +998,7 @@ It integrates with other AWS services (Lambda, CloudFront, Glue, Athena, etc.) a
 
 | **Category**                      | **Use Case**                     | **Description / Example**                                                                                                                   |
 | --------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🗂️ **Backup & Archival**         | Data backup, DR storage          | Store backups from databases, EC2 snapshots, on-prem systems, or EBS volumes; integrate with AWS Backup or Glacier for long-term retention. |
+| 🗂️ **Backup & Archival**          | Data backup, DR storage          | Store backups from databases, EC2 snapshots, on-prem systems, or EBS volumes; integrate with AWS Backup or Glacier for long-term retention. |
 | 🌐 **Static Website Hosting**     | Host websites or documentation   | Serve static assets (HTML, CSS, JS, images) directly via S3 static website hosting or through CloudFront CDN.                               |
 | 🧩 **Big Data & Analytics**       | Data lake storage                | Centralized data lake for raw, processed, and curated data — queried by **Athena**, **Redshift Spectrum**, **Glue**, or **EMR**.            |
 | 🎬 **Media Storage & CDN**        | Image/video storage              | Store and deliver media files via **CloudFront** with origin as S3. Supports scalable streaming and on-demand access.                       |
@@ -993,7 +1006,7 @@ It integrates with other AWS services (Lambda, CloudFront, Glue, Athena, etc.) a
 | 🧠 **Machine Learning / AI**      | Training and model data          | Store massive datasets for ML model training (e.g., S3 + SageMaker). Ideal for parallel access by training jobs.                            |
 | 🪣 **Data Archival / Compliance** | Glacier / Deep Archive           | Retain compliance data (financial, medical) for years with immutability using **S3 Object Lock** and **Glacier Vault Lock**.                |
 | 🧾 **Log Storage & Analysis**     | Central log aggregation          | Store access logs from ALB, CloudFront, VPC Flow Logs, and analyze with Athena or OpenSearch.                                               |
-| 🛠️ **DevOps Artifacts**          | CI/CD artifact store             | Store build artifacts, Terraform state files, container images (for ECR integration), or deployment bundles.                                |
+| 🛠️ **DevOps Artifacts**           | CI/CD artifact store             | Store build artifacts, Terraform state files, container images (for ECR integration), or deployment bundles.                                |
 | 🔒 **Security & Audit**           | Store audit trails               | Keep encrypted, versioned audit logs (CloudTrail, Config, WAF logs) for traceability.                                                       |
 
 ---
@@ -1013,12 +1026,12 @@ It integrates with other AWS services (Lambda, CloudFront, Glue, Athena, etc.) a
 
 ### ✅ Best Practices
 
-* Use **S3 Lifecycle Rules** to move cold data to Glacier or Deep Archive.
-* Enable **Versioning + SSE-KMS** for critical data protection.
-* Use **CloudFront** for performance and DDoS protection.
-* Manage **access via IAM policies, S3 bucket policies, and Block Public Access**.
-* Use **Intelligent-Tiering** for unpredictable access patterns.
-* Enable **access logs** and **CloudTrail data events** for auditing.
+- Use **S3 Lifecycle Rules** to move cold data to Glacier or Deep Archive.
+- Enable **Versioning + SSE-KMS** for critical data protection.
+- Use **CloudFront** for performance and DDoS protection.
+- Manage **access via IAM policies, S3 bucket policies, and Block Public Access**.
+- Use **Intelligent-Tiering** for unpredictable access patterns.
+- Enable **access logs** and **CloudTrail data events** for auditing.
 
 ---
 
@@ -1028,7 +1041,8 @@ Amazon S3 is the **go-to storage layer** for:
 ✅ **Backups, static websites, data lakes, logs, analytics, and ML datasets.**
 Its scalability, durability, and integrations make it essential for **modern cloud, DevOps, and data-driven workloads**.
 
-----
+---
+
 ## Q: How to Host a Static Website on Amazon S3
 
 ---
@@ -1118,10 +1132,10 @@ http://example.com.s3-website-ap-south-1.amazonaws.com
 
 #### a) Create CloudFront Distribution
 
-* **Origin Domain:** `example.com.s3-website-ap-south-1.amazonaws.com`
-* **Viewer Protocol Policy:** Redirect HTTP → HTTPS
-* **Alternate Domain Names (CNAMEs):** `example.com`, `www.example.com`
-* **Attach ACM Certificate** (for HTTPS)
+- **Origin Domain:** `example.com.s3-website-ap-south-1.amazonaws.com`
+- **Viewer Protocol Policy:** Redirect HTTP → HTTPS
+- **Alternate Domain Names (CNAMEs):** `example.com`, `www.example.com`
+- **Attach ACM Certificate** (for HTTPS)
 
 #### b) Route 53 DNS Record
 
@@ -1143,12 +1157,12 @@ Point your domain (A/AAAA alias) to CloudFront distribution.
 
 ### ✅ Best Practices
 
-* Use **CloudFront** for HTTPS, caching, and global performance.
-* Keep S3 **public access restricted** if using CloudFront Origin Access Control (OAC).
-* Enable **S3 Versioning** for easy rollback of website content.
-* Set **Lifecycle policies** to clean up old versions.
-* Use **Route 53 alias records** for domain → CloudFront mapping.
-* Monitor **S3 access logs** for usage tracking.
+- Use **CloudFront** for HTTPS, caching, and global performance.
+- Keep S3 **public access restricted** if using CloudFront Origin Access Control (OAC).
+- Enable **S3 Versioning** for easy rollback of website content.
+- Set **Lifecycle policies** to clean up old versions.
+- Use **Route 53 alias records** for domain → CloudFront mapping.
+- Monitor **S3 access logs** for usage tracking.
 
 ---
 
@@ -1159,6 +1173,7 @@ To host a static website on S3:
 ✅ Result: a **serverless, scalable, globally available** static site with minimal cost and zero maintenance.
 
 ---
+
 ## Q: How to Secure Amazon S3 Buckets 🔒
 
 ---
@@ -1214,11 +1229,13 @@ Grant **users and roles** only the permissions they need — no wildcards (`*`).
 ```json
 {
   "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": ["s3:GetObject"],
-    "Resource": ["arn:aws:s3:::my-secure-bucket/*"]
-  }]
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::my-secure-bucket/*"]
+    }
+  ]
 }
 ```
 
@@ -1233,14 +1250,20 @@ Use **resource-based bucket policies** only when necessary — for specific acco
 ```json
 {
   "Version": "2012-10-17",
-  "Statement": [{
-    "Sid": "AllowCloudFrontAccess",
-    "Effect": "Allow",
-    "Principal": {"Service": "cloudfront.amazonaws.com"},
-    "Action": "s3:GetObject",
-    "Resource": "arn:aws:s3:::my-secure-bucket/*",
-    "Condition": {"StringEquals": {"AWS:SourceArn": "arn:aws:cloudfront::123456789012:distribution/EXAMPLE"}}
-  }]
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontAccess",
+      "Effect": "Allow",
+      "Principal": { "Service": "cloudfront.amazonaws.com" },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-secure-bucket/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::123456789012:distribution/EXAMPLE"
+        }
+      }
+    }
+  ]
 }
 ```
 
@@ -1292,7 +1315,7 @@ Use **VPC Endpoint Policies** for internal-only buckets.
   "Principal": "*",
   "Action": "s3:*",
   "Resource": "arn:aws:s3:::my-secure-bucket/*",
-  "Condition": {"StringNotEquals": {"aws:SourceVpce": "vpce-123456789"}}
+  "Condition": { "StringNotEquals": { "aws:SourceVpce": "vpce-123456789" } }
 }
 ```
 
@@ -1365,7 +1388,8 @@ To secure an S3 bucket:
 6️⃣ **Monitor via CloudTrail + Config**.
 ✅ Combined, these provide **enterprise-grade, end-to-end S3 security** — from access to encryption to auditability.
 
-----
+---
+
 ## Q: What is Amazon S3 Object Lock?
 
 ---
@@ -1382,9 +1406,9 @@ It helps meet regulatory and compliance requirements (e.g., SEC 17a-4(f), FINRA,
 S3 Object Lock enforces **retention policies** at the **object level**, preventing deletion or alteration until the retention period expires.
 You can configure:
 
-* **Retention Mode** – `GOVERNANCE` or `COMPLIANCE`
-* **Retention Period** – Duration (days/years) for which data is locked
-* **Legal Holds** – Indefinite protection until explicitly removed
+- **Retention Mode** – `GOVERNANCE` or `COMPLIANCE`
+- **Retention Period** – Duration (days/years) for which data is locked
+- **Legal Holds** – Indefinite protection until explicitly removed
 
 It requires **Versioning** to be enabled on the bucket.
 
@@ -1395,7 +1419,7 @@ It requires **Versioning** to be enabled on the bucket.
 | **Mode**       | **Description**                                                                                                         | **Who Can Modify/Delete** |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------- |
 | **GOVERNANCE** | Prevents deletion by most users; only users with special IAM permissions (`s3:BypassGovernanceRetention`) can override. | Authorized IAM users only |
-| **COMPLIANCE** | Strict mode; **no one**, not even the root account, can delete or overwrite the object until retention expires.         | ❌ No one                  |
+| **COMPLIANCE** | Strict mode; **no one**, not even the root account, can delete or overwrite the object until retention expires.         | ❌ No one                 |
 | **Legal Hold** | Manual, indefinite lock — independent of retention period. Can be removed only by authorized users.                     | Only when hold removed    |
 
 ---
@@ -1492,9 +1516,9 @@ resource "aws_s3_object_lock_configuration" "example" {
 
 ### ⚠️ Important Notes
 
-* Once **Object Lock** is enabled on a bucket, **it cannot be disabled**.
-* `COMPLIANCE` mode is **irrevocable** — not even the root user can delete or shorten retention.
-* Works only on **new objects**; old objects must be re-uploaded to apply lock.
+- Once **Object Lock** is enabled on a bucket, **it cannot be disabled**.
+- `COMPLIANCE` mode is **irrevocable** — not even the root user can delete or shorten retention.
+- Works only on **new objects**; old objects must be re-uploaded to apply lock.
 
 ---
 
@@ -1505,6 +1529,7 @@ It enforces **WORM protection** to prevent any changes or deletions for a define
 ✅ Use with **versioning + SSE-KMS** for complete secure, compliant, tamper-proof storage.
 
 ---
+
 ## Q: What is Server-Side Encryption (SSE) in Amazon S3? 🔒
 
 ---
@@ -1532,9 +1557,9 @@ This means encryption and decryption are **completely managed by AWS**, ensuring
 
 | **Type**                             | **Key Management**                              | **Encryption Algorithm** | **Use Case**                                                                 |
 | ------------------------------------ | ----------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------- |
-| **SSE-S3** *(AES-256)*               | Managed entirely by AWS                         | AES-256                  | Default and simplest — no setup needed.                                      |
-| **SSE-KMS** *(AWS KMS-managed keys)* | Managed via AWS KMS CMKs (Customer Master Keys) | AES-256 (via KMS)        | Enterprise-grade, fine-grained key control & audit logs.                     |
-| **SSE-C** *(Customer-provided keys)* | You manage and supply the key on every request  | AES-256                  | Full control over encryption keys (rarely used, high security environments). |
+| **SSE-S3** _(AES-256)_               | Managed entirely by AWS                         | AES-256                  | Default and simplest — no setup needed.                                      |
+| **SSE-KMS** _(AWS KMS-managed keys)_ | Managed via AWS KMS CMKs (Customer Master Keys) | AES-256 (via KMS)        | Enterprise-grade, fine-grained key control & audit logs.                     |
+| **SSE-C** _(Customer-provided keys)_ | You manage and supply the key on every request  | AES-256                  | Full control over encryption keys (rarely used, high security environments). |
 
 ---
 
@@ -1599,8 +1624,8 @@ aws s3api put-bucket-encryption --bucket my-secure-bucket \
 | --------------------------- | ----------------- | -------------------------- | ----------------------- |
 | **Key Managed By**          | AWS               | You (via KMS)              | You (manually)          |
 | **Key Rotation**            | Automatic         | Automatic / manual         | Manual                  |
-| **Auditing via CloudTrail** | ❌ No              | ✅ Yes                      | ❌ No                    |
-| **KMS Key Policies**        | ❌ N/A             | ✅ Yes                      | ❌ N/A                   |
+| **Auditing via CloudTrail** | ❌ No             | ✅ Yes                     | ❌ No                   |
+| **KMS Key Policies**        | ❌ N/A            | ✅ Yes                     | ❌ N/A                  |
 | **Performance Impact**      | Minimal           | Slight (due to KMS calls)  | Slight                  |
 | **Best For**                | General workloads | Compliance, sensitive data | High-security isolation |
 
@@ -1608,12 +1633,12 @@ aws s3api put-bucket-encryption --bucket my-secure-bucket \
 
 ### ✅ Best Practices
 
-* Use **SSE-KMS** for sensitive or regulated data — provides key control and auditability.
-* Enable **default encryption** at the bucket level.
-* Limit KMS key usage via **IAM and key policies** (`kms:Encrypt`, `kms:Decrypt`).
-* Combine with **S3 Versioning + Object Lock** for maximum data protection.
-* Monitor **CloudTrail** for KMS encryption and decryption operations.
-* Don’t store plaintext keys or share them across applications (especially with SSE-C).
+- Use **SSE-KMS** for sensitive or regulated data — provides key control and auditability.
+- Enable **default encryption** at the bucket level.
+- Limit KMS key usage via **IAM and key policies** (`kms:Encrypt`, `kms:Decrypt`).
+- Combine with **S3 Versioning + Object Lock** for maximum data protection.
+- Monitor **CloudTrail** for KMS encryption and decryption operations.
+- Don’t store plaintext keys or share them across applications (especially with SSE-C).
 
 ---
 
@@ -1626,6 +1651,7 @@ aws s3api put-bucket-encryption --bucket my-secure-bucket \
 It’s the easiest way to ensure **data confidentiality and compliance** without changing your application logic.
 
 ---
+
 ## Q: What’s the Difference Between SSE-S3 and SSE-KMS?
 
 ---
@@ -1714,12 +1740,13 @@ resource "aws_kms_key" "s3key" {
 
 ### 💡 In short
 
-* **SSE-S3** → “AWS handles everything.” (Simple, fast, no extra cost)
-* **SSE-KMS** → “You control and audit key usage.” (Secure, compliant, auditable)
+- **SSE-S3** → “AWS handles everything.” (Simple, fast, no extra cost)
+- **SSE-KMS** → “You control and audit key usage.” (Secure, compliant, auditable)
   ✅ Use **SSE-KMS** for sensitive or regulated workloads;
   use **SSE-S3** for general data protection with minimal management overhead.
 
-----
+---
+
 ## Q: What is Amazon S3 Event Notification? ⚡
 
 ---
@@ -1733,13 +1760,14 @@ They’re a cornerstone of **event-driven architectures**, enabling integrations
 
 ### ⚙️ Purpose / How It Works
 
-* You configure an **event notification** on an S3 bucket.
-* When an event (like `s3:ObjectCreated:Put`) occurs, S3 sends a message to the **target destination**:
+- You configure an **event notification** on an S3 bucket.
+- When an event (like `s3:ObjectCreated:Put`) occurs, S3 sends a message to the **target destination**:
 
-  * 🪄 **Lambda function** – run custom code (e.g., image resizing, log parsing).
-  * 📬 **SQS queue** – decouple event processing pipelines.
-  * 📢 **SNS topic** – broadcast notifications to multiple subscribers.
-* Notifications can be **filtered by prefix/suffix** (e.g., only trigger for `.jpg` files in `images/` folder).
+  - 🪄 **Lambda function** – run custom code (e.g., image resizing, log parsing).
+  - 📬 **SQS queue** – decouple event processing pipelines.
+  - 📢 **SNS topic** – broadcast notifications to multiple subscribers.
+
+- Notifications can be **filtered by prefix/suffix** (e.g., only trigger for `.jpg` files in `images/` folder).
 
 ---
 
@@ -1836,12 +1864,12 @@ resource "aws_s3_bucket_notification" "notify" {
 
 ### ✅ Best Practices
 
-* Always set **prefix/suffix filters** to minimize unnecessary triggers.
-* Use **SQS** between S3 and consumers for durability and retry handling.
-* Grant proper **IAM permissions** (`s3:PutBucketNotification`, `lambda:InvokeFunction`, `sqs:SendMessage`).
-* Enable **ObjectCreated:CompleteMultipartUpload** if using multipart uploads.
-* Use **CloudWatch Logs** to debug Lambda trigger failures.
-* Prefer **EventBridge** (newer service) for complex event routing and cross-service triggers.
+- Always set **prefix/suffix filters** to minimize unnecessary triggers.
+- Use **SQS** between S3 and consumers for durability and retry handling.
+- Grant proper **IAM permissions** (`s3:PutBucketNotification`, `lambda:InvokeFunction`, `sqs:SendMessage`).
+- Enable **ObjectCreated:CompleteMultipartUpload** if using multipart uploads.
+- Use **CloudWatch Logs** to debug Lambda trigger failures.
+- Prefer **EventBridge** (newer service) for complex event routing and cross-service triggers.
 
 ---
 
@@ -1863,6 +1891,7 @@ Whenever an object is **created, deleted, or modified**, S3 can trigger **Lambda
 ✅ Ideal for image pipelines, data ingestion, and real-time file processing.
 
 ---
+
 ## Q: How to Prevent Accidental Deletion in Amazon S3 🛡️
 
 ---
@@ -1879,10 +1908,10 @@ AWS provides multiple layers of protection — such as **Versioning**, **MFA Del
 Accidental deletion can occur from human error, scripts, or IAM misconfigurations.
 S3 mitigates this risk by:
 
-* Keeping **older versions** of deleted objects.
-* Requiring **MFA confirmation** for deletions.
-* Enforcing **immutability (Object Lock)**.
-* Restricting delete permissions in **IAM policies**.
+- Keeping **older versions** of deleted objects.
+- Requiring **MFA confirmation** for deletions.
+- Enforcing **immutability (Object Lock)**.
+- Restricting delete permissions in **IAM policies**.
 
 ---
 
@@ -1981,7 +2010,7 @@ Use **least privilege** — deny `s3:DeleteObject` or allow deletes only for adm
 
 Track who deleted what — critical for audits and investigations.
 
-* **Enable CloudTrail Data Events** for S3:
+- **Enable CloudTrail Data Events** for S3:
 
 ```bash
 aws cloudtrail put-event-selectors \
@@ -2037,12 +2066,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "safe_delete" {
 
 ### ✅ Best Practices
 
-* Always **enable versioning** on important buckets.
-* Apply **MFA Delete** to protect against accidental or malicious deletions.
-* Use **Object Lock (COMPLIANCE mode)** for critical, regulated data.
-* Deny `s3:DeleteObject` to non-admin IAM roles.
-* Monitor **CloudTrail logs** and **Config rules** for delete actions.
-* Don’t use **root account** for operations — use scoped IAM roles.
+- Always **enable versioning** on important buckets.
+- Apply **MFA Delete** to protect against accidental or malicious deletions.
+- Use **Object Lock (COMPLIANCE mode)** for critical, regulated data.
+- Deny `s3:DeleteObject` to non-admin IAM roles.
+- Monitor **CloudTrail logs** and **Config rules** for delete actions.
+- Don’t use **root account** for operations — use scoped IAM roles.
 
 ---
 
@@ -2056,7 +2085,8 @@ To prevent accidental deletions in S3:
 5️⃣ Monitor via **CloudTrail**.
 ✅ Together, these make your S3 data **deletion-proof, recoverable, and compliant**.
 
-----
+---
+
 ## Q: What is an Amazon S3 Access Point? 🌐
 
 ---
@@ -2073,9 +2103,9 @@ Instead of using the **bucket’s single global endpoint**, access points provid
 S3 Access Points act as **named network endpoints** attached to a bucket.
 Each access point has:
 
-* A **unique alias/ARN** (e.g., `myapp-ap-123456789012.s3-accesspoint.ap-south-1.amazonaws.com`)
-* A **custom access policy** that defines who can access and what actions they can perform
-* Optional **VPC restrictions** for private data access
+- A **unique alias/ARN** (e.g., `myapp-ap-123456789012.s3-accesspoint.ap-south-1.amazonaws.com`)
+- A **custom access policy** that defines who can access and what actions they can perform
+- Optional **VPC restrictions** for private data access
 
 When you make S3 API requests through an access point, permissions are evaluated against both:
 
@@ -2088,9 +2118,9 @@ This enables **fine-grained, application-specific control** without modifying th
 
 ### 🧩 Example Use Case
 
-* A **data lake bucket** (`company-analytics`) shared across multiple teams (e.g., Marketing, Finance, ML).
-* Each team gets its own **Access Point** with a policy restricting access to its folder only.
-* Optionally, Access Points can be **restricted to specific VPCs** — ensuring internal-only access.
+- A **data lake bucket** (`company-analytics`) shared across multiple teams (e.g., Marketing, Finance, ML).
+- Each team gets its own **Access Point** with a policy restricting access to its folder only.
+- Optionally, Access Points can be **restricted to specific VPCs** — ensuring internal-only access.
 
 ---
 
@@ -2180,12 +2210,12 @@ arn:aws:s3:ap-south-1:123456789012:accesspoint/marketing-ap/object/marketing/rep
 
 ### ✅ Best Practices
 
-* Use **one access point per application, team, or data domain**.
-* Restrict public access (`BlockPublicAccess=true`) on all access points.
-* Use **VPC-only access points** for internal or compliance-sensitive data.
-* Apply **least-privilege access policies** at the access point level.
-* Use **Access Point ARNs** instead of bucket ARNs in IAM policies for fine control.
-* Monitor access via **CloudTrail** — logs access point ARN in events.
+- Use **one access point per application, team, or data domain**.
+- Restrict public access (`BlockPublicAccess=true`) on all access points.
+- Use **VPC-only access points** for internal or compliance-sensitive data.
+- Apply **least-privilege access policies** at the access point level.
+- Use **Access Point ARNs** instead of bucket ARNs in IAM policies for fine control.
+- Monitor access via **CloudTrail** — logs access point ARN in events.
 
 ---
 
@@ -2194,8 +2224,8 @@ arn:aws:s3:ap-south-1:123456789012:accesspoint/marketing-ap/object/marketing/rep
 **S3 Access Points** simplify managing access to shared S3 buckets by creating **dedicated, policy-controlled endpoints** for each application or team.
 ✅ They enable **fine-grained permissions**, **VPC restrictions**, and **simpler access control** — perfect for **data lakes**, **multi-tenant S3 architectures**, and **private internal access**.
 
+---
 
-----
 ## Q: What is Amazon S3 Transfer Acceleration? 🚀
 
 ---
@@ -2220,9 +2250,9 @@ With **Transfer Acceleration**:
 
 ### 🧩 Example: Standard vs Accelerated Path
 
-| **Scenario**            | **Network Path**                                                  |
-| ----------------------- | ----------------------------------------------------------------- |
-| 🌐 Standard Upload      | Client → Internet → S3 Region Endpoint                            |
+| **Scenario**             | **Network Path**                                                  |
+| ------------------------ | ----------------------------------------------------------------- |
+| 🌐 Standard Upload       | Client → Internet → S3 Region Endpoint                            |
 | ⚡ Transfer Acceleration | Client → Nearest CloudFront Edge → AWS Global Network → S3 Bucket |
 
 ---
@@ -2288,11 +2318,11 @@ resource "aws_s3_bucket_accelerate_configuration" "example" {
 
 ### ✅ Best Practices
 
-* Use **Transfer Acceleration** for global uploads (e.g., mobile apps, distributed users).
-* For local or in-region uploads, disable it (adds cost without benefit).
-* Test performance first — only enable for buckets with frequent large-object uploads.
-* Use with **pre-signed URLs** for secure accelerated uploads from clients.
-* Combine with **Multipart Upload** for very large files.
+- Use **Transfer Acceleration** for global uploads (e.g., mobile apps, distributed users).
+- For local or in-region uploads, disable it (adds cost without benefit).
+- Test performance first — only enable for buckets with frequent large-object uploads.
+- Use with **pre-signed URLs** for secure accelerated uploads from clients.
+- Combine with **Multipart Upload** for very large files.
 
 ---
 
@@ -2318,7 +2348,8 @@ https://<bucket>.s3-accelerate.amazonaws.com
 
 Result: **significantly lower latency** and **improved transfer speeds** worldwide.
 
-----
+---
+
 ## Q: How to Access Amazon S3 Privately Within a VPC 🔒
 
 ---
@@ -2333,12 +2364,12 @@ This ensures all S3 traffic stays **within the AWS network** — secure, faster,
 
 ### ⚙️ Purpose / How It Works
 
-* A **VPC Gateway Endpoint** (for S3) acts as a **private route** between your VPC and S3.
-* When configured, all S3 API calls (e.g., `GetObject`, `PutObject`) are routed through the **AWS internal network**, not public internet.
-* You can **control access** via:
+- A **VPC Gateway Endpoint** (for S3) acts as a **private route** between your VPC and S3.
+- When configured, all S3 API calls (e.g., `GetObject`, `PutObject`) are routed through the **AWS internal network**, not public internet.
+- You can **control access** via:
 
-  * **VPC endpoint policies**
-  * **S3 bucket policies (using `aws:SourceVpce` or `aws:SourceVpc`)**
+  - **VPC endpoint policies**
+  - **S3 bucket policies (using `aws:SourceVpce` or `aws:SourceVpc`)**
 
 ---
 
@@ -2474,12 +2505,12 @@ resource "aws_s3_bucket_policy" "private_access" {
 
 ### ✅ Best Practices
 
-* Always **restrict bucket access** to specific VPC endpoints (`aws:SourceVpce`).
-* Use **private subnets** with **no NAT Gateway** for isolated workloads.
-* Combine with **S3 Access Points (VPC Restricted)** for fine-grained control.
-* Monitor access via **CloudTrail** (logs include VPC endpoint ID).
-* Keep **Block Public Access** enabled on all buckets.
-* Tag endpoints with owner/environment details for governance.
+- Always **restrict bucket access** to specific VPC endpoints (`aws:SourceVpce`).
+- Use **private subnets** with **no NAT Gateway** for isolated workloads.
+- Combine with **S3 Access Points (VPC Restricted)** for fine-grained control.
+- Monitor access via **CloudTrail** (logs include VPC endpoint ID).
+- Keep **Block Public Access** enabled on all buckets.
+- Tag endpoints with owner/environment details for governance.
 
 ---
 
@@ -2502,7 +2533,8 @@ To access S3 **privately within a VPC**:
 
 Result: All S3 traffic stays **inside AWS’s private network** — no internet, no NAT, fully secure.
 
-----
+---
+
 ## Q: What is Amazon CloudFront? 🌍⚡
 
 ---
@@ -2510,7 +2542,7 @@ Result: All S3 traffic stays **inside AWS’s private network** — no internet,
 ### 🧠 Overview
 
 **Amazon CloudFront** is a **Content Delivery Network (CDN)** service by AWS that securely delivers **web content, videos, APIs, and static or dynamic assets** to users **with low latency and high transfer speed**.
-It caches content across **AWS edge locations** worldwide, reducing load on origin servers (like **S3**, **EC2**, or on-prem web servers**) and improving performance globally.
+It caches content across **AWS edge locations** worldwide, reducing load on origin servers (like **S3**, **EC2**, or on-prem web servers\*\*) and improving performance globally.
 
 ---
 
@@ -2523,10 +2555,10 @@ It caches content across **AWS edge locations** worldwide, reducing load on orig
 
 This mechanism provides:
 
-* ⚡ Faster delivery (reduced latency)
-* 💰 Lower bandwidth costs (cached data)
-* 🔒 Security (WAF, Shield, HTTPS)
-* 🌐 Global reach (600+ edge POPs)
+- ⚡ Faster delivery (reduced latency)
+- 💰 Lower bandwidth costs (cached data)
+- 🔒 Security (WAF, Shield, HTTPS)
+- 🌐 Global reach (600+ edge POPs)
 
 ---
 
@@ -2624,14 +2656,14 @@ aws cloudfront create-origin-access-control \
 
 ### ✅ Best Practices
 
-* Use **OAC (Origin Access Control)** instead of old OAI for S3 origin security.
-* Always **redirect HTTP → HTTPS** (viewer protocol policy).
-* Enable **WAF** and **AWS Shield Standard** for DDoS and web attacks.
-* Use **custom error pages (403/404)** for better UX.
-* Set **TTL values** (min/max/default) appropriately for cache freshness.
-* Enable **Access Logs** and send them to S3 for analytics.
-* Use **ACM-issued SSL certs** for custom domain HTTPS.
-* Use **Invalidations** to purge outdated content when needed:
+- Use **OAC (Origin Access Control)** instead of old OAI for S3 origin security.
+- Always **redirect HTTP → HTTPS** (viewer protocol policy).
+- Enable **WAF** and **AWS Shield Standard** for DDoS and web attacks.
+- Use **custom error pages (403/404)** for better UX.
+- Set **TTL values** (min/max/default) appropriately for cache freshness.
+- Enable **Access Logs** and send them to S3 for analytics.
+- Use **ACM-issued SSL certs** for custom domain HTTPS.
+- Use **Invalidations** to purge outdated content when needed:
 
   ```bash
   aws cloudfront create-invalidation --distribution-id E1ABCXYZ --paths "/*"
@@ -2658,7 +2690,8 @@ aws cloudfront create-origin-access-control \
 It caches your **S3 or web content at edge locations**, enforces **HTTPS + WAF security**, and integrates with **Lambda@Edge** for smart edge logic.
 ✅ Use it for **websites, APIs, streaming, and global file distribution** — low latency, high availability, and enterprise-grade security.
 
-----
+---
+
 ## Q: What Are **Origin** and **Distribution** in Amazon CloudFront? 🌍⚙️
 
 ---
@@ -2667,8 +2700,8 @@ It caches your **S3 or web content at edge locations**, enforces **HTTPS + WAF s
 
 In **Amazon CloudFront**, the two key concepts are:
 
-* **Origin** → The **source location** where your content lives (e.g., S3, ALB, EC2, or custom HTTP server).
-* **Distribution** → The **CloudFront configuration** that defines **how content is cached, secured, and delivered** to users globally through AWS edge locations.
+- **Origin** → The **source location** where your content lives (e.g., S3, ALB, EC2, or custom HTTP server).
+- **Distribution** → The **CloudFront configuration** that defines **how content is cached, secured, and delivered** to users globally through AWS edge locations.
 
 Together, they enable **fast, secure, and scalable content delivery** worldwide.
 
@@ -2678,14 +2711,14 @@ Together, they enable **fast, secure, and scalable content delivery** worldwide.
 
 #### 📦 **Origin**
 
-* The **backend source** of content that CloudFront fetches when the requested data isn’t already cached.
-* Can be an **S3 bucket**, **Application Load Balancer**, **EC2 instance**, **API Gateway**, or **on-prem web server**.
-* Each origin is defined with its:
+- The **backend source** of content that CloudFront fetches when the requested data isn’t already cached.
+- Can be an **S3 bucket**, **Application Load Balancer**, **EC2 instance**, **API Gateway**, or **on-prem web server**.
+- Each origin is defined with its:
 
-  * Domain name (e.g., `myapp.s3.amazonaws.com`)
-  * Origin ID (unique name)
-  * Protocol policy (HTTP/HTTPS)
-  * Optional Origin Access Control (OAC) for private access.
+  - Domain name (e.g., `myapp.s3.amazonaws.com`)
+  - Origin ID (unique name)
+  - Protocol policy (HTTP/HTTPS)
+  - Optional Origin Access Control (OAC) for private access.
 
 > 🧩 Think of **Origin** as: “Where does my content live?”
 
@@ -2693,13 +2726,13 @@ Together, they enable **fast, secure, and scalable content delivery** worldwide.
 
 #### 🌐 **Distribution**
 
-* The **CloudFront service configuration** that manages **global caching, delivery, and security** of your content.
-* It contains:
+- The **CloudFront service configuration** that manages **global caching, delivery, and security** of your content.
+- It contains:
 
-  * One or more **origins**
-  * **Cache behaviors** (rules controlling caching and routing per path/pattern)
-  * **Viewer protocols** (HTTP→HTTPS redirects, signed URLs)
-  * **WAF, logging, and SSL/TLS configurations**
+  - One or more **origins**
+  - **Cache behaviors** (rules controlling caching and routing per path/pattern)
+  - **Viewer protocols** (HTTP→HTTPS redirects, signed URLs)
+  - **WAF, logging, and SSL/TLS configurations**
 
 When a user accesses your CloudFront URL (e.g., `https://d123abcde.cloudfront.net`), the request is automatically routed to the **nearest edge location**, which serves cached content or retrieves it from the origin if missing.
 
@@ -2791,24 +2824,25 @@ resource "aws_cloudfront_distribution" "my_distribution" {
 
 ### ✅ Best Practices
 
-* Always secure origins using **Origin Access Control (OAC)** — prevent direct access to S3.
-* Use multiple origins in a single distribution for **failover** or **path-based routing**.
-* Set appropriate **cache TTLs** (short for dynamic, long for static).
-* Always enable **HTTPS (TLS)** for viewers and origin connections.
-* Use **custom domain names (CNAMEs)** + ACM SSL certs for branded delivery.
-* Enable **WAF + AWS Shield Standard** for DDoS and app-layer protection.
+- Always secure origins using **Origin Access Control (OAC)** — prevent direct access to S3.
+- Use multiple origins in a single distribution for **failover** or **path-based routing**.
+- Set appropriate **cache TTLs** (short for dynamic, long for static).
+- Always enable **HTTPS (TLS)** for viewers and origin connections.
+- Use **custom domain names (CNAMEs)** + ACM SSL certs for branded delivery.
+- Enable **WAF + AWS Shield Standard** for DDoS and app-layer protection.
 
 ---
 
 ### 💡 In short
 
-* **Origin** → “Where your content lives.”
-* **Distribution** → “How CloudFront delivers it securely and fast.”
+- **Origin** → “Where your content lives.”
+- **Distribution** → “How CloudFront delivers it securely and fast.”
 
 ✅ The **Origin** feeds CloudFront with data,
 ✅ The **Distribution** ensures it’s **cached, accelerated, and protected** across AWS’s global edge network.
 
-----
+---
+
 ## Q: What is an **Edge Location** in Amazon CloudFront? 🌎⚡
 
 ---
@@ -2826,8 +2860,9 @@ It’s where **end-user requests terminate** — providing **low latency**, **hi
    CloudFront routes the request to the **nearest edge location** based on **latency and geography**.
 2. The **edge cache** checks if the content is already available:
 
-   * ✅ **Cache Hit:** Served instantly from the edge (no origin call).
-   * ❌ **Cache Miss:** Fetched from the origin (e.g., S3, ALB, EC2), cached, and then delivered to the user.
+   - ✅ **Cache Hit:** Served instantly from the edge (no origin call).
+   - ❌ **Cache Miss:** Fetched from the origin (e.g., S3, ALB, EC2), cached, and then delivered to the user.
+
 3. Future requests from nearby users are served from that **edge cache**, minimizing round-trip times.
 
 ---
@@ -2853,7 +2888,7 @@ S3 Origin (ap-south-1)
 | **Feature**                 | **Description**                                                                   |
 | --------------------------- | --------------------------------------------------------------------------------- |
 | 🌍 **Location**             | 600+ Edge POPs across 100+ cities globally (via AWS Global Network).              |
-| ⚡ **Low Latency**           | Routes requests to the nearest edge, minimizing round-trip time.                  |
+| ⚡ **Low Latency**          | Routes requests to the nearest edge, minimizing round-trip time.                  |
 | 💾 **Caching**              | Stores frequently accessed objects locally for re-use.                            |
 | 🔄 **TTL-Based Expiry**     | Cache entries expire based on CloudFront cache policies.                          |
 | 🔒 **Security Integration** | Supports AWS WAF, Shield, TLS termination, signed URLs.                           |
@@ -2885,11 +2920,13 @@ exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
 
   // Redirect HTTP → HTTPS
-  if (request.headers['cloudfront-forwarded-proto'][0].value === 'http') {
+  if (request.headers["cloudfront-forwarded-proto"][0].value === "http") {
     return {
-      status: '301',
+      status: "301",
       headers: {
-        location: [{ value: `https://${request.headers.host[0].value}${request.uri}` }],
+        location: [
+          { value: `https://${request.headers.host[0].value}${request.uri}` },
+        ],
       },
     };
   }
@@ -2930,12 +2967,12 @@ If Still Miss → Origin (S3/ALB)
 
 ### ✅ Best Practices
 
-* Place **frequently accessed content** (e.g., static assets, APIs) behind CloudFront to leverage edge caching.
-* Use **shorter TTLs** for dynamic data and **longer TTLs** for static content.
-* Use **Lambda@Edge** for real-time header manipulation, authentication, or redirects.
-* Enable **WAF** and **Shield** for DDoS protection at the edge.
-* Use **compression (Gzip/Brotli)** to optimize data transfer.
-* Log requests via **CloudFront Access Logs** for performance analysis.
+- Place **frequently accessed content** (e.g., static assets, APIs) behind CloudFront to leverage edge caching.
+- Use **shorter TTLs** for dynamic data and **longer TTLs** for static content.
+- Use **Lambda@Edge** for real-time header manipulation, authentication, or redirects.
+- Enable **WAF** and **Shield** for DDoS protection at the edge.
+- Use **compression (Gzip/Brotli)** to optimize data transfer.
+- Log requests via **CloudFront Access Logs** for performance analysis.
 
 ---
 
@@ -2954,7 +2991,8 @@ If Still Miss → Origin (S3/ALB)
 An **Edge Location** is a **global caching point** in AWS CloudFront’s network that delivers content **closest to the end user**.
 ✅ It reduces latency, accelerates content delivery, and supports edge compute functions like **Lambda@Edge** — enabling **faster, secure, and intelligent content distribution** worldwide.
 
-----
+---
+
 ## Q: What is TTL (Time-to-Live) in Amazon CloudFront? ⏱️⚙️
 
 ---
@@ -2976,9 +3014,9 @@ When a user requests content:
 
 This mechanism ensures:
 
-* ⚡ Faster performance (less origin traffic)
-* 💰 Lower cost (fewer origin requests)
-* 🔄 Fresh content when TTL expires
+- ⚡ Faster performance (less origin traffic)
+- 💰 Lower cost (fewer origin requests)
+- 🔄 Fresh content when TTL expires
 
 ---
 
@@ -3067,16 +3105,17 @@ Expires: Wed, 13 Nov 2025 12:00:00 GMT
 
 ### ✅ Best Practices
 
-* Use **short TTLs** (5–30s) for **dynamic content** (e.g., APIs).
-* Use **long TTLs** (1h–24h) for **static assets** (e.g., images, JS, CSS).
-* Set **MinTTL = 0** to allow immediate invalidations or Cache-Control overrides.
-* Combine **Cache-Control headers** with **CloudFront TTLs** for optimal control.
-* Use **Invalidations** when deploying updates before TTL expiry:
+- Use **short TTLs** (5–30s) for **dynamic content** (e.g., APIs).
+- Use **long TTLs** (1h–24h) for **static assets** (e.g., images, JS, CSS).
+- Set **MinTTL = 0** to allow immediate invalidations or Cache-Control overrides.
+- Combine **Cache-Control headers** with **CloudFront TTLs** for optimal control.
+- Use **Invalidations** when deploying updates before TTL expiry:
 
   ```bash
   aws cloudfront create-invalidation --distribution-id E123ABC --paths "/*"
   ```
-* For **versioned assets** (e.g., `app.v1.js`), use long TTLs (since file name changes per release).
+
+- For **versioned assets** (e.g., `app.v1.js`), use long TTLs (since file name changes per release).
 
 ---
 
@@ -3098,7 +3137,8 @@ Expires: Wed, 13 Nov 2025 12:00:00 GMT
 ✅ **Long TTL** → faster performance, fewer origin calls.
 Set **TTL values** smartly based on content type — and combine them with **Cache-Control headers** for full caching control.
 
-----
+---
+
 ## Q: What’s the Difference Between **OAI (Origin Access Identity)** and **OAC (Origin Access Control)** in Amazon CloudFront? 🔒
 
 ---
@@ -3127,13 +3167,13 @@ However, **OAI is the older method**, while **OAC (Origin Access Control)** is t
 | ---------------------------- | -------------------------------------------- | ----------------------------------------------------------- |
 | **Purpose**                  | Restrict direct S3 access to CloudFront only | Same, but with stronger authentication and more flexibility |
 | **Auth Mechanism**           | Uses a special “OAI user” identity           | Uses AWS **SigV4 signed requests**                          |
-| **Encryption Support**       | ❌ Limited (cannot sign SSE-KMS requests)     | ✅ Fully supports **SSE-KMS encryption**                     |
-| **Custom Headers**           | ❌ Not supported                              | ✅ Supports signed **custom headers**                        |
-| **Modern IAM Conditions**    | ❌ Limited                                    | ✅ Supports `aws:SourceArn`, `aws:SourceAccount`             |
-| **Multi-Origin Support**     | ❌ One OAI per distribution                   | ✅ One OAC per origin (supports multiple per distribution)   |
-| **Bucket Policy Simplicity** | ✅ Simple JSON allow for OAI                  | ✅ Cleaner and modern (no OAI ARN needed)                    |
+| **Encryption Support**       | ❌ Limited (cannot sign SSE-KMS requests)    | ✅ Fully supports **SSE-KMS encryption**                    |
+| **Custom Headers**           | ❌ Not supported                             | ✅ Supports signed **custom headers**                       |
+| **Modern IAM Conditions**    | ❌ Limited                                   | ✅ Supports `aws:SourceArn`, `aws:SourceAccount`            |
+| **Multi-Origin Support**     | ❌ One OAI per distribution                  | ✅ One OAC per origin (supports multiple per distribution)  |
+| **Bucket Policy Simplicity** | ✅ Simple JSON allow for OAI                 | ✅ Cleaner and modern (no OAI ARN needed)                   |
 | **Performance Impact**       | Similar                                      | Similar                                                     |
-| **Best For**                 | Legacy setups                                | ✅ New CloudFront deployments                                |
+| **Best For**                 | Legacy setups                                | ✅ New CloudFront deployments                               |
 
 ---
 
@@ -3244,22 +3284,23 @@ aws cloudfront update-distribution \
 
 ### ✅ Best Practices
 
-* 🟢 **Use OAC (Origin Access Control)** for all new CloudFront → S3 integrations.
-* 🧩 Update existing OAIs to OACs for better **security, flexibility, and SSE-KMS support**.
-* 🔒 Keep **S3 Block Public Access = TRUE** — OAC removes the need for public bucket policies.
-* ⚙️ Restrict bucket access via `aws:SourceArn` (specific CloudFront distribution).
-* 📜 Monitor access in **CloudTrail** — OAC requests appear as `cloudfront.amazonaws.com` principal.
+- 🟢 **Use OAC (Origin Access Control)** for all new CloudFront → S3 integrations.
+- 🧩 Update existing OAIs to OACs for better **security, flexibility, and SSE-KMS support**.
+- 🔒 Keep **S3 Block Public Access = TRUE** — OAC removes the need for public bucket policies.
+- ⚙️ Restrict bucket access via `aws:SourceArn` (specific CloudFront distribution).
+- 📜 Monitor access in **CloudTrail** — OAC requests appear as `cloudfront.amazonaws.com` principal.
 
 ---
 
 ### 💡 In short
 
-| **Legacy**                                                                                                                                                                     | **Modern**                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| **OAI** → Uses IAM-style identity to access S3                                                                                                                                 | **OAC** → Uses SigV4 signed requests for enhanced security |
+| **Legacy**                                                                                                                                                                      | **Modern**                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **OAI** → Uses IAM-style identity to access S3                                                                                                                                  | **OAC** → Uses SigV4 signed requests for enhanced security |
 | ✅ **Use OAC** going forward — it’s **more secure, supports encryption (SSE-KMS)**, allows **fine-grained access control**, and is the **AWS-recommended replacement for OAI**. |                                                            |
 
-----
+---
+
 ## Q: How Does **Amazon CloudFront** Improve Security? 🔒🌍
 
 ---
@@ -3291,7 +3332,7 @@ This setup isolates your origin from the internet, reducing exposure to attacks 
 | 🧱 **Origin Protection**                  | **OAC (Origin Access Control)**    | Prevents direct access to S3 — allows only signed CloudFront requests.    |
 | 🌍 **DDoS Protection**                    | **AWS Shield Standard (Built-in)** | Automatically protects against volumetric & SYN flood attacks.            |
 | 🧰 **Web App Firewall**                   | **AWS WAF Integration**            | Blocks SQLi, XSS, bad bots, or malicious patterns before reaching origin. |
-| 🕵️ **Access Control**                    | **Signed URLs & Cookies**          | Restricts private content access to authenticated users only.             |
+| 🕵️ **Access Control**                     | **Signed URLs & Cookies**          | Restricts private content access to authenticated users only.             |
 | 🧭 **Geo Restriction**                    | **Geolocation-based Blocking**     | Denies access from specific countries or regions.                         |
 | 🔐 **Field-Level Encryption**             | **Per-field Encryption**           | Encrypts sensitive headers/form fields at the edge (e.g., PII data).      |
 | 🧩 **Origin Failover**                    | **Origin Groups**                  | Maintains availability under DDoS or failure conditions.                  |
@@ -3392,14 +3433,14 @@ aws cloudfront update-distribution \
 
 ### ✅ Best Practices
 
-* 🧱 **Always enable OAC** — block all public S3 access.
-* 🔐 Use **ACM-managed SSL/TLS certs** for HTTPS.
-* ⚙️ Apply **AWS WAF** with managed rule sets (e.g., OWASP).
-* 🕵️ Use **Signed URLs/Cookies** for private media or downloads.
-* 🌍 Enable **geo restrictions** for compliance.
-* 🧠 Run **Lambda@Edge** for custom header inspection or JWT verification.
-* 🧾 Enable **real-time logging** → stream to CloudWatch, Kinesis, or S3.
-* 📉 Monitor metrics like `4xxErrorRate`, `5xxErrorRate`, and `BytesDownloaded` in CloudWatch.
+- 🧱 **Always enable OAC** — block all public S3 access.
+- 🔐 Use **ACM-managed SSL/TLS certs** for HTTPS.
+- ⚙️ Apply **AWS WAF** with managed rule sets (e.g., OWASP).
+- 🕵️ Use **Signed URLs/Cookies** for private media or downloads.
+- 🌍 Enable **geo restrictions** for compliance.
+- 🧠 Run **Lambda@Edge** for custom header inspection or JWT verification.
+- 🧾 Enable **real-time logging** → stream to CloudWatch, Kinesis, or S3.
+- 📉 Monitor metrics like `4xxErrorRate`, `5xxErrorRate`, and `BytesDownloaded` in CloudWatch.
 
 ---
 
@@ -3414,6 +3455,7 @@ aws cloudfront update-distribution \
 Result → your application is **faster**, **safer**, and **less exposed to the internet** — with **AWS edge security by design**.
 
 ---
+
 ## Q: What Are **Signed URLs** and **Signed Cookies** in Amazon CloudFront? 🔑🍪
 
 ---
@@ -3427,18 +3469,18 @@ They allow only **authenticated or authorized users** to view content for a **li
 
 ### ⚙️ Purpose / How It Works
 
-* You (the content owner) create a **CloudFront key pair** (public/private).
-* When a user requests content:
+- You (the content owner) create a **CloudFront key pair** (public/private).
+- When a user requests content:
 
-  * CloudFront validates the **signature** using your public key.
-  * If the signature and expiration are valid → CloudFront serves the object.
-  * Otherwise → returns **HTTP 403 (Forbidden)**.
+  - CloudFront validates the **signature** using your public key.
+  - If the signature and expiration are valid → CloudFront serves the object.
+  - Otherwise → returns **HTTP 403 (Forbidden)**.
 
 This lets you enforce:
 
-* **Time-bound access** (temporary URLs)
-* **IP restrictions**
-* **User-specific authorization**
+- **Time-bound access** (temporary URLs)
+- **IP restrictions**
+- **User-specific authorization**
 
 ---
 
@@ -3467,8 +3509,8 @@ This lets you enforce:
 
 #### Prerequisites
 
-* CloudFront **key pair** associated with a **trusted key group or signer**.
-* Content behind **CloudFront private distribution**.
+- CloudFront **key pair** associated with a **trusted key group or signer**.
+- Content behind **CloudFront private distribution**.
 
 #### Example (Python SDK)
 
@@ -3523,8 +3565,8 @@ Set-Cookie: CloudFront-Key-Pair-Id=K123456789EXAMPLE;
     {
       "Resource": "https://d123abcd.cloudfront.net/private/*",
       "Condition": {
-        "DateLessThan": {"AWS:EpochTime": 1731465600},
-        "IpAddress": {"AWS:SourceIp": "203.0.113.0/24"}
+        "DateLessThan": { "AWS:EpochTime": 1731465600 },
+        "IpAddress": { "AWS:SourceIp": "203.0.113.0/24" }
       }
     }
   ]
@@ -3533,9 +3575,9 @@ Set-Cookie: CloudFront-Key-Pair-Id=K123456789EXAMPLE;
 
 ✅ Restricts access to:
 
-* Specific **path pattern**
-* **Time window**
-* **Source IP range**
+- Specific **path pattern**
+- **Time window**
+- **Source IP range**
 
 ---
 
@@ -3554,13 +3596,13 @@ Set-Cookie: CloudFront-Key-Pair-Id=K123456789EXAMPLE;
 
 ### ✅ Best Practices
 
-* Always use **HTTPS** for signed requests (prevents signature leaks).
-* Rotate **CloudFront key pairs** regularly.
-* Use **short expiration times** (e.g., minutes to hours).
-* Store private keys **securely in AWS Secrets Manager** or **KMS**.
-* Apply **IP address restrictions** for additional security.
-* Combine with **OAC (Origin Access Control)** to block direct S3 access.
-* Log access via **CloudFront Access Logs** for auditing.
+- Always use **HTTPS** for signed requests (prevents signature leaks).
+- Rotate **CloudFront key pairs** regularly.
+- Use **short expiration times** (e.g., minutes to hours).
+- Store private keys **securely in AWS Secrets Manager** or **KMS**.
+- Apply **IP address restrictions** for additional security.
+- Combine with **OAC (Origin Access Control)** to block direct S3 access.
+- Log access via **CloudFront Access Logs** for auditing.
 
 ---
 
@@ -3571,7 +3613,8 @@ Set-Cookie: CloudFront-Key-Pair-Id=K123456789EXAMPLE;
 ✅ **Signed Cookie** → best for multiple objects (e.g., whole app).
 They enforce **time-bound, secure, and auditable access** — without making your S3 bucket public.
 
-----
+---
+
 ## Q: How Do You Invalidate **Amazon CloudFront Cache**? 🧹⚡
 
 ---
@@ -3716,16 +3759,17 @@ stage('Invalidate CloudFront Cache') {
 
 ### ✅ Best Practices
 
-* Use **object versioning** (e.g., `style.v2.css`) to avoid frequent invalidations.
-* Invalidate **only changed files**, not `"/*"`, for cost efficiency.
-* Automate invalidations in **CI/CD deployments** after uploading new builds.
-* Monitor invalidation status via:
+- Use **object versioning** (e.g., `style.v2.css`) to avoid frequent invalidations.
+- Invalidate **only changed files**, not `"/*"`, for cost efficiency.
+- Automate invalidations in **CI/CD deployments** after uploading new builds.
+- Monitor invalidation status via:
 
   ```bash
   aws cloudfront list-invalidations --distribution-id E123ABC456XYZ
   ```
-* Combine with **shorter TTLs** for fast-moving content (e.g., HTML).
-* For static assets (e.g., images, JS, CSS), use **long TTL + versioned filenames**.
+
+- Combine with **shorter TTLs** for fast-moving content (e.g., HTML).
+- For static assets (e.g., images, JS, CSS), use **long TTL + versioned filenames**.
 
 ---
 
@@ -3741,6 +3785,7 @@ aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 Use **versioned file names** + **selective invalidations** for the best mix of **speed, freshness, and cost control**.
 
 ---
+
 ## Q: How to Restrict Content by Country in Amazon CloudFront? 🌍🚫
 
 ---
@@ -3760,8 +3805,8 @@ It’s ideal for **regional compliance**, **licensing restrictions**, or **conte
 2. CloudFront compares the country code (ISO 3166-1 alpha-2, e.g., `US`, `IN`, `FR`) with your **Geo Restriction rules**.
 3. Based on your configuration, CloudFront either:
 
-   * ✅ **Allows** access, or
-   * ❌ **Blocks** the request with **HTTP 403 (Forbidden)**.
+   - ✅ **Allows** access, or
+   - ❌ **Blocks** the request with **HTTP 403 (Forbidden)**.
 
 > 🔒 This filtering happens **at the edge**, reducing origin traffic and improving security.
 
@@ -3859,12 +3904,12 @@ For **dynamic country-based rules**, use **Lambda@Edge** to inspect the `CloudFr
 ```js
 exports.handler = async (event) => {
   const request = event.Records[0].cf.request;
-  const country = request.headers['cloudfront-viewer-country'][0].value;
+  const country = request.headers["cloudfront-viewer-country"][0].value;
 
   if (["CN", "RU"].includes(country)) {
     return {
-      status: '403',
-      statusDescription: 'Forbidden',
+      status: "403",
+      statusDescription: "Forbidden",
       body: `Access denied for region: ${country}`,
     };
   }
@@ -3917,11 +3962,11 @@ aws cloudfront update-distribution \
 
 ### ✅ Best Practices
 
-* Use **whitelisting** for high-security content (e.g., internal regions).
-* Combine **Geo Restriction + WAF** for layered protection.
-* For multi-region redirection, use **Lambda@Edge** instead of blocking.
-* Customize **403 error pages** for a better user experience.
-* Log blocked access attempts using **CloudFront Access Logs** or **Real-Time Logs**.
+- Use **whitelisting** for high-security content (e.g., internal regions).
+- Combine **Geo Restriction + WAF** for layered protection.
+- For multi-region redirection, use **Lambda@Edge** instead of blocking.
+- Customize **403 error pages** for a better user experience.
+- Log blocked access attempts using **CloudFront Access Logs** or **Real-Time Logs**.
 
 ---
 
@@ -3932,7 +3977,8 @@ aws cloudfront update-distribution \
 ✅ Use **Lambda@Edge** for dynamic or fine-grained rules.
 Result → **Compliance, security, and performance** — all enforced globally in milliseconds.
 
-----
+---
+
 ## Q: How Does **Amazon CloudFront** Integrate with **Amazon Route 53**? 🌍🔗
 
 ---
@@ -3950,8 +3996,8 @@ Route 53 acts as the **DNS service**, while CloudFront serves as the **content d
 2. **Route 53** provides a **DNS alias record (A/AAAA)** that maps your domain (e.g., `cdn.example.com`) to the **CloudFront distribution domain name** (e.g., `d1234abcd.cloudfront.net`).
 3. When users request your domain:
 
-   * Route 53 resolves the DNS query to the nearest CloudFront edge location.
-   * CloudFront serves cached or fresh content from the origin (S3, ALB, EC2, etc.).
+   - Route 53 resolves the DNS query to the nearest CloudFront edge location.
+   - CloudFront serves cached or fresh content from the origin (S3, ALB, EC2, etc.).
 
 ✅ This integration removes the need for CNAME chains and provides **AWS-managed performance optimization**.
 
@@ -4045,7 +4091,7 @@ aws route53 change-resource-record-sets --hosted-zone-id Z1234567890 \
       "Name": "cdn.example.com",
       "Type": "A",
       "AliasTarget": {
-        "HostedZoneId": "Z2FDTNDATAQYW2", 
+        "HostedZoneId": "Z2FDTNDATAQYW2",
         "DNSName": "d123abcd.cloudfront.net",
         "EvaluateTargetHealth": false
       }
@@ -4108,12 +4154,12 @@ resource "aws_route53_record" "cdn_alias" {
 
 ### ✅ Best Practices
 
-* Always use **Alias records (Type A)** for CloudFront — not `CNAME`.
-* Request your **ACM certificate in `us-east-1`**, even if your distribution is global.
-* Use **Route 53 latency-based routing** with multiple CloudFront distributions (multi-region failover).
-* Configure **WAF + OAC** at CloudFront for full edge-layer security.
-* Enable **DNSSEC** in Route 53 for signed DNS responses.
-* Keep TTLs low (e.g., 300s) during migrations for faster DNS updates.
+- Always use **Alias records (Type A)** for CloudFront — not `CNAME`.
+- Request your **ACM certificate in `us-east-1`**, even if your distribution is global.
+- Use **Route 53 latency-based routing** with multiple CloudFront distributions (multi-region failover).
+- Configure **WAF + OAC** at CloudFront for full edge-layer security.
+- Enable **DNSSEC** in Route 53 for signed DNS responses.
+- Keep TTLs low (e.g., 300s) during migrations for faster DNS updates.
 
 ---
 
@@ -4124,7 +4170,9 @@ resource "aws_route53_record" "cdn_alias" {
 This provides **secure, low-latency, and highly available content delivery** — fully managed within AWS.
 
 ---
+
 # Scenario Based Questions
+
 ## Q: Need to host a static React app **securely**
 
 ---
@@ -4137,12 +4185,12 @@ Host your React build (`build/` or `dist/`) on **S3 (private)** + **CloudFront**
 
 ### ⚙️ Purpose / How it works
 
-* Build React → upload static files to an **S3 bucket** (private, versioned).
-* CloudFront distribution serves content globally and terminates TLS.
-* CloudFront signs requests to S3 via **Origin Access Control (OAC)** so the bucket stays private.
-* Add security headers & redirects at edge (CloudFront Function / Lambda@Edge).
-* Use Route53 + ACM for custom domain and HTTPS.
-* CI/CD automates build → `aws s3 sync` → CloudFront invalidation.
+- Build React → upload static files to an **S3 bucket** (private, versioned).
+- CloudFront distribution serves content globally and terminates TLS.
+- CloudFront signs requests to S3 via **Origin Access Control (OAC)** so the bucket stays private.
+- Add security headers & redirects at edge (CloudFront Function / Lambda@Edge).
+- Use Route53 + ACM for custom domain and HTTPS.
+- CI/CD automates build → `aws s3 sync` → CloudFront invalidation.
 
 ---
 
@@ -4212,17 +4260,17 @@ resource "aws_cloudfront_distribution" "cdn" {
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowCloudFrontServiceAccess",
-      "Effect":"Allow",
-      "Principal":{"Service":"cloudfront.amazonaws.com"},
-      "Action":"s3:GetObject",
-      "Resource":"arn:aws:s3:::example-react-site/*",
-      "Condition":{
-        "StringEquals":{
-          "AWS:SourceArn":"arn:aws:cloudfront::123456789012:distribution/E123ABCDEF456"
+      "Sid": "AllowCloudFrontServiceAccess",
+      "Effect": "Allow",
+      "Principal": { "Service": "cloudfront.amazonaws.com" },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-react-site/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::123456789012:distribution/E123ABCDEF456"
         }
       }
     }
@@ -4237,17 +4285,32 @@ function handler(event) {
   var response = event.response;
   var headers = response.headers;
 
-  headers['strict-transport-security'] = [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' }];
-  headers['content-security-policy'] = [{ key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none';" }];
-  headers['x-frame-options'] = [{ key: 'X-Frame-Options', value: 'DENY' }];
-  headers['x-content-type-options'] = [{ key: 'X-Content-Type-Options', value: 'nosniff' }];
-  headers['referrer-policy'] = [{ key: 'Referrer-Policy', value: 'no-referrer' }];
+  headers["strict-transport-security"] = [
+    {
+      key: "Strict-Transport-Security",
+      value: "max-age=31536000; includeSubDomains; preload",
+    },
+  ];
+  headers["content-security-policy"] = [
+    {
+      key: "Content-Security-Policy",
+      value:
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none';",
+    },
+  ];
+  headers["x-frame-options"] = [{ key: "X-Frame-Options", value: "DENY" }];
+  headers["x-content-type-options"] = [
+    { key: "X-Content-Type-Options", value: "nosniff" },
+  ];
+  headers["referrer-policy"] = [
+    { key: "Referrer-Policy", value: "no-referrer" },
+  ];
 
   return response;
 }
 ```
 
-* Attach this to **viewer-response** event in the cache behavior.
+- Attach this to **viewer-response** event in the cache behavior.
 
 #### 4) CI/CD — GitHub Actions snippet to build, sync to S3, and invalidate CloudFront
 
@@ -4314,16 +4377,16 @@ aws route53 change-resource-record-sets --hosted-zone-id ZONEID --change-batch '
 
 ### ✅ Best Practices (production-ready checklist)
 
-* 🔒 **Keep S3 private**; use **OAC** to restrict access to CloudFront only.
-* 🔐 Use **ACM certificate** (TLS) in `us-east-1` and set CloudFront to `redirect-to-https`.
-* 🛡️ Attach **AWS WAF** with managed OWASP rules + rate limiting.
-* 🧾 Enable **CloudFront access logs** to a separate S3 bucket and **CloudTrail** data events for S3.
-* 🧰 Add **security headers** at the edge (CloudFront Function) for HSTS, CSP, etc.
-* ⚙️ Use **versioned filenames** for JS/CSS (cache-busting) and set long TTL for immutable assets.
-* 🔁 Automate deploys with CI/CD and trigger **CloudFront invalidation** (or use versioned paths to avoid invalidations).
-* 🔑 Use **SSE-KMS** if you must encrypt objects with customer-managed keys (OAC supports SigV4).
-* 🧪 Test origin access and policies from inside the VPC/CI runner (no public access should work).
-* 📈 Monitor `4xx/5xx` rates, cache-hit ratio, and WAF metrics in CloudWatch.
+- 🔒 **Keep S3 private**; use **OAC** to restrict access to CloudFront only.
+- 🔐 Use **ACM certificate** (TLS) in `us-east-1` and set CloudFront to `redirect-to-https`.
+- 🛡️ Attach **AWS WAF** with managed OWASP rules + rate limiting.
+- 🧾 Enable **CloudFront access logs** to a separate S3 bucket and **CloudTrail** data events for S3.
+- 🧰 Add **security headers** at the edge (CloudFront Function) for HSTS, CSP, etc.
+- ⚙️ Use **versioned filenames** for JS/CSS (cache-busting) and set long TTL for immutable assets.
+- 🔁 Automate deploys with CI/CD and trigger **CloudFront invalidation** (or use versioned paths to avoid invalidations).
+- 🔑 Use **SSE-KMS** if you must encrypt objects with customer-managed keys (OAC supports SigV4).
+- 🧪 Test origin access and policies from inside the VPC/CI runner (no public access should work).
+- 📈 Monitor `4xx/5xx` rates, cache-hit ratio, and WAF metrics in CloudWatch.
 
 ---
 
@@ -4333,6 +4396,7 @@ Build your React app → upload to a **private S3** bucket, serve via **CloudFro
 This yields a secure, fast, and production-ready static React hosting platform with minimal operational overhead.
 
 ---
+
 ## Q: Users seeing old content
 
 ---
@@ -4345,9 +4409,9 @@ Users getting stale files usually means CloudFront (or browser) served a cached 
 
 ### ⚙️ Purpose / How it works
 
-* CloudFront caches responses at edge locations according to **Cache-Control / Expires** headers or the distribution’s **min/default/max TTL**.
-* On a cache **miss** CloudFront fetches origin; on **hit** it serves the cached object until TTL expiry or explicit invalidation/version change.
-* Browsers also cache based on response headers (and `service-worker` if present).
+- CloudFront caches responses at edge locations according to **Cache-Control / Expires** headers or the distribution’s **min/default/max TTL**.
+- On a cache **miss** CloudFront fetches origin; on **hit** it serves the cached object until TTL expiry or explicit invalidation/version change.
+- Browsers also cache based on response headers (and `service-worker` if present).
 
 ---
 
@@ -4361,9 +4425,9 @@ Users getting stale files usually means CloudFront (or browser) served a cached 
 
    Look for headers:
 
-   * `X-Cache` (`Hit from cloudfront` / `Miss from cloudfront`)
-   * `Cache-Control` / `Expires` / `Age`
-   * `Last-Modified` / `ETag`
+   - `X-Cache` (`Hit from cloudfront` / `Miss from cloudfront`)
+   - `Cache-Control` / `Expires` / `Age`
+   - `Last-Modified` / `ETag`
 
 2. **Inspect CloudFront cache behavior & TTLs**
 
@@ -4456,15 +4520,15 @@ curl -I https://d123.cloudfront.net/index.html | egrep "X-Cache|Cache-Control|Ag
 
 ### ✅ Best Practices (fix & prevent)
 
-* **Use hashed (versioned) filenames** for static assets (JS/CSS/images). → long `max-age` + `immutable`.
-* **Keep HTML non-immutable** (short TTL or `no-cache`) so it fetches latest asset references.
-* **Set Cache-Control at origin** (S3 metadata or app response). CloudFront honors origin headers unless overridden by cache policy.
-* **Prefer Cache Policies** (CloudFront) over legacy `ForwardedValues` for fine control (headers, cookies, query string).
-* **Automate invalidations** in CI only for HTML or critical single-file updates; prefer naming for assets.
-* **Check `X-Cache` and `Age`** to debug whether edge served cached copy.
-* **Avoid global `/*` invalidations routinely** — costly and slow; target paths or use versioning.
-* **Clear/disable service workers** in deploys if they cache aggressively (bust via updated service-worker script URL).
-* **Monitor** CloudFront `CacheHitRate` and CloudWatch alarms for cache anomalies.
+- **Use hashed (versioned) filenames** for static assets (JS/CSS/images). → long `max-age` + `immutable`.
+- **Keep HTML non-immutable** (short TTL or `no-cache`) so it fetches latest asset references.
+- **Set Cache-Control at origin** (S3 metadata or app response). CloudFront honors origin headers unless overridden by cache policy.
+- **Prefer Cache Policies** (CloudFront) over legacy `ForwardedValues` for fine control (headers, cookies, query string).
+- **Automate invalidations** in CI only for HTML or critical single-file updates; prefer naming for assets.
+- **Check `X-Cache` and `Age`** to debug whether edge served cached copy.
+- **Avoid global `/*` invalidations routinely** — costly and slow; target paths or use versioning.
+- **Clear/disable service workers** in deploys if they cache aggressively (bust via updated service-worker script URL).
+- **Monitor** CloudFront `CacheHitRate` and CloudWatch alarms for cache anomalies.
 
 ---
 
@@ -4472,7 +4536,8 @@ curl -I https://d123.cloudfront.net/index.html | egrep "X-Cache|Cache-Control|Ag
 
 Users see old content when CloudFront or browsers serve cached objects. Quick fixes: **inspect `X-Cache` and headers**, perform **selective invalidation**, or — better long-term — **use versioned filenames** and correct `Cache-Control` (short for HTML, long for immutable assets). Automate deployment + invalidation logic in CI/CD.
 
-----
+---
+
 ## Q: Access denied when using CloudFront
 
 ---
@@ -4513,8 +4578,8 @@ If `NotFound` → wrong key/path.
 aws cloudfront get-distribution-config --id <dist-id>
 ```
 
-* Confirm **Origin Domain Name** points to the expected S3 bucket (regional domain for OAC).
-* If using custom origin (ALB/EC2), ensure origin accepts CloudFront requests.
+- Confirm **Origin Domain Name** points to the expected S3 bucket (regional domain for OAC).
+- If using custom origin (ALB/EC2), ensure origin accepts CloudFront requests.
 
 4. **Check S3 bucket policy / ACL / public-access**
 
@@ -4524,26 +4589,28 @@ aws s3api get-bucket-acl --bucket my-bucket
 aws s3control get-public-access-block --account-id <acct>
 ```
 
-* Look for statements denying `s3:GetObject` for CloudFront or not allowing it.
+- Look for statements denying `s3:GetObject` for CloudFront or not allowing it.
 
 5. **If using OAC (recommended) — verify bucket policy**
 
-* Bucket should allow `cloudfront.amazonaws.com` with condition `AWS:SourceArn` = your distribution ARN.
+- Bucket should allow `cloudfront.amazonaws.com` with condition `AWS:SourceArn` = your distribution ARN.
 
 Example minimal OAC policy:
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowCloudFrontService",
-      "Effect":"Allow",
-      "Principal":{"Service":"cloudfront.amazonaws.com"},
-      "Action":"s3:GetObject",
-      "Resource":"arn:aws:s3:::my-bucket/*",
-      "Condition":{
-        "StringEquals":{"AWS:SourceArn":"arn:aws:cloudfront::<acct>:distribution/<dist-id>"}
+      "Sid": "AllowCloudFrontService",
+      "Effect": "Allow",
+      "Principal": { "Service": "cloudfront.amazonaws.com" },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-bucket/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::<acct>:distribution/<dist-id>"
+        }
       }
     }
   ]
@@ -4560,16 +4627,20 @@ Mismatch between OAI vs OAC is a common error.
 
 7. **SSE-KMS? Check KMS key policy**
 
-* If objects encrypted with **SSE-KMS**, the KMS key policy must allow CloudFront to `kms:Decrypt` (principal `cloudfront.amazonaws.com`) **and** possibly `aws:SourceArn` condition for the distribution/origin.
-* Example minimal KMS statement:
+- If objects encrypted with **SSE-KMS**, the KMS key policy must allow CloudFront to `kms:Decrypt` (principal `cloudfront.amazonaws.com`) **and** possibly `aws:SourceArn` condition for the distribution/origin.
+- Example minimal KMS statement:
 
 ```json
 {
-  "Effect":"Allow",
-  "Principal": {"Service":"cloudfront.amazonaws.com"},
-  "Action":["kms:Decrypt","kms:GenerateDataKey"],
-  "Resource":"*",
-  "Condition":{"StringEquals":{"aws:SourceArn":"arn:aws:cloudfront::<acct>:distribution/<dist-id>"}}
+  "Effect": "Allow",
+  "Principal": { "Service": "cloudfront.amazonaws.com" },
+  "Action": ["kms:Decrypt", "kms:GenerateDataKey"],
+  "Resource": "*",
+  "Condition": {
+    "StringEquals": {
+      "aws:SourceArn": "arn:aws:cloudfront::<acct>:distribution/<dist-id>"
+    }
+  }
 }
 ```
 
@@ -4577,12 +4648,12 @@ Also ensure IAM role/policy for CloudFront origin signing is correct.
 
 8. **Signed URL / Signed Cookie checks**
 
-* If distribution requires signed URLs/cookies, verify client uses correct **Key-Pair-Id / Signature / Policy** and that key group/trusted signer and key-pair are valid and not expired.
-* Generate a test signed URL server-side and curl it.
+- If distribution requires signed URLs/cookies, verify client uses correct **Key-Pair-Id / Signature / Policy** and that key group/trusted signer and key-pair are valid and not expired.
+- Generate a test signed URL server-side and curl it.
 
 9. **Test direct S3 GET using CLI (simulates CloudFront access)**
 
-* Use the same principal CloudFront should use (hard to emulate). But at minimum test public read or a temp pre-signed URL:
+- Use the same principal CloudFront should use (hard to emulate). But at minimum test public read or a temp pre-signed URL:
 
 ```bash
 aws s3 presign s3://my-bucket/path/object.ext --expires-in 60
@@ -4591,8 +4662,8 @@ curl -I "<presigned-url>"
 
 10. **Check CloudFront logs / S3 access logs / CloudTrail**
 
-* CloudFront access logs show viewer requests and origin response codes.
-* S3 server access logs / CloudTrail will show `GetObject` Deny events with IAM principal and error code — the most telling evidence.
+- CloudFront access logs show viewer requests and origin response codes.
+- S3 server access logs / CloudTrail will show `GetObject` Deny events with IAM principal and error code — the most telling evidence.
 
 ---
 
@@ -4612,32 +4683,32 @@ curl -I "<presigned-url>"
 
 ### 🧩 Useful commands & snippets
 
-* Get distribution config:
+- Get distribution config:
 
 ```bash
 aws cloudfront get-distribution-config --id <dist-id>
 ```
 
-* Show S3 object metadata:
+- Show S3 object metadata:
 
 ```bash
 aws s3api head-object --bucket my-bucket --key path/object.ext
 ```
 
-* Show bucket policy:
+- Show bucket policy:
 
 ```bash
 aws s3api get-bucket-policy --bucket my-bucket
 ```
 
-* Check bucket encryption (SSE-KMS):
+- Check bucket encryption (SSE-KMS):
 
 ```bash
 aws s3api get-bucket-encryption --bucket my-bucket
 aws s3api head-object --bucket my-bucket --key path/object.ext --query ServerSideEncryption
 ```
 
-* Search CloudTrail for Deny:
+- Search CloudTrail for Deny:
 
 ```bash
 aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=GetObject --max-results 50
@@ -4647,12 +4718,12 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 ### ✅ Best practices to avoid 403s
 
-* Use **OAC** (Origin Access Control / SigV4) for CloudFront→S3 and set bucket policy with `AWS:SourceArn` to the distribution ARN.
-* Keep **S3 Block Public Access = TRUE**; do not rely on object ACLs.
-* If using **SSE-KMS**, include CloudFront in the **KMS key policy** to allow decrypt/data-key operations and log them.
-* Use **CloudFront signed URLs/cookies** for private content; keep expirations short and manage private keys securely.
-* Automate checks in CI: verify CloudFront origin permissions and test an end-to-end GET for critical assets after deploy.
-* Use CloudFront **Origin Access** test tool: attempt a `curl` to object via CF (signed/unsigned) and inspect `X-Cache`/`Age`/response body.
+- Use **OAC** (Origin Access Control / SigV4) for CloudFront→S3 and set bucket policy with `AWS:SourceArn` to the distribution ARN.
+- Keep **S3 Block Public Access = TRUE**; do not rely on object ACLs.
+- If using **SSE-KMS**, include CloudFront in the **KMS key policy** to allow decrypt/data-key operations and log them.
+- Use **CloudFront signed URLs/cookies** for private content; keep expirations short and manage private keys securely.
+- Automate checks in CI: verify CloudFront origin permissions and test an end-to-end GET for critical assets after deploy.
+- Use CloudFront **Origin Access** test tool: attempt a `curl` to object via CF (signed/unsigned) and inspect `X-Cache`/`Age`/response body.
 
 ---
 
@@ -4660,7 +4731,8 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 `Access Denied` from CloudFront = origin refused CloudFront. Check **S3 bucket policy/OAC vs OAI**, **object existence**, **SSE-KMS key policy**, and **signed URL/cookie validity**. Use CloudTrail/S3 logs to find the exact deny reason, then update the bucket or KMS policy to explicitly allow your CloudFront distribution.
 
-----
+---
+
 ## Q: Slow S3 uploads from remote region 🌍🐢
 
 ---
@@ -4674,10 +4746,10 @@ To fix slow S3 uploads, use **S3 Transfer Acceleration**, **multipart uploads**,
 
 ### ⚙️ Purpose / How it works
 
-* By default, S3 uploads go directly to the **bucket’s regional endpoint** (e.g., `s3.ap-south-1.amazonaws.com`).
-* If your users or CI runners are far from that region, uploads traverse long network paths, reducing throughput.
-* **Transfer Acceleration (TA)** uses the **CloudFront edge network** to route data over **AWS’s private backbone** to the target bucket’s region.
-* **Multipart uploads** break large files into chunks, allowing **parallel transfer**.
+- By default, S3 uploads go directly to the **bucket’s regional endpoint** (e.g., `s3.ap-south-1.amazonaws.com`).
+- If your users or CI runners are far from that region, uploads traverse long network paths, reducing throughput.
+- **Transfer Acceleration (TA)** uses the **CloudFront edge network** to route data over **AWS’s private backbone** to the target bucket’s region.
+- **Multipart uploads** break large files into chunks, allowing **parallel transfer**.
 
 ---
 
@@ -4685,8 +4757,8 @@ To fix slow S3 uploads, use **S3 Transfer Acceleration**, **multipart uploads**,
 
 | **Cause**                     | **Impact**                  | **Fix**                                                              |
 | ----------------------------- | --------------------------- | -------------------------------------------------------------------- |
-| 🏔️ Long physical distance    | High latency (RTT > 200 ms) | Enable **Transfer Acceleration**                                     |
-| 🕸️ Unoptimized TCP path      | Packet loss, retransmits    | Use **AWS CLI multipart parallelism**                                |
+| 🏔️ Long physical distance     | High latency (RTT > 200 ms) | Enable **Transfer Acceleration**                                     |
+| 🕸️ Unoptimized TCP path       | Packet loss, retransmits    | Use **AWS CLI multipart parallelism**                                |
 | 🧱 Small single-thread upload | Low throughput              | Use `--expected-size` and `--parallel` flags                         |
 | 🔒 TLS handshake overhead     | Slower for many small files | Batch uploads or use S3 sync                                         |
 | 🐢 Regional congestion        | Slower cross-region routes  | Upload to nearest S3 region or use **S3 Multi-Region Access Points** |
@@ -4766,8 +4838,8 @@ aws s3control create-multi-region-access-point --account-id 123456789012 --detai
 {
   "Name": "global-upload",
   "Regions": [
-    {"Bucket": "mybucket-ap-south-1"},
-    {"Bucket": "mybucket-us-east-1"}
+    { "Bucket": "mybucket-ap-south-1" },
+    { "Bucket": "mybucket-us-east-1" }
   ]
 }
 ```
@@ -4819,13 +4891,13 @@ aws s3 cp testfile s3://mybucket/ --region ap-south-1 --debug
 
 ### ✅ Best Practices
 
-* 🚀 Enable **S3 Transfer Acceleration** for global uploads.
-* 📦 Use **Multipart uploads** for any file >100 MB.
-* ⚙️ Tune **CLI concurrency settings** (`max_concurrent_requests`).
-* 🧩 For multi-region teams → use **S3 Multi-Region Access Points**.
-* 🔐 Use HTTPS always (performance edge TLS termination is fast).
-* 🧾 Monitor upload metrics in **CloudWatch → S3 → DataTransferOut / FirstByteLatency**.
-* 🔁 If possible, **build in the same AWS region** as the S3 bucket (CI/CD runners close to bucket region).
+- 🚀 Enable **S3 Transfer Acceleration** for global uploads.
+- 📦 Use **Multipart uploads** for any file >100 MB.
+- ⚙️ Tune **CLI concurrency settings** (`max_concurrent_requests`).
+- 🧩 For multi-region teams → use **S3 Multi-Region Access Points**.
+- 🔐 Use HTTPS always (performance edge TLS termination is fast).
+- 🧾 Monitor upload metrics in **CloudWatch → S3 → DataTransferOut / FirstByteLatency**.
+- 🔁 If possible, **build in the same AWS region** as the S3 bucket (CI/CD runners close to bucket region).
 
 ---
 
@@ -4836,6 +4908,7 @@ Slow S3 uploads from remote regions = **network distance problem**.
 These changes typically cut global upload times by **50–90%** while maintaining full security and reliability.
 
 ---
+
 ## Q: Files deleted accidentally in Amazon S3 😱🗑️
 
 ---
@@ -4850,9 +4923,9 @@ If versioning was on — your data is **not truly gone**; you can restore it eas
 
 ### ⚙️ Purpose / How It Works
 
-* **Without Versioning** → Delete = permanent removal (no recovery from S3).
-* **With Versioning** → Delete marks object with a *delete marker*, older versions remain retrievable.
-* **With Replication/Backup** → You can restore from secondary region or Glacier vault.
+- **Without Versioning** → Delete = permanent removal (no recovery from S3).
+- **With Versioning** → Delete marks object with a _delete marker_, older versions remain retrievable.
+- **With Replication/Backup** → You can restore from secondary region or Glacier vault.
 
 ---
 
@@ -4907,8 +4980,8 @@ If versioning was on — your data is **not truly gone**; you can restore it eas
 
 If versioning wasn’t enabled:
 
-* Native S3 **cannot restore deleted files**.
-* Try the following:
+- Native S3 **cannot restore deleted files**.
+- Try the following:
 
   1. **Check backups** — AWS Backup, Cross-Region Replication (CRR), Glacier, or third-party backups.
   2. **Check CloudTrail** logs for delete event:
@@ -4917,7 +4990,8 @@ If versioning wasn’t enabled:
      aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=DeleteObject
      ```
 
-     Identify *who*, *when*, and *what* was deleted.
+     Identify _who_, _when_, and _what_ was deleted.
+
   3. Restore from any secondary bucket or offsite copy.
 
 ✅ Going forward, enable **versioning** and **MFA delete**.
@@ -4928,7 +5002,7 @@ If versioning wasn’t enabled:
 
 1. Go to your **S3 bucket** → Enable **List Versions**.
 2. Find the deleted object → Older versions appear below.
-3. Select the latest *non-delete* version → Click **"Download"** or **"Copy"** to restore.
+3. Select the latest _non-delete_ version → Click **"Download"** or **"Copy"** to restore.
 
 ---
 
@@ -4963,12 +5037,12 @@ aws cloudtrail lookup-events \
 
 | **Scenario**                        | **Recoverable?** | **How to Recover**                              |
 | ----------------------------------- | ---------------- | ----------------------------------------------- |
-| Versioning enabled                  | ✅ Yes            | Restore previous version / delete delete marker |
-| Replication (CRR/SRR) enabled       | ✅ Yes            | Restore from replica bucket                     |
-| AWS Backup used                     | ✅ Yes            | Restore snapshot from AWS Backup console        |
-| No versioning, no backup            | ❌ No             | Permanent loss (unless offsite copy exists)     |
+| Versioning enabled                  | ✅ Yes           | Restore previous version / delete delete marker |
+| Replication (CRR/SRR) enabled       | ✅ Yes           | Restore from replica bucket                     |
+| AWS Backup used                     | ✅ Yes           | Restore snapshot from AWS Backup console        |
+| No versioning, no backup            | ❌ No            | Permanent loss (unless offsite copy exists)     |
 | Lifecycle rule deleted old versions | ⚠️ Partially     | Depends on retention window & storage class     |
-| Glacier Archive                     | ✅ Yes            | Restore from Glacier using `restore-object` API |
+| Glacier Archive                     | ✅ Yes           | Restore from Glacier using `restore-object` API |
 
 ---
 
@@ -4980,7 +5054,7 @@ aws cloudtrail lookup-events \
 | 🔐 **MFA Delete**       | Protect production buckets from accidental or malicious deletions. |
 | 🧰 **Backups / CRR**    | Use Cross-Region Replication or AWS Backup for disaster recovery.  |
 | ⚙️ **Lifecycle Rules**  | Review policies — ensure they don’t expire needed data too soon.   |
-| 🕵️ **CloudTrail**      | Keep CloudTrail enabled to track deletion events (user/time/IP).   |
+| 🕵️ **CloudTrail**       | Keep CloudTrail enabled to track deletion events (user/time/IP).   |
 | 🧱 **Access Controls**  | Limit `s3:DeleteObject` permission via IAM policies and SCPs.      |
 | 🧠 **CI/CD Safety**     | Add confirmation checks before destructive S3 actions.             |
 | 🧮 **Retention Policy** | For logs or compliance, use Object Lock + Governance mode.         |
@@ -4993,7 +5067,8 @@ If **versioning** was enabled → ✅ you can restore files instantly by removin
 If **not** → ❌ data is permanently lost, recover only from backups or replicas.
 ➡️ Always **enable Versioning + MFA Delete + CloudTrail** to safeguard against accidental or malicious S3 deletions.
 
-----
+---
+
 ## Q: How to **Block Public Access** but Still **Host a Website on Amazon S3 + CloudFront** 🔒🌐
 
 ---
@@ -5002,11 +5077,11 @@ If **not** → ❌ data is permanently lost, recover only from backups or replic
 
 To securely host a **static website** using S3 + CloudFront **without making the S3 bucket public**, you use:
 
-* **S3 Block Public Access = ON** (✅ keep bucket private)
-* **CloudFront** as the **public entry point**
-* **Origin Access Control (OAC)** (or legacy OAI) so only CloudFront can fetch from S3
-* **ACM (HTTPS)** for encryption
-* **Route 53** for a custom domain
+- **S3 Block Public Access = ON** (✅ keep bucket private)
+- **CloudFront** as the **public entry point**
+- **Origin Access Control (OAC)** (or legacy OAI) so only CloudFront can fetch from S3
+- **ACM (HTTPS)** for encryption
+- **Route 53** for a custom domain
 
 👉 This ensures **users access your site only through CloudFront**, not directly from S3, while keeping your bucket fully private.
 
@@ -5198,12 +5273,12 @@ aws route53 change-resource-record-sets --hosted-zone-id ZONEID --change-batch '
 
 ### ✅ Best Practices
 
-* 🔒 **Keep S3 private** — never add public-read ACLs or policies.
-* 🔐 Always use **OAC** instead of legacy OAI.
-* 🧱 Attach **AWS WAF** to CloudFront for DDoS & OWASP protection.
-* 🌍 Enable **HTTP → HTTPS redirection** in CloudFront behavior.
-* 🧾 Enable **CloudFront Access Logs** → S3 for auditing.
-* 🔄 In CI/CD, deploy new builds to S3 and invalidate CloudFront cache:
+- 🔒 **Keep S3 private** — never add public-read ACLs or policies.
+- 🔐 Always use **OAC** instead of legacy OAI.
+- 🧱 Attach **AWS WAF** to CloudFront for DDoS & OWASP protection.
+- 🌍 Enable **HTTP → HTTPS redirection** in CloudFront behavior.
+- 🧾 Enable **CloudFront Access Logs** → S3 for auditing.
+- 🔄 In CI/CD, deploy new builds to S3 and invalidate CloudFront cache:
 
   ```bash
   aws cloudfront create-invalidation --distribution-id <DIST-ID> --paths "/*"
@@ -5216,7 +5291,8 @@ aws route53 change-resource-record-sets --hosted-zone-id ZONEID --change-batch '
 You **can keep S3 fully private** (`Block Public Access = ON`) and still host a **public static website** securely by using **CloudFront + OAC**.
 ✅ CloudFront serves content over **HTTPS**, handles caching, and authenticates to S3 — keeping your bucket invisible to the internet while maintaining **speed, security, and scalability**.
 
-----
+---
+
 ## Q: How to Optimize Costs for S3 + CloudFront Static Website Hosting 💰⚙️
 
 ---
@@ -5315,9 +5391,9 @@ aws ce get-cost-and-usage --time-period Start=2025-11-01,End=2025-11-12 --granul
 
 Track:
 
-* `AWS/S3 → NumberOfObjects, BucketSizeBytes`
-* `AWS/CloudFront → BytesDownloaded, Requests, CacheHitRate`
-* Set CloudWatch alarms if CloudFront egress or S3 PUTs spike unexpectedly.
+- `AWS/S3 → NumberOfObjects, BucketSizeBytes`
+- `AWS/CloudFront → BytesDownloaded, Requests, CacheHitRate`
+- Set CloudWatch alarms if CloudFront egress or S3 PUTs spike unexpectedly.
 
 ---
 
@@ -5338,8 +5414,8 @@ Avoid mixing `S3 (ap-south-1)` with CloudFront origin in `us-east-1` unless requ
 
 If using self-hosted runners for deployment:
 
-* Use **Graviton (ARM)** EC2 for build agents → ~20% cheaper.
-* Compress builds locally before upload to S3 to reduce data transfer.
+- Use **Graviton (ARM)** EC2 for build agents → ~20% cheaper.
+- Compress builds locally before upload to S3 to reduce data transfer.
 
 ---
 
@@ -5361,15 +5437,16 @@ If using self-hosted runners for deployment:
 
 For S3 + CloudFront static sites:
 
-* ✅ **Long TTL + versioned assets**
-* ✅ **Targeted invalidations only**
-* ✅ **Lifecycle transitions (IA/Glacier)**
-* ✅ **Disable unnecessary logs**
-* ✅ **Use monitoring & budgets**
+- ✅ **Long TTL + versioned assets**
+- ✅ **Targeted invalidations only**
+- ✅ **Lifecycle transitions (IA/Glacier)**
+- ✅ **Disable unnecessary logs**
+- ✅ **Use monitoring & budgets**
 
 You’ll cut **CloudFront & S3 costs by 30–60%** without sacrificing performance or security.
 
 ---
+
 ## Q: S3 uploads failing in CI/CD
 
 ---
@@ -5384,10 +5461,10 @@ CI/CD S3 upload failures are usually caused by **credentials/permissions, region
 
 CI pipelines call `aws s3 cp/sync` or SDKs to PUT objects into a bucket. Uploads require:
 
-* Valid **AWS credentials** (access key or assumed role) with `s3:PutObject` (and possibly `s3:PutObjectAcl`, `s3:ListBucket`) permissions.
-* Correct **region/endpoint** and **bucket name/key**.
-* If object encryption uses **SSE-KMS**, the pipeline identity must have KMS `Decrypt/GenerateDataKey` permissions.
-* Network path must allow egress to S3 or use **VPC Gateway Endpoint** for private VPC runners.
+- Valid **AWS credentials** (access key or assumed role) with `s3:PutObject` (and possibly `s3:PutObjectAcl`, `s3:ListBucket`) permissions.
+- Correct **region/endpoint** and **bucket name/key**.
+- If object encryption uses **SSE-KMS**, the pipeline identity must have KMS `Decrypt/GenerateDataKey` permissions.
+- Network path must allow egress to S3 or use **VPC Gateway Endpoint** for private VPC runners.
 
 ---
 
@@ -5395,72 +5472,80 @@ CI pipelines call `aws s3 cp/sync` or SDKs to PUT objects into a bucket. Uploads
 
 1. **Capture the exact error** from CI logs (copy full error).
 
-   * `AccessDenied`, `InvalidAccessKeyId`, `RequestTimeTooSkewed`, `ExpiredToken`, `KMSAccessDenied`, `NoSuchBucket`, `slow/no response` — identify category.
+   - `AccessDenied`, `InvalidAccessKeyId`, `RequestTimeTooSkewed`, `ExpiredToken`, `KMSAccessDenied`, `NoSuchBucket`, `slow/no response` — identify category.
 
 2. **Verify credentials in CI**
 
-   * Print `aws sts get-caller-identity` in the job (safe to run) to confirm identity:
+   - Print `aws sts get-caller-identity` in the job (safe to run) to confirm identity:
 
    ```bash
    aws sts get-caller-identity
    ```
 
-   * If it fails, credentials are wrong/expired.
+   - If it fails, credentials are wrong/expired.
 
 3. **Check IAM permissions** (quick policy test)
 
-   * Minimal policy needed:
+   - Minimal policy needed:
 
    ```json
    {
-     "Version":"2012-10-17",
-     "Statement":[
-       {"Effect":"Allow","Action":["s3:PutObject","s3:PutObjectAcl","s3:ListBucket"],"Resource":["arn:aws:s3:::my-bucket","arn:aws:s3:::my-bucket/*"]}
+     "Version": "2012-10-17",
+     "Statement": [
+       {
+         "Effect": "Allow",
+         "Action": ["s3:PutObject", "s3:PutObjectAcl", "s3:ListBucket"],
+         "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"]
+       }
      ]
    }
    ```
 
-   * For SSE-KMS:
+   - For SSE-KMS:
 
    ```json
-   {"Effect":"Allow","Action":["kms:Encrypt","kms:Decrypt","kms:GenerateDataKey"],"Resource":"arn:aws:kms:region:acct:key/KEYID"}
+   {
+     "Effect": "Allow",
+     "Action": ["kms:Encrypt", "kms:Decrypt", "kms:GenerateDataKey"],
+     "Resource": "arn:aws:kms:region:acct:key/KEYID"
+   }
    ```
 
 4. **Region / endpoint mismatch**
 
-   * Ensure CLI/SDK region matches bucket region; explicitly set `--region ap-south-1` or `AWS_REGION` env var.
+   - Ensure CLI/SDK region matches bucket region; explicitly set `--region ap-south-1` or `AWS_REGION` env var.
 
 5. **SSE-KMS problems**
 
-   * If objects require `x-amz-server-side-encryption:aws:kms`, ensure pipeline role allowed by **KMS key policy** (CloudFront or IAM principal must be permitted).
+   - If objects require `x-amz-server-side-encryption:aws:kms`, ensure pipeline role allowed by **KMS key policy** (CloudFront or IAM principal must be permitted).
 
 6. **Bucket policy / Block Public Access**
 
-   * Bucket policy may `Deny` requests not from specific VPC endpoint or principal. Test with `aws s3api put-object` from a dev machine using same creds as CI to reproduce.
+   - Bucket policy may `Deny` requests not from specific VPC endpoint or principal. Test with `aws s3api put-object` from a dev machine using same creds as CI to reproduce.
 
 7. **VPC / NAT / Endpoint networking**
 
-   * Self-hosted runners in private subnets without NAT need a **Gateway VPC Endpoint** for S3 or egress via NAT. Verify connectivity:
+   - Self-hosted runners in private subnets without NAT need a **Gateway VPC Endpoint** for S3 or egress via NAT. Verify connectivity:
 
    ```bash
    curl -v https://s3.ap-south-1.amazonaws.com
    ```
 
-   * For private endpoints, ensure bucket policy allows `aws:SourceVpce` or `aws:SourceVpc`.
+   - For private endpoints, ensure bucket policy allows `aws:SourceVpce` or `aws:SourceVpc`.
 
 8. **Token expiration (assume role / OIDC)**
 
-   * Short-lived tokens (OIDC, STS) may expire during long uploads. Refresh/assume role just before upload.
+   - Short-lived tokens (OIDC, STS) may expire during long uploads. Refresh/assume role just before upload.
 
 9. **Object size / multipart config**
 
-   * Large files may fail unless multipart is used. Configure CLI:
+   - Large files may fail unless multipart is used. Configure CLI:
 
    ```bash
    aws s3 cp bigfile.tar s3://my-bucket/ --region ap-south-1 --expected-size 5000000000
    ```
 
-   * Tune concurrency in `~/.aws/config` or environment:
+   - Tune concurrency in `~/.aws/config` or environment:
 
    ```
    AWS_MAX_CONCURRENCY=10
@@ -5469,15 +5554,15 @@ CI pipelines call `aws s3 cp/sync` or SDKs to PUT objects into a bucket. Uploads
 
 10. **ACL or ownership issues (PutObjectAcl)**
 
-    * If your pipeline sets `--acl public-read` but bucket blocks public ACLs, upload fails. Use private ACL or remove ACL flag.
+    - If your pipeline sets `--acl public-read` but bucket blocks public ACLs, upload fails. Use private ACL or remove ACL flag.
 
 11. **Clock skew**
 
-    * `RequestTimeTooSkewed` — ensure CI runner clock is correct (NTP).
+    - `RequestTimeTooSkewed` — ensure CI runner clock is correct (NTP).
 
 12. **Inspect CloudTrail / S3 access logs**
 
-    * Look for `AccessDenied` events showing the principal and deny reason.
+    - Look for `AccessDenied` events showing the principal and deny reason.
 
 ---
 
@@ -5540,36 +5625,37 @@ aws s3api head-object --bucket my-bucket --key path/object.ext --query ServerSid
 
 ### 📋 Checklist for a robust CI S3 upload pipeline
 
-* [ ] Use **short-lived assumed role** (OIDC) or scoped IAM user; avoid root keys.
-* [ ] CI role has minimal **s3:PutObject**, **s3:PutObjectAcl** (if needed), **s3:ListBucket**.
-* [ ] If using KMS: grant `kms:GenerateDataKey`/`kms:Decrypt` to CI role and add key policy.
-* [ ] Set `AWS_REGION` and use regional endpoints.
-* [ ] Self-hosted runners: ensure NAT or **S3 VPC endpoint** and matching bucket policy (`aws:SourceVpce`).
-* [ ] Use multipart for large files; tune `max_concurrent_requests`.
-* [ ] Avoid `--acl public-read` if Block Public Access enabled.
-* [ ] Add retry logic in CI for transient network errors.
-* [ ] Log CloudTrail / S3 access logs for failed requests and alert on `AccessDenied`.
+- [ ] Use **short-lived assumed role** (OIDC) or scoped IAM user; avoid root keys.
+- [ ] CI role has minimal **s3:PutObject**, **s3:PutObjectAcl** (if needed), **s3:ListBucket**.
+- [ ] If using KMS: grant `kms:GenerateDataKey`/`kms:Decrypt` to CI role and add key policy.
+- [ ] Set `AWS_REGION` and use regional endpoints.
+- [ ] Self-hosted runners: ensure NAT or **S3 VPC endpoint** and matching bucket policy (`aws:SourceVpce`).
+- [ ] Use multipart for large files; tune `max_concurrent_requests`.
+- [ ] Avoid `--acl public-read` if Block Public Access enabled.
+- [ ] Add retry logic in CI for transient network errors.
+- [ ] Log CloudTrail / S3 access logs for failed requests and alert on `AccessDenied`.
 
 ---
 
 ### ✅ Best Practices (production-ready)
 
-* Use **OIDC + IAM Role for Service Accounts** (GitHub Actions) — no long-lived secrets.
-* Grant **least privilege**; use resource-level policies (bucket ARN).
-* Bake an upload test step into pipeline (quick `put` + `head-object`) to fail fast with useful info.
-* For private networks, prefer **Gateway VPC Endpoint for S3** and bucket policy with `aws:SourceVpce`.
-* Store sensitive KMS keys and secrets in **AWS Secrets Manager** or parameter store if needed.
-* Implement **exponential backoff + retry** on upload commands (handle throttling).
-* Version assets (hash filenames) to avoid invalidation issues after upload.
+- Use **OIDC + IAM Role for Service Accounts** (GitHub Actions) — no long-lived secrets.
+- Grant **least privilege**; use resource-level policies (bucket ARN).
+- Bake an upload test step into pipeline (quick `put` + `head-object`) to fail fast with useful info.
+- For private networks, prefer **Gateway VPC Endpoint for S3** and bucket policy with `aws:SourceVpce`.
+- Store sensitive KMS keys and secrets in **AWS Secrets Manager** or parameter store if needed.
+- Implement **exponential backoff + retry** on upload commands (handle throttling).
+- Version assets (hash filenames) to avoid invalidation issues after upload.
 
 ---
 
 ### 💡 In short
 
 Most CI/CD S3 upload failures are credentials/permissions, region, KMS, or network-related.
-Quick fixes: run `aws sts get-caller-identity` in your job, confirm IAM permissions (S3 & KMS), set correct region, and ensure private runners have NAT or an S3 VPC endpoint. Automate a small *upload + head-object* test step to surface issues early.
+Quick fixes: run `aws sts get-caller-identity` in your job, confirm IAM permissions (S3 & KMS), set correct region, and ensure private runners have NAT or an S3 VPC endpoint. Automate a small _upload + head-object_ test step to surface issues early.
 
 ---
+
 ## Q: Users bypass CloudFront and hit S3 directly — how do I stop that?
 
 ---
@@ -5582,10 +5668,10 @@ Users hitting the S3 origin directly defeats caching, TLS, WAF, and analytics an
 
 ### ⚙️ Purpose / How it works
 
-* Make S3 unreachable from the internet except via CloudFront.
-* CloudFront authenticates to S3 using **Origin Access Control (OAC)** (SigV4).
-* Bucket policy denies any `GetObject` not coming from the CloudFront distribution ARN (or VPC endpoint/Access Point).
-* Prevent accidental public exposure by blocking public ACLs/policies and avoiding the S3 website endpoint (which cannot use SigV4 auth).
+- Make S3 unreachable from the internet except via CloudFront.
+- CloudFront authenticates to S3 using **Origin Access Control (OAC)** (SigV4).
+- Bucket policy denies any `GetObject` not coming from the CloudFront distribution ARN (or VPC endpoint/Access Point).
+- Prevent accidental public exposure by blocking public ACLs/policies and avoiding the S3 website endpoint (which cannot use SigV4 auth).
 
 ---
 
@@ -5623,17 +5709,17 @@ Replace `<ACCOUNT-ID>`, `<DIST-ID>`, and bucket name:
 
 ```json
 {
-  "Version":"2012-10-17",
-  "Statement":[
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      "Sid":"AllowCloudFrontReadOnly",
-      "Effect":"Allow",
-      "Principal":{"Service":"cloudfront.amazonaws.com"},
-      "Action":"s3:GetObject",
-      "Resource":"arn:aws:s3:::my-site-bucket/*",
-      "Condition":{
-        "StringEquals":{
-          "AWS:SourceArn":"arn:aws:cloudfront::<ACCOUNT-ID>:distribution/<DIST-ID>"
+      "Sid": "AllowCloudFrontReadOnly",
+      "Effect": "Allow",
+      "Principal": { "Service": "cloudfront.amazonaws.com" },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-site-bucket/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::<ACCOUNT-ID>:distribution/<DIST-ID>"
         }
       }
     }
@@ -5647,14 +5733,14 @@ This adds a protective Deny to catch any other principal:
 
 ```json
 {
-  "Sid":"DenyDirectS3Access",
-  "Effect":"Deny",
-  "Principal":"*",
-  "Action":"s3:GetObject",
-  "Resource":"arn:aws:s3:::my-site-bucket/*",
-  "Condition":{
-    "StringNotEquals":{
-      "AWS:SourceArn":"arn:aws:cloudfront::<ACCOUNT-ID>:distribution/<DIST-ID>"
+  "Sid": "DenyDirectS3Access",
+  "Effect": "Deny",
+  "Principal": "*",
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::my-site-bucket/*",
+  "Condition": {
+    "StringNotEquals": {
+      "AWS:SourceArn": "arn:aws:cloudfront::<ACCOUNT-ID>:distribution/<DIST-ID>"
     }
   }
 }
@@ -5664,17 +5750,17 @@ This adds a protective Deny to catch any other principal:
 
 #### 5) **Do NOT** use S3 website endpoint as CloudFront origin
 
-* Website endpoints (`bucket.s3-website-<region>.amazonaws.com`) **cannot** be secured with OAC/OAI (SigV4); they will expose content.
-* Use the **regional S3 REST endpoint** (`bucket.s3.<region>.amazonaws.com` / `bucket.s3.<region>.amazonaws.com` or `bucket-regional-domain-name`) as CloudFront origin.
+- Website endpoints (`bucket.s3-website-<region>.amazonaws.com`) **cannot** be secured with OAC/OAI (SigV4); they will expose content.
+- Use the **regional S3 REST endpoint** (`bucket.s3.<region>.amazonaws.com` / `bucket.s3.<region>.amazonaws.com` or `bucket-regional-domain-name`) as CloudFront origin.
 
 #### 6) If using presigned URLs — scope & expiry
 
-* Avoid publicly issuable presigned URLs with long TTLs. Keep TTLs short and generate server-side only.
+- Avoid publicly issuable presigned URLs with long TTLs. Keep TTLs short and generate server-side only.
 
 #### 7) Detect direct hits (quick)
 
-* Enable **S3 server access logs** or **CloudTrail data events** and search for requests where `userIdentity.type` is `Anonymous` or `principalId` ≠ `cloudfront.amazonaws.com`.
-* Example CloudTrail lookup (pseudo):
+- Enable **S3 server access logs** or **CloudTrail data events** and search for requests where `userIdentity.type` is `Anonymous` or `principalId` ≠ `cloudfront.amazonaws.com`.
+- Example CloudTrail lookup (pseudo):
 
 ```bash
 aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=GetObject
@@ -5685,8 +5771,8 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 ### 📋 Table — Options to block direct S3 access
 
-| **Method**                           | **Use case**                    | **Effectiveness**                                 |
-| ------------------------------------ | ------------------------------- | ------------------------------------------------- |
+| **Method**                           | **Use case**                    | **Effectiveness**                                  |
+| ------------------------------------ | ------------------------------- | -------------------------------------------------- |
 | **OAC + Bucket policy (SourceArn)**  | CloudFront → S3 (recommended)   | ✅ Strong — blocks direct internet requests        |
 | **OAI (legacy)**                     | Older distributions             | ✅ Good but legacy; lacks KMS support              |
 | **Block Public Access**              | Prevent public ACLs/policies    | ✅ Required baseline                               |
@@ -5699,24 +5785,24 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 
 ### ✅ Best Practices (step-by-step checklist)
 
-* [ ] **Block public access** on the bucket (all 4 options).
-* [ ] **Make bucket objects private** (no public ACLs). Remove any `public-read` ACLs.
-* [ ] **Use CloudFront + OAC** (SigV4) and set the origin to the **regional S3 REST endpoint** (not website endpoint).
-* [ ] **Set bucket policy** to allow `cloudfront.amazonaws.com` with `AWS:SourceArn` = your distribution ARN (or explicit allow + Deny all others).
-* [ ] **If SSE-KMS** used, add CloudFront service principal (with SourceArn) to KMS key policy for `Decrypt`/`GenerateDataKey`.
-* [ ] **Avoid presigned URLs** leaking; if needed, keep them short and audited.
-* [ ] **Enable S3 server access logs / CloudTrail data events** and create alerts for direct GETs not from CloudFront.
-* [ ] **Do not use S3 website endpoint** as origin — if you need clean index handling, use CloudFront + Lambda@Edge or CloudFront function to rewrite requests.
-* [ ] **Test in staging**: temporarily add Deny policies then validate CloudFront can still fetch. Use `curl` to test direct bucket URL (should 403) and CloudFront URL (should 200).
+- [ ] **Block public access** on the bucket (all 4 options).
+- [ ] **Make bucket objects private** (no public ACLs). Remove any `public-read` ACLs.
+- [ ] **Use CloudFront + OAC** (SigV4) and set the origin to the **regional S3 REST endpoint** (not website endpoint).
+- [ ] **Set bucket policy** to allow `cloudfront.amazonaws.com` with `AWS:SourceArn` = your distribution ARN (or explicit allow + Deny all others).
+- [ ] **If SSE-KMS** used, add CloudFront service principal (with SourceArn) to KMS key policy for `Decrypt`/`GenerateDataKey`.
+- [ ] **Avoid presigned URLs** leaking; if needed, keep them short and audited.
+- [ ] **Enable S3 server access logs / CloudTrail data events** and create alerts for direct GETs not from CloudFront.
+- [ ] **Do not use S3 website endpoint** as origin — if you need clean index handling, use CloudFront + Lambda@Edge or CloudFront function to rewrite requests.
+- [ ] **Test in staging**: temporarily add Deny policies then validate CloudFront can still fetch. Use `curl` to test direct bucket URL (should 403) and CloudFront URL (should 200).
 
 ---
 
 ### ⚠️ Gotchas & tips
 
-* After switching from OAI → OAC, **update bucket policy** (OAI ARNs differ from OAC style).
-* `aws:SourceIp` is unreliable for CloudFront because CloudFront uses many IPs; use `AWS:SourceArn` for distribution or signed requests.
-* CloudFront Signed URLs/Cookies or presigned S3 URLs still allow direct access if the URL is publicly shared — design auth flow accordingly.
-* If you need both CloudFront and some trusted service (e.g., third-party CDN) access, add those principals explicitly in the bucket policy.
+- After switching from OAI → OAC, **update bucket policy** (OAI ARNs differ from OAC style).
+- `aws:SourceIp` is unreliable for CloudFront because CloudFront uses many IPs; use `AWS:SourceArn` for distribution or signed requests.
+- CloudFront Signed URLs/Cookies or presigned S3 URLs still allow direct access if the URL is publicly shared — design auth flow accordingly.
+- If you need both CloudFront and some trusted service (e.g., third-party CDN) access, add those principals explicitly in the bucket policy.
 
 ---
 
@@ -5725,6 +5811,7 @@ aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,Attribut
 Make the bucket **private**, use **CloudFront + OAC (SigV4)** as the only allowed principal in the bucket policy (conditional on your distribution ARN), **do not use S3 website endpoint**, and enable logging/alerts to detect direct S3 GETs. This forces all user traffic through CloudFront (TLS, WAF, caching) and prevents direct bypass of your CDN.
 
 ---
+
 ## Q: CloudFront Cache Invalidation Cost Optimization 💰⚡
 
 ---
@@ -5739,10 +5826,10 @@ Optimizing cache design — using **versioned assets, cache-control headers, and
 
 ### ⚙️ Purpose / How It Works
 
-* CloudFront stores objects at edge locations until TTL expiry.
-* Invalidations manually remove cached objects before TTL expiration.
-* Invalidation cost = **per path**, and `/*` counts as **1 path**, but affects all objects globally (slow + expensive if done repeatedly).
-* You can avoid invalidations by **busting cache with file versioning** or **smart cache-control** settings.
+- CloudFront stores objects at edge locations until TTL expiry.
+- Invalidations manually remove cached objects before TTL expiration.
+- Invalidation cost = **per path**, and `/*` counts as **1 path**, but affects all objects globally (slow + expensive if done repeatedly).
+- You can avoid invalidations by **busting cache with file versioning** or **smart cache-control** settings.
 
 ---
 
@@ -5826,9 +5913,9 @@ aws cloudfront create-invalidation \
 
 ✅ Typically, you only need to invalidate:
 
-* `/index.html`
-* `/service-worker.js`
-* `/manifest.json`
+- `/index.html`
+- `/service-worker.js`
+- `/manifest.json`
 
 Everything else (hashed files) can live forever.
 
@@ -5901,13 +5988,13 @@ aws cloudfront create-invalidation \
 
 ### ✅ Best Practices
 
-* 🧩 **Use versioned filenames** for all static files (CI/CD build output).
-* ⚙️ **Only invalidate HTML or manifest files**.
-* 📦 **Set long TTLs** for versioned files (`immutable`).
-* 🚀 **Bundle invalidations** — multiple paths in one request.
-* 🧮 **Avoid `/*`** invalidations unless absolutely necessary.
-* 🔍 **Monitor CloudFront “InvalidationRequests”** metric in CloudWatch.
-* 💡 **Automate TTLs** in deploy pipeline — never manual invalidation.
+- 🧩 **Use versioned filenames** for all static files (CI/CD build output).
+- ⚙️ **Only invalidate HTML or manifest files**.
+- 📦 **Set long TTLs** for versioned files (`immutable`).
+- 🚀 **Bundle invalidations** — multiple paths in one request.
+- 🧮 **Avoid `/*`** invalidations unless absolutely necessary.
+- 🔍 **Monitor CloudFront “InvalidationRequests”** metric in CloudWatch.
+- 💡 **Automate TTLs** in deploy pipeline — never manual invalidation.
 
 ---
 
@@ -5916,12 +6003,13 @@ aws cloudfront create-invalidation \
 Stop using `/*` invalidations — they’re costly and slow.
 ✅ Instead:
 
-* Version all static assets (JS/CSS/images).
-* Cache them for a year (`immutable`).
-* Invalidate only HTML or changed metadata files.
+- Version all static assets (JS/CSS/images).
+- Cache them for a year (`immutable`).
+- Invalidate only HTML or changed metadata files.
   This **reduces cache costs by 90%+** and makes deployments faster and safer.
 
 ---
+
 ## 🏗️ S3 + CloudFront Architecture Overview
 
 A secure, scalable, and globally performant setup for hosting **static websites**, **web assets**, or **CDN content** in AWS.
@@ -5933,7 +6021,7 @@ It combines **Amazon S3** (as origin storage) with **Amazon CloudFront** (as glo
 
 | **Component**                         | **Purpose / Functionality**                                                                                 |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| 🗂️ **S3 Bucket**                     | Stores static assets (HTML, JS, CSS, images). Configured as **private** (no public access).                 |
+| 🗂️ **S3 Bucket**                      | Stores static assets (HTML, JS, CSS, images). Configured as **private** (no public access).                 |
 | 🔒 **Bucket Policy**                  | Grants read permission **only to CloudFront** via **OAC/OAI**. Prevents direct public access.               |
 | 🌐 **CloudFront Distribution**        | CDN layer that caches and delivers content to users globally with low latency.                              |
 | 🏠 **Origin (S3 / ALB)**              | The primary content source — S3 for static sites, ALB for dynamic APIs or app servers.                      |
@@ -5977,17 +6065,17 @@ It combines **Amazon S3** (as origin storage) with **Amazon CloudFront** (as glo
 
 1. **Users → CloudFront:**
 
-   * All traffic hits CloudFront first (`https://cdn.myapp.com`).
-   * WAF inspects and filters malicious requests.
+   - All traffic hits CloudFront first (`https://cdn.myapp.com`).
+   - WAF inspects and filters malicious requests.
 
 2. **CloudFront → S3 (Origin Request):**
 
-   * Authenticated using **OAC** (SigV4).
-   * Bucket policy allows only that CloudFront distribution ARN.
+   - Authenticated using **OAC** (SigV4).
+   - Bucket policy allows only that CloudFront distribution ARN.
 
 3. **S3 → CloudFront → Users:**
 
-   * Cached at edge → served securely over HTTPS with low latency.
+   - Cached at edge → served securely over HTTPS with low latency.
 
 ---
 
@@ -6008,9 +6096,9 @@ It combines **Amazon S3** (as origin storage) with **Amazon CloudFront** (as glo
 
 **Amazon S3 + CloudFront** = Secure, cost-effective, globally distributed architecture for static websites or CDN delivery.
 
-* 🔒 **S3 remains private**
-* 🌎 **CloudFront handles HTTPS, caching, and WAF**
-* 🧠 **OAC enforces origin protection**
-* ⚙️ **Route 53 + ACM simplify domain and SSL**
+- 🔒 **S3 remains private**
+- 🌎 **CloudFront handles HTTPS, caching, and WAF**
+- 🧠 **OAC enforces origin protection**
+- ⚙️ **Route 53 + ACM simplify domain and SSL**
 
 ✅ Result: Fast, secure, low-cost global content delivery — the AWS-recommended pattern for modern web hosting.

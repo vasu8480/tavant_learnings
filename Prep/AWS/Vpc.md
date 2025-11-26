@@ -1,38 +1,42 @@
 # VPC (Virtual Private Cloud)
-## Q: What is a VPC (Virtual Private Cloud)?  
 
-### 🧠 Overview  
+## Q: What is a VPC (Virtual Private Cloud)?
+
+### 🧠 Overview
+
 A **VPC (Virtual Private Cloud)** is an **isolated, customizable virtual network** inside AWS (or other clouds like Azure VNet, GCP VPC).  
-It lets you control **IP ranges, subnets, routing, and security** for your cloud resources — just like managing your own data center network, but fully software-defined.  
+It lets you control **IP ranges, subnets, routing, and security** for your cloud resources — just like managing your own data center network, but fully software-defined.
 
 ---
 
-### ⚙️ Purpose / How It Works  
-- A **VPC** provides **logical isolation** for your workloads within the cloud.  
+### ⚙️ Purpose / How It Works
+
+- A **VPC** provides **logical isolation** for your workloads within the cloud.
 - You define:
-  - **CIDR block (IP range)** → e.g., `10.0.0.0/16`  
-  - **Subnets** → smaller IP ranges for availability zones  
-  - **Route tables** → direct traffic between subnets or the internet  
-  - **Internet/NAT Gateways** → control outbound/inbound access  
-  - **Security Groups & NACLs** → enforce traffic-level firewalls  
+  - **CIDR block (IP range)** → e.g., `10.0.0.0/16`
+  - **Subnets** → smaller IP ranges for availability zones
+  - **Route tables** → direct traffic between subnets or the internet
+  - **Internet/NAT Gateways** → control outbound/inbound access
+  - **Security Groups & NACLs** → enforce traffic-level firewalls
 
 Essentially, the VPC acts as the **foundation network layer** for all AWS resources (EC2, RDS, EKS, Lambda with VPC access, etc.).
 
 ---
 
-### 🧩 Example — Simple VPC Setup  
+### 🧩 Example — Simple VPC Setup
 
 #### 🧱 Components
-| Component | Purpose |
-|------------|----------|
-| **VPC** | Root network environment (e.g., `10.0.0.0/16`) |
-| **Public Subnet** | Exposes resources to the internet (e.g., web servers) |
-| **Private Subnet** | For internal-only resources (e.g., databases) |
-| **Internet Gateway (IGW)** | Enables public internet access |
-| **NAT Gateway** | Allows private subnets to access the internet securely |
-| **Route Tables** | Define allowed network paths |
-| **Security Groups** | Instance-level firewalls |
-| **Network ACLs** | Subnet-level firewalls |
+
+| Component                  | Purpose                                                |
+| -------------------------- | ------------------------------------------------------ |
+| **VPC**                    | Root network environment (e.g., `10.0.0.0/16`)         |
+| **Public Subnet**          | Exposes resources to the internet (e.g., web servers)  |
+| **Private Subnet**         | For internal-only resources (e.g., databases)          |
+| **Internet Gateway (IGW)** | Enables public internet access                         |
+| **NAT Gateway**            | Allows private subnets to access the internet securely |
+| **Route Tables**           | Define allowed network paths                           |
+| **Security Groups**        | Instance-level firewalls                               |
+| **Network ACLs**           | Subnet-level firewalls                                 |
 
 ---
 
@@ -58,7 +62,7 @@ Essentially, the VPC acts as the **foundation network layer** for all AWS resour
 
 ---
 
-### ⚙️ AWS CLI Example — Create a Simple VPC  
+### ⚙️ AWS CLI Example — Create a Simple VPC
 
 ```bash
 # 1. Create VPC
@@ -75,36 +79,38 @@ aws ec2 attach-internet-gateway --vpc-id vpc-1234abcd --internet-gateway-id igw-
 
 ---
 
-### 📋 Key Features of AWS VPC  
+### 📋 Key Features of AWS VPC
 
-| Feature | Description |
-|----------|--------------|
-| **Isolation** | Dedicated virtual network for your AWS account |
-| **Subnet Segmentation** | Divide network into public/private areas |
-| **Route Control** | Custom route tables for full traffic control |
-| **Security** | Security Groups (stateful) + NACLs (stateless) |
+| Feature                  | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| **Isolation**            | Dedicated virtual network for your AWS account         |
+| **Subnet Segmentation**  | Divide network into public/private areas               |
+| **Route Control**        | Custom route tables for full traffic control           |
+| **Security**             | Security Groups (stateful) + NACLs (stateless)         |
 | **Connectivity Options** | Internet Gateway, VPN, Direct Connect, Transit Gateway |
-| **Elastic IP & ENI** | Assign static IPs or multiple NICs to EC2s |
-| **Flow Logs** | Monitor inbound/outbound network traffic |
+| **Elastic IP & ENI**     | Assign static IPs or multiple NICs to EC2s             |
+| **Flow Logs**            | Monitor inbound/outbound network traffic               |
 
 ---
 
-### ✅ Best Practices  
+### ✅ Best Practices
 
-- 🧠 Use **separate subnets per AZ** for high availability.  
-- 🔒 Keep **databases and internal services** in **private subnets**.  
-- ⚙️ Use **NAT Gateway** for outbound internet access from private subnets.  
-- 🧩 Enable **VPC Flow Logs** for security auditing.  
-- 🌐 Reserve IP ranges that don’t overlap with on-prem networks.  
-- 🚀 Manage network configuration as code using **Terraform or AWS CDK**.  
+- 🧠 Use **separate subnets per AZ** for high availability.
+- 🔒 Keep **databases and internal services** in **private subnets**.
+- ⚙️ Use **NAT Gateway** for outbound internet access from private subnets.
+- 🧩 Enable **VPC Flow Logs** for security auditing.
+- 🌐 Reserve IP ranges that don’t overlap with on-prem networks.
+- 🚀 Manage network configuration as code using **Terraform or AWS CDK**.
 
 ---
 
-### 💡 In short  
+### 💡 In short
+
 A **VPC** = your **own private, isolated cloud network** in AWS.  
 It defines **IP addressing, subnets, routing, and security**, letting you run cloud workloads securely just like in a traditional data center — but **fully managed and programmable.**
 
 ---
+
 ## Q: What is a CIDR Block in a VPC?
 
 ---
@@ -126,15 +132,15 @@ VPC CIDR: 10.0.0.0/16  →  65,536 IPs (10.0.0.0–10.0.255.255)
 
 ### ⚙️ Purpose / How It Works
 
-* The **CIDR block** determines:
+- The **CIDR block** determines:
 
-  * The **total number of available IP addresses**.
-  * The **private IP space** your instances can use.
-  * How **subnets** and **routing** are organized inside the VPC.
+  - The **total number of available IP addresses**.
+  - The **private IP space** your instances can use.
+  - How **subnets** and **routing** are organized inside the VPC.
 
-* AWS allows multiple CIDR blocks per VPC (primary + secondary).
+- AWS allows multiple CIDR blocks per VPC (primary + secondary).
 
-* CIDR format:
+- CIDR format:
 
   ```
   <Network Address>/<Prefix Length>
@@ -142,8 +148,8 @@ VPC CIDR: 10.0.0.0/16  →  65,536 IPs (10.0.0.0–10.0.255.255)
 
   Example: `10.0.0.0/16`
 
-  * `10.0.0.0` → network identifier
-  * `/16` → prefix length → determines how many bits define the network
+  - `10.0.0.0` → network identifier
+  - `/16` → prefix length → determines how many bits define the network
 
 ---
 
@@ -157,11 +163,11 @@ VPC CIDR: 10.0.0.0/16  →  65,536 IPs (10.0.0.0–10.0.255.255)
 
 > AWS reserves 5 IPs per subnet:
 >
-> * `.0` = network address
-> * `.1` = VPC router
-> * `.2` = DNS
-> * `.3` = future use
-> * `.255` = broadcast
+> - `.0` = network address
+> - `.1` = VPC router
+> - `.2` = DNS
+> - `.3` = future use
+> - `.255` = broadcast
 
 So `/24` → 256 - 5 = 251 usable IPs.
 
@@ -214,15 +220,16 @@ Each subnet inherits from the **VPC CIDR** but defines its own smaller slice.
 
 ### ✅ Best Practices
 
-* 🧠 **Plan CIDR ranges carefully** before creating a VPC — can’t shrink later.
-* 🧩 Use **/16 VPC** and carve subnets like `/24` or `/20` for flexibility.
-* 🔒 Avoid overlapping IP ranges with on-prem or peered VPCs.
-* ⚙️ Use **secondary CIDR blocks** if you run out of IPs later:
+- 🧠 **Plan CIDR ranges carefully** before creating a VPC — can’t shrink later.
+- 🧩 Use **/16 VPC** and carve subnets like `/24` or `/20` for flexibility.
+- 🔒 Avoid overlapping IP ranges with on-prem or peered VPCs.
+- ⚙️ Use **secondary CIDR blocks** if you run out of IPs later:
 
   ```bash
   aws ec2 associate-vpc-cidr-block --vpc-id vpc-1234abcd --cidr-block 10.1.0.0/16
   ```
-* 🚀 Document subnet usage by environment (e.g., dev, staging, prod).
+
+- 🚀 Document subnet usage by environment (e.g., dev, staging, prod).
 
 ---
 
@@ -234,7 +241,8 @@ For example:
 
 ✅ Always plan **non-overlapping, scalable CIDRs** for long-term network growth and hybrid connectivity.
 
---- 
+---
+
 ## Q: What Are Subnets in a VPC?
 
 ---
@@ -250,19 +258,19 @@ Each subnet exists in **exactly one Availability Zone**, and inherits its parent
 
 ### ⚙️ Purpose / How It Works
 
-* **VPC = entire network**, **subnets = network segments** inside it.
-* Subnets allow you to:
+- **VPC = entire network**, **subnets = network segments** inside it.
+- Subnets allow you to:
 
-  * Separate **public** (internet-facing) and **private** (internal) resources.
-  * Control **routing and security** independently per subnet.
-  * Achieve **high availability** by spreading subnets across multiple AZs.
+  - Separate **public** (internet-facing) and **private** (internal) resources.
+  - Control **routing and security** independently per subnet.
+  - Achieve **high availability** by spreading subnets across multiple AZs.
 
 Each subnet has:
 
-* **CIDR block** (e.g., `10.0.1.0/24`)
-* **Route table** association
-* **NACL (Network ACL)** association
-* Optionally **auto-assign public IPs**
+- **CIDR block** (e.g., `10.0.1.0/24`)
+- **Route table** association
+- **NACL (Network ACL)** association
+- Optionally **auto-assign public IPs**
 
 ---
 
@@ -315,7 +323,7 @@ aws ec2 create-subnet \
 
 | Feature           | Public Subnet                    | Private Subnet                              |
 | ----------------- | -------------------------------- | ------------------------------------------- |
-| Internet Access   | ✅ Yes (via Internet Gateway)     | ❌ No direct access                          |
+| Internet Access   | ✅ Yes (via Internet Gateway)    | ❌ No direct access                         |
 | Default Route     | Points to **IGW**                | Points to **NAT Gateway / Transit Gateway** |
 | Used For          | Web servers, ALBs, bastion hosts | App servers, DBs, internal services         |
 | Security          | Security Groups + NACLs          | Security Groups + NACLs                     |
@@ -344,21 +352,21 @@ aws ec2 create-subnet \
 
 ### ⚙️ Key Notes
 
-* Each subnet belongs to **one Availability Zone** only.
-* You can have **multiple subnets per AZ**.
-* AWS reserves **5 IP addresses per subnet** (first 4 + last 1).
-* Subnets can be **associated** with different **route tables** for custom routing.
-* Use **Flow Logs** at subnet level to capture traffic metadata.
+- Each subnet belongs to **one Availability Zone** only.
+- You can have **multiple subnets per AZ**.
+- AWS reserves **5 IP addresses per subnet** (first 4 + last 1).
+- Subnets can be **associated** with different **route tables** for custom routing.
+- Use **Flow Logs** at subnet level to capture traffic metadata.
 
 ---
 
 ### ✅ Best Practices
 
-* 🧠 Always create **at least 2 subnets per AZ** (for HA and isolation).
-* ⚙️ Keep **public and private workloads separated**.
-* 🔒 Use **NAT Gateway in public subnet** for private subnet internet access.
-* 🧩 Align subnet CIDRs with environments (e.g., `10.0.1.0/24` = dev, `10.0.2.0/24` = prod).
-* 🚀 Spread subnets across AZs for **fault tolerance and resilience**.
+- 🧠 Always create **at least 2 subnets per AZ** (for HA and isolation).
+- ⚙️ Keep **public and private workloads separated**.
+- 🔒 Use **NAT Gateway in public subnet** for private subnet internet access.
+- 🧩 Align subnet CIDRs with environments (e.g., `10.0.1.0/24` = dev, `10.0.2.0/24` = prod).
+- 🚀 Spread subnets across AZs for **fault tolerance and resilience**.
 
 ---
 
@@ -366,12 +374,13 @@ aws ec2 create-subnet \
 
 A **subnet** is a **smaller network segment inside a VPC**, tied to one **Availability Zone**.
 
-* **Public Subnets** → Internet-facing resources (via IGW)
-* **Private Subnets** → Internal-only resources (via NAT)
+- **Public Subnets** → Internet-facing resources (via IGW)
+- **Private Subnets** → Internal-only resources (via NAT)
 
 ✅ Subnets allow **logical isolation**, **fine-grained routing**, and **security control** — forming the foundation of a secure and scalable VPC architecture.
 
 ---
+
 ## Q: How Do You Decide Subnet Size in a VPC?
 
 ---
@@ -389,9 +398,9 @@ Subnet sizing directly affects **scalability**, **cost (NAT gateways, IP usage)*
 Each **VPC** has a main CIDR (e.g., `10.0.0.0/16`) → divided into **smaller subnets**.
 The subnet’s CIDR determines:
 
-* How many **IP addresses** you can assign.
-* How many **resources** (EC2, RDS, Load Balancers, etc.) fit in each subnet.
-* The **isolation** between environments (public/private/dev/prod).
+- How many **IP addresses** you can assign.
+- How many **resources** (EC2, RDS, Load Balancers, etc.) fit in each subnet.
+- The **isolation** between environments (public/private/dev/prod).
 
 Each subnet **loses 5 IPs** to AWS reservations (network, router, DNS, etc.), so always factor that in.
 
@@ -480,15 +489,15 @@ Hosts/Net: 65534
 
 ### ✅ Best Practices
 
-* 🧠 Always **leave address space** for future subnets or peering.
-* ⚙️ Use **/24 subnets** as a default — easy to scale and manage.
-* 🔒 Keep **NAT Gateways and Bastions** in small `/28` subnets.
-* 🚀 Align subnet sizes with **availability zones** for high availability.
-* 🧩 Avoid **CIDR overlap** with:
+- 🧠 Always **leave address space** for future subnets or peering.
+- ⚙️ Use **/24 subnets** as a default — easy to scale and manage.
+- 🔒 Keep **NAT Gateways and Bastions** in small `/28` subnets.
+- 🚀 Align subnet sizes with **availability zones** for high availability.
+- 🧩 Avoid **CIDR overlap** with:
 
-  * On-prem networks
-  * Peered or Transit VPCs
-  * Other AWS accounts
+  - On-prem networks
+  - Peered or Transit VPCs
+  - Other AWS accounts
 
 ---
 
@@ -500,6 +509,7 @@ Start with `/24` (251 usable IPs) for most workloads, adjust larger (`/22`, `/20
 ✅ Plan with growth in mind — it’s easy to add new subnets, but **you can’t shrink or resize existing ones** once created.
 
 ---
+
 ## Q: What is an Internet Gateway (IGW) in AWS?
 
 ---
@@ -522,12 +532,12 @@ The **IGW** performs two main functions:
 
 It works by:
 
-* Attaching to your **VPC**.
-* Being referenced in **route tables** (e.g., `0.0.0.0/0 → igw-xxxxxx`).
-* Working in combination with:
+- Attaching to your **VPC**.
+- Being referenced in **route tables** (e.g., `0.0.0.0/0 → igw-xxxxxx`).
+- Working in combination with:
 
-  * **Public IPs / Elastic IPs** on instances.
-  * **Security Groups** and **NACLs** for traffic control.
+  - **Public IPs / Elastic IPs** on instances.
+  - **Security Groups** and **NACLs** for traffic control.
 
 ---
 
@@ -624,11 +634,11 @@ aws ec2 create-route \
 
 ### ✅ Best Practices
 
-* 🧠 Attach **only one IGW per VPC** (additional IGWs not allowed).
-* ⚙️ Ensure public subnets have **route to IGW** *and* EC2s have **public IPs**.
-* 🔒 Control access using **Security Groups** and **NACLs** — IGW doesn’t filter traffic.
-* 🧩 Combine IGW (for public) and NAT Gateway (for private) for hybrid VPC designs.
-* 🚀 Use **Elastic IPs** for stable DNS mappings and recovery scenarios.
+- 🧠 Attach **only one IGW per VPC** (additional IGWs not allowed).
+- ⚙️ Ensure public subnets have **route to IGW** _and_ EC2s have **public IPs**.
+- 🔒 Control access using **Security Groups** and **NACLs** — IGW doesn’t filter traffic.
+- 🧩 Combine IGW (for public) and NAT Gateway (for private) for hybrid VPC designs.
+- 🚀 Use **Elastic IPs** for stable DNS mappings and recovery scenarios.
 
 ---
 
@@ -640,6 +650,7 @@ It must be **attached to a VPC**, **referenced in route tables**, and **used wit
 ✅ **Think of IGW as the “door” between your private cloud network and the internet** — secure, scalable, and essential for public workloads.
 
 ---
+
 ## Q: What is a NAT Gateway in AWS?
 
 ---
@@ -656,9 +667,9 @@ In short → **Private → Internet (Outbound Only)** ✅
 
 ### ⚙️ Purpose / How It Works
 
-* Private EC2 instances **don’t have public IPs**, so they can’t connect to the internet directly.
-* A **NAT Gateway** lives in a **public subnet** with a **public Elastic IP**, and routes outbound traffic **on behalf of private subnets**.
-* It performs **source NAT (SNAT)** → replaces the private source IP (e.g., `10.0.2.15`) with the NAT’s public IP before sending packets to the internet.
+- Private EC2 instances **don’t have public IPs**, so they can’t connect to the internet directly.
+- A **NAT Gateway** lives in a **public subnet** with a **public Elastic IP**, and routes outbound traffic **on behalf of private subnets**.
+- It performs **source NAT (SNAT)** → replaces the private source IP (e.g., `10.0.2.15`) with the NAT’s public IP before sending packets to the internet.
 
 Return traffic flows back through the NAT Gateway → routed to the private instance.
 
@@ -683,8 +694,8 @@ Internet <-----> IGW| Public Sub |   | Private Sub|
 
 **Route tables:**
 
-* Public Subnet → `0.0.0.0/0 → igw-xxxx`
-* Private Subnet → `0.0.0.0/0 → nat-xxxx`
+- Public Subnet → `0.0.0.0/0 → igw-xxxx`
+- Private Subnet → `0.0.0.0/0 → nat-xxxx`
 
 ---
 
@@ -767,11 +778,11 @@ aws ec2 create-route \
 
 ### ✅ Best Practices
 
-* 🧠 Deploy **one NAT Gateway per AZ** for high availability.
-* ⚙️ Place **NAT Gateways in public subnets** with route to IGW.
-* 🔒 Use **private route tables** pointing to NAT GW for outbound access.
-* 🚀 Enable **VPC Flow Logs** to audit outbound connections.
-* 🧩 For cost savings in dev environments, consider **NAT instances** or **proxy servers** instead.
+- 🧠 Deploy **one NAT Gateway per AZ** for high availability.
+- ⚙️ Place **NAT Gateways in public subnets** with route to IGW.
+- 🔒 Use **private route tables** pointing to NAT GW for outbound access.
+- 🚀 Enable **VPC Flow Logs** to audit outbound connections.
+- 🧩 For cost savings in dev environments, consider **NAT instances** or **proxy servers** instead.
 
 ---
 
@@ -783,6 +794,7 @@ It sits in a **public subnet**, uses a **public Elastic IP**, and routes return 
 ✅ **IGW = public access**, **NAT GW = secure outbound access** — both together form the backbone of a hybrid public/private VPC network design.
 
 ---
+
 ## Q: What is a Route Table in AWS VPC?
 
 ---
@@ -800,9 +812,9 @@ In short — a **Route Table = VPC’s traffic map** 🗺️
 
 Every subnet in a VPC must be **associated with exactly one Route Table**.
 
-* A **route** specifies a **destination CIDR block** (like `10.0.0.0/16`, `0.0.0.0/0`) and a **target** (like `igw-xxxx`, `nat-xxxx`, or `eni-xxxx`).
-* AWS automatically adds a **“local” route** for all internal VPC traffic.
-* Custom routes determine how traffic leaves the subnet — e.g., internet, VPN, peering, etc.
+- A **route** specifies a **destination CIDR block** (like `10.0.0.0/16`, `0.0.0.0/0`) and a **target** (like `igw-xxxx`, `nat-xxxx`, or `eni-xxxx`).
+- AWS automatically adds a **“local” route** for all internal VPC traffic.
+- Custom routes determine how traffic leaves the subnet — e.g., internet, VPN, peering, etc.
 
 The Route Table **decides the next hop** for each packet based on its destination IP.
 
@@ -910,12 +922,12 @@ Example:
 
 ### ✅ Best Practices
 
-* 🧠 Use **separate route tables** for public and private subnets.
-* ⚙️ Ensure **0.0.0.0/0 → IGW** only exists in public route tables.
-* 🔒 For private subnets, use **NAT GW** or **Transit GW** for outbound routing.
-* 🧩 Enable **VPC Flow Logs** to audit unexpected traffic paths.
-* 🚀 Keep **naming consistent** (e.g., `rtb-public-us-east-1a`, `rtb-private-db`).
-* 🌐 For hybrid setups, use **Virtual Private Gateway** routes for on-prem networks.
+- 🧠 Use **separate route tables** for public and private subnets.
+- ⚙️ Ensure **0.0.0.0/0 → IGW** only exists in public route tables.
+- 🔒 For private subnets, use **NAT GW** or **Transit GW** for outbound routing.
+- 🧩 Enable **VPC Flow Logs** to audit unexpected traffic paths.
+- 🚀 Keep **naming consistent** (e.g., `rtb-public-us-east-1a`, `rtb-private-db`).
+- 🌐 For hybrid setups, use **Virtual Private Gateway** routes for on-prem networks.
 
 ---
 
@@ -923,13 +935,14 @@ Example:
 
 A **Route Table** defines **where your VPC traffic goes** — locally, to the internet, or through private connections.
 
-* **Public subnet** → route to **Internet Gateway (IGW)**
-* **Private subnet** → route to **NAT Gateway (NAT GW)**
-* **Hybrid / VPN** → route to **VGW / TGW / Peering**
+- **Public subnet** → route to **Internet Gateway (IGW)**
+- **Private subnet** → route to **NAT Gateway (NAT GW)**
+- **Hybrid / VPN** → route to **VGW / TGW / Peering**
 
 ✅ It’s the **core traffic control layer** of AWS networking — the “routing brain” of your VPC.
 
 ---
+
 ## Q: What is a Security Group in AWS?
 
 ---
@@ -947,14 +960,14 @@ Think of it as the **instance-level firewall** in your VPC. 🔒
 
 Security Groups control **who can talk to your resource** (inbound) and **where your resource can connect** (outbound).
 
-* **Inbound rules** → define which traffic is allowed *into* your resource.
-* **Outbound rules** → define which traffic is allowed *out of* your resource.
-* Each resource (like EC2) can have **up to 5 Security Groups attached**.
-* Each rule specifies:
+- **Inbound rules** → define which traffic is allowed _into_ your resource.
+- **Outbound rules** → define which traffic is allowed _out of_ your resource.
+- Each resource (like EC2) can have **up to 5 Security Groups attached**.
+- Each rule specifies:
 
-  * **Protocol** (TCP, UDP, ICMP)
-  * **Port range** (e.g., 22, 80, 443)
-  * **Source / Destination** (IP range or another SG)
+  - **Protocol** (TCP, UDP, ICMP)
+  - **Port range** (e.g., 22, 80, 443)
+  - **Source / Destination** (IP range or another SG)
 
 ---
 
@@ -1015,8 +1028,8 @@ aws ec2 authorize-security-group-ingress \
 
 If you allow inbound HTTP (port 80):
 
-* Client → EC2 on port 80 ✅
-* Response (EC2 → client) is **auto-allowed**, even if no outbound rule explicitly exists.
+- Client → EC2 on port 80 ✅
+- Response (EC2 → client) is **auto-allowed**, even if no outbound rule explicitly exists.
 
 If you remove the inbound rule, traffic is dropped in both directions.
 
@@ -1027,7 +1040,7 @@ If you remove the inbound rule, traffic is dropped in both directions.
 | Feature              | Security Group                           | Network ACL                                 |
 | -------------------- | ---------------------------------------- | ------------------------------------------- |
 | **Level**            | Instance level                           | Subnet level                                |
-| **Stateful**         | ✅ Yes                                    | ❌ No                                        |
+| **Stateful**         | ✅ Yes                                   | ❌ No                                       |
 | **Default Rules**    | All inbound denied, all outbound allowed | All inbound/outbound allowed                |
 | **Evaluation Order** | Rules aggregated                         | Rules evaluated in order (lowest → highest) |
 | **Use Case**         | Protect individual EC2s or ENIs          | Protect entire subnets                      |
@@ -1069,12 +1082,12 @@ Internet
 
 ### ✅ Best Practices
 
-* 🔒 **Least privilege** — allow only required ports/IPs.
-* 🧩 Reference **other SGs** instead of IPs for dynamic relationships (e.g., web SG → DB SG).
-* ⚙️ Separate SGs by function (web, app, db).
-* 🧠 Regularly **audit unused rules** and **restrict SSH access** (use bastion host).
-* 🚀 Automate SG creation using IaC (Terraform, AWS CDK).
-* 🔍 Enable **VPC Flow Logs** to validate rule effectiveness.
+- 🔒 **Least privilege** — allow only required ports/IPs.
+- 🧩 Reference **other SGs** instead of IPs for dynamic relationships (e.g., web SG → DB SG).
+- ⚙️ Separate SGs by function (web, app, db).
+- 🧠 Regularly **audit unused rules** and **restrict SSH access** (use bastion host).
+- 🚀 Automate SG creation using IaC (Terraform, AWS CDK).
+- 🔍 Enable **VPC Flow Logs** to validate rule effectiveness.
 
 ---
 
@@ -1082,8 +1095,8 @@ Internet
 
 A **Security Group** is a **stateful, instance-level firewall** that controls inbound and outbound traffic in a VPC.
 
-* **Inbound rules** → who can reach your resource
-* **Outbound rules** → where your resource can connect
+- **Inbound rules** → who can reach your resource
+- **Outbound rules** → where your resource can connect
 
 ✅ Use **SGs for fine-grained control**, **NACLs for subnet-level defense** — together they form a layered network security model.
 
@@ -1104,13 +1117,14 @@ Think of it as the **first line of defense** — filtering packets **before they
 
 ### ⚙️ Purpose / How It Works
 
-* A **NACL** acts at the **subnet level**, inspecting **each packet** entering or leaving.
-* Each NACL has two sets of rules:
+- A **NACL** acts at the **subnet level**, inspecting **each packet** entering or leaving.
+- Each NACL has two sets of rules:
 
-  * **Inbound rules** → control traffic *into* the subnet.
-  * **Outbound rules** → control traffic *out of* the subnet.
-* Rules are evaluated in **ascending order** (lowest number first).
-* Being **stateless**, both inbound and outbound directions must have matching “allow” rules for bi-directional traffic.
+  - **Inbound rules** → control traffic _into_ the subnet.
+  - **Outbound rules** → control traffic _out of_ the subnet.
+
+- Rules are evaluated in **ascending order** (lowest number first).
+- Being **stateless**, both inbound and outbound directions must have matching “allow” rules for bi-directional traffic.
 
 ---
 
@@ -1177,10 +1191,10 @@ aws ec2 create-network-acl-entry \
 | Feature                 | **Network ACL (NACL)**      | **Security Group (SG)**                 |
 | ----------------------- | --------------------------- | --------------------------------------- |
 | **Scope**               | Subnet level                | Instance level                          |
-| **Stateful**            | ❌ No (stateless)            | ✅ Yes                                   |
+| **Stateful**            | ❌ No (stateless)           | ✅ Yes                                  |
 | **Default behavior**    | Allows all (default)        | Denies all inbound, allows all outbound |
 | **Rule evaluation**     | In order (lowest → highest) | Aggregate all rules                     |
-| **Supports deny rules** | ✅ Yes                       | ❌ No (only allow)                       |
+| **Supports deny rules** | ✅ Yes                      | ❌ No (only allow)                      |
 | **Direction rules**     | Separate inbound/outbound   | Implicitly paired by statefulness       |
 | **Use case**            | Coarse subnet filtering     | Fine-grained instance protection        |
 
@@ -1228,13 +1242,13 @@ aws ec2 create-network-acl-entry \
 
 ### ✅ Best Practices
 
-* 🧠 Use **NACLs for coarse-grained, subnet-wide security**.
-* ⚙️ Keep rule numbers spaced (e.g., 100, 110, 120) for easy insertion.
-* 🔒 Always define **both inbound & outbound rules** for return traffic.
-* 🚀 Associate **different NACLs per subnet tier** (public, private, DB).
-* 🧩 Deny known malicious IP ranges explicitly (NACL supports deny).
-* 📊 Enable **VPC Flow Logs** to validate rule effectiveness.
-* 🧾 Default NACLs are permissive — replace with custom ones in production.
+- 🧠 Use **NACLs for coarse-grained, subnet-wide security**.
+- ⚙️ Keep rule numbers spaced (e.g., 100, 110, 120) for easy insertion.
+- 🔒 Always define **both inbound & outbound rules** for return traffic.
+- 🚀 Associate **different NACLs per subnet tier** (public, private, DB).
+- 🧩 Deny known malicious IP ranges explicitly (NACL supports deny).
+- 📊 Enable **VPC Flow Logs** to validate rule effectiveness.
+- 🧾 Default NACLs are permissive — replace with custom ones in production.
 
 ---
 
@@ -1242,12 +1256,13 @@ aws ec2 create-network-acl-entry \
 
 A **Network ACL (NACL)** is a **stateless, subnet-level firewall** that controls inbound and outbound traffic using ordered allow/deny rules.
 
-* **NACL → subnet-level guardrail**
-* **SG → instance-level protection**
+- **NACL → subnet-level guardrail**
+- **SG → instance-level protection**
 
 ✅ Use both for **layered security** — NACLs to isolate network zones, and Security Groups to protect individual workloads.
 
 ---
+
 ## Q: How Do You Make an EC2 Instance Public in AWS?
 
 ---
@@ -1403,8 +1418,8 @@ curl http://<public-ip>
 | Feature         | Public EC2             | Private EC2                |
 | --------------- | ---------------------- | -------------------------- |
 | Subnet Type     | Public (via IGW)       | Private (via NAT GW)       |
-| Public IP       | ✅ Yes                  | ❌ No                       |
-| Internet Access | ✅ Inbound + Outbound   | ⬆ Outbound only            |
+| Public IP       | ✅ Yes                 | ❌ No                      |
+| Internet Access | ✅ Inbound + Outbound  | ⬆ Outbound only            |
 | Route Table     | `0.0.0.0/0 → igw-xxxx` | `0.0.0.0/0 → nat-xxxx`     |
 | Use Case        | Web, Bastion, API      | App, DB, Internal Services |
 
@@ -1412,11 +1427,11 @@ curl http://<public-ip>
 
 ### ✅ Best Practices
 
-* 🔒 Restrict SSH (22) to admin IPs only — never open to `0.0.0.0/0`.
-* ⚙️ Use **Elastic IPs** for production, not auto-assigned ones.
-* 🧩 Place **NAT Gateway** for private resources needing outbound internet.
-* 🚀 Use **ALB (Application Load Balancer)** in the public subnet instead of exposing backend EC2s directly.
-* 🔍 Enable **VPC Flow Logs** to audit incoming/outgoing traffic.
+- 🔒 Restrict SSH (22) to admin IPs only — never open to `0.0.0.0/0`.
+- ⚙️ Use **Elastic IPs** for production, not auto-assigned ones.
+- 🧩 Place **NAT Gateway** for private resources needing outbound internet.
+- 🚀 Use **ALB (Application Load Balancer)** in the public subnet instead of exposing backend EC2s directly.
+- 🔍 Enable **VPC Flow Logs** to audit incoming/outgoing traffic.
 
 ---
 
@@ -1431,7 +1446,8 @@ To make an EC2 **publicly accessible**:
 
 ✅ Public EC2 = `Public Subnet + IGW + Public IP + Open Ports` — ready to serve traffic on the internet securely.
 
-----
+---
+
 ## Q: What’s the Difference Between Public and Private Subnets in AWS VPC?
 
 ---
@@ -1441,8 +1457,7 @@ To make an EC2 **publicly accessible**:
 In an AWS VPC, **subnets** are logical network segments — either **public** or **private** — based on how they connect to the **internet**.
 The key difference:
 
-> **Public Subnet → Has Internet access via Internet Gateway (IGW)**
-> **Private Subnet → No direct Internet access (uses NAT Gateway or stays internal)**
+> **Public Subnet → Has Internet access via Internet Gateway (IGW)** > **Private Subnet → No direct Internet access (uses NAT Gateway or stays internal)**
 
 ---
 
@@ -1483,17 +1498,17 @@ The difference is determined **by the route table**, not by name.
 
 ### 📋 Comparison Table
 
-| Feature                      | **Public Subnet**                     | **Private Subnet**                    |
-| ---------------------------- | ------------------------------------- | ------------------------------------- |
-| **Internet Gateway (IGW)**   | ✅ Route to IGW                        | ❌ No direct route                     |
-| **NAT Gateway**              | Optional                              | ✅ Required for outbound internet      |
-| **Public IP / Elastic IP**   | Required for internet access          | Not allowed or needed                 |
-| **Inbound Internet Access**  | ✅ Allowed via IGW (and open SG rules) | ❌ Not directly allowed                |
-| **Outbound Internet Access** | ✅ Direct via IGW                      | ✅ Via NAT Gateway                     |
-| **Route Table**              | `0.0.0.0/0 → igw-xxxx`                | `0.0.0.0/0 → nat-xxxx`                |
-| **Common Resources**         | ALBs, Bastion Hosts, Web Servers      | App Servers, Databases, Internal APIs |
-| **Security Level**           | Internet-exposed                      | Fully internal                        |
-| **Use Case**                 | Internet-facing workloads             | Backend workloads                     |
+| Feature                      | **Public Subnet**                      | **Private Subnet**                    |
+| ---------------------------- | -------------------------------------- | ------------------------------------- |
+| **Internet Gateway (IGW)**   | ✅ Route to IGW                        | ❌ No direct route                    |
+| **NAT Gateway**              | Optional                               | ✅ Required for outbound internet     |
+| **Public IP / Elastic IP**   | Required for internet access           | Not allowed or needed                 |
+| **Inbound Internet Access**  | ✅ Allowed via IGW (and open SG rules) | ❌ Not directly allowed               |
+| **Outbound Internet Access** | ✅ Direct via IGW                      | ✅ Via NAT Gateway                    |
+| **Route Table**              | `0.0.0.0/0 → igw-xxxx`                 | `0.0.0.0/0 → nat-xxxx`                |
+| **Common Resources**         | ALBs, Bastion Hosts, Web Servers       | App Servers, Databases, Internal APIs |
+| **Security Level**           | Internet-exposed                       | Fully internal                        |
+| **Use Case**                 | Internet-facing workloads              | Backend workloads                     |
 
 ---
 
@@ -1535,11 +1550,11 @@ aws ec2 create-route \
 
 ### ✅ Best Practices
 
-* 🧠 Always deploy **public + private subnet pairs per AZ** for HA and separation.
-* 🔒 Keep **databases, caches, and internal APIs** in **private subnets**.
-* ⚙️ Use **NAT Gateways** in public subnets for outbound internet access from private ones.
-* 🚀 Place **load balancers** or **bastion hosts** in **public subnets**.
-* 🧩 Tag route tables and subnets clearly (e.g., `public-us-east-1a`, `private-db-1a`).
+- 🧠 Always deploy **public + private subnet pairs per AZ** for HA and separation.
+- 🔒 Keep **databases, caches, and internal APIs** in **private subnets**.
+- ⚙️ Use **NAT Gateways** in public subnets for outbound internet access from private ones.
+- 🚀 Place **load balancers** or **bastion hosts** in **public subnets**.
+- 🧩 Tag route tables and subnets clearly (e.g., `public-us-east-1a`, `private-db-1a`).
 
 ---
 
@@ -1555,6 +1570,7 @@ aws ec2 create-route \
 ✅ **Public = external access**, **Private = internal-only** — together, they form a secure and layered VPC design.
 
 ---
+
 ## Q: What is an Elastic IP (EIP) in AWS?
 
 ---
@@ -1570,10 +1586,10 @@ Unlike auto-assigned public IPs (which change when an instance restarts), an **E
 
 ### ⚙️ Purpose / How It Works
 
-* When you launch an EC2 instance, it can automatically get a **dynamic public IP** — but it **changes** on stop/start.
-* An **Elastic IP** is a **persistent public IP** that stays with your AWS account until you release it.
-* You can **reassign** it to another instance instantly — useful for **failover or blue-green deployments**.
-* EIPs are **region-specific** (not global).
+- When you launch an EC2 instance, it can automatically get a **dynamic public IP** — but it **changes** on stop/start.
+- An **Elastic IP** is a **persistent public IP** that stays with your AWS account until you release it.
+- You can **reassign** it to another instance instantly — useful for **failover or blue-green deployments**.
+- EIPs are **region-specific** (not global).
 
 ---
 
@@ -1667,11 +1683,11 @@ aws ec2 release-address --allocation-id eipalloc-0abcd1234efgh5678
 
 ### ✅ Best Practices
 
-* 🧠 Use EIPs only when **you need a fixed IP**; otherwise, dynamic public IPs are simpler.
-* ⚙️ **Release unused EIPs** to avoid hourly charges.
-* 🔄 Automate reassignment in failover using **Lambda or Route 53 health checks**.
-* 🚀 Use **Elastic Load Balancers (ALBs/NLBs)** instead of EIPs for scalable apps.
-* 🌐 For IPv6, use **Elastic Network Interfaces (ENIs)** — not EIPs.
+- 🧠 Use EIPs only when **you need a fixed IP**; otherwise, dynamic public IPs are simpler.
+- ⚙️ **Release unused EIPs** to avoid hourly charges.
+- 🔄 Automate reassignment in failover using **Lambda or Route 53 health checks**.
+- 🚀 Use **Elastic Load Balancers (ALBs/NLBs)** instead of EIPs for scalable apps.
+- 🌐 For IPv6, use **Elastic Network Interfaces (ENIs)** — not EIPs.
 
 ---
 
@@ -1683,6 +1699,7 @@ An **Elastic IP (EIP)** is a **persistent public IPv4 address** you can allocate
 Use for **production or HA setups**; release when not in use to avoid unnecessary costs.
 
 ---
+
 ## Q: What’s the Difference Between Security Groups and Network ACLs (NACLs) in AWS?
 
 ---
@@ -1691,8 +1708,8 @@ Use for **production or HA setups**; release when not in use to avoid unnecessar
 
 Both **Security Groups (SGs)** and **Network ACLs (NACLs)** are AWS VPC security mechanisms, but they operate at **different layers**:
 
-* **Security Groups** → Instance-level, **stateful** firewalls.
-* **Network ACLs** → Subnet-level, **stateless** firewalls.
+- **Security Groups** → Instance-level, **stateful** firewalls.
+- **Network ACLs** → Subnet-level, **stateless** firewalls.
 
 They work **together** to enforce **layered network security** (defense-in-depth).
 
@@ -1715,7 +1732,7 @@ They work **together** to enforce **layered network security** (defense-in-depth
 | Feature               | **Security Group (SG)**                  | **Network ACL (NACL)**                                |
 | --------------------- | ---------------------------------------- | ----------------------------------------------------- |
 | **Layer**             | Instance level                           | Subnet level                                          |
-| **Stateful**          | ✅ Yes                                    | ❌ No                                                  |
+| **Stateful**          | ✅ Yes                                   | ❌ No                                                 |
 | **Default Behavior**  | Inbound: Deny all<br>Outbound: Allow all | Inbound: Allow all<br>Outbound: Allow all             |
 | **Rules Type**        | Only “Allow” rules                       | Both “Allow” and “Deny” rules                         |
 | **Evaluation Order**  | All rules are evaluated together         | Rules evaluated in ascending order (lowest → highest) |
@@ -1777,21 +1794,21 @@ They work **together** to enforce **layered network security** (defense-in-depth
 
 ### ⚙️ Key Concept — Stateful vs Stateless
 
-| Behavior     | **Security Group**                                                          | **NACL**                                                  |
-| ------------ | --------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Behavior     | **Security Group**                                                           | **NACL**                                                   |
+| ------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | **Stateful** | ✅ Keeps track of sessions — if inbound allowed, outbound reply auto-allowed | ❌ No tracking — you must explicitly allow both directions |
-| **Example:** | Allow inbound port 80 → response traffic auto-allowed                       | Must add inbound 80 + outbound 1024–65535 rules           |
+| **Example:** | Allow inbound port 80 → response traffic auto-allowed                        | Must add inbound 80 + outbound 1024–65535 rules            |
 
 ---
 
 ### ✅ Best Practices
 
-* 🧩 Use **Security Groups** for **instance-level control**.
-* ⚙️ Use **NACLs** for **broad subnet filtering** or **deny lists**.
-* 🔒 Deny known malicious IP ranges using NACLs (since SGs can’t deny).
-* 🧠 Keep NACL rule numbers spaced (e.g., 100, 110, 120) for easy updates.
-* 🚀 Default to **least privilege** — allow only what’s required.
-* 🧾 Combine both: NACL = “outer wall”, SG = “inner gate”.
+- 🧩 Use **Security Groups** for **instance-level control**.
+- ⚙️ Use **NACLs** for **broad subnet filtering** or **deny lists**.
+- 🔒 Deny known malicious IP ranges using NACLs (since SGs can’t deny).
+- 🧠 Keep NACL rule numbers spaced (e.g., 100, 110, 120) for easy updates.
+- 🚀 Default to **least privilege** — allow only what’s required.
+- 🧾 Combine both: NACL = “outer wall”, SG = “inner gate”.
 
 ---
 
@@ -1808,6 +1825,7 @@ They work **together** to enforce **layered network security** (defense-in-depth
 ✅ **Use both together** — NACLs provide subnet-level isolation; SGs fine-tune access to instances for layered security defense.
 
 ---
+
 ## Q: How Do You Connect Two VPCs Privately in AWS?
 
 ---
@@ -1818,10 +1836,10 @@ To connect **two VPCs privately** (without using the public internet), AWS provi
 
 The most common and secure methods are:
 
-* 🧩 **VPC Peering** (simple 1:1 private link)
-* 🌐 **Transit Gateway** (for many-to-many connections)
-* ⚙️ **PrivateLink / Interface Endpoint** (for service-to-service private access)
-* 🔒 **VPN / Direct Connect** (for hybrid or cross-account private access)
+- 🧩 **VPC Peering** (simple 1:1 private link)
+- 🌐 **Transit Gateway** (for many-to-many connections)
+- ⚙️ **PrivateLink / Interface Endpoint** (for service-to-service private access)
+- 🔒 **VPN / Direct Connect** (for hybrid or cross-account private access)
 
 ---
 
@@ -1903,9 +1921,9 @@ For multi-VPC or multi-account architectures → use **AWS Transit Gateway**.
 
 **Advantages:**
 
-* Scales to **1000s of VPCs**
-* Supports **cross-account** and **cross-region**
-* **Transitive routing** supported (A ↔ B ↔ C possible)
+- Scales to **1000s of VPCs**
+- Supports **cross-account** and **cross-region**
+- **Transitive routing** supported (A ↔ B ↔ C possible)
 
 **Example:**
 
@@ -1935,14 +1953,14 @@ If you only need **service-to-service** access (not full network connectivity):
 
 **Example Use Case:**
 
-* VPC-A hosts an internal API.
-* VPC-B accesses it privately via a VPC Endpoint.
+- VPC-A hosts an internal API.
+- VPC-B accesses it privately via a VPC Endpoint.
 
 **Benefits:**
 
-* Works across **accounts and regions**.
-* **No overlapping CIDR restrictions**.
-* **More secure** — doesn’t expose entire subnet routing.
+- Works across **accounts and regions**.
+- **No overlapping CIDR restrictions**.
+- **More secure** — doesn’t expose entire subnet routing.
 
 ---
 
@@ -1950,20 +1968,20 @@ If you only need **service-to-service** access (not full network connectivity):
 
 | Method                   | Best For                         | Transitive Routing | Overlapping CIDRs | Cross-Account | Cross-Region |
 | ------------------------ | -------------------------------- | ------------------ | ----------------- | ------------- | ------------ |
-| **VPC Peering**          | Simple 1:1 VPC connection        | ❌ No               | ❌ No              | ✅ Yes         | ✅ Yes        |
-| **Transit Gateway**      | Hub-and-spoke multi-VPC networks | ✅ Yes              | ❌ No              | ✅ Yes         | ✅ Yes        |
-| **PrivateLink**          | Service-specific private access  | ❌ No               | ✅ Yes             | ✅ Yes         | ✅ Yes        |
-| **VPN / Direct Connect** | Hybrid on-prem + AWS             | ✅ Yes              | ✅ Yes             | ✅ Yes         | ✅ Yes        |
+| **VPC Peering**          | Simple 1:1 VPC connection        | ❌ No              | ❌ No             | ✅ Yes        | ✅ Yes       |
+| **Transit Gateway**      | Hub-and-spoke multi-VPC networks | ✅ Yes             | ❌ No             | ✅ Yes        | ✅ Yes       |
+| **PrivateLink**          | Service-specific private access  | ❌ No              | ✅ Yes            | ✅ Yes        | ✅ Yes       |
+| **VPN / Direct Connect** | Hybrid on-prem + AWS             | ✅ Yes             | ✅ Yes            | ✅ Yes        | ✅ Yes       |
 
 ---
 
 ### ✅ Best Practices
 
-* 🧠 Ensure **non-overlapping CIDR ranges** before peering or TGW setup.
-* 🔒 Use **Security Groups + NACLs** to limit cross-VPC exposure.
-* 🚀 For >10 VPCs → use **Transit Gateway**, not multiple peerings.
-* 🧩 Use **PrivateLink** for private API/service access instead of full peering.
-* 🌍 Enable **DNS resolution** across VPCs if using internal hostnames (`enableDnsResolution` in peering options).
+- 🧠 Ensure **non-overlapping CIDR ranges** before peering or TGW setup.
+- 🔒 Use **Security Groups + NACLs** to limit cross-VPC exposure.
+- 🚀 For >10 VPCs → use **Transit Gateway**, not multiple peerings.
+- 🧩 Use **PrivateLink** for private API/service access instead of full peering.
+- 🌍 Enable **DNS resolution** across VPCs if using internal hostnames (`enableDnsResolution` in peering options).
 
 ---
 
@@ -1971,13 +1989,14 @@ If you only need **service-to-service** access (not full network connectivity):
 
 To connect two VPCs **privately** (no internet):
 
-* Use **VPC Peering** for simple, direct, point-to-point links.
-* Use **Transit Gateway** for scalable multi-VPC connectivity.
-* Use **PrivateLink** for secure service-to-service access.
+- Use **VPC Peering** for simple, direct, point-to-point links.
+- Use **Transit Gateway** for scalable multi-VPC connectivity.
+- Use **PrivateLink** for secure service-to-service access.
 
 ✅ All options route traffic **through AWS’s private backbone**, not the internet — ensuring **low latency, high security, and no public exposure.**
 
 ---
+
 ## Q: What’s a VPC Endpoint in AWS?
 
 ---
@@ -2007,9 +2026,9 @@ There are **two main types** of endpoints:
 
 **How it works:**
 
-* Creates an **Elastic Network Interface (ENI)** with a private IP in your subnet.
-* Connects your VPC privately to AWS services or custom VPC endpoint services.
-* Uses **Private DNS** (e.g., `s3.amazonaws.com` → resolves to private IP).
+- Creates an **Elastic Network Interface (ENI)** with a private IP in your subnet.
+- Connects your VPC privately to AWS services or custom VPC endpoint services.
+- Uses **Private DNS** (e.g., `s3.amazonaws.com` → resolves to private IP).
 
 **Example:**
 Connect to **SSM, CloudWatch, ECR, or API Gateway privately** from private subnets.
@@ -2033,9 +2052,9 @@ aws ec2 create-vpc-endpoint \
 
 **How it works:**
 
-* Adds a **route in your route table** for the target service.
-* Routes traffic for the service (e.g., S3) directly via the **gateway endpoint**, not through IGW or NAT.
-* No ENIs are created — purely route-based.
+- Adds a **route in your route table** for the target service.
+- Routes traffic for the service (e.g., S3) directly via the **gateway endpoint**, not through IGW or NAT.
+- No ENIs are created — purely route-based.
 
 **Example:**
 Access **S3** from private subnet **without** a NAT Gateway.
@@ -2063,9 +2082,9 @@ aws ec2 create-vpc-endpoint \
 | **Subnet Requirement**    | Needs subnet association                                        | No subnet association                |
 | **Cost**                  | Charged hourly + data                                           | Free                                 |
 | **Security Group**        | Required                                                        | Not applicable                       |
-| **Private DNS Support**   | ✅ Yes                                                           | ✅ Yes                                |
-| **Cross-Account Support** | ✅ Yes (via PrivateLink)                                         | ❌ No                                 |
-| **Cross-Region Support**  | ✅ Yes                                                           | ❌ No                                 |
+| **Private DNS Support**   | ✅ Yes                                                          | ✅ Yes                               |
+| **Cross-Account Support** | ✅ Yes (via PrivateLink)                                        | ❌ No                                |
+| **Cross-Region Support**  | ✅ Yes                                                          | ❌ No                                |
 
 ---
 
@@ -2114,12 +2133,12 @@ aws ec2 create-vpc-endpoint \
 
 ### ✅ Best Practices
 
-* 🧠 Use **Gateway Endpoints for S3/DynamoDB** — they’re free and fast.
-* ⚙️ Use **Interface Endpoints for other AWS services** (e.g., SSM, ECR).
-* 🔒 Restrict access via **endpoint policies** to specific buckets or actions.
-* 🚀 Enable **Private DNS** so service names resolve automatically inside VPC.
-* 🧩 Use **PrivateLink** for secure, cross-account service exposure.
-* 💰 Remove unused Interface Endpoints — billed hourly per AZ.
+- 🧠 Use **Gateway Endpoints for S3/DynamoDB** — they’re free and fast.
+- ⚙️ Use **Interface Endpoints for other AWS services** (e.g., SSM, ECR).
+- 🔒 Restrict access via **endpoint policies** to specific buckets or actions.
+- 🚀 Enable **Private DNS** so service names resolve automatically inside VPC.
+- 🧩 Use **PrivateLink** for secure, cross-account service exposure.
+- 💰 Remove unused Interface Endpoints — billed hourly per AZ.
 
 ---
 
@@ -2129,12 +2148,13 @@ A **VPC Endpoint** provides **private access** to AWS services **without leaving
 
 | Type                        | Use For             | Internet-Free | Cost             |
 | --------------------------- | ------------------- | ------------- | ---------------- |
-| **Gateway**                 | S3, DynamoDB        | ✅             | Free             |
-| **Interface (PrivateLink)** | Most other services | ✅             | 💵 Hourly + Data |
+| **Gateway**                 | S3, DynamoDB        | ✅            | Free             |
+| **Interface (PrivateLink)** | Most other services | ✅            | 💵 Hourly + Data |
 
 ✅ **Secure, low-latency, and compliance-friendly** — ideal for private workloads and enterprises restricting internet exposure.
 
 ---
+
 ## Q: What’s the Difference Between **Interface Endpoints** and **Gateway Endpoints** in AWS?
 
 ---
@@ -2145,8 +2165,8 @@ Both **Interface Endpoints** and **Gateway Endpoints** are types of **VPC Endpoi
 
 The key difference lies in **how they connect** and **which services they support**:
 
-* **Interface Endpoints** → Use AWS **PrivateLink** (via ENI).
-* **Gateway Endpoints** → Use **route table entries** (for S3/DynamoDB only).
+- **Interface Endpoints** → Use AWS **PrivateLink** (via ENI).
+- **Gateway Endpoints** → Use **route table entries** (for S3/DynamoDB only).
 
 ---
 
@@ -2172,9 +2192,9 @@ EC2 (10.0.1.5)
 [Interface Endpoint ENI] —→ AWS SSM / ECR / Secrets Manager
 ```
 
-* Creates an **ENI** with a private IP.
-* Used for most AWS services (API calls, management services).
-* Can be secured with **Security Groups**.
+- Creates an **ENI** with a private IP.
+- Used for most AWS services (API calls, management services).
+- Can be secured with **Security Groups**.
 
 #### 🟣 Gateway Endpoint
 
@@ -2188,9 +2208,9 @@ EC2 (10.0.2.5)
 AWS S3 / DynamoDB
 ```
 
-* No ENI created.
-* Traffic routed directly via AWS backbone using route table.
-* Simpler, faster, and **free** — but only for **S3** and **DynamoDB**.
+- No ENI created.
+- Traffic routed directly via AWS backbone using route table.
+- Simpler, faster, and **free** — but only for **S3** and **DynamoDB**.
 
 ---
 
@@ -2203,10 +2223,10 @@ AWS S3 / DynamoDB
 | **Subnet Placement**     | Created in specific subnets (ENIs per AZ)                                    | No subnet association                             |
 | **IP Addressing**        | Gets private IPs inside your subnet                                          | No IPs — purely route-based                       |
 | **Security Control**     | Uses **Security Groups**                                                     | Controlled via **Endpoint Policy**                |
-| **Cost**                 | 💵 Charged per hour + data processed                                         | ✅ Free                                            |
-| **Private DNS**          | ✅ Supported                                                                  | ✅ Supported                                       |
-| **Cross-Account Access** | ✅ Supported                                                                  | ❌ Not supported                                   |
-| **Cross-Region Access**  | ✅ Supported                                                                  | ❌ Not supported                                   |
+| **Cost**                 | 💵 Charged per hour + data processed                                         | ✅ Free                                           |
+| **Private DNS**          | ✅ Supported                                                                 | ✅ Supported                                      |
+| **Cross-Account Access** | ✅ Supported                                                                 | ❌ Not supported                                  |
+| **Cross-Region Access**  | ✅ Supported                                                                 | ❌ Not supported                                  |
 | **Use Case**             | Private API/service access, management tools, SaaS integration               | Access S3/DynamoDB privately from private subnets |
 | **Performance**          | Slightly higher latency (ENI hop)                                            | Fast (direct routing)                             |
 | **Availability**         | AZ-specific (one per AZ)                                                     | Regional (covers all subnets in route table)      |
@@ -2277,12 +2297,12 @@ aws ec2 create-vpc-endpoint \
 
 ### ✅ Best Practices
 
-* 🧠 Use **Gateway Endpoints** for S3/DynamoDB — free, scalable, simpler.
-* ⚙️ Use **Interface Endpoints** for all other AWS/private services.
-* 🔒 Apply **Security Groups** to Interface Endpoints for traffic control.
-* 🚀 Enable **Private DNS** for seamless internal hostname resolution.
-* 🧩 Deploy one Interface Endpoint per AZ for high availability.
-* 💰 Remove unused Interface Endpoints to reduce hourly cost.
+- 🧠 Use **Gateway Endpoints** for S3/DynamoDB — free, scalable, simpler.
+- ⚙️ Use **Interface Endpoints** for all other AWS/private services.
+- 🔒 Apply **Security Groups** to Interface Endpoints for traffic control.
+- 🚀 Enable **Private DNS** for seamless internal hostname resolution.
+- 🧩 Deploy one Interface Endpoint per AZ for high availability.
+- 💰 Remove unused Interface Endpoints to reduce hourly cost.
 
 ---
 
@@ -2293,7 +2313,7 @@ aws ec2 create-vpc-endpoint \
 | Mechanism | ENI (PrivateLink)          | Route Table Entry          |
 | Services  | Most AWS services          | S3 & DynamoDB              |
 | Security  | Security Groups            | Endpoint Policies          |
-| Cost      | 💵 Paid                    | ✅ Free                     |
+| Cost      | 💵 Paid                    | ✅ Free                    |
 | Scope     | AZ-specific                | VPC-wide                   |
 | Use Case  | Private API/service access | Private S3/DynamoDB access |
 
@@ -2301,6 +2321,7 @@ aws ec2 create-vpc-endpoint \
 ✅ Use **Gateway Endpoints** for **S3 and DynamoDB** — they’re faster, simpler, and free.
 
 ---
+
 ## Q: How to Share VPCs Across AWS Accounts?
 
 ---
@@ -2318,14 +2339,14 @@ This lets multiple accounts **deploy resources (like EC2, RDS, Lambda)** into **
 
 Multi-account setups (common in **AWS Organizations**, **Landing Zones**, and **Control Tower**) often use shared VPCs for:
 
-* Centralized **network management** (single VPC owner).
-* Decentralized **resource ownership** (multiple accounts deploy workloads).
-* Consistent **security and routing** across environments.
+- Centralized **network management** (single VPC owner).
+- Decentralized **resource ownership** (multiple accounts deploy workloads).
+- Consistent **security and routing** across environments.
 
 **Example:**
 
-* Account A (Network Account) → owns the VPC.
-* Account B (App Account) → launches EC2 instances in shared subnets of that VPC.
+- Account A (Network Account) → owns the VPC.
+- Account B (App Account) → launches EC2 instances in shared subnets of that VPC.
 
 ---
 
@@ -2355,9 +2376,9 @@ Multi-account setups (common in **AWS Organizations**, **Landing Zones**, and **
 
 #### 🟢 1️⃣ Prerequisites
 
-* Both accounts must be in the **same AWS Organization** (recommended).
-* VPC **must be owned by one account** (network account).
-* Subnets must be **in the same Region** as the participant accounts’ resources.
+- Both accounts must be in the **same AWS Organization** (recommended).
+- VPC **must be owned by one account** (network account).
+- Subnets must be **in the same Region** as the participant accounts’ resources.
 
 ---
 
@@ -2375,9 +2396,9 @@ Go to **AWS Console → Resource Access Manager (RAM)** → “Create Resource S
 
 Select:
 
-* **Resource type:** “Subnets”
-* **VPC ID:** choose your existing VPC
-* **Principals:** specify participant AWS account IDs or your AWS Organization
+- **Resource type:** “Subnets”
+- **VPC ID:** choose your existing VPC
+- **Principals:** specify participant AWS account IDs or your AWS Organization
 
 Or via CLI:
 
@@ -2395,14 +2416,14 @@ aws ram create-resource-share \
 
 #### 🟢 3️⃣ In the **Participant Account (Receiver)**
 
-* Accept the resource share (if required):
+- Accept the resource share (if required):
 
 ```bash
 aws ram accept-resource-share-invitation \
   --resource-share-invitation-arn arn:aws:ram:us-east-1:111122223333:resource-share-invitation/abc123
 ```
 
-* Now you can launch EC2s, RDS, or other supported resources into the **shared subnet**:
+- Now you can launch EC2s, RDS, or other supported resources into the **shared subnet**:
 
 ```bash
 aws ec2 run-instances \
@@ -2419,37 +2440,37 @@ aws ec2 run-instances \
 
 | Resource Type                     | Shared VPC Support | Notes                               |
 | --------------------------------- | ------------------ | ----------------------------------- |
-| **EC2**                           | ✅                  | Can launch into shared subnets      |
-| **RDS / Aurora**                  | ✅                  | Fully supported                     |
-| **Lambda (VPC)**                  | ✅                  | Supported if same subnet shared     |
-| **ECS / EKS**                     | ✅                  | Supported (task ENIs, worker nodes) |
-| **ALB / NLB**                     | ✅                  | Managed by participant              |
-| **VPC Peering / TGW Attachments** | ❌                  | Must be done from owner account     |
-| **Route Tables / IGW / NAT GW**   | ❌                  | Managed only by owner account       |
+| **EC2**                           | ✅                 | Can launch into shared subnets      |
+| **RDS / Aurora**                  | ✅                 | Fully supported                     |
+| **Lambda (VPC)**                  | ✅                 | Supported if same subnet shared     |
+| **ECS / EKS**                     | ✅                 | Supported (task ENIs, worker nodes) |
+| **ALB / NLB**                     | ✅                 | Managed by participant              |
+| **VPC Peering / TGW Attachments** | ❌                 | Must be done from owner account     |
+| **Route Tables / IGW / NAT GW**   | ❌                 | Managed only by owner account       |
 
 ---
 
 ### ⚙️ Responsibilities
 
-| Task                                  | VPC Owner  | Participant |
-| ------------------------------------- | ---------- | ----------- |
-| Create & manage VPC, subnets, routing | ✅          | ❌           |
-| Manage NACLs, IGW, NAT Gateways       | ✅          | ❌           |
-| Launch EC2/RDS into shared subnets    | ❌          | ✅           |
-| Attach security groups                | ✅ / Shared | ✅           |
-| Billing for data transfer             | Shared     | Shared      |
+| Task                                  | VPC Owner   | Participant |
+| ------------------------------------- | ----------- | ----------- |
+| Create & manage VPC, subnets, routing | ✅          | ❌          |
+| Manage NACLs, IGW, NAT Gateways       | ✅          | ❌          |
+| Launch EC2/RDS into shared subnets    | ❌          | ✅          |
+| Attach security groups                | ✅ / Shared | ✅          |
+| Billing for data transfer             | Shared      | Shared      |
 
 ---
 
 ### ✅ Best Practices
 
-* 🧠 Centralize **VPC ownership** in a **network account** (Hub model).
-* 🔒 Use **AWS Organizations** for easier sharing (no manual invites).
-* ⚙️ Share **only required subnets** (e.g., one per environment or AZ).
-* 🚀 Keep **NAT Gateways, Route Tables, and IGWs** managed by the network team.
-* 🧩 Use **naming conventions** to distinguish shared subnets (e.g., `shared-app-prod-1a`).
-* 🔍 Monitor with **VPC Flow Logs** from the owner account.
-* 💰 Avoid resource sprawl — participants should not modify network ACLs or route tables.
+- 🧠 Centralize **VPC ownership** in a **network account** (Hub model).
+- 🔒 Use **AWS Organizations** for easier sharing (no manual invites).
+- ⚙️ Share **only required subnets** (e.g., one per environment or AZ).
+- 🚀 Keep **NAT Gateways, Route Tables, and IGWs** managed by the network team.
+- 🧩 Use **naming conventions** to distinguish shared subnets (e.g., `shared-app-prod-1a`).
+- 🔍 Monitor with **VPC Flow Logs** from the owner account.
+- 💰 Avoid resource sprawl — participants should not modify network ACLs or route tables.
 
 ---
 
@@ -2469,6 +2490,7 @@ To share a VPC across AWS accounts:
 ✅ Result: One **central VPC**, multiple accounts deploying securely over **AWS’s private backbone**, with **centralized governance** and **no public internet exposure**.
 
 ---
+
 ## Q: How to Connect On-Premises Network to AWS?
 
 ---
@@ -2479,12 +2501,12 @@ Connecting your **on-premises data center** to **AWS** allows you to securely ex
 
 AWS offers multiple **hybrid connectivity options**, depending on **security, latency, and throughput** requirements:
 
-| Method                        | Type                            | Description                                                       |
-| ----------------------------- | ------------------------------- | ----------------------------------------------------------------- |
-| 🧩 **Site-to-Site VPN**       | Encrypted over the internet     | Quick and cost-effective IPsec tunnel between on-prem and AWS VPC |
+| Method                         | Type                            | Description                                                       |
+| ------------------------------ | ------------------------------- | ----------------------------------------------------------------- |
+| 🧩 **Site-to-Site VPN**        | Encrypted over the internet     | Quick and cost-effective IPsec tunnel between on-prem and AWS VPC |
 | ⚡ **AWS Direct Connect (DX)** | Dedicated physical link         | Private, high-bandwidth, low-latency connection                   |
-| 🌉 **Transit Gateway (TGW)**  | Hub for multi-site connectivity | Centralized management for multiple VPNs/DX connections           |
-| 🔒 **AWS Client VPN**         | Remote access                   | Secure access for individual users (laptops, devs, etc.)          |
+| 🌉 **Transit Gateway (TGW)**   | Hub for multi-site connectivity | Centralized management for multiple VPNs/DX connections           |
+| 🔒 **AWS Client VPN**          | Remote access                   | Secure access for individual users (laptops, devs, etc.)          |
 
 ---
 
@@ -2580,9 +2602,9 @@ On-Prem Router ──────(Fiber Link 1Gbps–100Gbps)──────>
 3. ⚙️ Configure **BGP session** between your router and AWS DX router.
 4. 🧱 Create **VIF (Virtual Interface)** and associate with:
 
-   * VPC (Private VIF)
-   * AWS services (Public VIF)
-   * Transit Gateway (Transit VIF)
+   - VPC (Private VIF)
+   - AWS services (Public VIF)
+   - Transit Gateway (Transit VIF)
 
 ---
 
@@ -2618,9 +2640,9 @@ A **managed OpenVPN service** for secure access by individual users (e.g., devel
 
 **Ideal for:**
 
-* Remote workers
-* Jump host replacement
-* Secure AWS resource access
+- Remote workers
+- Jump host replacement
+- Secure AWS resource access
 
 **Example Setup:**
 
@@ -2647,13 +2669,13 @@ Laptop → Client VPN → VPC → On-Prem Network
 
 ### ✅ Best Practices
 
-* 🧩 For **quick hybrid access**, start with **Site-to-Site VPN**.
-* ⚙️ For **production-grade**, **combine Direct Connect + VPN** for failover (called **DX + VPN backup**).
-* 🚀 Use **Transit Gateway** to connect multiple VPCs and on-prem via a single hub.
-* 🔒 Implement **BGP routing** for dynamic, resilient network paths.
-* 🧠 Enable **CloudWatch alarms** for VPN tunnel health.
-* 📊 Use **VPC Flow Logs + CloudWatch metrics** to monitor traffic.
-* 🧩 Consider **AWS Network Firewall** or **third-party appliances** for deep inspection.
+- 🧩 For **quick hybrid access**, start with **Site-to-Site VPN**.
+- ⚙️ For **production-grade**, **combine Direct Connect + VPN** for failover (called **DX + VPN backup**).
+- 🚀 Use **Transit Gateway** to connect multiple VPCs and on-prem via a single hub.
+- 🔒 Implement **BGP routing** for dynamic, resilient network paths.
+- 🧠 Enable **CloudWatch alarms** for VPN tunnel health.
+- 📊 Use **VPC Flow Logs + CloudWatch metrics** to monitor traffic.
+- 🧩 Consider **AWS Network Firewall** or **third-party appliances** for deep inspection.
 
 ---
 
@@ -2671,6 +2693,7 @@ To connect **on-prem → AWS** privately:
 ✅ Start with **VPN**, scale to **Direct Connect + Transit Gateway** for enterprise-grade hybrid networking.
 
 ---
+
 ## Q: What is a Transit Gateway (TGW) in AWS?
 
 ---
@@ -2764,9 +2787,9 @@ aws ec2 describe-transit-gateway-route-tables \
 | -------------------------- | -------------------------------------- | ------------------------- |
 | **Routing Type**           | Transitive                             | Non-transitive            |
 | **Scale**                  | Thousands of VPCs                      | One-to-one only           |
-| **Centralized Management** | ✅ Yes                                  | ❌ No                      |
-| **Cross-Region Support**   | ✅ Yes (TGW Peering)                    | ✅ Yes                     |
-| **Cross-Account Support**  | ✅ Yes (via RAM)                        | ✅ Yes                     |
+| **Centralized Management** | ✅ Yes                                 | ❌ No                     |
+| **Cross-Region Support**   | ✅ Yes (TGW Peering)                   | ✅ Yes                    |
+| **Cross-Account Support**  | ✅ Yes (via RAM)                       | ✅ Yes                    |
 | **Performance**            | AWS Backbone (50 Gbps+ per attachment) | Up to 10 Gbps per peering |
 | **Cost Model**             | Per GB + per attachment                | Per GB only               |
 | **Use Case**               | Enterprise / Multi-VPC networks        | Small/simple setups       |
@@ -2799,12 +2822,12 @@ aws ec2 describe-transit-gateway-route-tables \
 
 ### ✅ Best Practices
 
-* 🧠 Use **TGW** for multi-VPC and hybrid environments (scales better than VPC peering).
-* ⚙️ Use **separate route tables** for isolation (Prod, Dev, Shared Services).
-* 🔒 Implement **route propagation filtering** to control traffic flow.
-* 🚀 Combine **TGW + Direct Connect + VPN** for redundancy and hybrid resiliency.
-* 🧩 Use **AWS RAM** to share TGW attachments across accounts in an organization.
-* 📊 Monitor via **CloudWatch metrics** and **VPC Flow Logs**.
+- 🧠 Use **TGW** for multi-VPC and hybrid environments (scales better than VPC peering).
+- ⚙️ Use **separate route tables** for isolation (Prod, Dev, Shared Services).
+- 🔒 Implement **route propagation filtering** to control traffic flow.
+- 🚀 Combine **TGW + Direct Connect + VPN** for redundancy and hybrid resiliency.
+- 🧩 Use **AWS RAM** to share TGW attachments across accounts in an organization.
+- 📊 Monitor via **CloudWatch metrics** and **VPC Flow Logs**.
 
 ---
 
@@ -2822,6 +2845,7 @@ An **AWS Transit Gateway (TGW)** is a **centralized, scalable, and transitive ro
 ✅ Use TGW when managing **more than a few VPCs or hybrid networks** — it provides **clean, scalable, and secure connectivity** across your entire AWS footprint.
 
 ---
+
 ## Q: What is DNS Resolution in a VPC?
 
 ---
@@ -2832,10 +2856,10 @@ An **AWS Transit Gateway (TGW)** is a **centralized, scalable, and transitive ro
 
 It allows instances within the VPC to resolve:
 
-* **AWS internal hostnames** (e.g., `ip-10-0-1-5.ec2.internal`)
-* **AWS service endpoints** (e.g., `s3.amazonaws.com`)
-* **Private domain names** (if using Private Hosted Zones)
-* **Custom on-prem DNS servers** (for hybrid environments)
+- **AWS internal hostnames** (e.g., `ip-10-0-1-5.ec2.internal`)
+- **AWS service endpoints** (e.g., `s3.amazonaws.com`)
+- **Private domain names** (if using Private Hosted Zones)
+- **Custom on-prem DNS servers** (for hybrid environments)
 
 > 🧩 In short: DNS Resolution = internal name-to-IP translation inside your VPC using Route 53’s managed DNS.
 
@@ -2849,8 +2873,8 @@ Instances use this resolver by default (via DHCP options set).
 **Example:**
 
 ```
-VPC CIDR: 10.0.0.0/16  
-DNS Resolver IP: 10.0.0.2  
+VPC CIDR: 10.0.0.0/16
+DNS Resolver IP: 10.0.0.2
 ```
 
 When an EC2 instance does a DNS query:
@@ -2858,9 +2882,10 @@ When an EC2 instance does a DNS query:
 1. Query → `10.0.0.2` (VPC DNS Resolver)
 2. AWS checks:
 
-   * Private Hosted Zone records
-   * Internal AWS hostnames (e.g., EC2 internal DNS)
-   * Public DNS (if allowed)
+   - Private Hosted Zone records
+   - Internal AWS hostnames (e.g., EC2 internal DNS)
+   - Public DNS (if allowed)
+
 3. Returns the appropriate IP (private or public based on configuration).
 
 ---
@@ -2879,8 +2904,8 @@ When an EC2 instance does a DNS query:
 
 In the **VPC configuration**, there are two key DNS options:
 
-| Setting                | Description                                                                             | Default                                         |
-| ---------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Setting                | Description                                                                             | Default                                          |
+| ---------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | **enableDnsSupport**   | Allows instances to resolve internal AWS-provided hostnames using the Route 53 Resolver | ✅ Enabled                                       |
 | **enableDnsHostnames** | Assigns DNS hostnames (`ec2.internal`) to instances that have public or private IPs     | ❌ Disabled by default (enabled in default VPCs) |
 
@@ -2908,7 +2933,7 @@ In hybrid setups, AWS **Route 53 Resolver Endpoints** can forward or receive DNS
 #### Example Architecture
 
 ```
-On-Prem DNS Server ───► Inbound Resolver Endpoint ───► AWS Private Zone  
+On-Prem DNS Server ───► Inbound Resolver Endpoint ───► AWS Private Zone
 AWS Instance ───► Outbound Resolver Endpoint ───► On-Prem DNS
 ```
 
@@ -2960,12 +2985,12 @@ aws ec2 modify-vpc-peering-connection-options \
 
 ### ✅ Best Practices
 
-* 🧠 Always enable **enableDnsSupport** and **enableDnsHostnames** for custom VPCs.
-* 🔒 Use **Private Hosted Zones** for internal service discovery (e.g., `api.prod.internal`).
-* 🧩 For hybrid DNS, use **Route 53 Resolver Endpoints** instead of manual forwarding.
-* ⚙️ Automate DNS configuration via **DHCP options set** for custom resolvers.
-* 🚀 Use **AWS Cloud Map** for dynamic service discovery in microservices environments.
-* 📊 Monitor DNS query volume with **VPC Flow Logs** and **CloudWatch metrics** (`Route53Resolver:QueryVolume`).
+- 🧠 Always enable **enableDnsSupport** and **enableDnsHostnames** for custom VPCs.
+- 🔒 Use **Private Hosted Zones** for internal service discovery (e.g., `api.prod.internal`).
+- 🧩 For hybrid DNS, use **Route 53 Resolver Endpoints** instead of manual forwarding.
+- ⚙️ Automate DNS configuration via **DHCP options set** for custom resolvers.
+- 🚀 Use **AWS Cloud Map** for dynamic service discovery in microservices environments.
+- 📊 Monitor DNS query volume with **VPC Flow Logs** and **CloudWatch metrics** (`Route53Resolver:QueryVolume`).
 
 ---
 
@@ -2983,6 +3008,7 @@ It lets instances resolve **internal AWS names, private zones, and hybrid DNS do
 ✅ **Result:** Reliable, private, and secure name resolution for EC2, VPC, and hybrid workloads — without using the public internet.
 
 ---
+
 ## Q: What’s the Difference Between **Internet Gateway (IGW)** and **Egress-Only Internet Gateway (EOIGW)** in AWS?
 
 ---
@@ -3004,8 +3030,8 @@ Both **Internet Gateway (IGW)** and **Egress-Only Internet Gateway (EOIGW)** are
 | ----------------------- | ------------------------------------------------ | ----------------------------------------------------- |
 | **IP Version**          | IPv4                                             | IPv6                                                  |
 | **Direction**           | Inbound + Outbound                               | Outbound only                                         |
-| **Inbound Access**      | ✅ Allowed (e.g., public web servers)             | ❌ Blocked (one-way only)                              |
-| **Outbound Access**     | ✅ Allowed                                        | ✅ Allowed                                             |
+| **Inbound Access**      | ✅ Allowed (e.g., public web servers)            | ❌ Blocked (one-way only)                             |
+| **Outbound Access**     | ✅ Allowed                                       | ✅ Allowed                                            |
 | **Route Table Target**  | `0.0.0.0/0 → igw-xxxxxx`                         | `::/0 → eigw-xxxxxx`                                  |
 | **Use Case**            | Public-facing workloads needing inbound internet | Private IPv6-only workloads needing outbound internet |
 | **Public IP Required?** | Yes                                              | No (IPv6 uses global addressing)                      |
@@ -3067,7 +3093,7 @@ Target: eigw-0123456789abcdef0
 | **Traffic Direction**        | Inbound + Outbound         | Outbound only                            |
 | **IP Version**               | IPv4                       | IPv6                                     |
 | **Public IP Requirement**    | Yes                        | No                                       |
-| **Inbound Traffic Allowed?** | ✅ Yes                      | ❌ No                                     |
+| **Inbound Traffic Allowed?** | ✅ Yes                     | ❌ No                                    |
 | **Security Purpose**         | Enables full public access | Restricts IPv6 outbound-only traffic     |
 | **Typical Subnet Type**      | Public Subnet              | Private Subnet                           |
 | **Example Route**            | `0.0.0.0/0 → igw-xxxxxx`   | `::/0 → eigw-xxxxxx`                     |
@@ -3090,12 +3116,12 @@ Target: eigw-0123456789abcdef0
 
 ### ✅ Best Practices
 
-* 🌍 Use **IGW** for **public subnets** with internet-facing workloads.
-* 🔒 Use **EOIGW** for **IPv6 private subnets** that only require outbound traffic.
-* ⚙️ Combine **EOIGW + Security Groups/NACLs** for fine-grained outbound control.
-* 🧩 For IPv4 private subnets, use **NAT Gateway** instead of IGW.
-* 🚀 Always configure **route tables** correctly (default routes per IP family).
-* 📊 Monitor outbound traffic using **VPC Flow Logs** for audit and compliance.
+- 🌍 Use **IGW** for **public subnets** with internet-facing workloads.
+- 🔒 Use **EOIGW** for **IPv6 private subnets** that only require outbound traffic.
+- ⚙️ Combine **EOIGW + Security Groups/NACLs** for fine-grained outbound control.
+- 🧩 For IPv4 private subnets, use **NAT Gateway** instead of IGW.
+- 🚀 Always configure **route tables** correctly (default routes per IP family).
+- 📊 Monitor outbound traffic using **VPC Flow Logs** for audit and compliance.
 
 ---
 
@@ -3114,6 +3140,7 @@ Target: eigw-0123456789abcdef0
 Together, they provide **secure, protocol-specific connectivity** for modern hybrid and dual-stack VPC designs.
 
 ---
+
 ## Q: What’s the Purpose of a **Bastion Host** in AWS?
 
 ---
@@ -3139,9 +3166,9 @@ Admin → Bastion Host (Public Subnet) → Private EC2s (Private Subnet)
 
 **Why?**
 
-* Prevents exposing private servers to the public internet.
-* Centralizes and logs administrative access.
-* Simplifies network whitelisting (only Bastion’s IP is exposed).
+- Prevents exposing private servers to the public internet.
+- Centralizes and logs administrative access.
+- Simplifies network whitelisting (only Bastion’s IP is exposed).
 
 ---
 
@@ -3240,12 +3267,12 @@ aws ssm start-session --target i-0123456789abcdef0
 
 ### ✅ Best Practices
 
-* 🔒 **Restrict SSH access** to trusted IPs (or better — use SSM).
-* 🧠 **Disable password login**, use **SSH key pairs** or **Session Manager**.
-* 📊 Enable **CloudWatch Logs** and **CloudTrail** for audit tracking.
-* ⚙️ Regularly **patch and update** the Bastion Host OS.
-* 🧩 Deploy **multi-AZ bastions** behind an **Application Load Balancer (ALB)** for HA.
-* 🚀 Automate access with **AWS Systems Manager Session Manager** for passwordless SSH.
+- 🔒 **Restrict SSH access** to trusted IPs (or better — use SSM).
+- 🧠 **Disable password login**, use **SSH key pairs** or **Session Manager**.
+- 📊 Enable **CloudWatch Logs** and **CloudTrail** for audit tracking.
+- ⚙️ Regularly **patch and update** the Bastion Host OS.
+- 🧩 Deploy **multi-AZ bastions** behind an **Application Load Balancer (ALB)** for HA.
+- 🚀 Automate access with **AWS Systems Manager Session Manager** for passwordless SSH.
 
 ---
 
@@ -3263,6 +3290,7 @@ A **Bastion Host** is a **secure, hardened EC2 instance** that acts as a **contr
 ✅ Use Bastion Hosts to **minimize attack surface**, centralize access, and **avoid exposing private resources** directly to the internet.
 
 ---
+
 ## Q: How Do You Secure Traffic Between VPCs in AWS?
 
 ---
@@ -3317,10 +3345,10 @@ Creates a **private, non-transitive connection** between two VPCs using AWS’s 
 
 **Security Measures:**
 
-* Enforce access via **Security Groups & NACLs**.
-* Disable **DNS resolution** if not needed.
-* Use **non-overlapping CIDRs**.
-* Route traffic only through peering connection.
+- Enforce access via **Security Groups & NACLs**.
+- Disable **DNS resolution** if not needed.
+- Use **non-overlapping CIDRs**.
+- Route traffic only through peering connection.
 
 **Example Route Table:**
 
@@ -3350,9 +3378,9 @@ Traffic is isolated per **TGW route table**, ensuring **segmentation** (e.g., De
 
 **Security Enhancements:**
 
-* Separate TGW route tables per environment.
-* Attach **IAM policies** via **Resource Access Manager (RAM)** for account-level control.
-* Use **AWS Network Firewall** or **third-party firewalls** with TGW attachments.
+- Separate TGW route tables per environment.
+- Attach **IAM policies** via **Resource Access Manager (RAM)** for account-level control.
+- Use **AWS Network Firewall** or **third-party firewalls** with TGW attachments.
 
 ✅ TGW traffic uses **AWS private backbone** (not internet).
 
@@ -3367,9 +3395,9 @@ No routing between networks — only allows access to a **specific service or po
 
 **Security Benefits:**
 
-* No CIDR exposure (unlike peering).
-* Private, service-level connection (least privilege).
-* No need for IGW, NAT, or VPN.
+- No CIDR exposure (unlike peering).
+- Private, service-level connection (least privilege).
+- No need for IGW, NAT, or VPN.
 
 **Example:**
 
@@ -3404,13 +3432,13 @@ aws ec2 create-vpn-connection \
 
 ### 📋 Security Comparison
 
-| Method          | Routing Scope       | Encryption        | Internet Exposure  | CIDR Sharing | Cross-Region        | Typical Use                        |
-| --------------- | ------------------- | ----------------- | ------------------ | ------------ | ------------------- | ---------------------------------- |
-| **VPC Peering** | 1:1                 | App-level (TLS)   | ❌ No               | ✅ Required   | ✅                   | Simple private link                |
-| **TGW**         | Many-to-Many        | AWS Backbone      | ❌ No               | ✅ Required   | ✅ (via TGW Peering) | Centralized hub                    |
-| **PrivateLink** | 1:1 (Service-based) | AWS Backbone      | ❌ No               | ❌ Not needed | ✅                   | Private service access             |
+| Method          | Routing Scope       | Encryption         | Internet Exposure  | CIDR Sharing  | Cross-Region         | Typical Use                        |
+| --------------- | ------------------- | ------------------ | ------------------ | ------------- | -------------------- | ---------------------------------- |
+| **VPC Peering** | 1:1                 | App-level (TLS)    | ❌ No              | ✅ Required   | ✅                   | Simple private link                |
+| **TGW**         | Many-to-Many        | AWS Backbone       | ❌ No              | ✅ Required   | ✅ (via TGW Peering) | Centralized hub                    |
+| **PrivateLink** | 1:1 (Service-based) | AWS Backbone       | ❌ No              | ❌ Not needed | ✅                   | Private service access             |
 | **VPN**         | 1:1                 | ✅ IPsec           | 🌐 Yes (Encrypted) | ✅ Required   | ✅                   | Hybrid / Cross-account secure link |
-| **DX + VPN**    | Many                | ✅ + Private Fiber | ❌ No               | ✅ Required   | ✅                   | Enterprise-grade hybrid            |
+| **DX + VPN**    | Many                | ✅ + Private Fiber | ❌ No              | ✅ Required   | ✅                   | Enterprise-grade hybrid            |
 
 ---
 
@@ -3429,13 +3457,13 @@ aws ec2 create-vpn-connection \
 
 ### ✅ Best Practices
 
-* 🔒 **Never expose private VPCs to the public internet** — use TGW, Peering, or PrivateLink.
-* 🧩 Use **Security Groups referencing SGs** across VPCs for dynamic, secure rules.
-* ⚙️ Segment routing with **separate TGW route tables** for Dev/Test/Prod.
-* 🚀 Prefer **PrivateLink** for inter-service access (least privilege).
-* 🧠 Enforce **TLS 1.2+** for all service communication.
-* 🔍 Monitor **VPC Flow Logs** and **CloudWatch metrics** for cross-VPC traffic patterns.
-* 🧱 Use **AWS Network Firewall or third-party firewalls** for deep inspection between environments.
+- 🔒 **Never expose private VPCs to the public internet** — use TGW, Peering, or PrivateLink.
+- 🧩 Use **Security Groups referencing SGs** across VPCs for dynamic, secure rules.
+- ⚙️ Segment routing with **separate TGW route tables** for Dev/Test/Prod.
+- 🚀 Prefer **PrivateLink** for inter-service access (least privilege).
+- 🧠 Enforce **TLS 1.2+** for all service communication.
+- 🔍 Monitor **VPC Flow Logs** and **CloudWatch metrics** for cross-VPC traffic patterns.
+- 🧱 Use **AWS Network Firewall or third-party firewalls** for deep inspection between environments.
 
 ---
 
@@ -3454,7 +3482,8 @@ To secure traffic between VPCs:
 ✅ **Use encryption (TLS/IPsec)**, and
 ✅ **Control access via SGs, NACLs, and route tables** — for a **zero-trust, least-privilege design**.
 
-----
+---
+
 ## Q: What’s an ENI (Elastic Network Interface) in AWS?
 
 ---
@@ -3472,11 +3501,11 @@ It represents a **logical network interface** that includes a **private IP, MAC 
 
 Each ENI provides the networking capabilities that let an EC2 instance:
 
-* Communicate within its **VPC (private IP)**
-* Access the **internet** (via IGW/NAT)
-* Use **multiple IPs** or **network segments**
-* Enforce **security groups** and **NACL rules**
-* Maintain a **consistent network identity**, even if moved between instances
+- Communicate within its **VPC (private IP)**
+- Access the **internet** (via IGW/NAT)
+- Use **multiple IPs** or **network segments**
+- Enforce **security groups** and **NACL rules**
+- Maintain a **consistent network identity**, even if moved between instances
 
 ✅ Every EC2 instance has at least **one primary ENI** (eth0).
 ✅ You can **attach additional ENIs** (eth1, eth2…) for advanced networking use cases.
@@ -3496,11 +3525,11 @@ VPC (10.0.0.0/16)
 
 ✅ Each ENI can have:
 
-* One **primary private IP**
-* Multiple **secondary IPs**
-* **One public or Elastic IP (optional)**
-* **One or more Security Groups**
-* Attached to **only one EC2 at a time** (in same AZ)
+- One **primary private IP**
+- Multiple **secondary IPs**
+- **One public or Elastic IP (optional)**
+- **One or more Security Groups**
+- Attached to **only one EC2 at a time** (in same AZ)
 
 ---
 
@@ -3566,10 +3595,10 @@ aws ec2 attach-network-interface \
 
 | Feature                      | **Primary ENI (eth0)**      | **Secondary ENI (eth1, eth2, …)**         |
 | ---------------------------- | --------------------------- | ----------------------------------------- |
-| **Created automatically**    | ✅ Yes                       | ❌ No (manual)                             |
-| **Can detach?**              | ❌ No                        | ✅ Yes                                     |
+| **Created automatically**    | ✅ Yes                      | ❌ No (manual)                            |
+| **Can detach?**              | ❌ No                       | ✅ Yes                                    |
 | **Primary IP**               | Required                    | Optional                                  |
-| **Moves between instances?** | ❌ No                        | ✅ Yes                                     |
+| **Moves between instances?** | ❌ No                       | ✅ Yes                                    |
 | **Use Case**                 | Default instance networking | Failover, multi-network, advanced routing |
 
 ---
@@ -3587,12 +3616,12 @@ aws ec2 attach-network-interface \
 
 ### ✅ Best Practices
 
-* 🔒 Assign **dedicated Security Groups** per ENI for clear isolation.
-* 🧩 Place ENIs in **different subnets/AZs** for resilience.
-* ⚙️ Use **static private IPs** for HA configurations.
-* 🚀 Automate failover using **Lambda scripts** to detach/attach ENIs.
-* 📊 Monitor ENI usage and IP allocations with **VPC Flow Logs** and **CloudWatch**.
-* 🧱 Avoid unnecessary ENIs — they count toward **ENI per instance limit** (varies by instance type).
+- 🔒 Assign **dedicated Security Groups** per ENI for clear isolation.
+- 🧩 Place ENIs in **different subnets/AZs** for resilience.
+- ⚙️ Use **static private IPs** for HA configurations.
+- 🚀 Automate failover using **Lambda scripts** to detach/attach ENIs.
+- 📊 Monitor ENI usage and IP allocations with **VPC Flow Logs** and **CloudWatch**.
+- 🧱 Avoid unnecessary ENIs — they count toward **ENI per instance limit** (varies by instance type).
 
 ---
 
@@ -3611,6 +3640,7 @@ An **ENI (Elastic Network Interface)** is a **virtual network adapter** in your 
 ✅ **ENI = EC2’s virtual NIC** — essential for **private networking, redundancy, and service connectivity** within AWS.
 
 ---
+
 ## Q: How Do You Restrict Traffic Within a VPC?
 
 ---
@@ -3727,9 +3757,9 @@ DB Route Table:
 
 For enterprise-grade inspection:
 
-* Deploy **Network Firewall** in a **dedicated subnet**.
-* Enforce **stateful rule groups** (e.g., block certain domains, protocols, or signatures).
-* Integrate with **Transit Gateway** or **VPC ingress/egress routing**.
+- Deploy **Network Firewall** in a **dedicated subnet**.
+- Enforce **stateful rule groups** (e.g., block certain domains, protocols, or signatures).
+- Integrate with **Transit Gateway** or **VPC ingress/egress routing**.
 
 **Example Rule:**
 
@@ -3748,8 +3778,8 @@ Use **PrivateLink** to expose specific services privately (instead of open route
 
 **Example:**
 
-* App in VPC-A accesses S3 via **Gateway Endpoint**, not Internet Gateway.
-* Service in VPC-B accessed privately via **Interface Endpoint** (ENI).
+- App in VPC-A accesses S3 via **Gateway Endpoint**, not Internet Gateway.
+- Service in VPC-B accessed privately via **Interface Endpoint** (ENI).
 
 ✅ Traffic stays on AWS backbone.
 ✅ No CIDR-level connectivity — **service-specific** access only.
@@ -3760,23 +3790,23 @@ Use **PrivateLink** to expose specific services privately (instead of open route
 
 | Layer                | Control Type     | Direction | Stateful | Key Use                     |
 | -------------------- | ---------------- | --------- | -------- | --------------------------- |
-| **Security Group**   | Allow            | In/Out    | ✅        | Instance-level restriction  |
-| **NACL**             | Allow/Deny       | In/Out    | ❌        | Subnet boundary control     |
+| **Security Group**   | Allow            | In/Out    | ✅       | Instance-level restriction  |
+| **NACL**             | Allow/Deny       | In/Out    | ❌       | Subnet boundary control     |
 | **Route Table**      | Allow only       | Outbound  | N/A      | Define reachable subnets    |
-| **PrivateLink**      | Service-specific | N/A       | ✅        | Restrict API/service access |
-| **Network Firewall** | Stateful filter  | In/Out    | ✅        | L7 inspection (HTTP/S, DNS) |
+| **PrivateLink**      | Service-specific | N/A       | ✅       | Restrict API/service access |
+| **Network Firewall** | Stateful filter  | In/Out    | ✅       | L7 inspection (HTTP/S, DNS) |
 
 ---
 
 ### ✅ Best Practices
 
-* 🔒 **Least privilege:** open only required ports between known sources.
-* 🧠 Use **SG references** instead of CIDRs for dynamic environment access.
-* ⚙️ Separate **public, private, and database subnets** with distinct NACLs.
-* 🧩 Use **PrivateLink** instead of VPC Peering for service-specific access.
-* 🚀 Centralize security with **Transit Gateway + AWS Network Firewall**.
-* 📊 Enable **VPC Flow Logs** to audit allowed/denied traffic.
-* 🔍 Regularly scan rules for **overly permissive access (0.0.0.0/0)**.
+- 🔒 **Least privilege:** open only required ports between known sources.
+- 🧠 Use **SG references** instead of CIDRs for dynamic environment access.
+- ⚙️ Separate **public, private, and database subnets** with distinct NACLs.
+- 🧩 Use **PrivateLink** instead of VPC Peering for service-specific access.
+- 🚀 Centralize security with **Transit Gateway + AWS Network Firewall**.
+- 📊 Enable **VPC Flow Logs** to audit allowed/denied traffic.
+- 🔍 Regularly scan rules for **overly permissive access (0.0.0.0/0)**.
 
 ---
 
@@ -3795,6 +3825,7 @@ To **restrict traffic within a VPC**, use **multi-layer defense**:
 ✅ Combine all layers for **Zero Trust**, **least privilege**, and **segmented VPC design** — keeping internal traffic **secure, auditable, and isolated**.
 
 ---
+
 ## Q: How Does **AWS PrivateLink** Differ from **VPC Peering**?
 
 ---
@@ -3822,11 +3853,11 @@ Both **AWS PrivateLink** and **VPC Peering** allow communication between **two V
 | **Traffic Path**          | Routed over AWS backbone                     | Routed via interface endpoint (ENI)          |
 | **Security**              | Subnet-level control (SG + NACL)             | Service-level control (endpoint policy)      |
 | **Use Case**              | Communication between internal apps or tiers | Secure service/API access (SaaS or internal) |
-| **Internet Exposure**     | ❌ None                                       | ❌ None                                       |
-| **Cross-Account Support** | ✅ Yes                                        | ✅ Yes                                        |
-| **Cross-Region Support**  | ✅ Yes                                        | ✅ Yes (for most services)                    |
+| **Internet Exposure**     | ❌ None                                      | ❌ None                                      |
+| **Cross-Account Support** | ✅ Yes                                       | ✅ Yes                                       |
+| **Cross-Region Support**  | ✅ Yes                                       | ✅ Yes (for most services)                   |
 | **Cost**                  | Lower (no hourly ENI cost)                   | Higher (per-hour + data charges)             |
-| **Transitive Routing**    | ❌ Not supported                              | ❌ Not supported                              |
+| **Transitive Routing**    | ❌ Not supported                             | ❌ Not supported                             |
 
 ---
 
@@ -3935,12 +3966,12 @@ aws ec2 create-vpc-endpoint \
 
 ### ✅ Best Practices
 
-* 🔒 Use **PrivateLink** when you need **service-level exposure** without VPC-level access.
-* ⚙️ Use **VPC Peering** only between **trusted networks** with **non-overlapping CIDRs**.
-* 🚀 For 10+ VPCs, prefer **Transit Gateway** for easier management.
-* 🧩 Always use **TLS encryption** on PrivateLink or Peering connections.
-* 🧱 Enforce **endpoint policies** to restrict which services or accounts can access PrivateLink.
-* 📊 Monitor with **VPC Flow Logs** and **CloudWatch** for inter-VPC traffic insights.
+- 🔒 Use **PrivateLink** when you need **service-level exposure** without VPC-level access.
+- ⚙️ Use **VPC Peering** only between **trusted networks** with **non-overlapping CIDRs**.
+- 🚀 For 10+ VPCs, prefer **Transit Gateway** for easier management.
+- 🧩 Always use **TLS encryption** on PrivateLink or Peering connections.
+- 🧱 Enforce **endpoint policies** to restrict which services or accounts can access PrivateLink.
+- 📊 Monitor with **VPC Flow Logs** and **CloudWatch** for inter-VPC traffic insights.
 
 ---
 
@@ -3959,6 +3990,7 @@ aws ec2 create-vpc-endpoint \
 ✅ **Use PrivateLink** → when you must expose **only a specific service**, not your whole VPC.
 
 ---
+
 ## Q: How Do You Enable Cross-Region VPC Communication in AWS?
 
 ---
@@ -3976,11 +4008,11 @@ To enable **secure, private, cross-region communication**, AWS provides several 
 
 | Method                         | Scope                 | Description                                                     | Encryption                 | Internet Exposure |
 | ------------------------------ | --------------------- | --------------------------------------------------------------- | -------------------------- | ----------------- |
-| **VPC Peering (Cross-Region)** | VPC ↔ VPC             | Direct private connection between two VPCs in different regions | App-level (TLS)            | ❌ No              |
-| **Transit Gateway Peering**    | TGW ↔ TGW             | Scalable, hub-based inter-region routing                        | AWS Backbone (Encrypted)   | ❌ No              |
-| **PrivateLink (Cross-Region)** | Endpoint ↔ Service    | Service-level connection using Interface Endpoints              | AWS Backbone (Private ENI) | ❌ No              |
+| **VPC Peering (Cross-Region)** | VPC ↔ VPC             | Direct private connection between two VPCs in different regions | App-level (TLS)            | ❌ No             |
+| **Transit Gateway Peering**    | TGW ↔ TGW             | Scalable, hub-based inter-region routing                        | AWS Backbone (Encrypted)   | ❌ No             |
+| **PrivateLink (Cross-Region)** | Endpoint ↔ Service    | Service-level connection using Interface Endpoints              | AWS Backbone (Private ENI) | ❌ No             |
 | **Site-to-Site VPN**           | VPC ↔ VPC             | Encrypted IPsec tunnel over internet                            | IPsec                      | 🌐 Yes            |
-| **Direct Connect + TGW**       | Hybrid + Multi-Region | Private fiber connection extended across regions                | Optional (VPN over DX)     | ❌ No              |
+| **Direct Connect + TGW**       | Hybrid + Multi-Region | Private fiber connection extended across regions                | Optional (VPN over DX)     | ❌ No             |
 
 ---
 
@@ -4082,13 +4114,13 @@ Region A (us-east-1)
 
 ✅ **Pros:**
 
-* Centralized control (hub-spoke model)
-* Scalable to 1000s of VPCs
-* AWS-managed, encrypted, and high-throughput
+- Centralized control (hub-spoke model)
+- Scalable to 1000s of VPCs
+- AWS-managed, encrypted, and high-throughput
 
 ❌ **Cons:**
 
-* Slightly higher setup complexity and cost.
+- Slightly higher setup complexity and cost.
 
 ---
 
@@ -4100,7 +4132,7 @@ Provides **service-level private connectivity** between regions using **Interfac
 Used to **expose APIs/services privately** without full VPC peering.
 
 ```
-VPC A (us-east-1): Exposes API via NLB  
+VPC A (us-east-1): Exposes API via NLB
 │
 └── PrivateLink ──►
                    VPC B (ap-southeast-1): Connects via Endpoint (ENI)
@@ -4108,13 +4140,13 @@ VPC A (us-east-1): Exposes API via NLB
 
 ✅ **Pros:**
 
-* Least privilege (service-specific access only)
-* Works across accounts and regions
-* No need to expose entire network
+- Least privilege (service-specific access only)
+- Works across accounts and regions
+- No need to expose entire network
 
 ❌ **Cons:**
 
-* Not suitable for full network communication.
+- Not suitable for full network communication.
 
 ---
 
@@ -4141,9 +4173,9 @@ VPC A (us-east-1) ──(VPN/IPsec)── VPC B (ap-south-1)
 | **Scope**              | 1:1 VPCs           | Multi-VPC / Multi-Region    | Service-specific      | Any-to-any                  |
 | **Routing Type**       | Route table (CIDR) | TGW route tables            | Endpoint ENI          | IPsec tunnel                |
 | **Encryption**         | App-level          | AWS Backbone (encrypted)    | AWS Backbone          | IPsec                       |
-| **Transitive Routing** | ❌ No               | ✅ Yes                       | ❌ No                  | ✅ Yes                       |
-| **Cross-Account**      | ✅ Yes              | ✅ Yes                       | ✅ Yes                 | ✅ Yes                       |
-| **Cross-Region**       | ✅ Yes              | ✅ Yes                       | ✅ Yes                 | ✅ Yes                       |
+| **Transitive Routing** | ❌ No              | ✅ Yes                      | ❌ No                 | ✅ Yes                      |
+| **Cross-Account**      | ✅ Yes             | ✅ Yes                      | ✅ Yes                | ✅ Yes                      |
+| **Cross-Region**       | ✅ Yes             | ✅ Yes                      | ✅ Yes                | ✅ Yes                      |
 | **Performance**        | High               | High                        | Medium                | Medium                      |
 | **Use Case**           | Simple 2-VPC link  | Global network hub          | SaaS / service access | Temporary / encrypted setup |
 
@@ -4151,12 +4183,12 @@ VPC A (us-east-1) ──(VPN/IPsec)── VPC B (ap-south-1)
 
 ### ✅ Best Practices
 
-* 🔒 **Use AWS Backbone (VPC Peering or TGW Peering)** — never the public internet.
-* 🧱 For multiple VPCs, use **Transit Gateway Peering** instead of many peering links.
-* 🧩 Use **PrivateLink** to expose services privately (not whole networks).
-* ⚙️ For compliance, enable **VPC Flow Logs** and **CloudWatch metrics**.
-* 🚀 Use **TLS or IPsec encryption** even when traversing AWS backbone.
-* 🧠 Keep **CIDR ranges non-overlapping** across regions.
+- 🔒 **Use AWS Backbone (VPC Peering or TGW Peering)** — never the public internet.
+- 🧱 For multiple VPCs, use **Transit Gateway Peering** instead of many peering links.
+- 🧩 Use **PrivateLink** to expose services privately (not whole networks).
+- ⚙️ For compliance, enable **VPC Flow Logs** and **CloudWatch metrics**.
+- 🚀 Use **TLS or IPsec encryption** even when traversing AWS backbone.
+- 🧠 Keep **CIDR ranges non-overlapping** across regions.
 
 ---
 
@@ -4172,6 +4204,7 @@ VPC A (us-east-1) ──(VPN/IPsec)── VPC B (ap-south-1)
 ✅ **Best Practice:** Use **Transit Gateway Peering** for multi-VPC architectures and **PrivateLink** for secure service access — both keep traffic private, fast, and off the public internet.
 
 ---
+
 ## Q: How to capture VPC network traffic?
 
 ---
@@ -4184,9 +4217,9 @@ Capturing VPC network traffic gives visibility into flows and packet-level paylo
 
 ### ⚙️ Purpose / How it works
 
-* **VPC Flow Logs**: records IP flow metadata (src/dst IP, ports, protocol, accept/reject, bytes). Delivered to **CloudWatch Logs**, **S3**, or **Kinesis Data Firehose**. Low-cost, high-scale, not packet-level.
-* **VPC Traffic Mirroring**: copies **L3–L7 packets** from ENIs and sends them to a **mirror target** (monitoring EC2 ENI, Gateway Load Balancer, or Network Packet Broker). Enables `tcpdump`/Wireshark analysis, IDS/IPS appliances, or SIEM ingestion. Works per-ENI with filters and sessions.
-* **Additional options**: Transit Gateway Flow Logs, AWS Network Firewall logging, and capture at on-prem edges (Direct Connect) for hybrid setups.
+- **VPC Flow Logs**: records IP flow metadata (src/dst IP, ports, protocol, accept/reject, bytes). Delivered to **CloudWatch Logs**, **S3**, or **Kinesis Data Firehose**. Low-cost, high-scale, not packet-level.
+- **VPC Traffic Mirroring**: copies **L3–L7 packets** from ENIs and sends them to a **mirror target** (monitoring EC2 ENI, Gateway Load Balancer, or Network Packet Broker). Enables `tcpdump`/Wireshark analysis, IDS/IPS appliances, or SIEM ingestion. Works per-ENI with filters and sessions.
+- **Additional options**: Transit Gateway Flow Logs, AWS Network Firewall logging, and capture at on-prem edges (Direct Connect) for hybrid setups.
 
 ---
 
@@ -4280,7 +4313,7 @@ wireshark mirror_capture.pcap
 
 #### 4) **Traffic Mirroring to Gateway Load Balancer (GWLB)**
 
-* Create a **GWLB** + target group with your third-party appliance (e.g., IDS). Create a mirror target with `--network-load-balancer-arn` or set up GWLBe. This offloads appliance HA and scaling.
+- Create a **GWLB** + target group with your third-party appliance (e.g., IDS). Create a mirror target with `--network-load-balancer-arn` or set up GWLBe. This offloads appliance HA and scaling.
 
 #### 5) **Terraform snippets**
 
@@ -4339,25 +4372,26 @@ resource "aws_ec2_traffic_mirror_session" "session" {
 
 ### ✅ Best Practices
 
-* 🧠 **Choose the right tool**: use Flow Logs for broad visibility/alerting and Traffic Mirroring when packet-level analysis is required.
-* 🔒 **Secure captured data**: store pcaps/logs in encrypted S3 and control access with IAM. Rotate keys and restrict S3 bucket policies.
-* 🧾 **Tag & document** captures**: label flows/sessions with reason, owner, TTL.
-* ⚙️ **Use filters** to limit mirrored traffic (source/dest/port) to reduce cost and noise.
-* 🚀 **Scale monitoring** via Gateway Load Balancer + autoscaling appliances for production.
-* 🧪 **Test in non-prod** first — mirroring can increase load and affect performance if misconfigured.
-* 📊 **Integrate** Flow Logs with SIEM (CloudWatch → Kinesis → Splunk/Elastic) for alerts and retention.
-* 🧩 **Combine**: use Flow Logs to triage suspicious flows, then enable Traffic Mirroring for packet capture of specific ENIs.
-* 📈 **Retention policy**: store raw pcaps for required forensic window; use compressed flow logs for longer retention.
+- 🧠 **Choose the right tool**: use Flow Logs for broad visibility/alerting and Traffic Mirroring when packet-level analysis is required.
+- 🔒 **Secure captured data**: store pcaps/logs in encrypted S3 and control access with IAM. Rotate keys and restrict S3 bucket policies.
+- 🧾 **Tag & document** captures\*\*: label flows/sessions with reason, owner, TTL.
+- ⚙️ **Use filters** to limit mirrored traffic (source/dest/port) to reduce cost and noise.
+- 🚀 **Scale monitoring** via Gateway Load Balancer + autoscaling appliances for production.
+- 🧪 **Test in non-prod** first — mirroring can increase load and affect performance if misconfigured.
+- 📊 **Integrate** Flow Logs with SIEM (CloudWatch → Kinesis → Splunk/Elastic) for alerts and retention.
+- 🧩 **Combine**: use Flow Logs to triage suspicious flows, then enable Traffic Mirroring for packet capture of specific ENIs.
+- 📈 **Retention policy**: store raw pcaps for required forensic window; use compressed flow logs for longer retention.
 
 ---
 
 ### 💡 In short
 
-* **VPC Flow Logs** = cheap, scalable flow metadata (who talked to whom).
-* **VPC Traffic Mirroring** = full packet capture (pcap) delivered to a monitor appliance/EC2/GWLB for deep inspection.
+- **VPC Flow Logs** = cheap, scalable flow metadata (who talked to whom).
+- **VPC Traffic Mirroring** = full packet capture (pcap) delivered to a monitor appliance/EC2/GWLB for deep inspection.
   ✅ Use Flow Logs for broad monitoring + SIEM; enable Traffic Mirroring selectively (filtered) for packet-level troubleshooting or IDS.
 
 ---
+
 ## Q: How to Reduce **NAT Gateway** Cost in AWS?
 
 ---
@@ -4422,9 +4456,9 @@ By default, AWS recommends **1 NAT per AZ** for redundancy — but many non-crit
 
 **Example Optimization:**
 
-* ❌ Before: 3 NAT Gateways (one per AZ)
-* ✅ After: 1 shared NAT in main AZ
-* **Savings:** 66%+ reduction in hourly cost
+- ❌ Before: 3 NAT Gateways (one per AZ)
+- ✅ After: 1 shared NAT in main AZ
+- **Savings:** 66%+ reduction in hourly cost
 
 **Caveat:** Cross-AZ data is billed → use this only for low traffic or non-prod workloads.
 
@@ -4458,8 +4492,8 @@ When private instances access AWS services (like S3, DynamoDB, ECR), traffic nor
 
 **Solution:**
 
-* Create **Gateway Endpoints** (for S3, DynamoDB).
-* Create **Interface Endpoints (PrivateLink)** for services like ECR, SSM, CloudWatch, Secrets Manager.
+- Create **Gateway Endpoints** (for S3, DynamoDB).
+- Create **Interface Endpoints (PrivateLink)** for services like ECR, SSM, CloudWatch, Secrets Manager.
 
 **Example (S3 Endpoint via CLI):**
 
@@ -4483,8 +4517,8 @@ Traffic from a private subnet in **AZ-A** routed to a **NAT Gateway in AZ-B** in
 
 **Fix:**
 
-* Always deploy NAT Gateways **in the same AZ** as the subnets that use them.
-* Update route tables accordingly.
+- Always deploy NAT Gateways **in the same AZ** as the subnets that use them.
+- Update route tables accordingly.
 
 ```bash
 aws ec2 create-route \
@@ -4504,8 +4538,8 @@ Limit it to only subnets that **actually need outbound connectivity** (e.g., pat
 
 **Example:**
 
-* App/data subnets → no internet access
-* Maintenance subnet → NAT route
+- App/data subnets → no internet access
+- Maintenance subnet → NAT route
 
 ✅ Reduces data processed by NAT.
 
@@ -4528,8 +4562,8 @@ aws ssm start-session --target i-0abc123def456
 
 For frequent outbound downloads (e.g., OS updates, npm/pip packages):
 
-* Host a **proxy/mirror** inside the VPC (e.g., Squid, Artifactory).
-* Sync repos (Amazon Linux repo mirror) via cron to minimize outbound traffic.
+- Host a **proxy/mirror** inside the VPC (e.g., Squid, Artifactory).
+- Sync repos (Amazon Linux repo mirror) via cron to minimize outbound traffic.
 
 ✅ Greatly reduces repeated NAT egress bandwidth.
 
@@ -4561,11 +4595,11 @@ If your workloads support **IPv6**, use **Egress-Only Internet Gateway** instead
 
 ### ✅ Best Practices
 
-* 🧩 Use **PrivateLink/VPC Endpoints** for all AWS API calls.
-* 🧠 Enable **VPC Flow Logs** to find which instances generate heavy NAT traffic.
-* 🔒 Centralize outbound internet via **one NAT Gateway + Firewall (optional)**.
-* 🚀 Use **Terraform/AWS CDK** to auto-create per-AZ NATs only where necessary.
-* 📊 Track cost using **AWS Cost Explorer → NAT Gateway Data Processing**.
+- 🧩 Use **PrivateLink/VPC Endpoints** for all AWS API calls.
+- 🧠 Enable **VPC Flow Logs** to find which instances generate heavy NAT traffic.
+- 🔒 Centralize outbound internet via **one NAT Gateway + Firewall (optional)**.
+- 🚀 Use **Terraform/AWS CDK** to auto-create per-AZ NATs only where necessary.
+- 📊 Track cost using **AWS Cost Explorer → NAT Gateway Data Processing**.
 
 ---
 
@@ -4585,6 +4619,7 @@ To reduce **NAT Gateway cost**:
 ✅ Result: same functionality (private → internet), but **60–90% cheaper** with smarter routing, endpoints, and architecture.
 
 ---
+
 ## Q: How Do You Troubleshoot **VPC Connectivity** in AWS?
 
 ---
@@ -4602,15 +4637,16 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
 
 #### 🔹 Step 1️⃣ — Check **Basic Connectivity**
 
-* **Ping / Telnet / Curl** from the source to the destination IP:
+- **Ping / Telnet / Curl** from the source to the destination IP:
 
   ```bash
   ping 10.0.2.15
   nc -vz 10.0.2.15 22
   curl http://10.0.1.20:8080
   ```
-* If ICMP fails but port works — ICMP blocked (normal in hardened setups).
-* If both fail → proceed to path-level checks.
+
+- If ICMP fails but port works — ICMP blocked (normal in hardened setups).
+- If both fail → proceed to path-level checks.
 
 ---
 
@@ -4622,7 +4658,8 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
    aws ec2 describe-network-interfaces --filters "Name=attachment.instance-id,Values=i-0abcd1234"
    ```
 
-   * Confirm correct **subnet**, **private IP**, and **security group**.
+   - Confirm correct **subnet**, **private IP**, and **security group**.
+
 2. **Check OS-level networking:**
 
    ```bash
@@ -4630,7 +4667,8 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
    ip route
    ```
 
-   * Verify default route → correct subnet gateway (e.g., `10.0.x.1`).
+   - Verify default route → correct subnet gateway (e.g., `10.0.x.1`).
+
 3. **Confirm no local firewall conflict:**
 
    ```bash
@@ -4655,8 +4693,8 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
 
 #### 🔹 Step 4️⃣ — Check **Network ACLs (NACLs)**
 
-* NACLs are **stateless** — need **both inbound + outbound** rules.
-* Verify subnet’s NACL allows required ports.
+- NACLs are **stateless** — need **both inbound + outbound** rules.
+- Verify subnet’s NACL allows required ports.
 
 **Example:**
 
@@ -4671,15 +4709,15 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
 
 #### 🔹 Step 5️⃣ — Review **Route Tables**
 
-* Confirm correct route entries for your destination:
+- Confirm correct route entries for your destination:
 
   ```bash
   aws ec2 describe-route-tables --filters "Name=association.subnet-id,Values=subnet-0abc1234"
   ```
 
-  * `local` route → enables intra-VPC communication
-  * Default route (`0.0.0.0/0`) → NAT Gateway / IGW
-  * Peering / TGW / Endpoint → correct target IDs
+  - `local` route → enables intra-VPC communication
+  - Default route (`0.0.0.0/0`) → NAT Gateway / IGW
+  - Peering / TGW / Endpoint → correct target IDs
 
 ✅ For **cross-VPC** communication, both sides need routes to each other.
 ✅ For **private subnet**, NAT Gateway route only for **outbound internet**, not inbound.
@@ -4690,14 +4728,15 @@ AWS provides multiple built-in tools (Reachability Analyzer, VPC Flow Logs, Netw
 
 If communicating across VPCs:
 
-* Ensure **VPC Peering connection** is **“Active”**.
-* Validate **non-overlapping CIDRs**.
-* Add routes in **both VPCs**:
+- Ensure **VPC Peering connection** is **“Active”**.
+- Validate **non-overlapping CIDRs**.
+- Add routes in **both VPCs**:
 
   ```bash
   Destination: 10.1.0.0/16 → pcx-0abcd1234
   ```
-* Enable **DNS resolution across peering** if using hostnames:
+
+- Enable **DNS resolution across peering** if using hostnames:
 
   ```bash
   aws ec2 modify-vpc-peering-connection-options \
@@ -4709,14 +4748,15 @@ If communicating across VPCs:
 
 #### 🔹 Step 7️⃣ — Validate **NAT Gateway / IGW** for Internet Access
 
-* **NAT Gateway:**
+- **NAT Gateway:**
 
-  * In **public subnet** (with route to IGW).
-  * Private subnet → default route → NAT Gateway ID.
-* **Internet Gateway:**
+  - In **public subnet** (with route to IGW).
+  - Private subnet → default route → NAT Gateway ID.
 
-  * Attached to the VPC.
-  * Route table in public subnet includes `0.0.0.0/0 → igw-xxxx`.
+- **Internet Gateway:**
+
+  - Attached to the VPC.
+  - Route table in public subnet includes `0.0.0.0/0 → igw-xxxx`.
 
 Check EIP association on NAT/EC2:
 
@@ -4728,15 +4768,16 @@ aws ec2 describe-nat-gateways --filter Name=vpc-id,Values=vpc-1234
 
 #### 🔹 Step 8️⃣ — Check **VPC Endpoints / PrivateLink** (if using AWS services privately)
 
-* Verify endpoint exists in correct subnet & security group.
-* Test DNS resolution:
+- Verify endpoint exists in correct subnet & security group.
+- Test DNS resolution:
 
   ```bash
   dig s3.amazonaws.com
   ```
 
-  * Should resolve to **VPCE DNS name** (`vpce-xxxx.amazonaws.com`).
-* Confirm **endpoint policies** allow access.
+  - Should resolve to **VPCE DNS name** (`vpce-xxxx.amazonaws.com`).
+
+- Confirm **endpoint policies** allow access.
 
 ---
 
@@ -4744,8 +4785,8 @@ aws ec2 describe-nat-gateways --filter Name=vpc-id,Values=vpc-1234
 
 Enable VPC, Subnet, or ENI-level Flow Logs to check if traffic is:
 
-* **ACCEPT** → Reaches destination (good).
-* **REJECT** → Blocked by SG/NACL/route.
+- **ACCEPT** → Reaches destination (good).
+- **REJECT** → Blocked by SG/NACL/route.
 
 Example log format:
 
@@ -4802,8 +4843,8 @@ dig <hostname>
 nslookup <hostname>
 ```
 
-* Ensure DNS resolver (`10.0.0.2`) is enabled in VPC.
-* Enable:
+- Ensure DNS resolver (`10.0.0.2`) is enabled in VPC.
+- Enable:
 
   ```bash
   aws ec2 modify-vpc-attribute --vpc-id vpc-xxxx --enable-dns-support "{\"Value\":true}"
@@ -4831,12 +4872,12 @@ nslookup <hostname>
 
 ### ✅ Best Practices
 
-* 🧠 Start from **lowest layer (instance)** → move outward (subnet → route → gateway).
-* 🧩 Always confirm **CIDR ranges are non-overlapping** across VPCs.
-* 🔒 Align **SGs & NACLs** — SGs allow, NACLs permit.
-* 🧱 Enable **Flow Logs by default** on all VPCs.
-* 🚀 Automate connectivity validation via **Reachability Analyzer** in CI/CD.
-* 📊 Use **CloudWatch metrics** for latency/drops and **Athena queries** on flow logs for patterns.
+- 🧠 Start from **lowest layer (instance)** → move outward (subnet → route → gateway).
+- 🧩 Always confirm **CIDR ranges are non-overlapping** across VPCs.
+- 🔒 Align **SGs & NACLs** — SGs allow, NACLs permit.
+- 🧱 Enable **Flow Logs by default** on all VPCs.
+- 🚀 Automate connectivity validation via **Reachability Analyzer** in CI/CD.
+- 📊 Use **CloudWatch metrics** for latency/drops and **Athena queries** on flow logs for patterns.
 
 ---
 
@@ -4858,6 +4899,7 @@ To troubleshoot **VPC connectivity**:
 ---
 
 # Scenario-Based Questions
+
 ## Q: S3 Access Fails from Private Subnet
 
 ---
@@ -4867,8 +4909,8 @@ To troubleshoot **VPC connectivity**:
 When an EC2 instance in a **private subnet** cannot access **Amazon S3**, the issue usually stems from **routing or NAT/VPC Endpoint misconfiguration**.
 Private subnets have **no direct internet access**, so to reach S3 you must use either:
 
-* A **NAT Gateway / NAT Instance** (internet path), or
-* A **VPC Gateway Endpoint for S3** (private AWS network path).
+- A **NAT Gateway / NAT Instance** (internet path), or
+- A **VPC Gateway Endpoint for S3** (private AWS network path).
 
 > 🔍 If S3 access fails (timeouts, 403 errors, DNS issues), verify whether your VPC uses **NAT** or **VPC Endpoint** — and check security policies, routes, and DNS resolution.
 
@@ -4878,7 +4920,7 @@ Private subnets have **no direct internet access**, so to reach S3 you must use 
 
 | Root Cause                                       | Description                                   | Typical Error                      |
 | ------------------------------------------------ | --------------------------------------------- | ---------------------------------- |
-| ❌ **No route to S3 (no NAT or endpoint)**        | Private subnet cannot reach internet          | Timeout / “Could not resolve host” |
+| ❌ **No route to S3 (no NAT or endpoint)**       | Private subnet cannot reach internet          | Timeout / “Could not resolve host” |
 | ⚠️ **DNS resolution disabled**                   | S3 DNS name can’t resolve to private endpoint | Name or service not known          |
 | 🔒 **S3 bucket policy blocks public/NAT access** | Policy restricts to VPC or VPCE only          | 403 Forbidden                      |
 | ⚙️ **Wrong route table configuration**           | Route missing or points to wrong target       | Request times out                  |
@@ -4969,10 +5011,10 @@ aws ec2 describe-vpc-endpoints --filters "Name=vpc-id,Values=vpc-0123abcd"
 
 Ensure:
 
-* Endpoint type = **Gateway**
-* Service name = `com.amazonaws.<region>.s3`
-* Correct route table associated
-* Policy allows access:
+- Endpoint type = **Gateway**
+- Service name = `com.amazonaws.<region>.s3`
+- Correct route table associated
+- Policy allows access:
 
 ```json
 {
@@ -5029,7 +5071,7 @@ Type: All traffic  | Protocol: All | Destination: 0.0.0.0/0
 
 Inbound on return path:
 
-* NACL inbound/outbound must allow **1024–65535** (ephemeral ports).
+- NACL inbound/outbound must allow **1024–65535** (ephemeral ports).
   If blocked → connection timeouts.
 
 ---
@@ -5040,15 +5082,9 @@ Ensure the instance role or user has proper permissions:
 
 ```json
 {
-  "Action": [
-    "s3:GetObject",
-    "s3:ListBucket"
-  ],
+  "Action": ["s3:GetObject", "s3:ListBucket"],
   "Effect": "Allow",
-  "Resource": [
-    "arn:aws:s3:::my-bucket",
-    "arn:aws:s3:::my-bucket/*"
-  ]
+  "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"]
 }
 ```
 
@@ -5085,12 +5121,12 @@ aws s3 ls s3://my-bucket --region <region>
 
 ### ✅ Best Practices
 
-* 🧩 Always use **VPC Gateway Endpoint for S3** (instead of NAT).
-* 🔒 Restrict bucket policy to **specific VPC endpoint IDs** for security.
-* 🧠 Enable **VPC DNS support** for name resolution.
-* 🚀 Use **Interface Endpoints** for other AWS APIs (ECR, SSM, Secrets Manager).
-* 📊 Monitor with **VPC Flow Logs** — check if traffic to S3 prefix list is ACCEPT/REJECT.
-* 🧾 Use **Cost Explorer** to ensure no NAT data for S3 traffic (confirm optimization).
+- 🧩 Always use **VPC Gateway Endpoint for S3** (instead of NAT).
+- 🔒 Restrict bucket policy to **specific VPC endpoint IDs** for security.
+- 🧠 Enable **VPC DNS support** for name resolution.
+- 🚀 Use **Interface Endpoints** for other AWS APIs (ECR, SSM, Secrets Manager).
+- 📊 Monitor with **VPC Flow Logs** — check if traffic to S3 prefix list is ACCEPT/REJECT.
+- 🧾 Use **Cost Explorer** to ensure no NAT data for S3 traffic (confirm optimization).
 
 ---
 
@@ -5111,6 +5147,7 @@ If **S3 access fails from private subnet**, check:
 ✅ **Fix:** Add an **S3 Gateway Endpoint** or route traffic via **NAT Gateway** — ensure correct route, policy, and DNS setup to restore access securely and efficiently.
 
 ---
+
 ## Q: Peered VPCs Not Communicating
 
 ---
@@ -5141,7 +5178,7 @@ VPC-A (10.0.0.0/16) ──────── Peering ──────── VP
 
 | Root Cause                                | Description                                       | Impact                         |
 | ----------------------------------------- | ------------------------------------------------- | ------------------------------ |
-| ❌ **Missing routes**                      | No route to peer CIDR in one or both VPCs         | Packets dropped at route table |
+| ❌ **Missing routes**                     | No route to peer CIDR in one or both VPCs         | Packets dropped at route table |
 | ⚠️ **Overlapping CIDRs**                  | VPC IP ranges overlap (10.0.0.0/16 ↔ 10.0.0.0/16) | Routing conflict               |
 | 🔒 **Security Group (SG) blocks traffic** | Inbound/outbound rules missing                    | Connection timeout             |
 | 🔥 **Network ACLs deny traffic**          | Stateless filtering blocks packets                | No response                    |
@@ -5187,12 +5224,13 @@ Each subnet participating in peering must have a route to the peer’s CIDR.
 
 **Example:**
 
-* VPC-A route table:
+- VPC-A route table:
 
   ```
   Destination: 172.31.0.0/16 → pcx-0abcd1234
   ```
-* VPC-B route table:
+
+- VPC-B route table:
 
   ```
   Destination: 10.0.0.0/16 → pcx-0abcd1234
@@ -5335,12 +5373,12 @@ Output example:
 
 ### ✅ Best Practices
 
-* 🧩 **Tag all peering routes** clearly with target VPC name.
-* 🔒 Restrict SG/NACLs to **specific CIDRs**, not 0.0.0.0/0.
-* 🚀 For >10 VPCs, use **AWS Transit Gateway** (transitive + scalable).
-* 📊 Enable **VPC Flow Logs** — confirm “ACCEPT” for peer traffic.
-* 🧱 Avoid overlapping CIDRs across environments.
-* 🧠 Use **private DNS enablement** for smoother name resolution.
+- 🧩 **Tag all peering routes** clearly with target VPC name.
+- 🔒 Restrict SG/NACLs to **specific CIDRs**, not 0.0.0.0/0.
+- 🚀 For >10 VPCs, use **AWS Transit Gateway** (transitive + scalable).
+- 📊 Enable **VPC Flow Logs** — confirm “ACCEPT” for peer traffic.
+- 🧱 Avoid overlapping CIDRs across environments.
+- 🧠 Use **private DNS enablement** for smoother name resolution.
 
 ---
 
@@ -5348,8 +5386,8 @@ Output example:
 
 If **peered VPCs can’t communicate**, check this sequence:
 
-| Layer              | What to Verify                      |
-| ------------------ | ----------------------------------- |
+| Layer             | What to Verify                      |
+| ----------------- | ----------------------------------- |
 | 1️⃣ Peering Status | Connection is active                |
 | 2️⃣ CIDRs          | Non-overlapping                     |
 | 3️⃣ Routes         | Both sides point to `pcx-xxxx`      |
@@ -5361,6 +5399,7 @@ Add proper routes → allow traffic via SG/NACL → enable DNS → retest.
 Once fixed, **VPC Peering** offers **private, secure, low-latency communication** entirely over the **AWS backbone**, with **no public exposure**.
 
 ---
+
 ## Q: On-Premises Network Not Reaching AWS VPC
 
 ---
@@ -5378,11 +5417,11 @@ Hybrid connectivity (on-prem ↔ AWS) uses either **Site-to-Site VPN**, **AWS Di
 
 | Method                     | Path Type                  | Encryption                     | Typical Use                      |
 | -------------------------- | -------------------------- | ------------------------------ | -------------------------------- |
-| **Site-to-Site VPN**       | Over Internet (IPsec)      | ✅ Yes                          | Fast setup, secure tunnels       |
+| **Site-to-Site VPN**       | Over Internet (IPsec)      | ✅ Yes                         | Fast setup, secure tunnels       |
 | **Direct Connect (DX)**    | Dedicated fiber            | 🚫 No (add VPN for encryption) | Low-latency, high-bandwidth link |
-| **DX + VPN**               | Private + Encrypted        | ✅ Yes                          | Enterprise-grade hybrid HA       |
+| **DX + VPN**               | Private + Encrypted        | ✅ Yes                         | Enterprise-grade hybrid HA       |
 | **Transit Gateway (TGW)**  | Hub for multiple VPCs/VPNs | Depends on attachment          | Centralized routing              |
-| **PrivateLink / Endpoint** | Service-specific           | ✅ Yes                          | SaaS/private access only         |
+| **PrivateLink / Endpoint** | Service-specific           | ✅ Yes                         | SaaS/private access only         |
 
 ---
 
@@ -5397,7 +5436,7 @@ Hybrid connectivity (on-prem ↔ AWS) uses either **Site-to-Site VPN**, **AWS Di
 | 🔒 **Security Group / NACL Deny** | AWS blocks inbound packets                                  | Connection timeout               |
 | 🧩 **BGP not advertising**        | DX/VPN route not propagated                                 | Only one-way communication       |
 | 🌐 **Overlapping CIDRs**          | On-prem & VPC same range                                    | Routes ignored                   |
-| ❌ **Private DNS not resolving**   | Hybrid apps fail to reach hostnames                         | DNS resolution errors            |
+| ❌ **Private DNS not resolving**  | Hybrid apps fail to reach hostnames                         | DNS resolution errors            |
 
 ---
 
@@ -5412,9 +5451,9 @@ aws ec2 describe-vpn-connections --query "VpnConnections[*].{ID:VpnConnectionId,
 ✅ Should show `"State": "available"`.
 If `down`, check:
 
-* On-prem firewall allows UDP 500 & 4500 (IKE & NAT-T).
-* Pre-shared key matches.
-* Tunnel outside IPs are reachable (ping from on-prem edge).
+- On-prem firewall allows UDP 500 & 4500 (IKE & NAT-T).
+- Pre-shared key matches.
+- Tunnel outside IPs are reachable (ping from on-prem edge).
 
 ---
 
@@ -5442,18 +5481,20 @@ Destination: 192.168.0.0/16 → tgw-attach-0abc123
 
 #### 3️⃣ **Check On-Prem Router / Firewall**
 
-* Verify route to AWS CIDR:
+- Verify route to AWS CIDR:
 
   ```
   show ip route 10.0.0.0/16
   ```
-* Confirm tunnel interface up:
+
+- Confirm tunnel interface up:
 
   ```
   show vpn ike sa
   show vpn ipsec sa
   ```
-* Ensure outbound ACL allows AWS subnet ranges.
+
+- Ensure outbound ACL allows AWS subnet ranges.
 
 ---
 
@@ -5512,8 +5553,8 @@ aws ec2 describe-vpcs --query "Vpcs[*].CidrBlock"
 
 If on-prem apps use hostnames:
 
-* Ensure Route 53 **Private Hosted Zone** is **associated with VPC**.
-* Use **Route 53 Resolver Endpoints** for hybrid DNS queries.
+- Ensure Route 53 **Private Hosted Zone** is **associated with VPC**.
+- Use **Route 53 Resolver Endpoints** for hybrid DNS queries.
 
 ```bash
 aws route53resolver list-resolver-endpoints
@@ -5539,9 +5580,9 @@ aws ec2 start-network-insights-analysis --network-insights-path-id nip-0abc123
 
 #### 🔟 **Monitor Logs**
 
-* **CloudWatch VPN Logs:** connection events.
-* **VPC Flow Logs:** confirm packets reach AWS interface (ACCEPT/REJECT).
-* **On-prem firewall logs:** ensure traffic leaves network.
+- **CloudWatch VPN Logs:** connection events.
+- **VPC Flow Logs:** confirm packets reach AWS interface (ACCEPT/REJECT).
+- **On-prem firewall logs:** ensure traffic leaves network.
 
 ---
 
@@ -5562,13 +5603,13 @@ aws ec2 start-network-insights-analysis --network-insights-path-id nip-0abc123
 
 ### ✅ Best Practices
 
-* 🧱 Use **Transit Gateway** for multi-VPC + on-prem hubs — simplifies routing.
-* 🔒 Limit inbound VPN to known on-prem IPs only.
-* 📊 Enable **VPC Flow Logs** for visibility.
-* 🚀 Implement **BGP with propagation** instead of static routes for flexibility.
-* 🧠 Keep **CIDRs unique** across all regions and datacenters.
-* 🔁 Use **redundant VPN tunnels** for HA.
-* 📡 For production DX, add **VPN backup** (DX + VPN).
+- 🧱 Use **Transit Gateway** for multi-VPC + on-prem hubs — simplifies routing.
+- 🔒 Limit inbound VPN to known on-prem IPs only.
+- 📊 Enable **VPC Flow Logs** for visibility.
+- 🚀 Implement **BGP with propagation** instead of static routes for flexibility.
+- 🧠 Keep **CIDRs unique** across all regions and datacenters.
+- 🔁 Use **redundant VPN tunnels** for HA.
+- 📡 For production DX, add **VPN backup** (DX + VPN).
 
 ---
 
@@ -5578,17 +5619,18 @@ If your **on-premises network cannot reach AWS**:
 
 | Step | Check                                      |
 | ---- | ------------------------------------------ |
-| 1️⃣  | VPN/DX tunnel **UP**                       |
-| 2️⃣  | **Routes** present on both ends            |
-| 3️⃣  | **Non-overlapping CIDRs**                  |
-| 4️⃣  | **SG/NACL** allow inbound/outbound         |
-| 5️⃣  | **Firewall** allows UDP 500/4500 + traffic |
-| 6️⃣  | **DNS** resolves internal names            |
+| 1️⃣   | VPN/DX tunnel **UP**                       |
+| 2️⃣   | **Routes** present on both ends            |
+| 3️⃣   | **Non-overlapping CIDRs**                  |
+| 4️⃣   | **SG/NACL** allow inbound/outbound         |
+| 5️⃣   | **Firewall** allows UDP 500/4500 + traffic |
+| 6️⃣   | **DNS** resolves internal names            |
 
 ✅ **Fix:** verify tunnels, add routes for AWS/on-prem CIDRs, adjust firewalls & SGs, ensure BGP propagates prefixes.
 Result → stable, private, bidirectional connectivity between **on-premises and AWS VPC** over VPN, DX, or TGW.
 
 ---
+
 ## Q: DNS Resolution Not Working in EC2
 
 ---
@@ -5620,7 +5662,7 @@ If an **EC2 instance** cannot resolve domain names (e.g., `ping google.com` or `
 
 | Root Cause                                  | Description                                                    | Symptom                     |
 | ------------------------------------------- | -------------------------------------------------------------- | --------------------------- |
-| ❌ `enableDnsSupport` disabled               | DNS resolver not available                                     | “Name or service not known” |
+| ❌ `enableDnsSupport` disabled              | DNS resolver not available                                     | “Name or service not known” |
 | ⚙️ `/etc/resolv.conf` misconfigured         | Wrong nameserver (e.g., 8.8.8.8 unreachable in private subnet) | Timeout                     |
 | 🔥 NACL or SG blocks port 53                | DNS packets dropped                                            | No resolution               |
 | 🚫 Route missing to 10.0.0.2                | Instance can't reach internal resolver                         | Timeout                     |
@@ -5746,8 +5788,8 @@ If `/etc/resolv.conf` has `8.8.8.8` and no NAT gateway → can’t reach interne
 
 ✅ Either:
 
-* Add NAT Gateway route: `0.0.0.0/0 → nat-xxxx`, **or**
-* Use **AmazonProvidedDNS** via `10.0.0.2` (recommended).
+- Add NAT Gateway route: `0.0.0.0/0 → nat-xxxx`, **or**
+- Use **AmazonProvidedDNS** via `10.0.0.2` (recommended).
 
 ---
 
@@ -5755,13 +5797,14 @@ If `/etc/resolv.conf` has `8.8.8.8` and no NAT gateway → can’t reach interne
 
 If resolving internal names like `db.internal.local`:
 
-* Ensure **VPC associated** with the private hosted zone.
-* Validate record exists:
+- Ensure **VPC associated** with the private hosted zone.
+- Validate record exists:
 
   ```bash
   aws route53 list-resource-record-sets --hosted-zone-id Z1234ABC
   ```
-* If hybrid DNS → confirm **Route 53 Resolver endpoints** configured for inbound/outbound queries.
+
+- If hybrid DNS → confirm **Route 53 Resolver endpoints** configured for inbound/outbound queries.
 
 ---
 
@@ -5793,13 +5836,13 @@ nc -vz 10.0.0.2 53
 
 ### ✅ Best Practices
 
-* 🧩 Always keep **enableDnsSupport = true** in all VPCs.
-* 🔒 Don’t hardcode public resolvers (`8.8.8.8`) in private subnets.
-* 🚀 Use **Route 53 Resolver endpoints** for hybrid DNS with on-prem.
-* 🧱 Open **UDP/TCP 53** in SG/NACL for DNS queries.
-* 🧠 Keep **DHCP options set** to `AmazonProvidedDNS` unless a custom resolver is needed.
-* 📊 Monitor **VPC Flow Logs** for dropped DNS packets.
-* ⚙️ For containers (EKS/ECS), ensure CoreDNS pods can reach 10.0.0.2.
+- 🧩 Always keep **enableDnsSupport = true** in all VPCs.
+- 🔒 Don’t hardcode public resolvers (`8.8.8.8`) in private subnets.
+- 🚀 Use **Route 53 Resolver endpoints** for hybrid DNS with on-prem.
+- 🧱 Open **UDP/TCP 53** in SG/NACL for DNS queries.
+- 🧠 Keep **DHCP options set** to `AmazonProvidedDNS` unless a custom resolver is needed.
+- 📊 Monitor **VPC Flow Logs** for dropped DNS packets.
+- ⚙️ For containers (EKS/ECS), ensure CoreDNS pods can reach 10.0.0.2.
 
 ---
 
@@ -5820,6 +5863,7 @@ If **DNS resolution fails in EC2**:
 Result → reliable name resolution for public and private DNS inside your VPC.
 
 ---
+
 ## Q: Inter-Region Latency Is High in AWS
 
 ---
@@ -5887,8 +5931,8 @@ If your setup uses **public endpoints** (e.g., calling S3 us-east-1 from ap-sout
 
 **Fix:**
 
-* Use **VPC Peering (cross-region)** or **Transit Gateway Peering** to stay on AWS private backbone.
-* Use **PrivateLink** for service-level access.
+- Use **VPC Peering (cross-region)** or **Transit Gateway Peering** to stay on AWS private backbone.
+- Use **PrivateLink** for service-level access.
 
 ✅ AWS private backbone latency is ~30–50% lower and more stable.
 
@@ -5908,9 +5952,9 @@ Each DB query crosses regions → ~200ms RTT per call.
 
 ✅ Solutions:
 
-* Co-locate tightly coupled services in **same region**.
-* Use **read replicas** closer to users.
-* Implement **asynchronous replication** or queues for cross-region tasks.
+- Co-locate tightly coupled services in **same region**.
+- Use **read replicas** closer to users.
+- Implement **asynchronous replication** or queues for cross-region tasks.
 
 ---
 
@@ -5918,31 +5962,31 @@ Each DB query crosses regions → ~200ms RTT per call.
 
 If connected via:
 
-* **VPN tunnels:** Add ~5–15 ms encryption overhead.
-* **Transit Gateway peering:** Slight routing hop but still private.
-* **DX + VPN:** Check if VPN encryption adds delay.
+- **VPN tunnels:** Add ~5–15 ms encryption overhead.
+- **Transit Gateway peering:** Slight routing hop but still private.
+- **DX + VPN:** Check if VPN encryption adds delay.
 
 **Fix:**
 
-* Prefer **Transit Gateway Peering** over VPN for inter-region AWS communication.
-* Verify **tunnel path MTU (1500)** — low MTU causes fragmentation latency.
+- Prefer **Transit Gateway Peering** over VPN for inter-region AWS communication.
+- Verify **tunnel path MTU (1500)** — low MTU causes fragmentation latency.
 
 ---
 
 #### 5️⃣ **Use AWS Tools to Analyze Latency**
 
-* **VPC Reachability Analyzer** → verify path.
-* **CloudWatch Metrics** → monitor network RTT, connection time.
-* **VPC Flow Logs** → measure flow duration, packet retransmissions.
+- **VPC Reachability Analyzer** → verify path.
+- **CloudWatch Metrics** → monitor network RTT, connection time.
+- **VPC Flow Logs** → measure flow duration, packet retransmissions.
 
 ---
 
 #### 6️⃣ **Optimize Application Layer**
 
-* Enable **connection pooling** (avoid new TLS handshakes).
-* Use **message queues** (SQS, SNS) for async inter-region tasks.
-* Compress payloads or reduce chatty API calls.
-* Cache static assets in the destination region (Redis/CloudFront).
+- Enable **connection pooling** (avoid new TLS handshakes).
+- Use **message queues** (SQS, SNS) for async inter-region tasks.
+- Compress payloads or reduce chatty API calls.
+- Cache static assets in the destination region (Redis/CloudFront).
 
 ---
 
@@ -5971,7 +6015,7 @@ Example record:
   "SetIdentifier": "ap-south-1",
   "Region": "ap-south-1",
   "TTL": 60,
-  "ResourceRecords": [{"Value": "3.109.45.10"}]
+  "ResourceRecords": [{ "Value": "3.109.45.10" }]
 }
 ```
 
@@ -5995,12 +6039,12 @@ Example record:
 
 ### ✅ Best Practices
 
-* 🧠 **Co-locate compute & data** — don’t run DB in another region.
-* 🚀 **Use AWS backbone connectivity** (VPC/TGW peering) instead of public endpoints.
-* 🧱 **Deploy regional replicas** (RDS read replicas, S3 replication, ElastiCache Global Datastore).
-* 🌍 **Leverage Route 53 Latency-Based Routing** for global apps.
-* 📊 **Monitor RTTs** via CloudWatch or custom `ping` metrics.
-* 🧩 **Use Global Accelerator** for low-latency client entry points.
+- 🧠 **Co-locate compute & data** — don’t run DB in another region.
+- 🚀 **Use AWS backbone connectivity** (VPC/TGW peering) instead of public endpoints.
+- 🧱 **Deploy regional replicas** (RDS read replicas, S3 replication, ElastiCache Global Datastore).
+- 🌍 **Leverage Route 53 Latency-Based Routing** for global apps.
+- 📊 **Monitor RTTs** via CloudWatch or custom `ping` metrics.
+- 🧩 **Use Global Accelerator** for low-latency client entry points.
 
 ---
 
@@ -6018,7 +6062,8 @@ If **inter-region latency is high**:
 
 ✅ **Golden Rule:** Keep tightly coupled components **in the same region**, and use AWS’s **private backbone** (VPC Peering / TGW / PrivateLink) + **edge acceleration** for the rest.
 
-----
+---
+
 ## Q: Too Many IPs Exhausted in AWS VPC
 
 ---
@@ -6144,8 +6189,8 @@ aws ec2 associate-vpc-cidr-block --vpc-id vpc-0123abcd --cidr-block 10.2.0.0/16
 
 #### 7️⃣ **Rebalance Workloads**
 
-* Move workloads or services (ALBs, pods, EC2s) to subnets with available IPs.
-* Use **EKS IP prefix delegation** or **ENIConfig** to manage IP allocation per node.
+- Move workloads or services (ALBs, pods, EC2s) to subnets with available IPs.
+- Use **EKS IP prefix delegation** or **ENIConfig** to manage IP allocation per node.
 
 ---
 
@@ -6166,12 +6211,13 @@ aws eks update-nodegroup-config \
 
 #### 9️⃣ **Clean Up Unused Resources**
 
-* Delete terminated EC2 ENIs:
+- Delete terminated EC2 ENIs:
 
   ```bash
   aws ec2 describe-network-interfaces --filters "Name=status,Values=available"
   ```
-* Remove stale endpoints:
+
+- Remove stale endpoints:
 
   ```bash
   aws ec2 describe-vpc-endpoints
@@ -6194,17 +6240,18 @@ aws eks update-nodegroup-config \
 
 ### ✅ Best Practices
 
-* 🧩 **Use /20 or larger subnets** for dynamic workloads (EKS/ECS).
-* 🧱 **Add secondary CIDRs** to scale without recreating the VPC.
-* 🔄 **Enable EKS IP Prefix Delegation** to reduce per-pod ENI usage.
-* ⚙️ **Monitor IP usage** regularly using CloudWatch metrics or scripts:
+- 🧩 **Use /20 or larger subnets** for dynamic workloads (EKS/ECS).
+- 🧱 **Add secondary CIDRs** to scale without recreating the VPC.
+- 🔄 **Enable EKS IP Prefix Delegation** to reduce per-pod ENI usage.
+- ⚙️ **Monitor IP usage** regularly using CloudWatch metrics or scripts:
 
   ```bash
   aws ec2 describe-subnets --query "Subnets[*].{Subnet:SubnetId,Used:AvailableIpAddressCount}"
   ```
-* 📊 **Tag subnets by purpose** (public, private, EKS, DB) to isolate pools.
-* 🚀 **Automate cleanup** of stale ENIs and endpoints.
-* 🧠 **Plan CIDR space** with growth buffer (~30% reserved).
+
+- 📊 **Tag subnets by purpose** (public, private, EKS, DB) to isolate pools.
+- 🚀 **Automate cleanup** of stale ENIs and endpoints.
+- 🧠 **Plan CIDR space** with growth buffer (~30% reserved).
 
 ---
 
@@ -6223,6 +6270,7 @@ If **IPs are exhausted** in your VPC/subnet:
 ✅ **Best practice:** use **larger CIDRs**, **monitor IP consumption**, and **enable EKS IP prefix delegation** — ensuring elastic, scalable networking without hitting IP exhaustion.
 
 ---
+
 ## 🏗️ VPC Architecture Overview
 
 ---
@@ -6378,14 +6426,14 @@ You control IP ranges, subnets, routing, security, and connectivity — similar 
 
 ### ✅ Best Practices
 
-* 🧩 Use **/16 or /20 CIDRs** to allow subnet expansion.
-* 🧱 Separate **public, private, and database** subnets.
-* 🚀 Deploy in **multiple AZs** for redundancy.
-* 🔒 Restrict inbound rules in **Security Groups**.
-* 🧠 Use **VPC Endpoints** instead of NAT for S3/ECR access.
-* 📊 Enable **VPC Flow Logs** for monitoring.
-* 🌐 For hybrid setup, use **Transit Gateway** to connect multiple VPCs + on-prem.
-* ⚙️ Use **Infrastructure as Code (Terraform/CDK)** to standardize VPC builds.
+- 🧩 Use **/16 or /20 CIDRs** to allow subnet expansion.
+- 🧱 Separate **public, private, and database** subnets.
+- 🚀 Deploy in **multiple AZs** for redundancy.
+- 🔒 Restrict inbound rules in **Security Groups**.
+- 🧠 Use **VPC Endpoints** instead of NAT for S3/ECR access.
+- 📊 Enable **VPC Flow Logs** for monitoring.
+- 🌐 For hybrid setup, use **Transit Gateway** to connect multiple VPCs + on-prem.
+- ⚙️ Use **Infrastructure as Code (Terraform/CDK)** to standardize VPC builds.
 
 ---
 
