@@ -1,7937 +1,8148 @@
 # Linux 
 
-## Q: What is Linux?
+## Q1: What is Linux and how does it differ from Unix?
 
-### 🧠 Overview
+🧠 **Overview**
+Linux is an open-source operating system kernel that powers various OS distributions (Ubuntu, RHEL, Alpine). It follows Unix principles but is not derived from original AT&T Unix. Used heavily in DevOps, cloud servers, containers, and embedded systems.
 
-**Linux** is a **free, open-source operating system (OS)** based on **UNIX**.
-It manages hardware resources, runs applications, and provides a multiuser, multitasking environment.
-Linux powers servers, desktops, mobile devices (Android), and most **cloud infrastructure** — including **AWS EC2**, **Kubernetes**, and **Docker** containers.
+⚙️ **Purpose / How it Works**
 
----
+* Provides process management, memory control, filesystem drivers, networking, and hardware abstraction.
+* Forms the foundation for server OSes used in CI/CD, Kubernetes nodes, Docker images, etc.
 
-### ⚙️ Purpose / How It Works
+📋 **Linux vs Unix**
 
-🧭 **Core Components:**
+| Feature | Linux                               | Unix                          |
+| ------- | ----------------------------------- | ----------------------------- |
+| Source  | Open-source                         | Mostly proprietary            |
+| Distros | Many (Ubuntu, RHEL, Debian, Alpine) | Limited (AIX, HP-UX, Solaris) |
+| Usage   | Cloud, servers, containers          | Legacy enterprise servers     |
+| Cost    | Free                                | Paid/commercial               |
 
-| Component              | Description                                                                         |
-| ---------------------- | ----------------------------------------------------------------------------------- |
-| **Kernel**             | The core of Linux — manages CPU, memory, devices, and processes.                    |
-| **Shell**              | Command-line interface that lets users execute commands.                            |
-| **File System**        | Hierarchical structure (`/bin`, `/etc`, `/var`, `/home`, etc.) organizing all data. |
-| **Services / Daemons** | Background processes (e.g., `sshd`, `systemd`, `crond`) providing system functions. |
-| **Userspace Tools**    | Utilities like `ls`, `grep`, `top`, `vim` used for management and scripting.        |
-
-Linux uses a **modular architecture**, so you can customize components — ideal for servers, IoT, and containerized workloads.
+💡 **In short**
+Linux = open-source Unix-like OS widely used in DevOps; Unix = commercial systems mostly used in legacy enterprises.
 
 ---
 
-### 🧩 Examples / Commands
+## Q2: What is the Linux kernel and what is its role?
 
-#### Check OS and Kernel Version
+🧠 **Overview**
+The kernel is the **core component** of Linux that interacts directly with hardware. It enables processes, memory, I/O, networking, and device drivers.
 
-```bash
-cat /etc/os-release
-uname -r
-```
+⚙️ **Purpose / How it Works**
 
-#### List Running Processes
+* Manages CPU scheduling, RAM allocation, system calls.
+* Drivers allow software to work with hardware (disks, NICs).
+* Container engines (Docker, containerd) rely on kernel features like cgroups & namespaces.
 
-```bash
-ps -ef
-```
-
-#### Check Disk and Memory Usage
+🧩 **Example: Kernel parameters**
 
 ```bash
-df -h
-free -m
+cat /proc/sys/net/ipv4/ip_forward
+sysctl -w net.ipv4.ip_forward=1
 ```
 
-#### Update and Patch Packages
-
-```bash
-# Ubuntu/Debian
-sudo apt update && sudo apt upgrade -y
-
-# RHEL/CentOS/Amazon Linux
-sudo yum update -y
-```
+💡 **In short**
+Kernel = the bridge between hardware and software; controls everything your OS and containers do.
 
 ---
 
-### 📋 Common Linux Distributions
+## Q3: What are the main differences between Linux distributions (Ubuntu, CentOS, Debian, RHEL)?
 
-| Distribution                          | Package Manager | Common Use                                   |
-| ------------------------------------- | --------------- | -------------------------------------------- |
-| **Ubuntu / Debian**                   | `apt`           | General-purpose servers, DevOps environments |
-| **RHEL / CentOS / AlmaLinux / Rocky** | `yum` / `dnf`   | Enterprise servers                           |
-| **Amazon Linux**                      | `yum`           | AWS EC2 instances                            |
-| **SUSE / openSUSE**                   | `zypper`        | SAP and enterprise workloads                 |
-| **Kali / Arch / Fedora**              | Various         | Security testing, bleeding-edge development  |
+🧠 **Overview**
+Different distros bundle the Linux kernel + package managers + system tools optimized for specific use cases (cloud, enterprise, security, lightweight servers).
 
----
+📋 **Comparison Table**
 
-### ✅ Best Practices
+| Distro              | Package Manager | Use Case                | Notes                                     |
+| ------------------- | --------------- | ----------------------- | ----------------------------------------- |
+| **Ubuntu**          | `apt`           | Cloud, dev environments | Most common in cloud images; fast updates |
+| **Debian**          | `apt`           | Stable servers          | Very stable; slower release cycle         |
+| **CentOS** (Stream) | `dnf/yum`       | Pre-RHEL testing        | Rolling updates; used less in prod now    |
+| **RHEL**            | `dnf/yum`       | Enterprise workloads    | Paid support; stable long-term releases   |
 
-* 🔒 Keep the OS patched regularly using **SSM Patch Manager** or package updates.
-* ⚙️ Use **systemctl** for service management and **journalctl** for logs.
-* 🧠 Automate tasks using **cron jobs** or **shell scripts**.
-* 🧩 Harden systems with **SELinux/AppArmor**, firewall (`iptables`/`firewalld`), and least-privilege accounts.
-* 📊 Monitor performance with tools like `top`, `iostat`, `vmstat`, or `dstat`.
+💡 **In short**
+Distros differ mainly in package managers, stability, support model, and update frequency.
 
 ---
 
-### 💡 In short
+## Q4: What is a shell in Linux?
 
-**Linux** is a **stable, secure, and highly customizable open-source OS** that underpins most cloud and DevOps environments.
-It’s the backbone of **containers, Kubernetes, and cloud servers**, making it essential for modern infrastructure and automation.
+🧠 **Overview**
+A shell is a command-line interpreter that lets users interact with the OS using commands and scripts.
 
----
-## Q: How to Check OS Version and Kernel Version in Linux?
+⚙️ **How it Works**
 
----
+* Takes input from user/scripts
+* Executes commands
+* Returns output
 
-### 🧠 Overview
-
-Knowing the **OS version** and **kernel version** helps in patching, troubleshooting, and ensuring compatibility with drivers, tools, or container runtimes.
-Linux provides several built-in commands to display this information — both **distribution release** (e.g., Ubuntu 22.04, Amazon Linux 2) and **kernel details** (e.g., `5.15.0-1071-aws`).
-
----
-
-### ⚙️ Purpose / How It Works
-
-Linux maintains:
-
-* OS metadata in `/etc/os-release` or `/etc/*release`
-* Kernel information in `/proc/version` and `uname` system call output
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check OS Version (Distribution Info)
+🧩 **Example**
 
 ```bash
-cat /etc/os-release
+echo "Hello"
+ls -l /var/log
 ```
 
-**Example Output:**
-
-```
-NAME="Amazon Linux"
-VERSION="2"
-ID="amzn"
-PRETTY_NAME="Amazon Linux 2"
-```
-
-Other distro files (if `/etc/os-release` missing):
-
-```bash
-cat /etc/redhat-release    # RHEL/CentOS
-cat /etc/lsb-release       # Ubuntu/Debian
-cat /etc/SuSE-release      # SUSE
-```
+💡 **In short**
+Shell = command interface to the OS, essential for scripting and automation.
 
 ---
 
-#### 🟢 2. Check Kernel Version
+## Q5: What is the difference between bash, sh, zsh, and other shells?
 
-```bash
-uname -r
-```
+🧠 **Overview**
+Different shells offer different features, syntax improvements, scripting capabilities, and interactive enhancements.
 
-**Output Example:**
+📋 **Shell Comparison**
 
-```
-5.10.212-203.855.amzn2.x86_64
-```
+| Shell    | Features                                           | Usage                          |
+| -------- | -------------------------------------------------- | ------------------------------ |
+| **sh**   | Original Bourne shell                              | Basic scripting                |
+| **bash** | Most common; arrays, functions, scripting features | Default in many distros        |
+| **zsh**  | Auto-completion, plugins, themes (oh-my-zsh)       | Preferred for interactive use  |
+| **fish** | User-friendly, auto-suggestions                    | Not POSIX; less common in prod |
 
-Additional kernel info:
-
-```bash
-uname -a
-```
-
-**Output Example:**
-
-```
-Linux ip-10-0-0-1 5.10.212-203.855.amzn2.x86_64 #1 SMP Thu Aug 22 2024 x86_64 GNU/Linux
-```
+💡 **In short**
+bash = standard for scripting; zsh = improved interactive shell.
 
 ---
 
-#### 🟢 3. Combined Quick Summary
+## Q6: What is the root user and what privileges does it have?
+
+🧠 **Overview**
+`root` is the superuser account with full system administrative privileges.
+
+⚙️ **Capabilities**
+
+* Install/remove software
+* Modify system files (/etc, /var)
+* Manage users, permissions
+* Access any file/process
+
+🧩 **Example**
 
 ```bash
-echo "OS: $(cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2)"
-echo "Kernel: $(uname -r)"
+whoami
+sudo su -
 ```
 
-**Output Example:**
-
-```
-OS: "Ubuntu 22.04.3 LTS"
-Kernel: 5.15.0-122-generic
-```
+💡 **In short**
+root = unrestricted access; must be used carefully to avoid security risks.
 
 ---
 
-#### 🟢 4. For Systemd-based Summary
+## Q7: What is the difference between sudo and su commands?
 
-```bash
-hostnamectl
-```
+🧠 **Overview**
+Both allow privilege escalation but behave differently.
 
-**Output Example:**
+📋 **Comparison Table**
 
-```
-Operating System: Ubuntu 22.04.3 LTS
-Kernel: Linux 5.15.0-122-generic
-Architecture: x86-64
-```
+| Command  | Purpose                               | Behavior                                        |
+| -------- | ------------------------------------- | ----------------------------------------------- |
+| **sudo** | Run a single command as root          | Logs command; requires user to be in `sudoers`  |
+| **su**   | Switch to another user (usually root) | Full shell session; uses target user’s password |
 
----
-
-### 📋 Common Output Examples
-
-| Distro             | OS Command Output                             | Kernel Command Output           |
-| ------------------ | --------------------------------------------- | ------------------------------- |
-| **Amazon Linux 2** | `PRETTY_NAME="Amazon Linux 2"`                | `5.10.212-203.855.amzn2.x86_64` |
-| **RHEL 9**         | `Red Hat Enterprise Linux release 9.4 (Plow)` | `5.14.0-427.22.1.el9_4.x86_64`  |
-| **Ubuntu 22.04**   | `Ubuntu 22.04.3 LTS (Jammy)`                  | `5.15.0-122-generic`            |
-
----
-
-### ✅ Best Practices
-
-* 🧩 Always **document OS + kernel versions** in patching and compliance reports.
-* ⚙️ Use `uname -r` to confirm **kernel updates applied** after patching.
-* 🧠 Automate version checks via **SSM inventory** or a **startup script**.
-* 🔒 Ensure new kernel versions are **tested in staging** before production rollout.
-
----
-
-### 💡 In short
-
-Use `cat /etc/os-release` to check your **Linux distribution** and `uname -r` for the **kernel version**.
-Together, they provide a quick snapshot of your system’s OS environment — critical for **patching, compliance, and troubleshooting**.
-
----
-## Q: How to Check System Uptime in Linux?
-
----
-
-### 🧠 Overview
-
-**System uptime** shows how long a Linux system has been running since its last reboot — a key metric for **stability, patch verification, and troubleshooting**.
-Admins often check uptime after patching or reboot operations to confirm the system restarted correctly.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The **kernel** tracks uptime since boot and exposes it via `/proc/uptime`.
-* Utilities like `uptime`, `top`, and `who -b` read this data.
-* AWS monitoring tools (like **SSM Inventory** or **CloudWatch**) can also collect uptime metrics for compliance.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Simple Uptime Command
+🧩 **Examples**
 
 ```bash
-uptime
+sudo systemctl restart nginx
+su -  # switch to root
 ```
 
-**Example Output:**
-
-```
- 10:22:45 up 7 days,  4:15,  2 users,  load average: 0.10, 0.07, 0.09
-```
-
-* **“up 7 days, 4:15”** → server has been running for 7 days and 4 hours
-* **Load average** → CPU load over the last 1, 5, and 15 minutes
+💡 **In short**
+sudo = controlled privilege for one command; su = full user switch.
 
 ---
 
-#### 🟢 2. From /proc/uptime (raw data)
+## Q8: How do you check the current Linux version and kernel version?
 
-```bash
-cat /proc/uptime
-```
+🧠 **Overview**
+Used to verify OS distribution and kernel level (important for debugging, Kubernetes nodes, drivers).
 
-**Example Output:**
-
-```
-629871.23 618912.50
-```
-
-* First number = seconds since last boot
-  Convert seconds to readable format:
+🧩 **Commands**
 
 ```bash
-awk '{print int($1/86400)" days, "int(($1%86400)/3600)" hours, "int(($1%3600)/60)" minutes"}' /proc/uptime
+cat /etc/os-release   # OS version
+lsb_release -a        # distro details
+uname -r              # kernel version
+hostnamectl           # OS + kernel
 ```
 
-**Output:**
-
-```
-7 days, 4 hours, 15 minutes
-```
+💡 **In short**
+Use `/etc/os-release` for OS, `uname -r` for kernel.
 
 ---
 
-#### 🟢 3. Using `who -b` (Last Boot Time)
+## Q9: What is the purpose of the /etc directory?
 
-```bash
-who -b
-```
+🧠 **Overview**
+`/etc` contains **system-wide configuration files**.
 
-**Example Output:**
+⚙️ **What It Stores**
 
-```
- system boot  2025-11-04 06:12
-```
+* Service configs (`/etc/ssh/sshd_config`)
+* User/group info (`/etc/passwd`, `/etc/group`)
+* Network configs (`/etc/hosts`, `/etc/resolv.conf`)
 
-> Useful for verifying **reboot timing after patching** or maintenance.
-
----
-
-#### 🟢 4. Using `top` Command
-
-```bash
-top -bn1 | head -1
-```
-
-**Example Output:**
-
-```
-top - 10:25:01 up 7 days,  4:15,  2 users,  load average: 0.10, 0.07, 0.09
-```
+💡 **In short**
+`/etc` = configuration backbone of Linux.
 
 ---
 
-#### 🟢 5. Using `systemctl` (Modern Systems)
+## Q10: What is stored in the /var directory?
+
+🧠 **Overview**
+`/var` holds variable data files that change frequently.
+
+⚙️ **Common Contents**
+
+* Logs → `/var/log/*`
+* Spool files → `/var/spool`
+* Cache → `/var/cache`
+* App runtime data → `/var/lib`
+
+🧩 **Example**
 
 ```bash
-systemctl status
+ls -l /var/log
 ```
 
-**Example Output (snippet):**
-
-```
-   Hostname: prod-api
-   Kernel: Linux 5.15.0-122-generic
-   Uptime: 7 days 4h 15min
-```
+💡 **In short**
+`/var` stores logs, caches, and app runtime data — essential for debugging and services.
 
 ---
 
-### 📊 Common Use Cases
+## Q11: What is the /tmp directory used for?
 
-| Scenario                    | Purpose                                     |
-| --------------------------- | ------------------------------------------- |
-| **Post-patch verification** | Confirm reboot applied new kernel           |
-| **Availability tracking**   | Identify uptime trend for stability reports |
-| **Troubleshooting**         | Detect unplanned reboots or crashes         |
-| **Compliance**              | Validate scheduled maintenance completion   |
+🧠 **Overview**
+`/tmp` stores temporary files created by applications, scripts, or system processes. Contents are not persistent.
 
----
+⚙️ **Purpose / Behavior**
 
-### ✅ Best Practices
+* Used for caching, session files, installer temp files.
+* Automatically cleaned on reboot or by systemd timers.
 
-* ⚙️ Use `uptime` or `who -b` after patching to confirm **reboot success**.
-* 🧠 Log uptime to **CloudWatch metrics** via SSM RunCommand for compliance tracking.
-* 🚀 Integrate uptime checks into **CI/CD validation steps** for auto-scaling instances.
-* 🔒 Long uptimes ≠ secure — **regular reboots** post-patching are recommended.
-
----
-
-### 💡 In short
-
-Check system uptime using `uptime` or `who -b`.
-These commands show how long the system has been running and confirm **reboot success** after patching — a simple yet crucial step in **post-maintenance validation**.
-
-----
-## Q: How to Check CPU and Memory Usage in Linux?
-
----
-
-### 🧠 Overview
-
-Monitoring **CPU** and **memory** usage is essential for **performance tuning**, **patch validation**, and **incident troubleshooting**.
-Linux provides multiple native tools to inspect resource utilization in real time or from system snapshots — helping identify **bottlenecks**, **high-load processes**, or **memory leaks**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The **kernel** tracks CPU and memory metrics in `/proc/stat` and `/proc/meminfo`.
-* Utilities like `top`, `vmstat`, `free`, and `sar` present that data in human-readable form.
-* Cloud-native setups (AWS/EKS) can export the same data to **CloudWatch** or **Prometheus** for monitoring and alerts.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check CPU & Memory in Real Time — `top`
+🧩 **Example**
 
 ```bash
-top
+touch /tmp/test.log
 ```
 
-**Example Output (top 5 lines):**
-
-```
-top - 11:24:38 up 1 day,  4:12,  2 users,  load average: 0.31, 0.45, 0.27
-Tasks: 212 total,   1 running, 211 sleeping,   0 stopped,   0 zombie
-%Cpu(s): 12.3 us,  3.5 sy,  0.0 ni, 84.0 id,  0.0 wa,  0.0 hi,  0.2 si,  0.0 st
-MiB Mem :   7976.6 total,   1254.3 free,   4167.5 used,   2554.8 buff/cache
-MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   3465.2 avail Mem
-```
-
-**Key fields:**
-
-* `%Cpu(s):` — user/system/idle CPU usage
-* `Mem:` — total, used, and free RAM
-* `Swap:` — total swap space and current usage
-
-Exit with `q`.
+💡 **In short**
+`/tmp` = temporary, disposable workspace.
 
 ---
 
-#### 🟢 2. Quick CPU Summary — `mpstat`
+## Q12: What is the difference between /bin and /usr/bin?
 
-```bash
-mpstat -P ALL 1 3
-```
+🧠 **Overview**
+Both store user executable binaries but differ in purpose and historical usage.
 
-**Example Output:**
+📋 **Comparison Table**
 
-```
-Average:     all     5.00   1.25   0.00  92.00   0.00   0.00
-```
+| Directory    | Purpose                                         | Notes                           |
+| ------------ | ----------------------------------------------- | ------------------------------- |
+| **/bin**     | Essential binaries needed for boot and recovery | e.g., `ls`, `cp`, `mv`          |
+| **/usr/bin** | Non-essential user commands                     | Installed packages’ executables |
 
-> Shows per-core CPU utilization every 1 second (3 intervals).
+💡 **In short**
+`/bin` = core system commands; `/usr/bin` = user-level application commands.
 
 ---
 
-#### 🟢 3. Check Memory Usage — `free`
+## Q13: What is the /proc directory and what information does it contain?
+
+🧠 **Overview**
+`/proc` is a **virtual filesystem** exposing kernel and process information.
+
+⚙️ **What It Contains**
+
+* Process metadata (`/proc/<pid>/cmdline`, `/proc/<pid>/status`)
+* Kernel parameters (`/proc/sys/…`)
+* Hardware info (`/proc/cpuinfo`, `/proc/meminfo`)
+
+🧩 **Examples**
 
 ```bash
-free -h
+cat /proc/cpuinfo
+cat /proc/1234/status
 ```
 
-**Example Output:**
-
-```
-              total        used        free      shared  buff/cache   available
-Mem:           15Gi       6.2Gi       5.1Gi       150Mi       3.7Gi        8.1Gi
-Swap:          2.0Gi         0B       2.0Gi
-```
-
-> Focus on the **“available”** column — memory truly available for use.
+💡 **In short**
+`/proc` = real-time kernel and process info, not stored on disk.
 
 ---
 
-#### 🟢 4. CPU Load Over Time — `uptime`
+## Q14: What is the purpose of the /home directory?
 
-```bash
-uptime
-```
+🧠 **Overview**
+`/home` contains personal directories for each non-root user.
 
-**Example Output:**
+⚙️ **Contents**
 
-```
-11:28:52 up 1 day,  4:20,  2 users,  load average: 0.32, 0.45, 0.29
-```
+* User files
+* Shell configs (`.bashrc`, `.ssh/`)
+* Application settings
 
-> Load average = CPU queue length over 1, 5, and 15 mins
-> Rough rule: load ≈ number of CPU cores → system is healthy.
+💡 **In short**
+`/home` = user’s workspace and configuration storage.
 
 ---
 
-#### 🟢 5. Process-Specific Usage — `ps`
+## Q15: How do you list files and directories in Linux?
+
+🧠 **Overview**
+The `ls` command shows directory contents, widely used for navigation and scripting.
+
+🧩 **Examples**
 
 ```bash
-ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head
+ls
+ls -l        # detailed view
+ls -h        # human-readable sizes
+ls /var/log  # list specific path
 ```
 
-**Output Example:**
-
-```
-  PID COMMAND         %CPU %MEM
-12345 java            95.3 12.5
-23456 nginx            3.1  0.6
-```
+💡 **In short**
+Use `ls` with flags for details and formatting.
 
 ---
 
-#### 🟢 6. System-Wide Snapshot — `vmstat`
+## Q16: What is the difference between ls -l and ls -la?
+
+📋 **Comparison**
+
+| Command    | Meaning                     | What It Shows                  |
+| ---------- | --------------------------- | ------------------------------ |
+| **ls -l**  | Long listing                | Permissions, owner, size, date |
+| **ls -la** | Long listing + hidden files | Same as above + dotfiles       |
+
+🧩 **Example**
 
 ```bash
-vmstat 1 5
+ls -l
+ls -la
 ```
 
-**Columns Explained:**
-
-* `r` → running processes
-* `us`/`sy` → CPU usage (user/system)
-* `id` → idle time
-* `si`/`so` → swap activity
+💡 **In short**
+`-a` flag includes hidden files.
 
 ---
 
-#### 🟢 7. Historical Metrics — `sar` (sysstat package)
+## Q17: How do you create a directory in Linux?
+
+🧠 **Overview**
+`mkdir` creates new directories at any path.
+
+🧩 **Examples**
 
 ```bash
-sar -u 1 3     # CPU
-sar -r 1 3     # Memory
+mkdir logs
+mkdir -p /opt/app/config   # create nested dirs
 ```
 
-> Useful for trend analysis or troubleshooting past performance issues.
+💡 **In short**
+Use `mkdir`; `-p` creates parent directories automatically.
 
 ---
 
-### 📊 Example Combined Output
+## Q18: How do you remove a file and a directory?
 
-| Metric                | Command                     | Key Output Example                       |
-| --------------------- | --------------------------- | ---------------------------------------- |
-| **CPU Usage**         | `top`, `mpstat`, `vmstat`   | `%Cpu(s): 15.2 us, 4.3 sy, 80.0 id`      |
-| **Memory Usage**      | `free -h`, `top`, `sar -r`  | `Mem: 8Gi total, 6.1Gi used, 1.9Gi free` |
-| **Per-Process Stats** | `ps -eo pid,comm,%cpu,%mem` | Highest CPU/memory-consuming processes   |
-| **Historical Load**   | `sar -u` or `uptime`        | `load average: 0.5, 0.6, 0.7`            |
+🧠 **Overview**
+Use `rm` for files and `rmdir`/`rm -r` for directories.
 
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `top` or `htop` for **real-time monitoring**.
-* 🧠 Automate data collection via **CloudWatch Agent** or **Prometheus Node Exporter**.
-* 🔍 Investigate persistent high CPU (`>80%`) or low memory (`<10% free`).
-* 🚀 Correlate with **application logs** and **I/O metrics** for root cause.
-* 🧾 Schedule **resource utilization checks** post-patch or deployments.
-
----
-
-### 💡 In short
-
-Use `top` or `free -h` to monitor **CPU and memory usage** in real time.
-For automation or audits, leverage **mpstat**, **sar**, or **CloudWatch metrics** — ensuring your servers stay performant and stable after patches or workload changes.
-
----
-## Q: How to Find Disk Usage by Directory in Linux?
-
----
-
-### 🧠 Overview
-
-Checking **disk usage by directory** helps identify what’s consuming space — crucial for **troubleshooting full volumes**, **cleaning up logs**, and **verifying patch or backup space**.
-Linux provides tools like `du`, `df`, and `ncdu` to display directory-level storage usage in both **human-readable** and **summarized** formats.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The `du` (disk usage) command reads inode metadata and file sizes recursively.
-* The `df` (disk free) command shows overall filesystem utilization.
-* Tools like `ncdu` or `find` add interactivity and filtering.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check Overall Filesystem Usage
+🧩 **Examples**
 
 ```bash
-df -h
+rm file.txt          # delete file
+rmdir empty_dir      # remove empty directory
+rm -r folder         # remove directory + contents
 ```
 
-**Example Output:**
-
-```
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/xvda1       40G   29G  9.2G  76% /
-tmpfs           7.8G  1.0M  7.8G   1% /dev/shm
-```
-
-> Shows total disk space used and available on each mount.
+💡 **In short**
+Files → `rm`; directories → `rmdir` or `rm -r`.
 
 ---
 
-#### 🟢 2. Find Directory Usage (Recursive)
+## Q19: What is the difference between rm and rm -rf?
+
+📋 **Comparison**
+
+| Command    | Action                         | Risk                        |
+| ---------- | ------------------------------ | --------------------------- |
+| **rm**     | Delete file(s)                 | Safe-ish                    |
+| **rm -r**  | Recursively delete directories | Deletes subfolders          |
+| **rm -rf** | Recursive + force delete       | No confirmation → dangerous |
+
+⚠️ **Warning**
+`rm -rf /` can destroy the system.
+
+💡 **In short**
+`rm -rf` removes everything recursively without confirmation.
+
+---
+
+## Q20: How do you copy files and directories?
+
+🧠 **Overview**
+Use `cp` for file and directory copies.
+
+🧩 **Examples**
 
 ```bash
-du -sh /var/log
+cp file1.txt file2.txt           # copy file
+cp -r src_dir dest_dir           # copy directory
+cp *.log /var/log/backup/        # copy multiple files
 ```
 
-**Output Example:**
+📋 **Flags Table**
 
-```
-2.1G    /var/log
-```
+| Flag | Meaning              |
+| ---- | -------------------- |
+| `-r` | recursive            |
+| `-v` | verbose              |
+| `-p` | preserve permissions |
 
-> Displays total size of `/var/log` directory in human-readable format.
-
-**Flags:**
-
-* `-s` → summary (don’t show subdirectories)
-* `-h` → human-readable (MB/GB units)
+💡 **In short**
+`cp` copies files; use `cp -r` for directories.
 
 ---
 
-#### 🟢 3. List Top-Level Directory Usage
+## Q21: How do you move or rename files?
+
+🧠 **Overview**
+`mv` moves or renames files and directories.
+
+🧩 **Examples**
 
 ```bash
-du -sh /* 2>/dev/null
+mv file.txt /tmp/            # move
+mv oldname.txt newname.txt   # rename
+mv dir1 dir2/                # move directory
 ```
 
-**Output Example:**
-
-```
-4.3G    /var
-2.1G    /usr
-512M    /opt
-```
-
-> Quickly shows usage by major directories under root (`/`).
+💡 **In short**
+`mv` = move or rename; same command for both.
 
 ---
 
-#### 🟢 4. Sort Directories by Size (Top Usage)
+## Q22: What are file permissions in Linux?
+
+🧠 **Overview**
+File permissions control **who can read, write, or execute** files and directories. Essential for security, automation, and multi-user systems.
+
+⚙️ **How It Works**
+Each file has 3 permission sets:
+
+* **Owner**
+* **Group**
+* **Others**
+
+Each set contains:
+
+* `r` → read
+* `w` → write
+* `x` → execute
+
+🧩 **Example**
 
 ```bash
-du -h --max-depth=1 /var | sort -hr | head -10
+ls -l file.txt
+# -rw-r--r-- 1 user user 20 Jan 1 file.txt
 ```
 
-**Example Output:**
-
-```
-2.1G    /var/log
-1.5G    /var/cache
-512M    /var/tmp
-```
-
-> Displays the **largest subdirectories** under `/var`.
+💡 **In short**
+Permissions define allowed actions for owner/group/everyone else.
 
 ---
 
-#### 🟢 5. Analyze Disk Interactively with `ncdu`
+## Q23: What do the numbers 755, 644, and 777 mean in file permissions?
+
+🧠 **Overview**
+Numeric permissions are octal values representing read/write/execute bits.
+
+📋 **Permission Table**
+
+| Number | Binary | Meaning |
+| ------ | ------ | ------- |
+| **7**  | 111    | rwx     |
+| **6**  | 110    | rw-     |
+| **5**  | 101    | r-x     |
+| **4**  | 100    | r--     |
+
+📋 **Common Permission Sets**
+
+| Code    | Meaning                       | Use Case                                    |
+| ------- | ----------------------------- | ------------------------------------------- |
+| **755** | Owner: rwx, Group/Others: r-x | Binaries, scripts                           |
+| **644** | Owner: rw-, Group/Others: r-- | Config files, text files                    |
+| **777** | Everyone: rwx                 | ⚠️ Not recommended (full permission to all) |
+
+💡 **In short**
+Numbers map to rwx bits; 755 for scripts, 644 for files, avoid 777.
+
+---
+
+## Q24: How do you change file permissions using chmod?
+
+🧠 **Overview**
+`chmod` modifies permissions using **numeric** or **symbolic** notation.
+
+🧩 **Examples — Numeric**
 
 ```bash
-sudo apt install ncdu -y       # Ubuntu/Debian
-sudo yum install ncdu -y       # RHEL/Amazon Linux
-sudo ncdu /
+chmod 755 script.sh
+chmod 644 config.yaml
 ```
 
-> Opens a **TUI (text UI)** showing directories sorted by size, easy for drill-down cleanup.
-
----
-
-#### 🟢 6. Find Large Files (≥ 1 GB)
+🧩 **Examples — Symbolic**
 
 ```bash
-find / -type f -size +1G -exec ls -lh {} \; 2>/dev/null
+chmod u+x script.sh     # add execute to owner
+chmod g-w file.txt      # remove write for group
+chmod o+r file.txt      # add read for others
 ```
 
-**Example Output:**
-
-```
--rw-r--r-- 1 root root 2.5G /var/log/messages.1
--rw-r--r-- 1 ec2-user ec2-user 1.2G /home/ec2-user/dump.sql
-```
-
-> Identifies files consuming excessive disk space.
+💡 **In short**
+Use numeric for fast changes, symbolic for fine-grained adjustments.
 
 ---
 
-#### 🟢 7. Check Disk Usage for Specific Filesystem
+## Q25: How do you change file ownership using chown?
+
+🧠 **Overview**
+`chown` changes the owner and/or group of a file or directory.
+
+🧩 **Examples**
 
 ```bash
-df -hT /var
+chown user file.txt             # change owner
+chown user:group file.txt       # change owner + group
+chown -R user:group /opt/app    # recursive
 ```
 
-**Example Output:**
-
-```
-Filesystem     Type  Size  Used Avail Use% Mounted on
-/dev/xvda1     ext4   40G   29G  9.2G  76% /var
-```
+💡 **In short**
+`chown` updates file ownership; `-R` for directories.
 
 ---
 
-### 📋 Example Summary
+## Q26: What is the difference between absolute and symbolic links?
 
-| Command                     | Description                 | Example Use                    |                        |
-| --------------------------- | --------------------------- | ------------------------------ | ---------------------- |
-| `df -h`                     | Filesystem-level disk usage | Check volume capacity          |                        |
-| `du -sh <dir>`              | Directory size summary      | Check `/var` or `/home`        |                        |
-| `du -sh /*`                 | Top-level usage overview    | Identify large directories     |                        |
-| `du -h --max-depth=1 <path> | sort -hr`                   | Sorted directory usage         | Find top 10 large dirs |
-| `ncdu /`                    | Interactive analysis        | Drill down disk usage          |                        |
-| `find / -size +1G`          | Large file detection        | Locate oversized logs or dumps |                        |
+🧠 **Overview**
+Links let you reference a file from another location.
 
----
+📋 **Link Types**
 
-### ✅ Best Practices
+| Type                        | Points To                     | Behavior                              |
+| --------------------------- | ----------------------------- | ------------------------------------- |
+| **Absolute link**           | Full path (/opt/app/file)     | Works regardless of current directory |
+| **Relative link**           | Relative path (../file)       | Depends on link location              |
+| **Symbolic link (symlink)** | Shortcut/alias → another file | Breaks if target removed              |
+| **Hard link**               | Actual duplicate inode        | Doesn't break unless data removed     |
 
-* ⚙️ Run `du -sh /*` before patching to ensure **free disk space** for updates.
-* 🧩 Monitor `/var/log`, `/tmp`, `/opt`, and `/home` — common space offenders.
-* 🧠 Use **logrotate** and **tmpreaper** to auto-clean logs and temp files.
-* 🚀 Install **CloudWatch Agent** or **Prometheus Node Exporter** for ongoing disk monitoring.
-* 🔒 Avoid deleting system files manually under `/usr` or `/lib`.
+💡 **In short**
+Symlink = pointer to file; hard link = another reference to same inode.
 
 ---
 
-### 💡 In short
+## Q27: How do you create a symbolic link?
 
-Use `du -sh` and `du -h --max-depth=1 / | sort -hr` to find **disk usage by directory** and identify which paths consume the most space.
-For interactive cleanup, use `ncdu`, and always check `df -h` first to understand **overall disk utilization** before deleting or resizing volumes.
+🧠 **Overview**
+Use `ln -s` to create symlinks.
 
-----
-## Q: How to Check Which Process Uses the Most Memory or CPU in Linux?  
-
----
-
-### 🧠 Overview  
-When a Linux system is **slow, overloaded, or unstable**, identifying the **top CPU and memory-consuming processes** helps isolate root causes (e.g., runaway apps, memory leaks, or stuck services).  
-You can quickly find the culprit using tools like `top`, `ps`, or `htop`.
-
----
-
-### ⚙️ Purpose / How It Works  
-- The Linux **kernel tracks CPU and memory usage** for each running process via `/proc`.  
-- Utilities like `ps`, `top`, and `htop` display that information in real time or snapshots.  
-- These metrics help troubleshoot **high load**, **swap usage**, or **crash loops**.
-
----
-
-### 🧩 Commands / Examples  
-
-#### 🟢 1. Real-Time Monitoring — `top`
-```bash
-top
-```
-**Example Output:**
-```
-top - 12:25:10 up 3 days,  2:16,  2 users,  load average: 3.15, 2.90, 1.87
-Tasks: 214 total,   2 running, 212 sleeping,   0 stopped,   0 zombie
-%Cpu(s): 85.3 us,  4.2 sy,  0.0 ni,  9.9 id,  0.3 wa,  0.1 hi,  0.2 si,  0.0 st
-MiB Mem :   7976.6 total,   512.3 free,   6321.5 used,   1142.8 buff/cache
-  PID USER      PR  NI  VIRT  RES  SHR S  %CPU %MEM    TIME+  COMMAND
- 2043 webuser   20   0 1320m 922m  12m R  95.6 11.6  23:11.42 java
- 1125 root      20   0  157m  24m  12m S   5.3  0.3   1:52.77 dockerd
-```
-
-**Keys:**  
-- `P` → sort by CPU  
-- `M` → sort by memory  
-- `1` → show all CPU cores  
-- `q` → quit  
-
-> 🔍 **Use Case:** Quickly find processes hogging resources (e.g., Java, MySQL, Python).
-
----
-
-#### 🟢 2. Static Snapshot — `ps`
-```bash
-ps -eo pid,user,comm,%cpu,%mem --sort=-%cpu | head
-```
-**Example Output:**
-```
-  PID USER     COMMAND         %CPU %MEM
- 2043 webuser  java            95.6 11.6
- 1125 root     dockerd          5.3  0.3
-```
-
-To sort by memory usage:
-```bash
-ps -eo pid,user,comm,%cpu,%mem --sort=-%mem | head
-```
-
----
-
-#### 🟢 3. Interactive View — `htop` (Recommended)
-```bash
-sudo apt install htop -y   # Ubuntu/Debian
-sudo yum install htop -y   # RHEL/Amazon Linux
-htop
-```
-**Highlights:**
-- Displays CPU & memory bars graphically  
-- Sort by CPU, memory, or process ID (`F6`)  
-- Kill or renice processes directly (`F9`, `F7/F8`)  
-
-> 💡 Perfect for **DevOps engineers** monitoring real-time production load.
-
----
-
-#### 🟢 4. Check Per-User or Per-Process CPU Load
-```bash
-ps -eo user,pid,pcpu,pmem,comm --sort=-pcpu | head
-```
-**Example Output:**
-```
-USER       PID  %CPU %MEM COMMAND
-ec2-user  2043  95.6 11.6 java
-root      1125   5.3  0.3 dockerd
-```
-
----
-
-#### 🟢 5. Find Top 10 Memory Hogs
-```bash
-ps -eo pid,comm,pmem --sort=-pmem | head -10
-```
-**Example Output:**
-```
-PID   COMMAND        %MEM
-2043  java           11.6
-1523  mysqld          9.2
-```
-
----
-
-#### 🟢 6. Combine CPU + Memory + Time
-```bash
-ps -eo pid,user,%cpu,%mem,etime,cmd --sort=-%cpu | head
-```
-> Shows which processes are both long-running and resource-intensive.
-
----
-
-#### 🟢 7. Find Process Tree (Parent/Child Relationship)
-```bash
-pstree -p | less
-```
-> Useful when a parent process (like `systemd`, `gunicorn`, or `docker`) spawns children that consume resources.
-
----
-
-### 📋 Quick Reference Table  
-
-| Command | Focus | Description |
-|----------|--------|-------------|
-| `top` | Live | Real-time view of CPU & memory usage |
-| `ps -eo ... --sort=-%cpu` | Snapshot | Top CPU consumers |
-| `ps -eo ... --sort=-%mem` | Snapshot | Top memory consumers |
-| `htop` | Interactive | Visual interface, sorting, and process management |
-| `pstree` | Tree view | Parent-child process visualization |
-
----
-
-### ✅ Best Practices  
-- 🧠 **Use `top` for real-time** analysis; **`ps` for logging** or scripting.  
-- ⚙️ Automate alerts using **CloudWatch Agent** or **Prometheus Node Exporter**.  
-- 🔍 Investigate sustained high usage — may indicate **memory leaks** or **runaway threads**.  
-- 🚀 Use `nice` or `renice` to adjust process priorities during load spikes.  
-- 🧩 Include CPU/mem utilization in **post-patch verification scripts** to confirm stability.  
-
----
-
-### 💡 In short  
-Use `top` or `htop` for real-time monitoring, and `ps -eo pid,comm,%cpu,%mem --sort=-%cpu` for quick snapshots.  
-These tools let you instantly identify **which processes consume the most CPU or memory**, helping you **debug performance issues** or **verify post-patch system health**.
-
----
-## Q: How to List All Open Network Ports in Linux?
-
----
-
-### 🧠 Overview
-
-Checking **open ports** helps identify which **applications or services are listening for connections**, verify firewall rules, and detect potential **security risks**.
-Linux provides multiple tools — like `ss`, `netstat`, `lsof`, and `nmap` — to list active ports and their associated processes.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* Each network service binds to a **port number** (e.g., `22` for SSH, `80` for HTTP).
-* The **kernel** maintains socket state information, visible via `/proc/net` or utilities.
-* Tools like `ss` and `lsof` query the kernel to show **listening (LISTEN)** and **active (ESTABLISHED)** sockets.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Modern Way (Recommended) — Using `ss`
+🧩 **Examples**
 
 ```bash
-sudo ss -tuln
+ln -s /var/log/nginx/access.log access.log
+ln -s /opt/app/config config-link
 ```
 
-**Output Example:**
-
-```
-Netid State   Recv-Q Send-Q Local Address:Port   Peer Address:Port
-tcp   LISTEN  0      128    0.0.0.0:22          0.0.0.0:*
-tcp   LISTEN  0      128    127.0.0.1:5432      0.0.0.0:*
-udp   UNCONN  0      0      127.0.0.1:123       0.0.0.0:*
-```
-
-**Flags explained:**
-
-* `-t` → TCP
-* `-u` → UDP
-* `-l` → Listening sockets only
-* `-n` → Don’t resolve names (faster, shows numeric ports)
-
-> ✅ Use `ss` instead of `netstat` — it’s faster and default in modern distros.
+💡 **In short**
+`ln -s <target> <link_name>` creates a symbolic link.
 
 ---
 
-#### 🟢 2. Show Listening Ports with Process Info
+## Q28: What is the purpose of the grep command?
+
+🧠 **Overview**
+`grep` searches text for patterns using regex; heavily used in troubleshooting, logs, and pipelines.
+
+🧩 **Examples**
 
 ```bash
-sudo ss -tulnp
+grep "error" /var/log/syslog
+grep -i "failed" app.log     # case-insensitive
+grep -r "timeout" /etc       # recursive search
 ```
 
-**Output Example:**
-
-```
-Netid State  Local Address:Port  PID/Program name
-tcp   LISTEN 0.0.0.0:22          745/sshd
-tcp   LISTEN 127.0.0.1:5432      1143/postgres
-```
-
-> Displays **which process (PID + name)** is bound to each port.
+💡 **In short**
+grep = pattern search tool for files and command output.
 
 ---
 
-#### 🟢 3. Using Legacy Command — `netstat`
+## Q29: How do you search for a file using the find command?
+
+🧠 **Overview**
+`find` searches files based on name, size, type, modified time, permissions, etc.
+
+🧩 **Examples**
 
 ```bash
-sudo netstat -tuln
+find / -name "nginx.conf"
+find /var/log -type f -size +10M
+find . -mtime -1               # modified in last 24h
 ```
 
-**Output Example:**
+💡 **In short**
+`find <path> -options` locates files by various attributes.
 
-```
-Proto Recv-Q Send-Q Local Address           Foreign Address         State
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
-```
+---
 
-To include process names:
+## Q30: What does the cat command do?
+
+🧠 **Overview**
+`cat` displays, concatenates, or creates files.
+
+🧩 **Examples**
 
 ```bash
-sudo netstat -tulnp
+cat file.txt
+cat file1 file2 > combined.txt
 ```
 
-> ⚠️ `netstat` is part of the **net-tools** package (deprecated on modern distros).
+💡 **In short**
+`cat` reads or merges files; simplest file viewer.
 
 ---
 
-#### 🟢 4. Using `lsof` (List Open Files)
+## Q31: What is the difference between cat, less, more, and head commands?
+
+📋 **Comparison Table**
+
+| Command          | Purpose                        | Behavior               |
+| ---------------- | ------------------------------ | ---------------------- |
+| **cat**          | Print entire file              | No paging              |
+| **less**         | View with scroll (recommended) | Move up/down freely    |
+| **more**         | View with paging               | Forward only           |
+| **head**         | Show first N lines             | Default 10 lines       |
+| **tail** (bonus) | Show last N lines              | Use `tail -f` for logs |
+
+🧩 **Examples**
 
 ```bash
-sudo lsof -i -P -n
+less /var/log/messages
+head -20 file.txt
+tail -f app.log
 ```
 
-**Output Example:**
+💡 **In short**
+Use `less` for large files; `head`/`tail` for quick previews; `cat` for small outputs.
 
-```
-COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-sshd      745 root   3u  IPv4  18425      0t0  TCP *:22 (LISTEN)
-nginx    1234 root   6u  IPv4  19726      0t0  TCP *:80 (LISTEN)
-```
+---
 
-Filter for specific port:
+## Q32: How do you view the last few lines of a file?
+
+🧠 **Overview**
+Use the `tail` command to see the most recent lines—useful for logs and debugging apps.
+
+🧩 **Examples**
 
 ```bash
-sudo lsof -i :443
+tail file.log            # last 10 lines
+tail -20 file.log        # last 20 lines
+tail -f /var/log/syslog  # live log streaming
 ```
+
+💡 **In short**
+`tail` shows the end of a file; `tail -f` follows updates.
 
 ---
 
-#### 🟢 5. Show Only Open TCP Ports
+## Q33: What is piping (|) in Linux?
+
+🧠 **Overview**
+Piping (`|`) sends the **output of one command as input to another**, enabling powerful command chaining.
+
+⚙️ **How It Works**
+Command1 → output → Command2 → processed output.
+
+🧩 **Examples**
 
 ```bash
-sudo ss -lt
-```
-
-Show UDP ports:
-
-```bash
-sudo ss -lu
-```
-
----
-
-#### 🟢 6. Check Ports by Process Name
-
-```bash
-sudo ss -tulnp | grep nginx
-```
-
-**Output Example:**
-
-```
-tcp   LISTEN  0  128  0.0.0.0:80  0.0.0.0:*  users:(("nginx",pid=1234,fd=6))
-```
-
----
-
-#### 🟢 7. Remote Port Scan (External Check)
-
-```bash
-sudo yum install nmap -y   # or apt install nmap -y
-nmap -sT -p 1-1024 localhost
-```
-
-**Example Output:**
-
-```
-PORT     STATE SERVICE
-22/tcp   open  ssh
-80/tcp   open  http
-5432/tcp open  postgresql
-```
-
-> Great for verifying **firewall exposure** and external accessibility.
-
----
-
-### 📋 Common Default Service Ports
-
-| Port | Protocol | Common Service           |
-| ---- | -------- | ------------------------ |
-| 22   | TCP      | SSH                      |
-| 80   | TCP      | HTTP                     |
-| 443  | TCP      | HTTPS                    |
-| 3306 | TCP      | MySQL                    |
-| 5432 | TCP      | PostgreSQL               |
-| 8080 | TCP      | Tomcat / App Server      |
-| 9090 | TCP      | Prometheus / App Metrics |
-
----
-
-### ✅ Best Practices
-
-* 🧩 Use `ss -tulnp` for fast, detailed local port checks.
-* 🔒 Limit open ports using **firewalld** or **ufw** — principle of least exposure.
-* 🧠 Periodically scan with **nmap** to detect unexpected services.
-* ⚙️ Integrate port monitoring in **CloudWatch / Prometheus** for real-time visibility.
-* 🚨 In production, alert on any new port opened outside maintenance windows.
-
----
-
-### 💡 In short
-
-Use `sudo ss -tulnp` to list **all open ports with their owning processes**.
-For external visibility, run an **nmap** scan.
-Together, these commands help verify **network exposure**, detect **rogue services**, and maintain **secure, compliant environments**.
-
----
-
-## Q: How to Check Which Process Is Using a Specific Port (e.g., 8080) in Linux?
-
----
-
-### 🧠 Overview
-
-If a port like **8080** is already in use, your application (e.g., Tomcat, Jenkins, Nginx) may fail to start.
-You can identify **which process (PID/program)** owns that port using built-in tools such as `ss`, `lsof`, or `netstat`.
-
----
-
-### ⚙️ Purpose / How It Works
-
-Every listening socket is associated with:
-
-* A **protocol** (TCP/UDP)
-* A **port number** (e.g., 8080)
-* A **process ID (PID)** and program that opened it
-
-Linux exposes this mapping via `/proc/net/tcp` and tools that read it.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Using `ss` (Modern & Fast)
-
-```bash
-sudo ss -ltnp | grep 8080
-```
-
-**Example Output:**
-
-```
-LISTEN 0 128 0.0.0.0:8080  0.0.0.0:*  users:(("java",pid=1234,fd=6))
-```
-
-**Explanation:**
-
-* `LISTEN` → socket is actively accepting connections
-* `java` → process name
-* `pid=1234` → process ID
-
-> ✅ Preferred method on modern systems (`ss` replaces `netstat`).
-
----
-
-#### 🟢 2. Using `lsof` (List Open Files)
-
-```bash
-sudo lsof -i :8080
-```
-
-**Example Output:**
-
-```
-COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-java    1234 root   6u  IPv6  19726      0t0  TCP *:8080 (LISTEN)
-```
-
-**Breakdown:**
-
-* `COMMAND` → name of the executable
-* `PID` → process ID
-* `USER` → process owner
-* `NAME` → port & protocol (e.g., `TCP *:8080`)
-
-> 💡 Works on both **TCP** and **UDP** ports.
-
----
-
-#### 🟢 3. Using `netstat` (Legacy Tool)
-
-```bash
-sudo netstat -tulnp | grep 8080
-```
-
-**Example Output:**
-
-```
-tcp   0   0 0.0.0.0:8080   0.0.0.0:*   LISTEN   1234/java
-```
-
-> ⚠️ Requires `net-tools` package (`apt install net-tools -y`).
-
----
-
-#### 🟢 4. Verify Process Info with `ps`
-
-Once you have the PID:
-
-```bash
-ps -fp 1234
-```
-
-**Example Output:**
-
-```
-UID   PID  PPID  C STIME TTY   TIME CMD
-root 1234     1  2 10:12 ?     00:15:02 /usr/bin/java -jar /opt/jenkins.war
-```
-
-> ✅ Confirms **which application** and **how it was started**.
-
----
-
-#### 🟢 5. Using `fuser` (Quick Check)
-
-```bash
-sudo fuser 8080/tcp
-```
-
-**Example Output:**
-
-```
-8080/tcp: 1234
-```
-
-Then:
-
-```bash
-ps -p 1234 -o pid,comm,cmd
-```
-
-**Output:**
-
-```
-PID  COMMAND  CMD
-1234 java     /usr/bin/java -jar /opt/app.jar
-```
-
-> ⚙️ Simple and fast when only the PID is needed.
-
----
-
-#### 🟢 6. Find All Listening Processes (Optional)
-
-```bash
-sudo ss -tulnp
-```
-
-> Displays all open ports and their associated processes.
-
----
-
-### 📋 Command Comparison
-
-| Command          | Purpose       | Output Includes            |                   |
-| ---------------- | ------------- | -------------------------- | ----------------- |
-| `ss -ltnp        | grep 8080`    | Modern, fast               | Process name, PID |
-| `lsof -i :8080`  | Most detailed | PID, user, file descriptor |                   |
-| `netstat -tulnp  | grep 8080`    | Legacy                     | PID/program       |
-| `fuser 8080/tcp` | Lightweight   | PID only                   |                   |
-
----
-
-### ✅ Best Practices
-
-* 🧩 Always confirm **PID → Command mapping** with `ps` before killing or restarting.
-* 🔒 Avoid killing system daemons (e.g., `systemd`, `dockerd`) accidentally.
-* ⚙️ For app conflicts (e.g., Jenkins/Tomcat), reconfigure to use alternate ports in `/etc/default/<app>` or config files.
-* 🧠 In CI/CD or AWS EC2, integrate port usage checks before deployments to avoid service collisions.
-
----
-
-### 💡 In short
-
-Use `sudo ss -ltnp | grep 8080` or `sudo lsof -i :8080` to instantly find **which process is using port 8080**, along with its **PID and program name**.
-Then verify with `ps -fp <PID>` — a quick, safe way to resolve **port conflicts or blocked deployments**.
-
----
-## Q: How to View Logs in Linux?
-
----
-
-### 🧠 Overview
-
-Logs are the **first place to check** when troubleshooting errors, performance issues, or patch failures in Linux.
-Most logs are stored in **`/var/log/`**, managed by **rsyslog** or **systemd-journald**, and can be viewed with standard commands like `cat`, `less`, `tail`, or `journalctl`.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* **System logs** record kernel, authentication, service, and application events.
-* **rsyslog / journald** collect logs from all sources into central files or the journal.
-* Tools like `tail` and `journalctl` let you **view, filter, and follow logs in real time**.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. View System Log Files
-
-```bash
-cd /var/log
-ls -lh
-```
-
-**Common log files:**
-
-| Log File                               | Purpose                                        |
-| -------------------------------------- | ---------------------------------------------- |
-| `/var/log/messages`                    | General system messages (most distros)         |
-| `/var/log/syslog`                      | System log (Debian/Ubuntu)                     |
-| `/var/log/secure`                      | Security and authentication logs (RHEL/CentOS) |
-| `/var/log/auth.log`                    | Authentication log (Debian/Ubuntu)             |
-| `/var/log/dmesg`                       | Kernel boot logs                               |
-| `/var/log/cron`                        | Cron job logs                                  |
-| `/var/log/httpd/` or `/var/log/nginx/` | Web server logs                                |
-| `/var/log/amazon/ssm/`                 | AWS Systems Manager Agent logs                 |
-
----
-
-#### 🟢 2. View Logs with `cat`, `less`, or `more`
-
-```bash
-sudo cat /var/log/syslog
-sudo less /var/log/messages
-```
-
-> Use `less` for large logs — supports scrolling and search (`/keyword`).
-
----
-
-#### 🟢 3. Follow Logs in Real-Time
-
-```bash
-sudo tail -f /var/log/messages
-```
-
-**Output Example:**
-
-```
-Nov 11 12:42:01 ip-10-0-1-21 systemd[1]: Started Session 3921 of user ec2-user.
-Nov 11 12:42:05 ip-10-0-1-21 sshd[2209]: Accepted publickey for ec2-user
-```
-
-> Useful for monitoring logs **during patching or app deployment**.
-
----
-
-#### 🟢 4. Filter Logs by Keyword
-
-```bash
-sudo grep "error" /var/log/syslog
-sudo grep -i "fail" /var/log/messages
-```
-
-> Use `grep -i` for **case-insensitive** search.
-
----
-
-#### 🟢 5. Check Boot & Kernel Logs
-
-```bash
+ps aux | grep nginx
+cat access.log | wc -l
 dmesg | less
 ```
 
-**Example Output:**
-
-```
-[    0.000000] Linux version 5.15.0-122-generic (buildd@lcy02-amd64)
-[    2.103142] EXT4-fs (xvda1): mounted filesystem with ordered data mode.
-```
-
-> Shows **hardware, kernel, and driver messages** since last boot.
+💡 **In short**
+Pipes connect commands together for streamlined processing.
 
 ---
 
-#### 🟢 6. View Service-Specific Logs (systemd)
+## Q34: What is output redirection (>, >>) in Linux?
 
-```bash
-sudo journalctl -u sshd
-```
+🧠 **Overview**
+Redirection writes command output to files instead of the terminal.
 
-**Example Output:**
+📋 **Redirection Table**
 
-```
-Nov 11 12:42:01 ip-10-0-1-21 sshd[2209]: Accepted password for ec2-user from 10.0.0.15 port 50222 ssh2
-```
+| Operator | Action                     |
+| -------- | -------------------------- |
+| `>`      | Overwrite file with output |
+| `>>`     | Append output to file      |
+| `2>`     | Redirect errors            |
+| `&>`     | Redirect stdout + stderr   |
 
-> `-u` = filter by **unit/service name**
-> Works for any service (e.g., `nginx`, `docker`, `sshd`, `ssm-agent`)
-
----
-
-#### 🟢 7. View Logs Since Specific Time
+🧩 **Examples**
 
 ```bash
-sudo journalctl --since "2025-11-10 10:00:00"
-sudo journalctl --since "1 hour ago"
+echo "hello" > file.txt      # overwrite
+echo "more" >> file.txt      # append
+ls /notfound 2> errors.log   # capture errors
 ```
 
-#### 🟢 8. Real-Time Logs (journalctl)
-
-```bash
-sudo journalctl -f
-```
-
-> Equivalent to `tail -f`, but includes **systemd journal entries**.
+💡 **In short**
+Use `>` to overwrite, `>>` to append.
 
 ---
 
-#### 🟢 9. Application Logs
+## Q35: How do you check running processes?
 
-Application logs are usually in:
+🧠 **Overview**
+Use `ps`, `top`, or `htop` to list active processes.
 
-* `/var/log/<app-name>/`
-* Custom directories (e.g., `/opt/myapp/logs/`)
-* Or configured via environment variables/log frameworks (e.g., Log4j, syslog)
-
-**Example:**
+🧩 **Examples**
 
 ```bash
-sudo tail -n 100 /var/log/nginx/access.log
+ps aux            # all processes
+ps -ef            # full-format listing
+top               # real-time view
 ```
 
----
-
-### 📋 Command Summary
-
-| Command                          | Description                  | Example                 |
-| -------------------------------- | ---------------------------- | ----------------------- |
-| `ls /var/log`                    | List available log files     | Identify what’s logged  |
-| `cat /var/log/messages`          | View log contents            | Simple view             |
-| `less /var/log/syslog`           | Scroll/search logs           | `/error`, `q` to exit   |
-| `tail -f /var/log/messages`      | Follow new logs in real-time | Live monitoring         |
-| `grep "error" /var/log/messages` | Search for keywords          | Filtered view           |
-| `journalctl -u sshd`             | Logs for specific service    | systemd logs            |
-| `journalctl -f`                  | Follow journal logs live     | Equivalent to `tail -f` |
-| `dmesg`                          | Kernel/boot logs             | Hardware and drivers    |
+💡 **In short**
+`ps` = snapshot; `top` = live process view.
 
 ---
 
-### ✅ Best Practices
+## Q36: What is the difference between ps and top commands?
 
-* ⚙️ Use `journalctl -u <service>` for **systemd-managed apps**.
-* 🧠 Monitor `/var/log/messages` or `/var/log/syslog` for system issues.
-* 🔒 Secure logs — restrict access to `/var/log` (contains sensitive info).
-* 📦 Rotate logs automatically with `logrotate` to avoid disk full issues.
-* 🚀 Send logs to **CloudWatch Logs**, **ELK**, or **Splunk** for centralized visibility.
-* 🧩 Use `tail -f` during patching or deployments to watch live events.
+📋 **Comparison**
 
----
+| Command | Purpose                 | Behavior               |
+| ------- | ----------------------- | ---------------------- |
+| **ps**  | Lists current processes | One-time snapshot      |
+| **top** | Monitors processes live | Refreshes continuously |
 
-### 💡 In short
-
-Use `sudo tail -f /var/log/messages` for live logs, `journalctl -u <service>` for systemd service logs, and `grep "error"` to search failures.
-All Linux logs reside in **`/var/log/`**, and mastering these tools is essential for **debugging, monitoring, and auditing production systems**.
-
---- 
-## Q: How to Find a File by Name in Linux?
-
----
-
-### 🧠 Overview
-
-Finding files quickly is a key Linux skill — useful for **locating configuration files**, **logs**, **scripts**, or **binaries**.
-Linux provides several commands (`find`, `locate`, `ls`, `grep`) to search for files **by name**, **extension**, or **pattern** efficiently.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The `find` command searches the filesystem recursively by checking directories and file metadata.
-* The `locate` command uses a prebuilt database for faster lookups (via `updatedb`).
-* Both can search using wildcards (`*`, `?`) and filters (e.g., size, date, type).
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Search by Exact Name (Case-Sensitive)
+🧩 **Examples**
 
 ```bash
-find / -name "myapp.conf" 2>/dev/null
+ps aux | grep ssh
+top
 ```
 
-**Example Output:**
-
-```
-/etc/myapp/myapp.conf
-```
-
-> `2>/dev/null` hides permission errors for cleaner output.
+💡 **In short**
+`ps` for filtering and scripting; `top` for real-time monitoring.
 
 ---
 
-#### 🟢 2. Case-Insensitive Search
+## Q37: How do you kill a process in Linux?
+
+🧠 **Overview**
+Use `kill` with the process ID (PID).
+
+🧩 **Examples**
 
 ```bash
-find /etc -iname "nginx.conf"
+ps aux | grep app
+kill 1234             # TERM signal
+kill -9 1234          # force kill
 ```
 
-**Output:**
-
-```
-/etc/nginx/nginx.conf
-```
-
-> `-iname` ignores case differences (useful for mixed naming).
+💡 **In short**
+Identify PID → kill PID; use `-9` only if graceful kill fails.
 
 ---
 
-#### 🟢 3. Search by Partial Match (Wildcard)
+## Q38: What is the difference between kill, killall, and pkill?
+
+📋 **Comparison Table**
+
+| Command     | Kills By        | Use Case                                  |
+| ----------- | --------------- | ----------------------------------------- |
+| **kill**    | PID             | Precise targeting                         |
+| **killall** | Process name    | Kill all instances of a program           |
+| **pkill**   | Name or pattern | Pattern-based filtering (regex supported) |
+
+🧩 **Examples**
 
 ```bash
-find /var/log -name "*error*"
+kill 1234
+killall nginx
+pkill -f "python app.py"
 ```
 
-**Output Example:**
-
-```
-/var/log/httpd/error.log
-/var/log/nginx/error.log
-```
-
-> Matches any file with “error” in its name.
+💡 **In short**
+kill = PID, killall = name, pkill = pattern.
 
 ---
 
-#### 🟢 4. Find by File Extension
+## Q39: How do you check disk space usage?
+
+🧠 **Overview**
+Use `df` (disk filesystem usage) and `du` (directory usage).
+
+🧩 **Examples**
 
 ```bash
-find /opt -type f -name "*.sh"
+df -h                 # disk usage per filesystem
+du -sh /var/log       # size of directory
+du -sh *              # size of all items in folder
 ```
 
-**Output Example:**
-
-```
-/opt/scripts/deploy.sh
-/opt/tools/startup.sh
-```
-
-> `-type f` restricts search to files (omit for both files & directories).
+💡 **In short**
+`df` = disk, `du` = directory/file sizes.
 
 ---
 
-#### 🟢 5. Search by Directory Name
+## Q40: How do you check memory usage in Linux?
+
+🧠 **Overview**
+Memory usage can be checked via `free`, `top`, `vmstat`, or `/proc/meminfo`.
+
+🧩 **Examples**
 
 ```bash
-find / -type d -name "backup"
+free -h               # human-readable memory usage
+top                   # live memory usage
+cat /proc/meminfo     # detailed stats
+vmstat -s             # system memory summary
 ```
 
-**Output:**
-
-```
-/home/ec2-user/backup
-/var/tmp/backup
-```
-
-> Use `-type d` for **directories only**.
+💡 **In short**
+Use `free -h` for quick view, `top` for real-time monitoring.
 
 ---
 
-#### 🟢 6. Using `locate` (Fastest Method)
+## Q41: What is a process in Linux and what states can it be in?
+
+🧠 **Overview**
+A process is an executing instance of a program. The kernel tracks each process with a PID and transitions it through different states.
+
+📋 **Common Process States**
+
+| State                         | Meaning                                                  |
+| ----------------------------- | -------------------------------------------------------- |
+| **R (Running)**               | Actively executing or ready to run                       |
+| **S (Sleeping)**              | Waiting for an event (most processes)                    |
+| **D (Uninterruptible sleep)** | Waiting on I/O (disk, network)                           |
+| **T (Stopped)**               | Paused (SIGSTOP)                                         |
+| **Z (Zombie)**                | Process finished but parent hasn’t collected exit status |
+
+🧩 **Example**
 
 ```bash
-sudo updatedb     # Update database (if needed)
-locate myapp.conf
+ps -eo pid,stat,cmd
 ```
 
-**Output:**
-
-```
-/etc/myapp/myapp.conf
-/usr/local/etc/myapp.conf
-```
-
-> ⚙️ Faster than `find`, but results depend on the **last database update**.
+💡 **In short**
+Process = running program; processes move through states like running, sleeping, or zombie.
 
 ---
 
-#### 🟢 7. Search Specific Path + Depth
+## Q42: What is the difference between a process and a thread?
+
+📋 **Comparison Table**
+
+| Aspect        | Process          | Thread                            |
+| ------------- | ---------------- | --------------------------------- |
+| Memory        | Own memory space | Shares memory with parent process |
+| Overhead      | High             | Low                               |
+| Isolation     | Strong           | Weak                              |
+| Communication | IPC needed       | Shared memory                     |
+
+🧠 **Key Point**
+Threads are lightweight units within a process; processes are isolated from each other.
+
+💡 **In short**
+Process = independent execution; Thread = lightweight execution inside a process.
+
+---
+
+## Q43: What is a zombie process and how do you identify it?
+
+🧠 **Overview**
+A zombie process is a completed process whose parent hasn't read its exit status. It consumes no CPU or memory (except a tiny entry in the process table).
+
+⚙️ **Identification**
 
 ```bash
-find /etc -maxdepth 2 -name "*.conf"
+ps aux | grep Z
+ps -eo pid,ppid,stat,cmd | grep ' Z '
 ```
 
-> Limits search recursion to 2 levels under `/etc` for performance.
+State appears as **Z** or **defunct**.
 
----
-
-#### 🟢 8. Combine Search + Command (e.g., display details)
-
-```bash
-find /var/log -name "*.log" -exec ls -lh {} \;
-```
-
-**Output Example:**
-
-```
--rw-r--r-- 1 root root 2.1G /var/log/messages
--rw-r--r-- 1 root root 512M /var/log/secure
-```
-
-> Lists size and ownership of all `.log` files.
+💡 **In short**
+Zombie = dead process waiting for parent cleanup.
 
 ---
 
-#### 🟢 9. Search for Recently Modified Files
+## Q44: What is an orphan process?
 
-```bash
-find /var/log -name "*.log" -mtime -1
-```
+🧠 **Overview**
+An orphan process is one whose parent has exited. These are adopted by **init/systemd**, which becomes the new parent.
 
-> Shows files modified in the last **1 day** (`-mtime -1`).
+⚙️ **How It Works**
 
----
+* Orphan survives parent termination.
+* systemd reaps it when it finishes.
 
-### 📋 Command Comparison
-
-| Command                   | Speed  | Case        | Search Type    | Notes               |
-| ------------------------- | ------ | ----------- | -------------- | ------------------- |
-| `find / -name <file>`     | Medium | Sensitive   | File/directory | Most flexible       |
-| `find / -iname <file>`    | Medium | Insensitive | File/directory | Case-insensitive    |
-| `locate <file>`           | Fast   | Sensitive   | File only      | Uses prebuilt index |
-| `grep -R "pattern" /path` | Slow   | N/A         | Inside files   | For content search  |
+💡 **In short**
+Orphan = parent died; systemd adopts and manages it.
 
 ---
 
-### ✅ Best Practices
+## Q45: What is a daemon process in Linux?
 
-* ⚙️ Use `find` for **accurate live searches**, `locate` for **quick lookups**.
-* 🧠 Combine with `grep` to find both **filename** and **content**:
+🧠 **Overview**
+A daemon is a background service detached from any terminal—e.g., SSHD, CRON, systemd services.
 
-  ```bash
-  find /etc -type f -name "*.conf" -exec grep -H "Listen" {} \;
-  ```
-* 🚀 Exclude system directories to speed up:
+⚙️ **Characteristics**
 
-  ```bash
-  find / -path /proc -prune -o -name "*.log" -print
-  ```
-* 🔒 Always include `2>/dev/null` to suppress permission errors.
+* Starts at boot
+* Runs in background
+* No controlling terminal
 
----
-
-### 💡 In short
-
-Use `find / -name "<filename>"` to locate files instantly across the system.
-For faster indexed searches, use `locate <filename>`.
-Together, they’re your go-to tools for **finding configuration files, logs, or scripts** quickly and safely on any Linux server.
-
----
-## Q: How Do You Check Which User Executed a Command in Linux?
-
----
-
-### 🧠 Overview
-
-Identifying **who executed a command** is key for **auditing**, **incident response**, and **compliance**.
-Linux tracks user activity through **shell history**, **audit logs**, and **system logs** — allowing you to trace **commands, timestamps, and user IDs**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When a user runs a command:
-
-* The shell (like **bash**) logs it in `~/.bash_history`.
-* System-level actions (e.g., `sudo`, `su`, or privileged commands) are recorded in `/var/log/secure` or `/var/log/auth.log`.
-* Audit frameworks like **auditd** capture detailed events — including command, user, PID, and timestamp.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check Bash History (Per User)
-
-```bash
-cat ~/.bash_history
-```
-
-**Example Output:**
-
-```
-sudo systemctl restart nginx
-yum update -y
-rm -rf /tmp/test
-```
-
-> Shows commands executed by the **current user**.
-
-Check another user’s history:
-
-```bash
-sudo cat /home/ec2-user/.bash_history
-```
-
-> ⚙️ Note: Bash history is updated **after session logout** unless `PROMPT_COMMAND` is configured to log in real-time.
-
----
-
-#### 🟢 2. Check `sudo` Command Logs
-
-For privileged commands executed via `sudo`:
-
-```bash
-sudo cat /var/log/secure     # RHEL/CentOS/Amazon Linux
-sudo cat /var/log/auth.log   # Ubuntu/Debian
-```
-
-**Example Output:**
-
-```
-Nov 11 10:52:14 ip-10-0-1-20 sudo: ec2-user : TTY=pts/0 ; PWD=/home/ec2-user ; USER=root ; COMMAND=/bin/systemctl restart nginx
-```
-
-> Shows:
-
-* Who executed it → `ec2-user`
-* As which user → `root`
-* What command → `systemctl restart nginx`
-
----
-
-#### 🟢 3. Check User Login & Session Info
-
-```bash
-last
-```
-
-**Example Output:**
-
-```
-ec2-user pts/0 10.0.0.25 Mon Nov 11 10:42   still logged in
-root     pts/1 10.0.0.30 Mon Nov 11 09:10 - 09:32  (00:22)
-```
-
-> Correlate timestamps with commands from logs for attribution.
-
----
-
-#### 🟢 4. Using Auditd (If Enabled)
-
-```bash
-sudo ausearch -x systemctl
-```
-
-**Example Output:**
-
-```
-type=EXECVE msg=audit(1731310210.123:88): argc=3 a0="systemctl" a1="restart" a2="nginx"
-type=SYSCALL msg=audit(1731310210.123:88): pid=2178 uid=1000 auid=1000 comm="systemctl" exe="/bin/systemctl"
-```
-
-> `uid`/`auid` → the user who executed the command.
-> Requires **auditd** to be running:
-
-```bash
-sudo systemctl start auditd
-```
-
----
-
-#### 🟢 5. Search for Command in Logs
-
-```bash
-sudo grep "systemctl restart nginx" /var/log/secure
-```
-
-> Finds who ran a specific command and when.
-
----
-
-#### 🟢 6. Live Monitoring with `auditd`
-
-To track all executed commands:
-
-```bash
-sudo auditctl -a always,exit -F arch=b64 -S execve -k command_log
-ausearch -k command_log
-```
-
-> Logs every executed command system-wide (useful for production audit trails).
-
----
-
-#### 🟢 7. View Active Users and TTYs
-
-```bash
-who
-```
-
-**Output Example:**
-
-```
-ec2-user  pts/0  2025-11-11 10:40 (10.0.0.25)
-```
-
-> Helps identify which user session is currently active when a command was executed interactively.
-
----
-
-### 📋 Key Log Files
-
-| File                       | Purpose                                     | Typical Distro           |
-| -------------------------- | ------------------------------------------- | ------------------------ |
-| `/var/log/secure`          | Records `sudo`, `su`, authentication events | RHEL/CentOS/Amazon Linux |
-| `/var/log/auth.log`        | Authentication & sudo logs                  | Ubuntu/Debian            |
-| `/var/log/audit/audit.log` | Full command audit via `auditd`             | All (if enabled)         |
-| `~/.bash_history`          | Per-user shell command history              | All                      |
-| `/root/.bash_history`      | Root user command history                   | All                      |
-
----
-
-### ✅ Best Practices
-
-* 🧩 **Enable `auditd`** for centralized, tamper-resistant command logging.
-* ⚙️ Configure **real-time bash logging**:
-
-  ```bash
-  export PROMPT_COMMAND='history -a'
-  ```
-* 🔒 Restrict write access to history/log files (`chmod 600 ~/.bash_history`).
-* 📦 Forward logs to **CloudWatch**, **Splunk**, or **SIEM** for long-term storage.
-* 🧠 Regularly review `/var/log/secure` for unexpected privilege escalations.
-
----
-
-### 💡 In short
-
-To check **who executed a command**:
-
-* Use `~/.bash_history` for user activity,
-* `/var/log/secure` or `/var/log/auth.log` for `sudo` actions,
-* and `auditd` (`ausearch`) for full forensic-level tracking.
-  Together, these provide a complete audit trail of **what was run, by whom, and when**.
-
----
-## Q: How Do You Check System Resource Usage History in Linux?
-
----
-
-### 🧠 Overview
-
-System resource history (CPU, memory, disk, network) helps you **analyze performance trends**, **debug past incidents**, and **verify patch or deployment impacts**.
-Linux provides **CLI tools**, **system logs**, and **persistent monitoring daemons** (like `sar`, `sysstat`, or `atop`) to review **historical usage data**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* Tools like **sysstat (sar)** collect periodic snapshots of system metrics and save them in `/var/log/sa/`.
-* **Cloud/agent tools** (e.g., AWS CloudWatch, Prometheus) export metrics for long-term retention.
-* You can view CPU, memory, and I/O history directly from stored data or monitoring dashboards.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. View Historical Resource Usage via `sar` (sysstat)
-
-Install if missing:
-
-```bash
-sudo yum install sysstat -y     # RHEL/CentOS/Amazon Linux
-sudo apt install sysstat -y     # Ubuntu/Debian
-sudo systemctl enable --now sysstat
-```
-
-##### a) CPU Usage History
-
-```bash
-sar -u 1 3
-```
-
-**Output Example:**
-
-```
-Linux 5.15.0-122-generic (ip-10-0-1-10)  11/11/2025
-12:01:01 AM     CPU     %user  %nice %system %iowait %steal %idle
-12:10:01 AM     all      3.12   0.01    1.05    0.02    0.00  95.80
-```
-
-To view data from previous days:
-
-```bash
-sar -u -f /var/log/sa/sa10
-```
-
-> (10 = 10th day of the month)
-
----
-
-##### b) Memory Usage History
-
-```bash
-sar -r -f /var/log/sa/sa10
-```
-
-**Output Example:**
-
-```
-12:00:01 AM kbmemfree kbmemused  %memused kbbuffers kbcached
-12:10:01 AM   1320944   6578044     83.3     25896   310428
-```
-
----
-
-##### c) Disk I/O Usage History
-
-```bash
-sar -d -f /var/log/sa/sa10
-```
-
-> Identifies disk throughput trends and busy devices.
-
----
-
-##### d) Network Traffic History
-
-```bash
-sar -n DEV -f /var/log/sa/sa10
-```
-
-**Output Example:**
-
-```
-12:10:01 AM  eth0  rxpck/s  txpck/s  rxkB/s  txkB/s
-12:10:01 AM  eth0    13.02    14.05     1.2     1.1
-```
-
----
-
-#### 🟢 2. View Historical Load Average (From Logs)
-
-```bash
-grep "load average" /var/log/syslog
-```
-
-or
-
-```bash
-grep "load average" /var/log/messages
-```
-
-**Output Example:**
-
-```
-Nov 11 03:02:01 ip-10-0-1-10 systemd[1]: Started Session load average: 1.02, 0.78, 0.45
-```
-
----
-
-#### 🟢 3. Using `atop` for Process-Level History
-
-Install and enable service:
-
-```bash
-sudo apt install atop -y
-sudo systemctl enable --now atop
-```
-
-View yesterday’s performance log:
-
-```bash
-sudo atop -r /var/log/atop/atop_20251110
-```
-
-> Use `t` (time), `m` (memory), `d` (disk), `n` (network) to filter stats.
-> Great for post-incident root cause analysis (e.g., “what spiked at midnight?”).
-
----
-
-#### 🟢 4. Using Cloud-Native Monitoring (AWS Example)
-
-**Amazon CloudWatch Metrics**
-
-```bash
-# View CPU Utilization for an EC2 instance
-aws cloudwatch get-metric-statistics \
-  --metric-name CPUUtilization \
-  --namespace AWS/EC2 \
-  --dimensions Name=InstanceId,Value=i-0123456789abcdef0 \
-  --statistics Average \
-  --period 300 \
-  --start-time 2025-11-10T00:00:00Z \
-  --end-time 2025-11-11T00:00:00Z
-```
-
-> Returns 5-minute average CPU usage across a 24-hour window.
-
----
-
-#### 🟢 5. Historical Data from `/proc/stat` or `/proc/meminfo` (Real-Time Snapshot)
-
-```bash
-cat /proc/stat     # CPU stats since boot
-cat /proc/meminfo  # Memory stats
-```
-
-> Combine with cron-based scripts for your own custom logs.
-
----
-
-### 📋 Common Tools Summary
-
-| Tool                            | Type                                | Data Retention            | Use Case                                   |
-| ------------------------------- | ----------------------------------- | ------------------------- | ------------------------------------------ |
-| `sar`                           | System activity collector (sysstat) | 7–30 days (configurable)  | Historical CPU, memory, disk, network      |
-| `atop`                          | Detailed per-process history        | Configurable (daily logs) | Root cause analysis, performance debugging |
-| `vmstat`, `iostat`, `mpstat`    | Real-time snapshot tools            | N/A                       | Quick performance checks                   |
-| `journalctl`                    | System log                          | Days to weeks             | Event logs, not metrics                    |
-| **AWS CloudWatch / Prometheus** | Cloud/agent metrics                 | Long-term                 | Graphs, alerts, trend analysis             |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Enable **sysstat (`sar`)** on all critical servers — lightweight and reliable.
-* 🧠 Retain at least **7 days of `sar` logs** for post-patch or incident reviews.
-* 📊 Use **atop** for deep-dive per-process history.
-* 🚀 For AWS, integrate **CloudWatch Agent** or **Prometheus Node Exporter** for long-term retention.
-* 🔒 Restrict access to logs — they may reveal system usage and credentials.
-
----
-
-### 💡 In short
-
-Use `sar -u`, `sar -r`, `sar -d`, and `sar -n` to review **CPU, memory, disk, and network history**.
-For deep analysis, use `atop` (local) or **CloudWatch** (AWS).
-Together, these tools give a complete picture of your system’s **past performance and resource utilization trends** — critical for capacity planning and post-incident reviews.
-
----
-## Q: How to Find Large Files Consuming Disk Space in Linux?
-
----
-
-### 🧠 Overview
-
-Finding **large files** is essential when your server’s disk is full — especially before patching, backups, or deployments.
-Linux provides several built-in commands like `find`, `du`, and `ls` to identify large files and their locations quickly.
-
----
-
-### ⚙️ Purpose / How It Works
-
-The Linux filesystem stores metadata (size, owner, timestamp) for every file.
-Tools like `find` and `du` recursively scan directories and report file sizes so you can identify and clean up space hogs — like **old logs, dumps, and backups**.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Find Files Larger Than 1 GB
-
-```bash
-sudo find / -type f -size +1G -exec ls -lh {} \; 2>/dev/null
-```
-
-**Example Output:**
-
-```
--rw-r--r-- 1 root root 2.5G /var/log/messages.1
--rw-r--r-- 1 ec2-user ec2-user 1.2G /home/ec2-user/dump.sql
-```
-
-> `-size +1G` → files >1 GB
-> `-type f` → only files
-> `2>/dev/null` → suppress permission errors
-
----
-
-#### 🟢 2. List Top 10 Largest Files (Human Readable)
-
-```bash
-sudo find / -type f -exec du -h {} + 2>/dev/null | sort -hr | head -10
-```
-
-**Example Output:**
-
-```
-3.8G /var/lib/mysql/ibdata1
-2.5G /var/log/messages.1
-1.2G /opt/app/dump.sql
-```
-
----
-
-#### 🟢 3. Check Largest Directories at Root Level
-
-```bash
-sudo du -h --max-depth=1 / | sort -hr | head
-```
-
-**Example Output:**
-
-```
-4.3G    /var
-2.8G    /usr
-1.2G    /opt
-```
-
-> Identify **which directory** is consuming space before diving deeper.
-
----
-
-#### 🟢 4. Analyze Disk Usage by Directory (Recursive)
-
-```bash
-sudo du -ah /var | sort -hr | head -20
-```
-
-> Displays top 20 largest files/directories under `/var`.
-
----
-
-#### 🟢 5. Check Large Log Files (Common Disk Hogs)
-
-```bash
-sudo du -h /var/log | sort -hr | head -10
-```
-
-**Example Output:**
-
-```
-2.5G /var/log/messages.1
-1.8G /var/log/secure
-```
-
-> Often `/var/log`, `/opt`, or `/home` contain oversized logs or dumps.
-
----
-
-#### 🟢 6. Using `ncdu` (Interactive Disk Analyzer)
-
-```bash
-sudo apt install ncdu -y      # Ubuntu/Debian
-sudo yum install ncdu -y      # RHEL/Amazon Linux
-sudo ncdu /
-```
-
-> Opens a **TUI interface** showing directories sorted by size — easy to navigate and delete files safely.
-
----
-
-#### 🟢 7. Check Large Files in Home Directory
-
-```bash
-find /home -type f -size +500M -exec ls -lh {} \; | awk '{ print $5, $9 }' | sort -hr
-```
-
-> Quick check for user-uploaded large files or archives.
-
----
-
-#### 🟢 8. Check Free Disk Space Before Cleanup
-
-```bash
-df -h
-```
-
-**Example Output:**
-
-```
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/xvda1       40G   38G  1.2G  97% /
-```
-
-> Confirms which partition is filling up before deleting files.
-
----
-
-### 📋 Useful File Size Units
-
-| Flag    | Meaning             |
-| ------- | ------------------- |
-| `+1G`   | Larger than 1 GB    |
-| `+500M` | Larger than 500 MB  |
-| `+100K` | Larger than 100 KB  |
-| `-100M` | Smaller than 100 MB |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always check `/var/log`, `/opt`, `/tmp`, and `/home` — most common culprits.
-* 🧩 Compress old logs instead of deleting:
-
-  ```bash
-  sudo gzip /var/log/messages.1
-  ```
-* 🧠 Enable **logrotate** for automatic cleanup.
-* 🔒 Never delete system binaries under `/usr`, `/lib`, or `/bin`.
-* 📊 Use **CloudWatch Agent / Prometheus Node Exporter** to monitor disk usage trends.
-* 🧾 Document cleanup actions for audit traceability (especially on production systems).
-
----
-
-### 💡 In short
-
-Use `find / -type f -size +1G -exec ls -lh {} \;` to locate **large files**, or `du -h --max-depth=1 / | sort -hr` to spot **space-hungry directories**.
-For quick, safe cleanup — use `ncdu`.
-These commands give you full visibility into **what’s consuming disk space** so you can reclaim storage confidently and avoid downtime.
-
----
-## Q: How to Check Running Services in Linux?
-
----
-
-### 🧠 Overview
-
-Checking **running services** helps ensure that critical system components (e.g., `sshd`, `nginx`, `docker`, `ssm-agent`) are **up and active** — especially after **patching, rebooting, or deployments**.
-In modern Linux systems, **`systemd`** manages services, while older ones may use **`service`** or **`init.d`**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* **Systemd-based distros (Amazon Linux 2, Ubuntu ≥16.04, RHEL ≥7)** use `systemctl`.
-* **SysVinit-based systems (older CentOS, RHEL 6)** use `service`.
-* Both display **service status**, **start/stop state**, and **enabled (boot) configuration**.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. List All Active (Running) Services
-
-```bash
-systemctl list-units --type=service --state=running
-```
-
-**Example Output:**
-
-```
-  UNIT                      LOAD   ACTIVE SUB     DESCRIPTION
-  sshd.service              loaded active running OpenSSH server daemon
-  amazon-ssm-agent.service  loaded active running Amazon SSM Agent
-  docker.service            loaded active running Docker Application Container Engine
-```
-
-> Displays only **currently active services** under systemd.
-
----
-
-#### 🟢 2. Check All Services (Running or Stopped)
-
-```bash
-systemctl list-units --type=service
-```
-
-or the concise version:
-
-```bash
-systemctl --type=service --all
-```
-
-> Shows **active, inactive, failed, and disabled** services.
-
----
-
-#### 🟢 3. Check Status of a Specific Service
+🧩 **Examples**
 
 ```bash
 systemctl status sshd
 ```
 
-**Example Output:**
+💡 **In short**
+Daemon = background service performing system tasks.
 
-```
-● sshd.service - OpenSSH server daemon
-   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled)
-   Active: active (running) since Mon 2025-11-11 10:41:34 UTC; 1h 15min ago
- Main PID: 987 (sshd)
-```
-
-> Includes process ID, uptime, and last start time.
-
----
-
-#### 🟢 4. Start / Stop / Restart Services
-
-```bash
-sudo systemctl start nginx
-sudo systemctl stop nginx
-sudo systemctl restart nginx
-```
-
-> Control services interactively or in automation scripts.
-
----
-
-#### 🟢 5. Check Services Enabled on Boot
-
-```bash
-systemctl list-unit-files --type=service | grep enabled
-```
-
-**Example Output:**
-
-```
-sshd.service                 enabled
-docker.service               enabled
-amazon-ssm-agent.service     enabled
-```
-
-> Useful for ensuring **auto-start** after patch reboots.
-
----
-
-#### 🟢 6. For SysVinit-Based Systems (Older OS)
-
-```bash
-service --status-all
-```
-
-**Output Example:**
-
-```
- [ + ]  ssh
- [ + ]  crond
- [ - ]  nginx
-```
-
-> `+` → running, `-` → stopped.
-> To check individual service:
-
-```bash
-service ssh status
-```
-
----
-
-#### 🟢 7. Filter Running Services by Keyword
-
-```bash
-systemctl list-units --type=service --state=running | grep nginx
-```
-
-**Output Example:**
-
-```
-nginx.service  loaded active running  A high performance web server
-```
-
----
-
-#### 🟢 8. Check Failed Services (Post-Patching)
-
-```bash
-systemctl --failed
-```
-
-**Output Example:**
-
-```
-  UNIT              LOAD   ACTIVE SUB    DESCRIPTION
-● nginx.service     loaded failed failed A high performance web server
-```
-
-> ✅ Use this after reboot or patching to detect **failed startup services**.
-
----
-
-#### 🟢 9. Check Service Logs (via systemd)
-
-```bash
-sudo journalctl -u nginx --since "1 hour ago"
-```
-
-> View logs of a specific service to debug startup issues.
-
----
-
-### 📋 Common Services to Monitor
-
-| Service            | Purpose               |
-| ------------------ | --------------------- |
-| `sshd`             | Secure remote access  |
-| `amazon-ssm-agent` | AWS Systems Manager   |
-| `docker`           | Container runtime     |
-| `kubelet`          | Kubernetes node agent |
-| `crond`            | Scheduled jobs        |
-| `nginx` / `httpd`  | Web server            |
-| `rsyslog`          | System logging        |
-| `firewalld`        | Firewall management   |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `systemctl --failed` post-patching to confirm all critical services restarted.
-* 🧠 Enable essential services to **start automatically on boot**:
-
-  ```bash
-  sudo systemctl enable sshd docker amazon-ssm-agent
-  ```
-* 🧩 Monitor service states continuously via **CloudWatch Agent** or **Prometheus Node Exporter**.
-* 🚀 Use `journalctl -u <service>` for **debugging startup failures**.
-* 🔒 Limit unnecessary services to reduce attack surface and resource usage.
-
----
-
-### 💡 In short
-
-Use `systemctl list-units --type=service --state=running` to list **running services**, and `systemctl status <service>` for details.
-For older systems, use `service --status-all`.
-Always verify critical services (like SSH, SSM, Docker) are **running and enabled on boot** after any **patch or reboot** event.
-
----
-## Q: How to Restart a Specific Service in Linux?
-
----
-
-### 🧠 Overview
-
-Restarting a service is a common administrative task to **apply configuration changes**, **recover from failures**, or **refresh a daemon** after an update.
-In modern Linux systems, **`systemd`** is used to manage services via `systemctl`.
-Older systems use the `service` command or `/etc/init.d/` scripts.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When you restart a service:
-
-* The **current process stops** gracefully.
-* The **service configuration** (from `/etc/systemd/system/` or `/etc/init.d/`) is **reloaded**.
-* A **new process starts** under the same service unit, usually logged in `journalctl` or `/var/log/`.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Restart Service (Systemd)
-
-```bash
-sudo systemctl restart nginx
-```
-
-**Example Output:**
-
-```
-# no output means success
-```
-
-To verify:
-
-```bash
-sudo systemctl status nginx
-```
-
-**Output:**
-
-```
-● nginx.service - A high performance web server
-   Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled)
-   Active: active (running) since Tue 2025-11-11 11:30:02 UTC; 2s ago
-```
-
-> ✅ Recommended for **modern distros** (Amazon Linux 2, RHEL 7+, Ubuntu 16.04+).
-
----
-
-#### 🟢 2. Restart Multiple Services
-
-```bash
-sudo systemctl restart sshd docker ssm-agent
-```
-
-> Useful after patching or configuration updates.
-
----
-
-#### 🟢 3. Reload Config Without Full Restart (Zero Downtime)
-
-```bash
-sudo systemctl reload nginx
-```
-
-> Reloads configuration files (like `/etc/nginx/nginx.conf`) without stopping the service.
-
----
-
-#### 🟢 4. Restart Service and Confirm
-
-```bash
-sudo systemctl restart docker && sudo systemctl is-active docker
-```
-
-**Output:**
-
-```
-active
-```
-
-> Ensures the service restarted successfully.
-
----
-
-#### 🟢 5. For Older (SysVinit) Systems
-
-```bash
-sudo service httpd restart
-```
-
-**Output:**
-
-```
-Stopping httpd: [OK]
-Starting httpd: [OK]
-```
-
-> Used in older RHEL 6, CentOS 6, or legacy systems.
-
----
-
-#### 🟢 6. Using Init Scripts (Legacy)
-
-```bash
-sudo /etc/init.d/sshd restart
-```
-
-> Fallback option if `systemctl` or `service` commands aren’t available.
-
----
-
-#### 🟢 7. Check Logs After Restart
-
-```bash
-sudo journalctl -u nginx -n 20
-```
-
-or
-
-```bash
-sudo tail -f /var/log/nginx/error.log
-```
-
-> View startup logs and verify successful service launch.
-
----
-
-### 📋 Common Examples
-
-| Service             | Restart Command                           |
-| ------------------- | ----------------------------------------- |
-| **SSH**             | `sudo systemctl restart sshd`             |
-| **Docker**          | `sudo systemctl restart docker`           |
-| **Nginx**           | `sudo systemctl restart nginx`            |
-| **Apache (httpd)**  | `sudo systemctl restart httpd`            |
-| **SSM Agent (AWS)** | `sudo systemctl restart amazon-ssm-agent` |
-| **Kubelet**         | `sudo systemctl restart kubelet`          |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always verify restart with `systemctl status <service>`.
-* 🧠 Prefer `reload` for config changes (e.g., Nginx) to avoid downtime.
-* 🧾 For critical services (like SSH), **test changes in a second session** before restart — prevents lockout.
-* 🚀 Automate restarts via **CI/CD post-deploy hooks** or **AWS SSM RunCommand**.
-* 📊 Use `systemctl is-failed <service>` post-restart to detect failures.
-
----
-
-### 💡 In short
-
-Use `sudo systemctl restart <service>` (e.g., `sshd`, `nginx`, `docker`) to safely restart a service, then verify with `systemctl status`.
-For older systems, use `sudo service <service> restart`.
-Always check logs and confirm the service **came back healthy** after restart — especially on production servers.
-
----
-## Q: How to Monitor Disk I/O Performance in Linux?
-
----
-
-### 🧠 Overview
-
-Monitoring **Disk I/O (Input/Output)** performance helps identify **storage bottlenecks**, **slow applications**, or **patching impacts**.
-I/O metrics show **how much data is read/written** and **how long operations take**, helping detect overloaded or failing disks.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The Linux kernel exposes I/O stats via `/proc/diskstats`.
-* Tools like `iostat`, `vmstat`, `iotop`, and `dstat` read this data in real-time.
-* Cloud environments (like AWS EC2) can also send I/O metrics to **CloudWatch**.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Using `iostat` (Recommended)
-
-Install **sysstat** package if missing:
-
-```bash
-sudo yum install sysstat -y      # RHEL / CentOS / Amazon Linux
-sudo apt install sysstat -y      # Ubuntu / Debian
-```
-
-Run:
-
-```bash
-iostat -xz 2 5
-```
-
-**Example Output:**
-
-```
-Device:         r/s     w/s   rkB/s   wkB/s  await  svctm  %util
-xvda           12.5     5.3   640.2   210.4   4.10   0.52   2.50
-```
-
-**Key Metrics:**
-
-| Metric           | Description                                       |
-| ---------------- | ------------------------------------------------- |
-| `r/s`, `w/s`     | Reads/writes per second                           |
-| `rkB/s`, `wkB/s` | Read/write throughput                             |
-| `await`          | Avg. time (ms) I/O waits — **<10ms is good**      |
-| `%util`          | Disk utilization — **close to 100% = bottleneck** |
-
-> ✅ **Best all-in-one tool** for ongoing disk performance analysis.
-
----
-
-#### 🟢 2. Using `iotop` (Per-Process I/O Usage)
-
-```bash
-sudo apt install iotop -y     # or yum install iotop -y
-sudo iotop
-```
-
-**Example Output:**
-
-```
-Total DISK READ: 2.00 M/s | Total DISK WRITE: 1.50 M/s
-PID  USER      DISK READ  DISK WRITE  COMMAND
-1234 root      1.80 M/s   0.00 B/s    mysqld
-5678 ec2-user  0.20 M/s   1.50 M/s    tar -czf backup.tgz
-```
-
-> Shows **which processes** are performing heavy reads/writes in real-time.
-
----
-
-#### 🟢 3. Using `vmstat` (Quick Snapshot)
-
-```bash
-vmstat 2 5
-```
-
-**Output Example:**
-
-```
-procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
- r  b  swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 1  0     0 512000  23456 120000    0    0   200   150  320  540  5  2 90  3  0
-```
-
-**Columns Explained:**
-
-* `bi` = blocks read from disk/sec
-* `bo` = blocks written to disk/sec
-* `wa` = time CPU waits for I/O (% I/O wait)
-
-> 🔍 If `wa` > 20%, disk I/O may be slowing the system.
-
----
-
-#### 🟢 4. Using `dstat` (All-in-One Realtime)
-
-```bash
-sudo yum install dstat -y
-sudo dstat -cdngy
-```
-
-**Output Example:**
-
-```
-----total-cpu-usage---- ---disk/total--- ---net/total---
-usr sys idl wai hiq siq | read  writ | recv  send
-  5   2  90   3   0   0 | 200k  150k |  25k   20k
-```
-
-> Combines **CPU + Disk + Network** — great for live troubleshooting.
-
----
-
-#### 🟢 5. Using `pidstat` (Per-Process Disk Stats)
-
-```bash
-pidstat -d 2 5
-```
-
-**Output Example:**
-
-```
-11:42:01 AM   UID   PID  kB_rd/s  kB_wr/s  Command
-11:42:03 AM  1001  3245    1.20     350.00  java
-11:42:03 AM  1001  5687    0.00     420.00  postgres
-```
-
-> See **which process is writing/reading most**.
-
----
-
-#### 🟢 6. Check Disk Latency via `sar`
-
-```bash
-sar -d 2 5
-```
-
-**Output Example:**
-
-```
-DEV   tps  rd_sec/s  wr_sec/s  avgrq-sz  avgqu-sz  await  %util
-xvda  8.5   640.3    210.5     38.5      0.12      4.52   2.5
-```
-
-> Excellent for **historical I/O performance** (from `/var/log/sa/`).
-
----
-
-#### 🟢 7. AWS CloudWatch Example (EC2 I/O Metrics)
-
-```bash
-aws cloudwatch get-metric-statistics \
-  --namespace AWS/EC2 \
-  --metric-name DiskWriteOps \
-  --dimensions Name=InstanceId,Value=i-0123456789abcdef \
-  --statistics Average \
-  --period 300 \
-  --start-time 2025-11-11T00:00:00Z \
-  --end-time 2025-11-11T12:00:00Z
-```
-
-> Retrieve historical IOPS for EC2 instances.
-
----
-
-### 📋 Tool Comparison
-
-| Tool         | Focus             | Use Case                   | Frequency                |
-| ------------ | ----------------- | -------------------------- | ------------------------ |
-| `iostat`     | Disk device stats | Overall disk performance   | Periodic (every few sec) |
-| `iotop`      | Process-level I/O | Find heavy I/O processes   | Realtime                 |
-| `vmstat`     | CPU + I/O summary | Quick performance snapshot | Realtime                 |
-| `dstat`      | Combined metrics  | Live multi-resource view   | Realtime                 |
-| `sar -d`     | Historical I/O    | Long-term trend analysis   | From `/var/log/sa/`      |
-| `pidstat -d` | Per-process I/O   | Application-level insights | Realtime                 |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `iostat -xz 1` for baseline performance checks.
-* 🧠 Watch `%util` and `await` — indicators of disk pressure.
-* 📊 Collect data with `sar` for post-incident analysis.
-* 🚀 Monitor long-term trends via **AWS CloudWatch**, **Prometheus**, or **Grafana**.
-* 🔒 Separate logs and data disks in production to reduce contention.
-* 🧩 Run I/O checks **after patching or kernel updates** to confirm storage health.
-
----
-
-### 💡 In short
-
-Use `iostat -xz 2 5` for quick disk I/O stats, `iotop` for **process-level analysis**, and `sar -d` for **historical trends**.
-Focus on **%util** and **await** — if they’re consistently high, your disk or EBS volume may be a **performance bottleneck**.
-
----
-## Q: How to Check User Permissions on a File in Linux?
-
----
-
-### 🧠 Overview
-
-File permissions in Linux define **who can read, write, or execute** a file.
-Checking permissions is crucial for **security**, **troubleshooting access errors**, and **deployment validation** (e.g., config files, scripts, SSH keys).
-
-Linux uses a **permission model** with **user (owner)**, **group**, and **others** — represented in symbolic (`rwx`) or numeric (`755`) format.
-
----
-
-### ⚙️ Purpose / How It Works
-
-Each file’s metadata includes:
-
-* **Owner (user)** → creator or assigned user.
-* **Group** → group that has access.
-* **Permission bits** → define read/write/execute rights.
-
-Permissions are stored in the file’s **inode** and displayed via commands like `ls -l` or `stat`.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check File Permissions (Symbolic View)
-
-```bash
-ls -l /etc/passwd
-```
-
-**Example Output:**
-
-```
--rw-r--r-- 1 root root 2458 Nov 11 10:22 /etc/passwd
-```
-
-**Breakdown:**
-
-| Part        | Meaning                                 |
-| ----------- | --------------------------------------- |
-| `-`         | File type (`-` = file, `d` = directory) |
-| `rw-`       | Owner can **read/write**                |
-| `r--`       | Group can **read only**                 |
-| `r--`       | Others can **read only**                |
-| `root root` | Owner = root, Group = root              |
-
-> So `/etc/passwd` is readable by everyone, writable only by `root`.
-
----
-
-#### 🟢 2. Check Permissions on a Directory
-
-```bash
-ls -ld /var/log
-```
-
-**Output:**
-
-```
-drwxr-xr-x 10 root root 4096 Nov 11 11:20 /var/log
-```
-
-> `d` → directory
-> `rwx` (owner) → full access
-> `r-x` (group/others) → read + execute (can list/enter)
-
----
-
-#### 🟢 3. Numeric (Octal) Permission Representation
-
-```bash
-stat -c "%A %a %U %G %n" /etc/ssh/sshd_config
-```
-
-**Output:**
-
-```
--rw------- 600 root root /etc/ssh/sshd_config
-```
-
-| Field | Description                 |
-| ----- | --------------------------- |
-| `600` | Octal permission            |
-| `%A`  | Symbolic form (`rw-------`) |
-| `%a`  | Numeric form (600)          |
-| `%U`  | Owner user                  |
-| `%G`  | Owner group                 |
-| `%n`  | Filename                    |
-
----
-
-#### 🟢 4. Verify If a Specific User Can Access a File
-
-```bash
-sudo -u ec2-user test -r /etc/ssh/sshd_config && echo "Readable" || echo "Not readable"
-sudo -u ec2-user test -w /etc/ssh/sshd_config && echo "Writable" || echo "Not writable"
-```
-
-> Checks **read/write** permission for a given user.
-
----
-
-#### 🟢 5. View Access Control Lists (Extended Permissions)
-
-```bash
-getfacl /var/log/messages
-```
-
-**Example Output:**
-
-```
-# file: var/log/messages
-# owner: root
-# group: root
-user::rw-
-group::r--
-other::r--
-```
-
-> Shows standard permissions + any **ACL overrides** (used in fine-grained access control).
-
----
-
-#### 🟢 6. Check Ownership Only
-
-```bash
-ls -l /opt/myapp/config.yaml | awk '{print $3, $4}'
-```
-
-**Output:**
-
-```
-appuser appgroup
-```
-
----
-
-#### 🟢 7. Search Files Owned by a User
-
-```bash
-sudo find /var/www -user nginx
-```
-
-> Lists all files owned by user `nginx` — useful for audits or cleanup.
-
----
-
-### 📋 Permission Levels (Quick Reference)
-
-| Symbolic | Numeric | Meaning        | Access Rights                     |
-| -------- | ------- | -------------- | --------------------------------- |
-| `r--`    | 4       | Read           | View file contents                |
-| `-w-`    | 2       | Write          | Modify or delete                  |
-| `--x`    | 1       | Execute        | Run as program or enter directory |
-| `rw-`    | 6       | Read + Write   | Edit file                         |
-| `r-x`    | 5       | Read + Execute | View + run                        |
-| `rwx`    | 7       | Full Access    | Read + Write + Execute            |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `stat` for precise permission + owner info.
-* 🔒 Sensitive files (like `/etc/shadow`, SSH keys) should be `600` or stricter.
-* 🧠 Regularly verify permissions after **deployments or patching**.
-* 🧩 Use **ACLs (`getfacl`, `setfacl`)** for complex permission needs.
-* 🚀 Automate permission checks in **CI/CD** or **compliance pipelines** using shell or Ansible tasks.
-
----
-
-### 💡 In short
-
-Use `ls -l` for a quick view or `stat -c "%A %a %U %G %n" <file>` for detailed info.
-Permissions show **who can read, write, or execute** a file, helping secure your Linux environment and troubleshoot **“Permission denied”** errors efficiently.
-
----
-## Q: How to Change File Permissions or Ownership in Linux?
-
----
-
-### 🧠 Overview
-
-Changing file **permissions** and **ownership** is a key Linux admin task — used for securing files, enabling application access, or fixing “**Permission denied**” errors.
-Linux uses two primary commands for this:
-
-* `chmod` → change file permissions (read/write/execute)
-* `chown` / `chgrp` → change file owner and group
-
----
-
-### ⚙️ Purpose / How It Works
-
-Each file has 3 permission sets:
-
-* **User (Owner)**
-* **Group**
-* **Others**
-
-Permissions can be modified in:
-
-* **Symbolic mode** (`u`, `g`, `o`, `a` + `+`, `-`, `=`)
-* **Numeric mode** (`chmod 755`, `chmod 600`, etc.)
-
-Ownership defines **who owns** the file (`user:group`) — controlled by `chown`.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Change File Permissions (Symbolic Mode)
-
-```bash
-chmod u+x script.sh
-```
-
-> Adds execute (`x`) permission for the **owner**.
-
-```bash
-chmod g-w report.txt
-```
-
-> Removes write permission from the **group**.
-
-```bash
-chmod o=r /tmp/data.txt
-```
-
-> Gives **read-only** access to others.
-
----
-
-#### 🟢 2. Change File Permissions (Numeric Mode)
-
-```bash
-chmod 755 /usr/local/bin/deploy.sh
-```
-
-**Breakdown:**
-
-| User | Group | Others | Meaning                                       |
-| ---- | ----- | ------ | --------------------------------------------- |
-| 7    | 5     | 5      | `rwxr-xr-x` (owner full, others read/execute) |
-
-Other common permission values:
-
-| Mode  | Meaning                       | Example Usage                  |
-| ----- | ----------------------------- | ------------------------------ |
-| `600` | Owner can read/write          | Private files (e.g., SSH keys) |
-| `644` | Owner read/write, others read | Config files                   |
-| `700` | Owner full access             | Scripts or home directories    |
-| `755` | Everyone can read/execute     | Public scripts or binaries     |
-
----
-
-#### 🟢 3. Change Ownership of a File
-
-```bash
-sudo chown ec2-user /opt/app/config.yaml
-```
-
-> Sets owner to `ec2-user`.
-
-Change owner **and group**:
-
-```bash
-sudo chown ec2-user:appgroup /opt/app/config.yaml
-```
-
-**Output check:**
-
-```bash
-ls -l /opt/app/config.yaml
-```
-
-```
--rw-r--r-- 1 ec2-user appgroup 2048 Nov 11 11:42 config.yaml
-```
-
----
-
-#### 🟢 4. Change Group Only
-
-```bash
-sudo chgrp devops /var/www/html
-```
-
-> Sets group to `devops` (without changing owner).
-
----
-
-#### 🟢 5. Recursively Change Ownership/Permissions
-
-```bash
-sudo chown -R nginx:nginx /var/www/html
-sudo chmod -R 755 /var/www/html
-```
-
-> Applies changes to all **subdirectories and files** recursively.
-
----
-
-#### 🟢 6. Set Default Permissions for Newly Created Files
-
-```bash
-umask 022
-```
-
-> Default: files get `644`, directories get `755`.
-> Adjust in `/etc/profile` or `~/.bashrc` for persistent settings.
-
----
-
-#### 🟢 7. Verify Changes
-
-```bash
-ls -l /opt/app/
-```
-
-**Example Output:**
-
-```
--rwxr-xr-- 1 appuser appgroup 3.2K deploy.sh
-```
-
-> Confirms `chmod 754` + ownership assignment.
-
----
-
-### 📋 Symbolic Reference
-
-| Symbol | Meaning      | Applies To    |
-| ------ | ------------ | ------------- |
-| `u`    | user (owner) | Owner only    |
-| `g`    | group        | Group members |
-| `o`    | others       | Everyone else |
-| `a`    | all          | All users     |
-
-| Operator | Effect               |
-| -------- | -------------------- |
-| `+`      | Add permission       |
-| `-`      | Remove permission    |
-| `=`      | Set exact permission |
-
----
-
-### ✅ Best Practices
-
-* 🔒 Set **least privilege** (e.g., `600` for sensitive files like SSH keys).
-* 🧩 Use `sudo chown` for system-owned files only — avoid permission issues.
-* ⚙️ Combine `chmod` + `chown` for app deployments:
-
-  ```bash
-  sudo chown -R nginx:nginx /var/www/html
-  sudo chmod -R 755 /var/www/html
-  ```
-* 🧾 Always verify with `ls -l` or `stat`.
-* 🚀 For multi-user environments, manage access via **groups** rather than “others”.
-* 🧠 Avoid using `chmod 777` — it allows **anyone full access**, a major security risk.
-
----
-
-### 💡 In short
-
-Use `chmod` to **change permissions**, `chown` to **change owner**, and `chgrp` to **change group**.
-Example:
-
-```bash
-sudo chown ec2-user:devops /opt/app/config.yaml
-sudo chmod 640 /opt/app/config.yaml
-```
-
-This gives `ec2-user` secure ownership with read access for `devops` — the safest, most common setup in production.
-
----
-## Q: How to Check Which Users Are Logged In on a Linux System?
-
----
-
-### 🧠 Overview
-
-Knowing who’s **logged in** helps monitor **active sessions**, detect **unauthorized access**, and verify **admin activity** during maintenance or patching.
-Linux provides multiple commands (`who`, `w`, `users`, `last`) to list currently logged-in users, their session details, and login history.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When users log in (via SSH, console, or TTY), Linux records session details in `/var/run/utmp` (active sessions) and `/var/log/wtmp` (login history).
-Utilities like `who` and `w` read from these files to show real-time user activity.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Show All Logged-In Users (Simple)
-
-```bash
-who
-```
-
-**Example Output:**
-
-```
-ec2-user  pts/0  2025-11-11 10:40 (10.0.0.25)
-root      pts/1  2025-11-11 11:05 (10.0.0.30)
-```
-
-**Fields:**
-
-| Field     | Description           |
-| --------- | --------------------- |
-| Username  | Logged-in user        |
-| TTY       | Terminal session      |
-| Date/Time | Login time            |
-| Host      | Remote IP or hostname |
-
-> ✅ Quick snapshot of who is currently connected.
-
----
-
-#### 🟢 2. Detailed View of Logged-In Users
-
-```bash
-w
-```
-
-**Example Output:**
-
-```
- 11:25:43 up 2 days,  3:17,  2 users,  load average: 0.15, 0.12, 0.08
-USER     TTY      FROM         LOGIN@   IDLE   JCPU   PCPU WHAT
-ec2-user pts/0    10.0.0.25    10:40    1:21   0.10s  0.10s -bash
-root     pts/1    10.0.0.30    11:05    2.00s  0.20s  0.01s top
-```
-
-> Shows who’s logged in, **from where**, and **what command** they are running.
-
----
-
-#### 🟢 3. List Usernames Only
-
-```bash
-users
-```
-
-**Output:**
-
-```
-ec2-user root
-```
-
-> Simple list of currently logged-in users — no timestamps or session info.
-
----
-
-#### 🟢 4. Show Current User (Your Session)
-
-```bash
-whoami
-```
-
-**Output:**
-
-```
-ec2-user
-```
-
-> Prints the **effective username** of your current shell session.
-
----
-
-#### 🟢 5. Display Login History
-
-```bash
-last
-```
-
-**Example Output:**
-
-```
-ec2-user pts/0  10.0.0.25 Mon Nov 11 10:40   still logged in
-root     pts/1  10.0.0.30 Mon Nov 11 09:10 - 09:32  (00:22)
-reboot   system boot      Mon Nov 11 08:05
-```
-
-> Shows **past logins**, **durations**, and **reboots** — useful for audit and compliance.
-
----
-
-#### 🟢 6. Check User Logged In via SSH
-
-```bash
-sudo journalctl -u sshd | grep "Accepted"
-```
-
-**Output Example:**
-
-```
-Nov 11 10:40:21 ip-10-0-1-25 sshd[2209]: Accepted publickey for ec2-user from 10.0.0.25 port 50222 ssh2
-```
-
-> Displays accepted SSH logins — includes user, source IP, and timestamp.
-
----
-
-#### 🟢 7. Display Active Sessions (TTY Info)
-
-```bash
-who -a
-```
-
-**Output Example:**
-
-```
-           system boot  2025-11-11 08:05
-LOGIN      tty1         2025-11-11 08:05
-ec2-user   pts/0        2025-11-11 10:40   00:02   2209 (:0)
-```
-
-> Includes both **console** and **remote** sessions.
-
----
-
-### 📋 Command Comparison
-
-| Command              | Purpose                | Output Example                   |
-| -------------------- | ---------------------- | -------------------------------- |
-| `who`                | Current logins (basic) | User, TTY, time, IP              |
-| `w`                  | Detailed session info  | User, idle time, running process |
-| `users`              | Usernames only         | List of active users             |
-| `whoami`             | Current session user   | Single username                  |
-| `last`               | Login history          | Past logins & reboots            |
-| `journalctl -u sshd` | SSH login tracking     | Accepted connections             |
-
----
-
-### ✅ Best Practices
-
-* 🔒 Monitor user logins using `w` or `who` before patching or rebooting.
-* 🧠 Use `last` to audit login patterns for anomalies.
-* 🚨 Set up **login alerts** via `auditd`, **CloudWatch Events**, or `fail2ban`.
-* ⚙️ For production, disable root SSH login and enforce key-based authentication.
-* 📦 Forward `/var/log/secure` or `/var/log/auth.log` to a central SIEM for auditing.
-
----
-
-### 💡 In short
-
-Use `who` or `w` to see **who’s logged in right now**, and `last` to review **login history**.
-For security and compliance, always monitor `/var/log/auth.log` or `journalctl -u sshd` for **SSH login events** — ensuring only authorized users access your system.
-
----
-## Q: How to See Scheduled Cron Jobs in Linux?
-
----
-
-### 🧠 Overview
-
-Cron jobs automate recurring tasks like **backups, log rotations, patch checks, or cleanup scripts**.
-You can list and manage cron jobs at the **user level** or **system level** using commands like `crontab`, `ls`, and by checking cron configuration directories.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The **cron daemon (`crond`)** runs jobs on defined schedules (minute/hour/day/month/week).
-* Jobs are defined in **crontab files**, either per user or globally in system cron directories.
-* Cron schedules use a **5-field syntax** representing time and frequency.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. List Cron Jobs for Current User
-
-```bash
-crontab -l
-```
-
-**Example Output:**
-
-```
-# ┌──────────── minute (0 - 59)
-# │ ┌────────── hour (0 - 23)
-# │ │ ┌──────── day of month (1 - 31)
-# │ │ │ ┌────── month (1 - 12)
-# │ │ │ │ ┌──── day of week (0 - 6)
-# │ │ │ │ │
-# │ │ │ │ │
-  0  2  *  *  *  /usr/local/bin/db-backup.sh
-  30 4  *  *  1  /usr/local/bin/weekly-report.sh
-```
-
-> Displays the **cron jobs scheduled for the current user**.
-
----
-
-#### 🟢 2. List Cron Jobs for Another User
-
-```bash
-sudo crontab -u ec2-user -l
-```
-
-> Requires root privileges — lists cron jobs owned by `ec2-user`.
-
----
-
-#### 🟢 3. View System-Wide Cron Jobs
-
-System-level cron jobs are defined in:
-
-```bash
-cat /etc/crontab
-```
-
-**Example Output:**
-
-```
-SHELL=/bin/bash
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-MAILTO=root
-
-# m h dom mon dow user command
-0 * * * * root /usr/lib64/sa/sa1 1 1
-```
-
-> Includes an extra **user field** (the account executing the command).
-
----
-
-#### 🟢 4. Check Cron Directories
-
-| Location             | Purpose                                   |
-| -------------------- | ----------------------------------------- |
-| `/etc/cron.hourly/`  | Scripts run hourly                        |
-| `/etc/cron.daily/`   | Scripts run daily                         |
-| `/etc/cron.weekly/`  | Scripts run weekly                        |
-| `/etc/cron.monthly/` | Scripts run monthly                       |
-| `/etc/cron.d/`       | Custom cron job definitions (system-wide) |
-
-**Example:**
-
-```bash
-ls -lh /etc/cron.daily/
-```
-
-**Output:**
-
-```
--rwxr-xr-x  root  logrotate
--rwxr-xr-x  root  0yum-daily.cron
-```
-
-> These jobs are triggered automatically by system cron timers.
-
----
-
-#### 🟢 5. Check Active Cron Service
-
-```bash
-sudo systemctl status crond
-```
-
-**Output Example:**
-
-```
-● crond.service - Command Scheduler
-   Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled)
-   Active: active (running) since Tue 2025-11-11 10:42:13 UTC; 1h 2min ago
-```
-
-> Ensures cron daemon is running — required for scheduled jobs to execute.
-
----
-
-#### 🟢 6. View Logs of Executed Cron Jobs
-
-```bash
-sudo grep CRON /var/log/syslog     # Ubuntu/Debian
-sudo grep CRON /var/log/cron       # RHEL/CentOS/Amazon Linux
-```
-
-**Example Output:**
-
-```
-Nov 11 02:00:01 ip-10-0-1-5 CRON[1123]: (root) CMD (/usr/local/bin/db-backup.sh)
-```
-
-> Useful for **verifying cron execution** and **debugging failed jobs**.
-
----
-
-#### 🟢 7. Using `systemctl list-timers` (For `systemd`-based Jobs)
-
-Some modern systems (Amazon Linux 2023, Ubuntu ≥20.04) use `systemd` timers instead of cron.
-
-```bash
-systemctl list-timers --all
-```
-
-**Output Example:**
-
-```
-NEXT                        LEFT       LAST                        UNIT                      ACTIVATES
-Tue 2025-11-11 02:00:00 UTC 4h 10min   Mon 2025-11-10 02:00:01 UTC logrotate.timer          logrotate.service
-```
-
-> Shows **scheduled systemd timers** and when they’ll next execute.
-
----
-
-### 📋 Cron Syntax Quick Reference
-
-| Field        | Range | Description                |
-| ------------ | ----- | -------------------------- |
-| Minute       | 0–59  | When in the hour           |
-| Hour         | 0–23  | When in the day            |
-| Day of Month | 1–31  | Which day of the month     |
-| Month        | 1–12  | Which month                |
-| Day of Week  | 0–6   | Sunday (0) to Saturday (6) |
-
-**Example:**
-
-```
-30 3 * * 1 /usr/local/bin/backup.sh
-```
-
-→ Runs every **Monday at 3:30 AM**
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `crontab -e` for editing — it prevents syntax mistakes.
-* 🧠 Redirect cron output to logs for debugging:
-
-  ```bash
-  0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
-  ```
-* 🔒 Avoid using root’s cron unless necessary — prefer app-level users.
-* 🚀 Verify cron execution via `/var/log/cron` or systemd timer logs.
-* 📦 In cloud/DevOps setups, use **AWS Systems Manager Automation** or **GitLab CI/CD schedules** for scalable job orchestration.
-
----
-
-### 💡 In short
-
-Use `crontab -l` for user jobs, `cat /etc/crontab` and `/etc/cron.*` for system jobs, and `grep CRON /var/log/syslog` to verify execution.
-Together, these let you **inspect, validate, and troubleshoot** all scheduled cron activities on your Linux servers.
-
----
-## Q: How to Check Network Connectivity Without Using `ping` in Linux?
-
----
-
-### 🧠 Overview
-
-If **ICMP (`ping`) is blocked** by a firewall or security group, you can still test network connectivity using other TCP/UDP-based tools like `curl`, `nc`, `telnet`, or `ss`.
-These methods help confirm whether a **specific port/service** (e.g., 22, 80, 443) is reachable — which is often more relevant in production than plain ICMP.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* `ping` uses **ICMP Echo**, which many firewalls drop.
-* Alternatives use **application-layer or TCP/UDP** checks (e.g., connect to HTTP, SSH, or DNS).
-* These provide **real connectivity validation** — not just route availability.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Test TCP Port Connectivity with `nc` (Netcat)
-
-```bash
-nc -zv google.com 443
-```
-
-**Output:**
-
-```
-Connection to google.com 443 port [tcp/https] succeeded!
-```
-
-> ✅ Confirms that TCP 443 (HTTPS) is reachable.
-
-**Options:**
-
-* `-z` → scan without sending data
-* `-v` → verbose (show connection result)
-
-You can test multiple ports:
-
-```bash
-nc -zv 10.0.0.5 22 80 443
-```
-
----
-
-#### 🟢 2. Use `curl` to Test HTTP/HTTPS
-
-```bash
-curl -I https://example.com
-```
-
-**Output:**
-
-```
-HTTP/1.1 200 OK
-Server: nginx/1.18.0
-```
-
-> Confirms HTTP/HTTPS connectivity and retrieves response headers.
-
-To test only TCP connection (no output):
-
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://example.com
-```
-
----
-
-#### 🟢 3. Check DNS Resolution (Without ICMP)
-
-```bash
-dig google.com
-```
-
-or
-
-```bash
-nslookup google.com
-```
-
-**Output Example:**
-
-```
-google.com.   300  IN  A  142.250.185.206
-```
-
-> Verifies DNS resolution — if it fails, the host might not be reachable by name.
-
----
-
-#### 🟢 4. Test Specific TCP Port with `telnet` (Simple)
-
-```bash
-telnet github.com 443
-```
-
-**Output:**
-
-```
-Trying 140.82.112.3...
-Connected to github.com.
-Escape character is '^]'.
-```
-
-> If it connects, TCP communication works.
-> If it hangs or fails — port is blocked or service down.
-
-> ⚠️ `telnet` may not be installed by default — use `nc` instead for modern systems.
-
----
-
-#### 🟢 5. Using `ss` (Socket Statistics)
-
-Check if a local service port is listening:
-
-```bash
-sudo ss -tuln | grep 22
-```
-
-**Output:**
-
-```
-LISTEN 0 128 0.0.0.0:22 0.0.0.0:*
-```
-
-> Confirms SSH (port 22) is open locally — useful for inbound troubleshooting.
-
----
-
-#### 🟢 6. Using `tracepath` (Layer 3/4 Route Test)
-
-```bash
-tracepath example.com
-```
-
-**Output Example:**
-
-```
- 1?: [LOCALHOST]                      pmtu 9001
- 1:  10.0.0.1                         0.524ms
- 2:  52.93.8.4                        2.220ms
-```
-
-> Similar to `traceroute`, but **does not require root** or ICMP — shows routing path.
-
----
-
-#### 🟢 7. Check Outbound Port via `/dev/tcp`
-
-```bash
-echo > /dev/tcp/google.com/443 && echo "Connected" || echo "Connection failed"
-```
-
-**Output:**
-
-```
-Connected
-```
-
-> Uses Bash’s built-in TCP socket feature — handy in restricted shells.
-
----
-
-#### 🟢 8. Verify Service Accessibility Using `wget`
-
-```bash
-wget --spider https://aws.amazon.com
-```
-
-**Output:**
-
-```
-Spider mode enabled. Checking if remote file exists...
-Remote file exists.
-```
-
-> Confirms **internet and web service connectivity**.
-
----
-
-### 📋 Comparison of Methods
-
-| Command            | Checks                    | ICMP Needed | Common Use          |
-| ------------------ | ------------------------- | ----------- | ------------------- |
-| `nc -zv`           | TCP/UDP port reachability | ❌ No        | Any port/service    |
-| `curl`             | HTTP/HTTPS                | ❌ No        | Web endpoints       |
-| `dig` / `nslookup` | DNS resolution            | ❌ No        | Name resolution     |
-| `telnet`           | TCP connectivity          | ❌ No        | Legacy port test    |
-| `tracepath`        | Routing path              | ❌ No        | Network route debug |
-| `/dev/tcp`         | TCP socket                | ❌ No        | Quick shell test    |
-| `wget --spider`    | HTTP availability         | ❌ No        | App-level check     |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use `nc` for **port reachability** — reliable and scriptable.
-* 🧠 Always verify **DNS resolution** (`dig`) before testing ports.
-* 🔒 Test **specific ports** instead of ICMP for firewall-limited networks.
-* 🚀 In AWS or Kubernetes, combine with `curl` or `wget` inside pods to test **service connectivity**.
-* 🧩 Automate connectivity checks in CI/CD using `nc`, `curl`, or `dig`.
-
----
-
-### 💡 In short
-
-When `ping` is blocked, use:
-
-* `nc -zv <host> <port>` → test TCP/UDP reachability
-* `curl -I <URL>` → test HTTP/HTTPS
-* `dig <domain>` → test DNS
-  These tools verify real-world connectivity to **services and applications**, not just raw network reachability.
-
----
-## Q: How to Check DNS Resolution in Linux?
-
----
-
-### 🧠 Overview
-
-**DNS resolution** translates domain names (like `google.com`) into IP addresses.
-If DNS fails, commands like `ping`, `curl`, or `yum` will fail even when the network is up.
-You can test DNS using commands like `dig`, `nslookup`, and `host`, or by inspecting system resolver settings.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When you access a domain:
-
-1. The resolver checks `/etc/resolv.conf` for DNS servers.
-2. It queries them to resolve the name → IP address (A/AAAA record).
-3. The system caches the result temporarily for faster lookups.
-
-DNS testing tools help validate whether this name resolution process is **working, slow, or misconfigured**.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check DNS Resolution with `dig` (Recommended)
-
-```bash
-dig google.com
-```
-
-**Example Output:**
-
-```
-;; QUESTION SECTION:
-;google.com.          IN  A
-
-;; ANSWER SECTION:
-google.com.     300  IN  A  142.250.185.206
-
-;; Query time: 25 msec
-;; SERVER: 8.8.8.8#53(8.8.8.8)
-;; WHEN: Tue Nov 11 12:45:01 UTC 2025
-```
-
-**Key Fields:**
-
-| Field            | Description                 |
-| ---------------- | --------------------------- |
-| `ANSWER SECTION` | The resolved IP(s)          |
-| `Query time`     | Response latency            |
-| `SERVER`         | DNS server used             |
-| `A`              | IPv4 record (`AAAA` = IPv6) |
-
-> ✅ `dig` gives detailed diagnostics and confirms **which DNS server** responded.
-
----
-
-#### 🟢 2. Use `dig` for Specific Record Types
-
-```bash
-dig www.github.com A
-dig www.github.com AAAA
-dig github.com MX
-dig github.com NS
-```
-
-**Record Types:**
-
-| Type    | Meaning                |
-| ------- | ---------------------- |
-| `A`     | IPv4 address           |
-| `AAAA`  | IPv6 address           |
-| `MX`    | Mail server            |
-| `NS`    | Name server            |
-| `CNAME` | Canonical name (alias) |
-
----
-
-#### 🟢 3. Quick Output with `dig +short`
-
-```bash
-dig +short amazon.com
-```
-
-**Output:**
-
-```
-176.32.103.205
-205.251.242.103
-```
-
-> Minimal output — perfect for scripting or quick lookups.
-
----
-
-#### 🟢 4. Test DNS Resolution with `nslookup`
-
-```bash
-nslookup google.com
-```
-
-**Output Example:**
-
-```
-Server:    8.8.8.8
-Address:   8.8.8.8#53
-
-Non-authoritative answer:
-Name: google.com
-Address: 142.250.185.206
-```
-
-> Shows DNS server and resolved IP; simpler than `dig`.
-
-Specify a DNS server:
-
-```bash
-nslookup google.com 1.1.1.1
-```
-
-> Tests resolution using Cloudflare’s DNS (1.1.1.1).
-
----
-
-#### 🟢 5. Check Reverse DNS (IP → Hostname)
-
-```bash
-dig -x 142.250.185.206 +short
-```
-
-**Output:**
-
-```
-del03s03-in-f14.1e100.net.
-```
-
-> Confirms the reverse DNS mapping for an IP address.
-
----
-
-#### 🟢 6. Using `host` Command (Simple)
-
-```bash
-host example.com
-```
-
-**Output:**
-
-```
-example.com has address 93.184.216.34
-```
-
-> Lightweight alternative to `dig` and `nslookup`.
-
----
-
-#### 🟢 7. Verify DNS Configuration File
-
-```bash
-cat /etc/resolv.conf
-```
-
-**Example Output:**
-
-```
-nameserver 8.8.8.8
-nameserver 1.1.1.1
-search corp.local
-```
-
-> Lists the DNS servers your system uses for name resolution.
-
----
-
-#### 🟢 8. Check Local Hostname Resolution
-
-```bash
-getent hosts localhost
-```
-
-**Output:**
-
-```
-127.0.0.1   localhost
-::1         localhost
-```
-
-> Confirms name-to-IP mapping via `/etc/hosts` and DNS combined.
-
----
-
-#### 🟢 9. Test DNS Resolution Through a Specific Interface
-
-```bash
-dig @8.8.8.8 example.com
-```
-
-> Forces query through a specific DNS server (e.g., Google DNS).
-
----
-
-### 📋 Command Comparison
-
-| Command        | Description                        | Output Detail | Use Case        |
-| -------------- | ---------------------------------- | ------------- | --------------- |
-| `dig`          | Detailed DNS lookup                | High          | Troubleshooting |
-| `dig +short`   | Minimal IP output                  | Low           | Scripting       |
-| `nslookup`     | Simple lookup with DNS server info | Medium        | Quick check     |
-| `host`         | Minimal, fast                      | Low           | Lightweight     |
-| `getent hosts` | Uses system resolver (hosts + DNS) | Medium        | Host validation |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always verify `/etc/resolv.conf` → ensure valid DNS servers.
-* 🧠 Use `dig +trace` to debug DNS propagation or delegation issues:
-
-  ```bash
-  dig +trace example.com
-  ```
-* 🔒 Avoid relying solely on internal DNS servers — configure public fallback (e.g., `8.8.8.8`, `1.1.1.1`).
-* 🚀 For cloud environments, test both **private (VPC)** and **public** DNS resolution.
-* 📊 In Kubernetes, test inside pods:
-
-  ```bash
-  kubectl exec -it pod-name -- nslookup google.com
-  ```
-
----
-
-### 💡 In short
-
-Use `dig` (or `nslookup`) to confirm DNS resolution.
-For quick results:
-
-```bash
-dig +short example.com
-```
-
-For debugging:
-
-```bash
-dig example.com @8.8.8.8
-```
-
-These commands confirm that **domain names resolve correctly**, DNS servers are reachable, and your Linux system can translate hostnames into IPs — the foundation of all network connectivity.
-
----
-## Q: How Do You Secure SSH Access in Linux?
-
----
-
-### 🧠 Overview
-
-Securing SSH is a **critical part of Linux hardening** — especially on production servers or cloud environments (AWS EC2, EKS nodes, on-prem VMs).
-SSH (Secure Shell) provides encrypted access, but weak configurations or credentials can lead to compromise.
-
----
-
-### ⚙️ Purpose / How It Works
-
-SSH uses **public-key cryptography** for secure, encrypted connections.
-Hardening SSH involves:
-
-* Restricting who can log in,
-* Enforcing key-based authentication,
-* Reducing attack surface (e.g., port, users), and
-* Monitoring for intrusion attempts.
-
----
-
-### 🧩 Key Commands / Configuration Examples
-
-#### 🟢 1. Disable Root Login (Direct Access)
-
-Edit SSH config:
-
-```bash
-sudo vi /etc/ssh/sshd_config
-```
-
-Change:
-
-```
-PermitRootLogin no
-```
-
-Apply changes:
-
-```bash
-sudo systemctl restart sshd
-```
-
-> ✅ Prevents direct `root` access — users must log in as normal users and escalate via `sudo`.
-
----
-
-#### 🟢 2. Use Key-Based Authentication (No Passwords)
-
-Generate SSH key on client:
-
-```bash
-ssh-keygen -t ed25519 -C "vasu@devops"
-```
-
-Copy public key to server:
-
-```bash
-ssh-copy-id ec2-user@<server-ip>
-```
-
-Or manually append:
-
-```bash
-cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-```
-
-Disable password login:
-
-```
-PasswordAuthentication no
-ChallengeResponseAuthentication no
-```
-
-> 🔒 Ensures only authorized SSH keys are accepted.
-
----
-
-#### 🟢 3. Limit Which Users Can Log In
-
-In `/etc/ssh/sshd_config`:
-
-```
-AllowUsers ec2-user adminuser
-```
-
-or
-
-```
-AllowGroups devops ssm
-```
-
-> Restricts SSH access to specific accounts or groups only.
-
----
-
-#### 🟢 4. Change Default SSH Port
-
-In `/etc/ssh/sshd_config`:
-
-```
-Port 2222
-```
-
-Restart SSH:
-
-```bash
-sudo systemctl restart sshd
-```
-
-> 🚫 Avoids mass automated attacks targeting port 22.
-> *(Remember to open this port in firewall or AWS Security Group.)*
-
----
-
-#### 🟢 5. Use Fail2Ban to Block Brute Force Attempts
-
-Install & enable Fail2Ban:
-
-```bash
-sudo apt install fail2ban -y
-sudo systemctl enable --now fail2ban
-```
-
-> Automatically bans IPs after multiple failed SSH login attempts.
-
-Configuration file:
-
-```bash
-/etc/fail2ban/jail.local
-```
-
-Example:
-
-```
-[sshd]
-enabled = true
-bantime = 1h
-findtime = 10m
-maxretry = 3
-```
-
----
-
-#### 🟢 6. Restrict SSH Access via Firewall (UFW / iptables)
-
-Using UFW:
-
-```bash
-sudo ufw allow 2222/tcp
-sudo ufw deny 22/tcp
-sudo ufw enable
-```
-
-Or AWS Security Group:
-
-* Allow SSH from **trusted IPs only** (e.g., your office IP, VPN CIDR).
-
-> ✅ Prevents open SSH exposure to the internet.
-
----
-
-#### 🟢 7. Use SSH Protocol 2 Only
-
-Ensure in `/etc/ssh/sshd_config`:
-
-```
-Protocol 2
-```
-
-> SSHv1 is deprecated and insecure — always use v2.
-
----
-
-#### 🟢 8. Enable Idle Session Timeout
-
-```
-ClientAliveInterval 300
-ClientAliveCountMax 2
-```
-
-> Disconnects idle SSH sessions after **10 minutes** (300s × 2).
-
----
-
-#### 🟢 9. Use Multi-Factor Authentication (MFA)
-
-Install Google PAM module:
-
-```bash
-sudo apt install libpam-google-authenticator -y
-google-authenticator
-```
-
-Enable in `/etc/pam.d/sshd` and `/etc/ssh/sshd_config`:
-
-```
-AuthenticationMethods publickey,keyboard-interactive
-```
-
-> Adds a one-time token (OTP) to SSH logins for added protection.
-
----
-
-#### 🟢 10. Audit SSH Logs
-
-```bash
-sudo tail -f /var/log/auth.log     # Ubuntu/Debian
-sudo tail -f /var/log/secure       # RHEL/Amazon Linux
-```
-
-Look for:
-
-```
-Failed password for invalid user admin from 203.0.113.10 port 54022 ssh2
-Accepted publickey for ec2-user from 10.0.0.5 port 51212 ssh2
-```
-
-> 🧠 Regularly review or forward these logs to a SIEM (CloudWatch, Splunk, ELK).
-
----
-
-### 📋 SSH Hardening Summary
-
-| Measure            | Purpose                     | Example                     |
-| ------------------ | --------------------------- | --------------------------- |
-| Disable Root Login | Prevent direct root access  | `PermitRootLogin no`        |
-| Use SSH Keys       | Replace passwords           | `PasswordAuthentication no` |
-| Restrict Users     | Allow specific users/groups | `AllowUsers ec2-user`       |
-| Change Port        | Avoid port 22 attacks       | `Port 2222`                 |
-| Enable Fail2Ban    | Block brute force           | `/etc/fail2ban/jail.local`  |
-| Use Firewall Rules | Limit source IPs            | `ufw allow from <IP>`       |
-| Protocol 2         | Secure version              | `Protocol 2`                |
-| MFA                | Two-factor SSH              | PAM module                  |
-| Log Auditing       | Detect intrusions           | `/var/log/auth.log`         |
-
----
-
-### ✅ Best Practices
-
-* 🔒 Always use **key-based SSH**; disable password and root logins.
-* 🧠 Use **SSM Session Manager (AWS)** instead of SSH when possible (no open ports).
-* 🧩 Rotate SSH keys regularly and remove stale ones.
-* 🚀 Automate SSH hardening via **Ansible playbooks** or **Terraform user data**.
-* 🧾 Forward logs to **CloudWatch / ELK** for central monitoring.
-
----
-
-### 💡 In short
-
-To secure SSH access:
-
-1. Use **key-based auth only**,
-2. Disable **root & password logins**,
-3. Limit **users and source IPs**,
-4. Add **Fail2Ban + firewall rules**, and
-5. Monitor **SSH logs** regularly.
-
-These practices make SSH resilient against brute-force, credential theft, and unauthorized access — a must for **production-grade DevOps systems**.
-
----
-## Q: How Do You Find and Kill Zombie or Stuck Processes in Linux?
-
----
-
-### 🧠 Overview
-
-Zombie and stuck (hung) processes can **consume system resources**, **block service restarts**, or **indicate faulty applications**.
-
-* 🧟 **Zombie process** = finished execution but parent hasn’t cleaned it (defunct).
-* ⚠️ **Stuck process** = running or waiting on I/O indefinitely (can’t exit normally).
-
-Identifying and cleaning these processes keeps your system **stable and performant**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* The kernel tracks every process (via PID and state in `/proc`).
-* Zombie = state `Z` (defunct, waiting for parent cleanup).
-* Stuck = state `D` (uninterruptible sleep, usually due to I/O lock).
-* You can find them with `ps`, `top`, or `htop`, and safely terminate or trace them.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Find Zombie Processes
-
-```bash
-ps aux | grep 'Z'
-```
-
-or
-
-```bash
-ps -eo pid,ppid,state,cmd | grep 'Z'
-```
-
-**Example Output:**
-
-```
-1234  1123  Z  [nginx] <defunct>
-```
-
-> * `PID 1234` is zombie.
-> * `PPID 1123` → parent process not reaping its child.
-
----
-
-#### 🟢 2. Verify Zombies Using `top`
-
-```bash
-top
-```
-
-Look at the **“Tasks”** line:
-
-```
-Tasks: 212 total, 1 running, 0 sleeping, 1 zombie
-```
-
-> Shows how many zombie processes exist system-wide.
-
-You can press `Z` in `top` to highlight zombie processes.
-
----
-
-#### 🟢 3. List Only Zombies
-
-```bash
-ps -el | grep Z
-```
-
-**Output:**
-
-```
-F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY  TIME CMD
-0 Z  1000  2234  1123  0  80   0 -    0 exit   ?    00:00:00 nginx <defunct>
-```
-
----
-
-#### 🟢 4. Kill the Parent Process (to Clear Zombies)
-
-Find parent PID (PPID) of the zombie:
-
-```bash
-ps -o ppid= -p 2234
-```
-
-Kill it:
-
-```bash
-sudo kill -HUP <parent_pid>
-```
-
-> Sends hang-up signal to force the parent to reap its child.
-> If it doesn’t work:
-
-```bash
-sudo kill -9 <parent_pid>
-```
-
-> ⚠️ Be cautious — killing a parent can terminate an entire service.
-
----
-
-#### 🟢 5. Find Stuck (Uninterruptible Sleep) Processes
-
-```bash
-ps -eo pid,stat,comm | grep 'D'
-```
-
-**Example Output:**
-
-```
-3345 D disk_io_worker
-4450 D java
-```
-
-> `D` = **waiting on disk or I/O**, often due to kernel/hardware issues.
-
----
-
-#### 🟢 6. Analyze Why a Process Is Stuck
-
-Use `strace` to trace system calls:
-
-```bash
-sudo strace -p <pid>
-```
-
-**Example Output:**
-
-```
-read(3, 0x7ffcf234, 1024) = ? EAGAIN (Resource temporarily unavailable)
-```
-
-> Shows where the process is hanging (e.g., file lock, network wait).
-
----
-
-#### 🟢 7. Kill Stuck Process Safely
-
-Try normal termination first:
-
-```bash
-sudo kill <pid>
-```
-
-If unresponsive:
-
-```bash
-sudo kill -9 <pid>
-```
-
-> `SIGKILL (-9)` immediately ends the process (cannot be caught).
-
----
-
-#### 🟢 8. Monitor Resource-Hogging or Frozen Processes
-
-```bash
-top -o %CPU
-```
-
-or
-
-```bash
-ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head
-```
-
-> Identify processes consuming excessive CPU/memory before they hang.
-
----
-
-#### 🟢 9. Check Kernel/Hardware Locks
-
-```bash
-sudo dmesg | tail
-```
-
-**Output Example:**
-
-```
-blk_update_request: I/O error, dev xvda, sector 10240
-```
-
-> Indicates a process stuck due to **disk I/O issue** — killing won’t help until hardware recovers.
-
----
-
-#### 🟢 10. Forcefully Clear All Defunct Zombies (Rare)
-
-```bash
-sudo pkill -HUP -P 1
-```
-
-> Sends cleanup signal to init/systemd (PID 1) to reap orphaned zombies.
-> *(Do not use indiscriminately on production unless necessary.)*
-
----
-
-### 📋 Process State Reference
-
-| Code | Meaning               | Description                             |
-| ---- | --------------------- | --------------------------------------- |
-| `R`  | Running               | Actively executing                      |
-| `S`  | Sleeping              | Waiting for event                       |
-| `D`  | Uninterruptible Sleep | Stuck (I/O wait)                        |
-| `T`  | Stopped               | Paused by signal or job control         |
-| `Z`  | Zombie                | Process finished but not reaped         |
-| `X`  | Dead                  | Should not be seen in normal conditions |
-
----
-
-### ✅ Best Practices
-
-* 🧠 Investigate **why** processes hang — don’t just `kill -9`.
-* ⚙️ Restart affected services rather than killing parents randomly.
-* 🧩 Use `strace` or `lsof -p <pid>` to trace hung file/network operations.
-* 🚀 Automate zombie detection via monitoring tools (e.g., `ps`, `top`, `nagios`, `cloudwatch-agent`).
-* 🔒 Keep kernels and drivers up to date to prevent I/O stalls.
-
----
-
-### 💡 In short
-
-* Use `ps -eo pid,ppid,state,cmd | grep Z` → find zombies.
-* Use `ps -eo pid,stat,comm | grep D` → find stuck I/O processes.
-* Clear by killing **parent (zombie)** or **process itself (stuck)**.
-  Always confirm the cause using `strace` before killing — in production, focus on **preventing** stuck processes via **code fixes, timeouts, and monitoring**.
-
-----
-## Q: How Do You Monitor Logs in Real Time in Linux?
-
----
-
-### 🧠 Overview
-
-Real-time log monitoring helps **detect issues as they occur** — such as failed SSH attempts, service crashes, or deployment errors.
-In Linux, logs are typically stored under `/var/log/` and can be tailed, streamed, or monitored continuously using tools like `tail`, `less +F`, `journalctl -f`, or centralized log agents (e.g., CloudWatch, ELK).
-
----
-
-### ⚙️ Purpose / How It Works
-
-* Log files grow as system or app events occur.
-* Real-time monitoring tools stream **new lines appended** to a file or journal.
-* You can filter, follow, and analyze logs interactively — perfect for patching, deployments, or troubleshooting.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Follow Logs in Real Time with `tail`
-
-```bash
-sudo tail -f /var/log/messages
-```
-
-**Example Output:**
-
-```
-Nov 11 12:42:01 ip-10-0-1-21 systemd[1]: Started Session 123 of user ec2-user.
-Nov 11 12:42:05 ip-10-0-1-21 sshd[2209]: Accepted publickey for ec2-user from 10.0.0.5 port 50022 ssh2
-```
-
-> `-f` keeps the file open and prints new entries as they are written.
-
-To show the last 50 lines and continue:
-
-```bash
-sudo tail -n 50 -f /var/log/syslog
-```
-
----
-
-#### 🟢 2. Monitor Multiple Log Files Simultaneously
-
-```bash
-sudo tail -f /var/log/syslog /var/log/auth.log
-```
-
-> Streams both logs in one view — useful for correlation between system and authentication events.
-
----
-
-#### 🟢 3. Use `less +F` for Scrollable Real-Time View
-
-```bash
-sudo less +F /var/log/secure
-```
-
-> Similar to `tail -f`, but allows **scrolling back** while following new data (`Ctrl+C` to stop following, `Shift+F` to resume).
-
----
-
-#### 🟢 4. Filter Live Logs by Keyword
-
-```bash
-sudo tail -f /var/log/messages | grep "error"
-```
-
-**Example Output:**
-
-```
-Nov 11 12:43:22 httpd[3402]: [error] Permission denied: access to /admin denied
-```
-
-> Filters only lines containing “error” — perfect for live debugging.
-> For case-insensitive search:
-
-```bash
-grep -i "fail"
-```
-
----
-
-#### 🟢 5. Monitor Systemd Service Logs (Modern Systems)
-
-```bash
-sudo journalctl -u nginx -f
-```
-
-**Output Example:**
-
-```
-Nov 11 12:45:01 ip-10-0-1-21 nginx[1203]: Starting nginx: [ OK ]
-Nov 11 12:45:05 ip-10-0-1-21 nginx[1203]: nginx started successfully
-```
-
-> `-u` = unit (service), `-f` = follow new entries.
-
-You can combine with filters:
-
-```bash
-sudo journalctl -u sshd --since "10 min ago"
-```
-
-> Shows SSH logs from the last 10 minutes.
-
----
-
-#### 🟢 6. Colorize & Highlight Log Output
-
-```bash
-sudo tail -f /var/log/syslog | ccze
-```
-
-> Use `ccze` (install via `sudo apt install ccze -y`) for color-coded log readability.
-
----
-
-#### 🟢 7. Monitor Application-Specific Logs
-
-Examples:
-
-```bash
-sudo tail -f /var/log/nginx/access.log
-sudo tail -f /var/log/httpd/error_log
-sudo tail -f /var/log/amazon/ssm/amazon-ssm-agent.log
-```
-
-> Each application typically logs to its own directory under `/var/log/`.
-
----
-
-#### 🟢 8. Real-Time Monitoring with `multitail`
-
-```bash
-sudo multitail /var/log/syslog /var/log/auth.log
-```
-
-> Interactive tool that splits the screen and shows **multiple logs side-by-side** — great for multi-service debugging.
-
----
-
-#### 🟢 9. Follow Logs Over SSH (Remote Systems)
-
-```bash
-ssh ec2-user@server "sudo tail -f /var/log/messages"
-```
-
-> Stream logs from remote machines without transferring files.
-
----
-
-#### 🟢 10. Forward Logs to Cloud Monitoring (AWS Example)
-
-Install and configure **CloudWatch Agent**:
-
-```bash
-sudo yum install amazon-cloudwatch-agent -y
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-  -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent.json -s
-```
-
-> Streams local logs to CloudWatch for **real-time dashboarding and alerting**.
-
----
-
-### 📋 Common Log Locations
-
-| Log File                             | Description                           |
-| ------------------------------------ | ------------------------------------- |
-| `/var/log/messages`                  | General system messages (RHEL/CentOS) |
-| `/var/log/syslog`                    | System logs (Ubuntu/Debian)           |
-| `/var/log/secure`                    | Authentication, sudo, SSH logs        |
-| `/var/log/dmesg`                     | Kernel and hardware logs              |
-| `/var/log/httpd/`, `/var/log/nginx/` | Web server logs                       |
-| `/var/log/amazon/ssm/`               | AWS Systems Manager logs              |
-| `/var/log/cron`                      | Cron job logs                         |
-
----
-
-### ✅ Best Practices
-
-* 🧠 Use `journalctl -u <service> -f` for **systemd-based** services.
-* ⚙️ Combine `tail -f` with `grep` or `awk` for **targeted filtering**.
-* 🚀 Use `multitail` or `ccze` for real-time multi-log analysis.
-* 🔒 Restrict log access — `/var/log` often contains sensitive info.
-* 📦 Centralize logs with **CloudWatch, ELK, or Loki** for long-term analysis.
-* 🧩 Set up alerting based on log patterns (e.g., “error”, “failed”, “denied”).
-
----
-
-### 💡 In short
-
-Use `tail -f /var/log/<file>` or `journalctl -u <service> -f` to monitor logs live.
-Add `grep` to filter and `multitail` or `ccze` for better visualization.
-In production, stream logs to **CloudWatch or ELK** for real-time centralized monitoring and alerting.
-
----
-## Q: How to Check Firewall Rules in Linux?
-
----
-
-### 🧠 Overview
-
-Firewalls protect your Linux system by **controlling inbound and outbound network traffic** based on rules.
-Depending on your distribution and version, firewall management is done via **`iptables`**, **`firewalld`**, or **`ufw`**.
-Checking firewall rules helps verify **open ports**, **blocked services**, and **security configurations** — especially after deployments or patching.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* **`iptables`**: legacy tool — manages rules directly in the Linux kernel.
-* **`firewalld`**: modern daemon — uses “zones” and dynamic configuration.
-* **`ufw` (Uncomplicated Firewall)**: simplified wrapper (mainly Ubuntu/Debian).
-
-All ultimately control **netfilter**, the kernel-level packet filtering framework.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check if Firewall Is Active
-
-**For `firewalld`:**
-
-```bash
-sudo systemctl status firewalld
-```
-
-**Output:**
-
-```
-● firewalld.service - firewalld - dynamic firewall daemon
-   Active: active (running)
-```
-
-**For `ufw`:**
-
-```bash
-sudo ufw status
-```
-
-**Output:**
-
-```
-Status: active
-```
-
-**For `iptables`:**
-
-```bash
-sudo iptables -L
-```
-
-If no rules appear, it may not be active or rules are empty.
-
----
-
-#### 🟢 2. View All Firewall Rules (firewalld)
-
-```bash
-sudo firewall-cmd --list-all
-```
-
-**Output Example:**
-
-```
-public (active)
-  interfaces: eth0
-  services: ssh dhcpv6-client
-  ports: 8080/tcp 9000/tcp
-  protocols:
-  masquerade: no
-  forward-ports:
-  source-ports:
-  icmp-blocks:
-  rich rules:
-```
-
-> Shows active **zone**, allowed services, and open ports.
-
-To list all zones:
-
-```bash
-sudo firewall-cmd --list-all-zones
-```
-
-To check the zone for a specific interface:
-
-```bash
-sudo firewall-cmd --get-active-zones
-```
-
----
-
-#### 🟢 3. List All Rules in `iptables`
-
-```bash
-sudo iptables -L -v -n
-```
-
-**Output Example:**
-
-```
-Chain INPUT (policy ACCEPT 102 packets, 12800 bytes)
- pkts bytes target     prot opt in  out  source      destination
-  512  38K ACCEPT     tcp  --  *   *    0.0.0.0/0   0.0.0.0/0  tcp dpt:22
-  120  10K DROP       all  --  *   *    192.168.1.100  0.0.0.0/0
-```
-
-**Flags:**
-
-* `-L` → list rules
-* `-v` → verbose (packet/byte counts)
-* `-n` → numeric (don’t resolve hostnames)
-
-> 🔍 Shows rules for **INPUT**, **OUTPUT**, and **FORWARD** chains.
-
----
-
-#### 🟢 4. Show NAT Rules (useful for forwarding)
-
-```bash
-sudo iptables -t nat -L -n -v
-```
-
-**Example:**
-
-```
-Chain POSTROUTING (policy ACCEPT)
-MASQUERADE  all  --  10.0.0.0/24  !10.0.0.0/24
-```
-
-> Used for routing and masquerading (common in Kubernetes, Docker).
-
----
-
-#### 🟢 5. Using `nftables` (Newer Systems)
-
-```bash
-sudo nft list ruleset
-```
-
-**Example Output:**
-
-```
-table inet firewalld {
-  chain input {
-    type filter hook input priority 0;
-    policy accept;
-    tcp dport 22 accept
-    tcp dport 80 accept
-  }
-}
-```
-
-> `nftables` is the successor to `iptables` on RHEL 9, Ubuntu 22+, and Debian 12.
-
----
-
-#### 🟢 6. UFW (Ubuntu/Debian) Rules Overview
-
-```bash
-sudo ufw status verbose
-```
-
-**Output Example:**
-
-```
-Status: active
-Logging: on (low)
-Default: deny (incoming), allow (outgoing)
-New profiles: skip
-
-To                         Action      From
---                         ------      ----
-22/tcp                     ALLOW       Anywhere
-8080/tcp                   ALLOW       10.0.0.0/24
-```
-
-> Shows default policies and per-port rules.
-
-List raw iptables rules behind UFW:
-
-```bash
-sudo iptables -L -n -v
-```
-
----
-
-#### 🟢 7. Check Listening Ports (for Cross-Validation)
-
-```bash
-sudo ss -tuln
-```
-
-**Output Example:**
-
-```
-Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port
-tcp   LISTEN 0      128    0.0.0.0:22         0.0.0.0:*
-tcp   LISTEN 0      128    0.0.0.0:8080       0.0.0.0:*
-```
-
-> Verifies which services are **actually listening** vs. firewall rules.
-
 ---
 
-#### 🟢 8. Save/Export Firewall Rules
+## Q46: How do systemd and init differ in managing services?
 
-**Firewalld:**
+📋 **Comparison**
 
-```bash
-sudo firewall-cmd --runtime-to-permanent
-```
+| Aspect              | init (SysV)        | systemd                   |
+| ------------------- | ------------------ | ------------------------- |
+| Boot Speed          | Slow (sequential)  | Fast (parallel)           |
+| Config              | Shell scripts      | Unit files                |
+| Logging             | No unified logging | Journal (`journalctl`)    |
+| Dependency Handling | Limited            | Advanced dependency graph |
 
-**iptables:**
+🧠 **Key Point**
+systemd is the modern service manager with better logging, dependency handling, and performance.
 
-```bash
-sudo iptables-save > /root/firewall-backup.rules
-```
+💡 **In short**
+init = legacy; systemd = modern, faster, feature-rich.
 
-**nftables:**
-
-```bash
-sudo nft list ruleset > /root/nftables-backup.conf
-```
-
-> Good practice before patching or system upgrades.
-
----
-
-### 📋 Comparison of Firewall Tools
-
-| Tool        | Distro                                   | Command to View Rules     | Default Config File       |
-| ----------- | ---------------------------------------- | ------------------------- | ------------------------- |
-| `firewalld` | RHEL / CentOS 7+, Fedora, Amazon Linux 2 | `firewall-cmd --list-all` | `/etc/firewalld/`         |
-| `iptables`  | All (legacy)                             | `iptables -L -v -n`       | `/etc/sysconfig/iptables` |
-| `ufw`       | Ubuntu / Debian                          | `ufw status verbose`      | `/etc/ufw/`               |
-| `nftables`  | RHEL 9 / Ubuntu 22+                      | `nft list ruleset`        | `/etc/nftables.conf`      |
-
----
-
-### ✅ Best Practices
-
-* 🔒 Default policy should be **deny incoming**, **allow outgoing**.
-* ⚙️ Open only necessary ports (e.g., 22, 443, 80).
-* 🧩 Combine with **security groups** or **VPC NACLs** (in AWS).
-* 🧠 Regularly export and version-control firewall rules.
-* 🚀 After any patching/reboot, verify the firewall is active:
-
-  ```bash
-  sudo systemctl is-active firewalld
-  ```
-* 📊 Integrate firewall logs into **CloudWatch / ELK** for intrusion monitoring.
-
----
-
-### 💡 In short
-
-Use:
-
-* `sudo firewall-cmd --list-all` → for `firewalld`
-* `sudo iptables -L -v -n` → for legacy setups
-* `sudo ufw status verbose` → for Ubuntu systems
-  These show all active rules, ports, and policies — helping ensure your firewall correctly enforces **least-privilege network access**.
-
----
-## Q: How to Mount and Unmount File Systems in Linux?
-
----
-
-### 🧠 Overview
-
-Mounting a file system makes a **storage device (disk, partition, NFS share, ISO, etc.)** accessible within the Linux directory tree.
-Unmounting safely detaches it, ensuring all data is written to disk and no corruption occurs.
-You’ll typically mount disks under `/mnt` or `/media` for temporary use or `/data` for permanent storage.
-
----
-
-### ⚙️ Purpose / How It Works
-
-Linux uses a **virtual file system (VFS)** to unify all storage under `/`.
-Each device or partition is linked (“mounted”) to a specific **mount point** (a directory).
-The kernel uses the **mount table** (`/etc/mtab` or `/proc/mounts`) to track all active mounts.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Identify Available Disks and Partitions
-
-```bash
-lsblk
-```
-
-**Example Output:**
-
-```
-NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-xvda    202:0    0   40G  0 disk
-├─xvda1 202:1    0   10G  0 part /
-├─xvda2 202:2    0   10G  0 part /data
-└─xvdb  202:16   0   20G  0 disk
-```
-
-> `xvdb` = new unmounted volume.
-
-You can also run:
-
-```bash
-sudo fdisk -l
-```
-
-to see partitions and file system types (e.g., ext4, xfs).
-
----
-
-#### 🟢 2. Create a Mount Point
-
-```bash
-sudo mkdir -p /mnt/data
-```
-
-> This directory will be used to attach (mount) the disk.
-
----
-
-#### 🟢 3. Mount the File System
-
-```bash
-sudo mount /dev/xvdb1 /mnt/data
-```
-
-> Mounts partition `/dev/xvdb1` to `/mnt/data`.
-
-Check success:
-
-```bash
-df -h | grep /mnt/data
-```
-
-**Output:**
-
-```
-/dev/xvdb1  20G  1.1G  18G  6%  /mnt/data
-```
-
----
-
-#### 🟢 4. Mount by File System Type
-
-```bash
-sudo mount -t ext4 /dev/xvdb1 /mnt/data
-```
-
-> `-t ext4` explicitly specifies the filesystem type.
-
----
-
-#### 🟢 5. Mount a Network File System (NFS)
-
-```bash
-sudo mount -t nfs 10.0.0.5:/shared /mnt/nfs
-```
-
-> Mounts an NFS share from a remote host to `/mnt/nfs`.
-
----
-
-#### 🟢 6. Mount an ISO Image
-
-```bash
-sudo mount -o loop /tmp/ubuntu.iso /mnt/iso
-```
-
-> `-o loop` mounts the ISO file as a virtual disk.
-
----
-
-#### 🟢 7. View All Mounted File Systems
-
-```bash
-mount | column -t
-```
-
-or
-
-```bash
-findmnt
-```
-
-**Output Example:**
-
-```
-TARGET     SOURCE     FSTYPE  OPTIONS
-/          /dev/xvda1 ext4    rw,relatime
-/mnt/data  /dev/xvdb1 ext4    rw,relatime
-```
-
----
-
-#### 🟢 8. Unmount a File System
-
-```bash
-sudo umount /mnt/data
-```
-
-or by device name:
-
-```bash
-sudo umount /dev/xvdb1
-```
-
-> Always unmount before detaching disks (especially in AWS EBS or USB drives).
-
-If busy (device in use):
-
-```bash
-sudo umount -l /mnt/data       # Lazy unmount
-sudo fuser -vm /mnt/data       # Show which process is using it
-sudo kill <PID>                # Kill process and retry
-```
-
----
-
-#### 🟢 9. Mount File System Automatically on Boot (`/etc/fstab`)
-
-Edit the file:
-
-```bash
-sudo vi /etc/fstab
-```
-
-Add entry:
-
-```
-/dev/xvdb1   /mnt/data   ext4   defaults,nofail   0   2
-```
-
-Then reload:
-
-```bash
-sudo mount -a
-```
-
-> ✅ Ensures the disk mounts automatically after reboot.
-
----
-
-#### 🟢 10. Check Mount Options and Status
-
-```bash
-cat /proc/mounts
-```
-
-**Example Output:**
-
-```
-/dev/xvda1 / ext4 rw,relatime,data=ordered 0 0
-```
-
-> Shows all current mounts with options like `rw`, `noexec`, `relatime`.
-
----
-
-### 📋 Common Mount Options
-
-| Option     | Meaning                                                |
-| ---------- | ------------------------------------------------------ |
-| `rw`       | Read-write access                                      |
-| `ro`       | Read-only                                              |
-| `noexec`   | Disallow execution of binaries                         |
-| `nosuid`   | Ignore SUID bits for security                          |
-| `nodev`    | Prevent device files                                   |
-| `defaults` | Common defaults (`rw,suid,dev,exec,auto,nouser,async`) |
-| `nofail`   | Prevent boot failure if device missing                 |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always unmount before detaching or resizing disks.
-* 🧩 Use `mount -o noexec,nodev,nosuid` for shared or untrusted volumes.
-* 🔒 For sensitive mounts, restrict permissions on the mount point.
-* 🚀 Automate mounting via `/etc/fstab` or cloud-init user data.
-* 🧾 Monitor mount status post-boot using `findmnt` or `df -h`.
-
----
-
-### 💡 In short
-
-Use:
-
-* `sudo mount /dev/xvdb1 /mnt/data` → to mount
-* `sudo umount /mnt/data` → to unmount
-* Add to `/etc/fstab` for persistence.
-  Check with `lsblk`, `findmnt`, or `df -h`.
-  These commands let you safely attach, verify, and detach storage volumes on any Linux system — from local disks to cloud EBS or NFS shares.
-
----
-## Q: How Do You Check SELinux Status in Linux?
-
----
-
-### 🧠 Overview
-
-**SELinux (Security-Enhanced Linux)** is a mandatory access control (MAC) system that enforces security policies beyond traditional file permissions.
-It controls how **processes, users, and files** interact — critical for hardening systems like **RHEL, CentOS, and Amazon Linux**.
-Checking SELinux status helps confirm if it’s **enforcing, permissive, or disabled** — especially after deployments or policy changes.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* SELinux applies **context-based rules** to processes and files.
-* Operates in one of three modes:
-
-  * **Enforcing** → actively blocks policy violations
-  * **Permissive** → only logs violations (no blocking)
-  * **Disabled** → completely turned off
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Check SELinux Status (Quick)
-
-```bash
-getenforce
-```
-
-**Example Output:**
-
-```
-Enforcing
-```
-
-> Returns one of: `Enforcing`, `Permissive`, or `Disabled`.
-
----
-
-#### 🟢 2. Detailed Status Report
-
-```bash
-sestatus
-```
-
-**Example Output:**
-
-```
-SELinux status:                 enabled
-SELinuxfs mount:                /sys/fs/selinux
-Current mode:                   enforcing
-Mode from config file:          enforcing
-Policy version:                 33
-Policy from config file:        targeted
-```
-
-> ✅ Shows runtime status, policy type (`targeted`, `mls`, `minimum`), and configuration source.
-
----
-
-#### 🟢 3. View Configuration File
-
-```bash
-cat /etc/selinux/config
-```
-
-**Example Output:**
-
-```
-# This file controls the state of SELinux on the system.
-SELINUX=enforcing
-SELINUXTYPE=targeted
-```
-
-| Setting                | Description                               |
-| ---------------------- | ----------------------------------------- |
-| `SELINUX=enforcing`    | SELinux active and enforcing policy       |
-| `SELINUX=permissive`   | Logs policy violations only               |
-| `SELINUX=disabled`     | SELinux completely off                    |
-| `SELINUXTYPE=targeted` | Applies to targeted system processes only |
-
-> ⚠️ Changing this file requires a reboot to take effect.
-
----
-
-#### 🟢 4. Check File or Process Contexts
-
-To verify file context:
-
-```bash
-ls -Z /var/www/html/
-```
-
-**Output Example:**
-
-```
--rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 index.html
-```
-
-> Shows **SELinux context** (user:role:type:level).
-
-To check process context:
-
-```bash
-ps -eZ | grep httpd
-```
-
-**Output:**
-
-```
-system_u:system_r:httpd_t:s0   1234 ?  Ss   0:00 /usr/sbin/httpd
-```
-
----
-
-#### 🟢 5. Temporarily Change SELinux Mode
-
-Switch to permissive (for debugging):
-
-```bash
-sudo setenforce 0
-```
-
-Re-enable enforcing:
-
-```bash
-sudo setenforce 1
-```
-
-Verify:
-
-```bash
-getenforce
-```
-
-**Output:**
-
-```
-Permissive
-```
-
-> 🔧 Temporary change — resets to config file mode on reboot.
-
----
-
-#### 🟢 6. Check SELinux Logs for Violations
-
-```bash
-sudo cat /var/log/audit/audit.log | grep denied
-```
-
-or via `ausearch`:
-
-```bash
-sudo ausearch -m avc -ts recent
-```
-
-> Shows **access denials** (e.g., Apache blocked from reading `/home/user`).
-
----
-
-#### 🟢 7. List Installed SELinux Policies
-
-```bash
-semodule -l
-```
-
-**Output Example:**
-
-```
-abrt  1.0.0
-apache  2.9.0
-dhcp  1.2.1
-```
-
-> Lists loaded SELinux modules controlling application behavior.
-
----
-
-### 📋 SELinux Modes Summary
-
-| Mode           | Description                                   | Typical Use Case                |
-| -------------- | --------------------------------------------- | ------------------------------- |
-| **Enforcing**  | Enforces security policies, denies violations | Production servers              |
-| **Permissive** | Logs policy violations, does not enforce      | Testing / Debugging             |
-| **Disabled**   | SELinux off entirely                          | Containers / Debug environments |
-
----
-
-### ✅ Best Practices
-
-* 🔒 Keep SELinux **enabled (enforcing)** in production — disabling weakens system security.
-* 🧠 Use `setenforce 0` only for **temporary troubleshooting**.
-* 🧩 Always inspect audit logs (`audit.log`) when apps fail unexpectedly — SELinux may be blocking them.
-* 🚀 For custom services, assign correct **SELinux context** using:
-
-  ```bash
-  sudo restorecon -Rv /var/www/html
-  ```
-* 📦 Tools like `semanage`, `audit2allow`, and `chcon` help manage or create SELinux policies safely.
-
----
-
-### 💡 In short
-
-Use:
-
-```bash
-getenforce        # Quick check  
-sestatus          # Detailed view  
-cat /etc/selinux/config  # Persistent mode  
-```
-
-If SELinux blocks an app, check `/var/log/audit/audit.log` for “denied” entries.
-Keep it **Enforcing** in production — it’s a powerful layer of defense against privilege escalation and misconfigurations.
-
-----
-## Q: How to Limit CPU and Memory Usage of a Process in Linux?
-
----
-
-### 🧠 Overview
-
-In Linux, you can **throttle or limit** how much **CPU** or **memory** a process can use to prevent system overload or ensure fair resource sharing.
-This is critical in **multi-user**, **CI/CD**, or **containerized environments** where one misbehaving process can impact others.
-
-Linux offers multiple tools for resource control — **`ulimit`**, **`cgroups`**, and utilities like **`cpulimit`** or **`systemd` service limits**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-* **CPU limiting** → restricts how much CPU time a process can consume.
-* **Memory limiting** → caps RAM usage; exceeding the limit can trigger OOM (Out-Of-Memory kill).
-* Linux kernel **cgroups (control groups)** provide fine-grained, persistent resource control.
-
----
-
-### 🧩 Commands / Examples
-
-#### 🟢 1. Limit CPU Usage for a Process (`cpulimit`)
-
-Install first (if not available):
-
-```bash
-sudo apt install cpulimit -y   # Ubuntu/Debian
-sudo yum install cpulimit -y   # RHEL/CentOS
-```
-
-Run a process with CPU limit:
-
-```bash
-cpulimit -l 50 -- stress --cpu 1
-```
-
-> Limits process to **50% of one CPU core**.
-
-To limit an existing process:
-
-```bash
-sudo cpulimit -p <PID> -l 30
-```
-
-> Example: restricts process `<PID>` to **30% CPU**.
-
----
-
-#### 🟢 2. Limit Memory or CPU for a Command (`ulimit`)
-
-Temporary per-session limits:
-
-```bash
-ulimit -v 524288   # Max virtual memory (KB) = 512MB
-ulimit -t 60       # Max CPU time (seconds)
-```
-
-Run your process afterward:
-
-```bash
-./run-heavy-job.sh
-```
-
-> If it exceeds limits → process is **killed automatically**.
-
-Check current limits:
-
-```bash
-ulimit -a
-```
-
-**Output Example:**
-
-```
-core file size          (blocks, -c) unlimited
-cpu time               (seconds, -t) 60
-max memory size        (kbytes, -m) 524288
-open files             (-n) 1024
-```
-
----
-
-#### 🟢 3. Persistent Limits per User (`/etc/security/limits.conf`)
-
-Edit:
-
-```bash
-sudo vi /etc/security/limits.conf
-```
-
-Add entries:
-
-```
-devopsuser  hard  cpu   120
-devopsuser  hard  as    524288
-```
-
-> Limits user `devopsuser` to **120 seconds of CPU** and **512MB address space**.
-
-Reload session to apply.
-
----
-
-#### 🟢 4. Using `cgroups` (Modern, Persistent Method)
-
-Create control group:
-
-```bash
-sudo cgcreate -g cpu,memory:/limited
-```
-
-Set limits:
-
-```bash
-sudo cgset -r cpu.shares=512 limited          # Half of available CPU
-sudo cgset -r memory.limit_in_bytes=512M limited
-```
-
-Run a command under that cgroup:
-
-```bash
-sudo cgexec -g cpu,memory:limited /usr/bin/python3 app.py
-```
-
-Check cgroup stats:
-
-```bash
-sudo cat /sys/fs/cgroup/cpu/limited/cpuacct.usage
-sudo cat /sys/fs/cgroup/memory/limited/memory.usage_in_bytes
-```
-
-> ✅ Best for **persistent**, **fine-grained**, and **system-level** control.
-
 ---
-
-#### 🟢 5. Limit via `systemd` (For Services)
 
-For systemd-managed apps (like Nginx, Jenkins, etc.):
+## Q47: How do you create and manage systemd services?
 
-Edit unit file:
+🧠 **Overview**
+Systemd uses **unit files** located in `/etc/systemd/system/`.
 
-```bash
-sudo systemctl edit nginx.service
-```
+🧩 **Example Service File**
+`/etc/systemd/system/app.service`
 
-Add resource directives:
+```ini
+[Unit]
+Description=My App Service
+After=network.target
 
-```
 [Service]
-CPUQuota=50%
-MemoryMax=512M
+ExecStart=/usr/bin/python3 /opt/app/app.py
+Restart=always
+User=appuser
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-Reload systemd and restart:
+🧩 **Managing the Service**
 
 ```bash
-sudo systemctl daemon-reexec
-sudo systemctl daemon-reload
-sudo systemctl restart nginx
+systemctl daemon-reload
+systemctl start app.service
+systemctl stop app.service
+systemctl restart app.service
+systemctl status app.service
 ```
 
-Check:
+💡 **In short**
+Create unit file → reload → start/enable service.
+
+---
+
+## Q48: What is the purpose of the systemctl command?
+
+🧠 **Overview**
+`systemctl` is the control interface for systemd, used to manage services, units, and system state.
+
+🧩 **Common Commands**
 
 ```bash
+systemctl start nginx
+systemctl stop nginx
+systemctl restart nginx
 systemctl status nginx
+systemctl enable nginx
+systemctl disable nginx
+systemctl list-units --type=service
 ```
 
-> ⏱️ Applies **hard limits automatically** on every service start.
+💡 **In short**
+`systemctl` manages services (start/stop/status/enable).
 
 ---
 
-#### 🟢 6. Using Docker / Kubernetes (Container Environments)
+## Q49: How do you enable a service to start at boot?
 
-**Docker Example:**
+🧠 **Overview**
+Use `systemctl enable` to register the service in the appropriate target.
 
-```bash
-docker run -d --name web --cpus="1.0" --memory="512m" nginx
-```
-
-> Limits container to **1 CPU core** and **512 MB memory**.
-
-**Kubernetes Pod YAML Example:**
-
-```yaml
-resources:
-  requests:
-    cpu: "500m"
-    memory: "256Mi"
-  limits:
-    cpu: "1"
-    memory: "512Mi"
-```
-
-> Enforces hard resource caps per container — preferred for production workloads.
-
----
-
-### 📋 Comparison of Methods
-
-| Method                      | Scope           | Persistence  | CPU Limit | Memory Limit | Typical Use            |
-| --------------------------- | --------------- | ------------ | --------- | ------------ | ---------------------- |
-| `ulimit`                    | User/session    | Temporary    | ✅         | ✅            | Shell scripts, testing |
-| `/etc/security/limits.conf` | User            | Persistent   | ✅         | ✅            | Per-user policy        |
-| `cpulimit`                  | Process         | Runtime only | ✅         | ❌            | Single command control |
-| `cgroups`                   | System-level    | Persistent   | ✅         | ✅            | Fine-grained control   |
-| `systemd`                   | Service-level   | Persistent   | ✅         | ✅            | Daemonized apps        |
-| `docker/k8s`                | Container-level | Persistent   | ✅         | ✅            | Cloud-native workloads |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Use **systemd or cgroups** for persistent and reliable control.
-* 🧠 Apply limits to **specific services** (e.g., Jenkins, Nginx, Python apps).
-* 🚫 Avoid using `kill -9` on limited processes; let the kernel enforce limits.
-* 📊 Monitor resource usage with `top`, `htop`, or `systemd-cgtop`.
-* 🧩 In CI/CD or containerized setups, always define **CPU/memory limits** per workload.
-
----
-
-### 💡 In short
-
-Use:
-
-* `cpulimit -p <PID> -l 50` → limit CPU to 50%.
-* `ulimit -v 524288` → cap memory to 512MB.
-* `systemd` or `cgroups` → for **persistent**, **production-grade** enforcement.
-
-These tools keep rogue processes from overloading your Linux system — ensuring stability, fairness, and predictable performance.
-
----
-## Q: How Do You Troubleshoot High Load Average in Linux?
-
----
-
-### 🧠 Overview
-
-A **high load average** means the system has **too many processes waiting for CPU or I/O** — it’s a symptom, not a cause.
-Load average reflects **CPU utilization + I/O wait + runnable tasks**, averaged over 1, 5, and 15 minutes.
-Troubleshooting involves identifying **what’s overloading** (CPU, memory, disk, or I/O) and **why** (process, service, or misconfiguration).
-
----
-
-### ⚙️ Purpose / How It Works
-
-* Displayed via `uptime`, `top`, or `w`:
-
-  ```
-  load average: 6.24, 4.12, 2.91
-  ```
-
-  → Meaning: 6.24 (1 min), 4.12 (5 min), 2.91 (15 min)
-* Ideally, **load ≈ number of CPU cores** (e.g., 4-core system → load ≤ 4).
-* Causes:
-
-  * 🧠 CPU-bound tasks (e.g., compression, build jobs)
-  * 💾 Disk I/O bottlenecks
-  * 🔄 Memory pressure & swapping
-  * 🌐 Network saturation
-  * 🧩 Zombie/stuck processes
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Check Load & Uptime
-
-```bash
-uptime
-```
-
-**Example Output:**
-
-```
-12:42:08 up 5 days,  3:22,  3 users,  load average: 9.24, 5.32, 3.11
-```
-
-> Load is **very high** for a 4-core system — next step: find which resource is saturated.
-
----
-
-#### 🟢 2. Identify CPU Usage
-
-```bash
-top -o %CPU
-```
-
-or
-
-```bash
-ps -eo pid,ppid,comm,%cpu --sort=-%cpu | head
-```
-
-**Look for:**
-
-* Processes constantly at **>90% CPU**
-* Background jobs (`gcc`, `java`, `python`, etc.)
-
-If multiple cores are maxed:
-
-```bash
-mpstat -P ALL 2
-```
-
-> Shows per-core CPU utilization — helps spot imbalanced load.
-
----
-
-#### 🟢 3. Check I/O Wait (Disk Bottlenecks)
-
-In `top`, look at **`%wa`** (I/O wait):
-
-```
-%Cpu(s): 10.0 us, 2.5 sy, 85.0 id, 2.0 wa
-```
-
-If `wa > 5%`, disk I/O is slow.
-
-Detailed view:
-
-```bash
-iostat -xz 2
-```
-
-**Focus on:**
-
-| Metric  | Meaning               | Threshold             |
-| ------- | --------------------- | --------------------- |
-| `%util` | Disk busy percentage  | > 80% = bottleneck    |
-| `await` | Average I/O wait time | > 20ms = slow storage |
-
-> Common cause: overloaded EBS, NFS latency, or log write bursts.
-
----
-
-#### 🟢 4. Check Memory and Swap
-
-```bash
-free -h
-```
-
-**Output Example:**
-
-```
-              total   used   free  shared  buff/cache  available
-Mem:           4.0G   3.6G   0.2G   0.1G        0.3G       0.2G
-Swap:          2.0G   1.8G   0.2G
-```
-
-> If swap is heavily used → memory exhaustion.
-
-Identify top memory consumers:
-
-```bash
-ps -eo pid,comm,%mem,%cpu --sort=-%mem | head
-```
-
-If swap usage is high → add RAM or limit memory per process (`ulimit`, `systemd`).
-
----
-
-#### 🟢 5. Check Stuck or Uninterruptible Tasks
-
-```bash
-ps -eo pid,stat,cmd | grep 'D'
-```
-
-> State `D` = uninterruptible sleep (usually I/O wait).
-> Processes in `D` state for long → disk or NFS problems.
-
----
-
-#### 🟢 6. Check System Load by Process Count
-
-```bash
-vmstat 2 5
-```
-
-Focus on:
-
-* `r` (runnable): > number of CPUs → CPU overload
-* `b` (blocked): > 0 → I/O bottlenecks
-
-Example:
-
-```
-r  b  swpd  free  buff  cache  si  so  bi  bo  in  cs  us  sy  id  wa  st
-8  2   100   500  200   800    0   0  40  50  100 200 90  5   3   2   0
-```
-
-> 8 runnable tasks on 4 CPUs → overloaded.
-
----
-
-#### 🟢 7. Check Disk Usage and Inodes
-
-```bash
-df -h
-```
-
-If a partition is full:
-
-```
-/dev/xvda1  20G  20G  0G  100%  /
-```
-
-> Disk full → processes stuck writing logs.
-
-Also check inode usage:
-
-```bash
-df -i
-```
-
-> High inode use (100%) can block file creation.
-
----
-
-#### 🟢 8. Check Network Load (Optional)
-
-```bash
-sar -n DEV 2 5
-```
-
-or
-
-```bash
-iftop
-```
-
-> Look for high bandwidth processes causing network I/O wait.
-
----
-
-#### 🟢 9. Identify Kernel or Hardware Issues
-
-```bash
-dmesg | tail -20
-```
-
-**Examples:**
-
-```
-blk_update_request: I/O error, dev xvda, sector 2048
-Out of memory: Kill process 2345 (java)
-```
-
-> Hardware I/O errors or OOM events can spike load.
-
----
-
-#### 🟢 10. Correlate with Logs
-
-* System logs:
-
-  ```bash
-  sudo tail -n 50 -f /var/log/messages
-  ```
-* Application logs:
-
-  ```bash
-  tail -f /var/log/nginx/error.log
-  ```
-
-> Check for crashes, timeouts, or resource errors around spike time.
-
----
-
-### 📋 Load Average Cheat Sheet
-
-| Resource  | Command                     | Key Metric       | Action                        |
-| --------- | --------------------------- | ---------------- | ----------------------------- |
-| CPU       | `top`, `mpstat`             | `%CPU`, `%sys`   | Kill/optimize CPU-heavy tasks |
-| Disk      | `iostat`, `iotop`           | `%util`, `await` | Check disk I/O latency        |
-| Memory    | `free -h`, `ps`             | `Swap`, `%mem`   | Add RAM or limit usage        |
-| I/O Wait  | `vmstat`, `top`             | `wa`             | Check for slow I/O            |
-| Processes | `ps -eo state`              | `D`, `Z`, `R`    | Kill hung/zombie procs        |
-| Logs      | `tail -f /var/log/messages` | Errors, OOMs     | Root cause trace              |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always correlate load with **CPU count** (`nproc`).
-* 🧠 Investigate **I/O wait** and **swap**, not just CPU.
-* 🚀 Use `htop` or `atop` for interactive diagnosis.
-* 🧩 Limit CPU/memory hogs using **`cpulimit`**, **`ulimit`**, or **cgroups**.
-* 🔒 Automate monitoring via **CloudWatch**, **Prometheus**, or **Netdata** to detect spikes early.
-
----
-
-### 💡 In short
-
-1. Run `uptime` → confirm load.
-2. Check `top` → identify high `%CPU`, `%wa`, or `%mem`.
-3. Use `iostat`, `vmstat`, and `ps` → isolate CPU vs I/O bottleneck.
-4. Inspect logs and kernel messages for root cause.
-
-A **high load average ≠ high CPU** — it often means blocked I/O or memory contention. Always diagnose by **correlating all system metrics** before taking action.
-
-----
-# 🧰 Common Linux Commands for DevOps Engineers
-
-A practical, ready-to-use Linux command reference for **system administration, troubleshooting, automation, and DevOps tasks**.
-
----
-
-## 🖥️ **System Information**
-
-| Task                    | Command          | Description                                    |
-| ----------------------- | ---------------- | ---------------------------------------------- |
-| Kernel & system details | `uname -a`       | Shows kernel version, architecture, OS type    |
-| Linux distribution info | `lsb_release -a` | Displays distro version (Ubuntu, CentOS, etc.) |
-| Hostname details        | `hostnamectl`    | Prints hostname, OS, and kernel details        |
-| CPU information         | `lscpu`          | CPU model, cores, threads, and architecture    |
-| Memory info             | `free -h`        | Shows total, used, and free RAM                |
-| System uptime           | `uptime`         | Shows system uptime and load averages          |
-
----
-
-## ⚙️ **Process Management**
-
-| Task                       | Command                | Description                             |
-| -------------------------- | ---------------------- | --------------------------------------- |
-| List all processes         | `ps aux`               | Displays all running processes          |
-| View dynamic process usage | `top` or `htop`        | Real-time CPU/memory usage              |
-| Search for process         | `pgrep nginx`          | Finds process IDs by name               |
-| Kill a process             | `kill -9 <PID>`        | Force-terminates a process              |
-| Check process tree         | `pstree -p`            | Displays hierarchical process structure |
-| Track system load          | `uptime` or `vmstat 2` | Shows CPU load averages                 |
-
----
-
-## 💾 **Disk & File Management**
-
-| Task                | Command                           | Description                            |
-| ------------------- | --------------------------------- | -------------------------------------- |
-| Check disk usage    | `df -h`                           | Human-readable filesystem usage        |
-| Find directory size | `du -sh *`                        | Shows size of each item in current dir |
-| List block devices  | `lsblk`                           | Displays mounted disks/partitions      |
-| Mount filesystem    | `sudo mount /dev/xvdb1 /mnt/data` | Mounts a device to a directory         |
-| Unmount filesystem  | `sudo umount /mnt/data`           | Safely detaches a device               |
-| Check inode usage   | `df -i`                           | Shows inode usage per filesystem       |
-
----
-
-## 🌐 **Networking**
-
-| Task                     | Command                                   | Description                      |
-| ------------------------ | ----------------------------------------- | -------------------------------- |
-| Show interfaces          | `ifconfig` or `ip addr`                   | Lists all network interfaces     |
-| Check active connections | `netstat -an` or `ss -ltnp`               | Shows listening sockets and PIDs |
-| Test connectivity        | `curl -I https://example.com`             | Checks HTTP/HTTPS access         |
-| DNS lookup               | `dig google.com` or `nslookup google.com` | Tests DNS resolution             |
-| Trace route              | `tracepath example.com`                   | Checks route to destination      |
-| View routing table       | `ip route`                                | Displays routing information     |
-
----
-
-## 📜 **Logs & Monitoring**
-
-| Task                    | Command                         | Description                          |
-| ----------------------- | ------------------------------- | ------------------------------------ |
-| View latest log lines   | `tail -n 100 /var/log/syslog`   | Shows last 100 lines                 |
-| Follow log in real time | `tail -f /var/log/messages`     | Live stream system logs              |
-| View service logs       | `journalctl -u nginx`           | Shows logs for a systemd unit        |
-| Filter log entries      | `grep -i error /var/log/syslog` | Finds error lines (case-insensitive) |
-| Check login attempts    | `sudo less /var/log/secure`     | View SSH/sudo login logs             |
-
----
-
-## 🔍 **Search & File Operations**
-
-| Task                | Command                                                     | Description                    |
-| ------------------- | ----------------------------------------------------------- | ------------------------------ |
-| Search text in file | `grep -i "error" app.log`                                   | Case-insensitive search        |
-| Recursive search    | `grep -R "keyword" /etc/`                                   | Searches in all subdirectories |
-| Find file by name   | `find / -type f -name "*.conf"`                             | Finds config files             |
-| Count lines         | `wc -l filename`                                            | Counts lines in file           |
-| Compare files       | `diff file1 file2`                                          | Shows line differences         |
-| Compress/uncompress | `tar -czvf backup.tar.gz /data` / `tar -xzvf backup.tar.gz` | Create/extract archives        |
-
----
-
-## 👥 **Users & Groups**
-
-| Task               | Command                   | Description              |
-| ------------------ | ------------------------- | ------------------------ |
-| Add user           | `sudo useradd devopsuser` | Creates new user         |
-| Set password       | `sudo passwd devopsuser`  | Sets user password       |
-| View user info     | `id devopsuser`           | UID, GID, groups         |
-| List user groups   | `groups devopsuser`       | Shows group memberships  |
-| Switch user        | `su - devopsuser`         | Switch to another user   |
-| Check current user | `whoami`                  | Shows logged-in username |
-
----
-
-## 📦 **Package Management**
-
-| Distro        | Commands                            | Description                    |
-| ------------- | ----------------------------------- | ------------------------------ |
-| Ubuntu/Debian | `apt update && apt install nginx`   | Manage packages                |
-| RHEL/CentOS   | `yum install httpd` or `dnf update` | Install/update/remove packages |
-| openSUSE      | `zypper install git`                | Package operations             |
-| Amazon Linux  | `sudo yum install docker -y`        | Common cloud environment usage |
-
----
-
-## 🤖 **Automation & Scheduling**
-
-| Task                | Command                            | Description                 |
-| ------------------- | ---------------------------------- | --------------------------- |
-| Create cron job     | `crontab -e`                       | Opens user’s cron file      |
-| List cron jobs      | `crontab -l`                       | Shows scheduled jobs        |
-| Run job once        | `at now + 5 minutes`               | One-time job execution      |
-| List systemd timers | `systemctl list-timers`            | View automated system tasks |
-| Schedule script     | `0 2 * * * /opt/scripts/backup.sh` | Runs backup daily at 2AM    |
-| View scheduled jobs | `cat /etc/crontab`                 | System-wide cron schedule   |
-
----
-
-## ✅ **Bonus: DevOps Quick Checks**
-
-| Use Case              | Command                      | Purpose                       |
-| --------------------- | ---------------------------- | ----------------------------- |
-| Check open ports      | `sudo ss -tuln`              | See listening ports/services  |
-| Check service status  | `systemctl status docker`    | Verify systemd service health |
-| Check CPU/memory load | `top`, `htop`, or `vmstat 2` | Performance monitoring        |
-| Check disk I/O        | `iostat -xz 2`               | Detect I/O bottlenecks        |
-| Monitor processes     | `pidstat -p <PID> 1`         | Track CPU/memory per process  |
-| Check SELinux         | `getenforce` or `sestatus`   | Verify SELinux mode           |
-
----
-
-### 💡 In short
-
-For DevOps work:
-
-* **System:** `uname -a`, `df -h`, `lsblk`
-* **Network:** `ss -ltnp`, `curl -I`, `dig`
-* **Logs:** `journalctl -u <service>`, `grep error /var/log/*`
-* **Automation:** `crontab -l`, `systemctl list-timers`
-* **Processes:** `ps aux | grep <service>`
-
-These are the **core Linux commands** every DevOps engineer should master — for quick diagnosis, automation, and system stability.
-
----
-## Q: How Do You Troubleshoot High CPU Usage on a Linux Server?  
-
----
-
-### 🧠 Overview  
-High CPU usage means one or more processes are consuming **excessive CPU time**, slowing down the system or affecting other services.  
-It can result from **runaway processes, application loops, I/O wait misinterpretation, or insufficient CPU capacity**.  
-
-The goal is to **identify the culprit**, **analyze its behavior**, and **take corrective action** without bringing the server down.
-
----
-
-### ⚙️ Purpose / How It Works  
-- The kernel scheduler distributes CPU time among processes.  
-- High CPU load can occur due to:  
-  - 🧮 CPU-bound processes (computation-heavy jobs)  
-  - 🧠 Memory pressure → swapping  
-  - 💾 Disk or I/O wait misread as CPU load  
-  - 🧩 Zombie or hung threads  
-- Load average and CPU usage are related but **not identical** — one shows system demand, the other shows actual usage.
-
----
-
-### 🧩 Step-by-Step Troubleshooting  
-
-#### 🟢 1. Check Load and CPU Summary  
-```bash
-uptime
-```
-**Example Output:**
-```
-12:43:01 up 2 days, 4:22, 2 users, load average: 9.24, 7.18, 4.12
-```
-> Compare load average with number of CPU cores:
-```bash
-nproc
-```
-If `load > cores`, CPU is overloaded.
-
----
-
-#### 🟢 2. Identify Top CPU Consumers  
-```bash
-top -o %CPU
-```
-or  
-```bash
-ps -eo pid,ppid,comm,%cpu,%mem --sort=-%cpu | head
-```
-**Example Output:**
-```
-PID   PPID  COMMAND      %CPU  %MEM
-2431  1     java         185.2  32.5
-1256  1     nginx        60.1   5.2
-```
-> The top process (`java`) is consuming excessive CPU.
-
----
-
-#### 🟢 3. Check Per-Core CPU Usage  
-```bash
-mpstat -P ALL 2
-```
-**Output:**
-```
-CPU    %usr %sys %iowait %idle
-all    85.0 10.0  1.0    4.0
-0      92.0  6.0  1.0    1.0
-```
-> If all cores are >80% busy → system-wide issue.  
-> If one core is maxed → single-threaded bottleneck.
-
----
-
-#### 🟢 4. View Process Thread Usage  
-```bash
-top -H -p <PID>
-```
-> Shows per-thread CPU — helpful for multi-threaded apps (Java, Python, Nginx).
-
-Identify hot thread and map to function:
-```bash
-printf "%x\n" <TID>     # convert thread ID to hex
-jstack <PID> | grep <hex_tid> -A 10
-```
-> For Java apps — see which method is looping.
-
----
-
-#### 🟢 5. Check I/O Wait (Misleading “High CPU”)  
-```bash
-iostat -xz 2
-```
-**Example:**
-```
-%util: 95%, await: 30ms
-```
-> CPU looks high because processes are **waiting on disk**.  
-If `%wa` (I/O wait) in `top` > 10%, it’s a **storage issue**, not CPU.
-
----
-
-#### 🟢 6. Check System Stats Over Time  
-```bash
-sar -u 1 5
-```
-**Output:**
-```
-%user %system %iowait %steal %idle
-80.2  10.3   0.5     0.0     9.0
-```
-> Identifies whether CPU pressure is from user processes or kernel/system calls.
-
----
-
-#### 🟢 7. Investigate Specific Process Behavior  
-```bash
-strace -p <PID>
-```
-> Traces system calls to see if it’s stuck in a loop, waiting on I/O, or thrashing memory.  
-
-Example:
-```
-read(3, "", 4096) = 0
-read(3, "", 4096) = 0
-```
-> Looping reads = bug in application code.
-
----
-
-#### 🟢 8. Check Kernel Logs for CPU or Hardware Errors  
-```bash
-dmesg | grep -i cpu
-```
-**Example:**
-```
-CPU1: Core temperature above threshold, throttling
-```
-> CPU throttling or hardware failure can also cause load spikes.
-
----
-
-#### 🟢 9. Look for Runaway or Zombie Processes  
-```bash
-ps -eo pid,ppid,stat,cmd | grep 'Z'
-```
-> Zombies consume process table slots, not CPU, but can cause confusion in load readings.
-
----
-
-#### 🟢 10. Kill or Throttle the Offending Process  
-Gracefully:
-```bash
-sudo kill <PID>
-```
-Forcefully:
-```bash
-sudo kill -9 <PID>
-```
-Limit CPU instead of killing:
-```bash
-sudo cpulimit -p <PID> -l 50
-```
-> Restricts process to 50% CPU.
-
----
-
-#### 🟢 11. Verify After Fix  
-```bash
-top
-```
-Ensure CPU usage stabilizes:
-```
-%Cpu(s): 20.5 us, 3.0 sy, 1.0 ni, 75.5 id, 0.0 wa
-```
-
----
-
-### 📋 Key Tools Summary  
-
-| Purpose | Command | Notes |
-|----------|----------|-------|
-| Load average | `uptime`, `top` | Overall CPU demand |
-| Top processes | `ps`, `top -o %CPU` | Identify CPU hogs |
-| Per-core stats | `mpstat -P ALL` | Check imbalance |
-| I/O waits | `iostat -xz` | Rule out disk bottleneck |
-| Historical CPU | `sar -u` | CPU trend over time |
-| Trace process | `strace -p PID` | Debug stuck loops |
-| Throttle CPU | `cpulimit` | Temporary mitigation |
-
----
-
-### ✅ Best Practices  
-- 🧠 Compare load average vs CPU count — avoid false alarms.  
-- 🧩 Identify *which process* and *why* (loop, I/O, memory, etc.).  
-- ⚙️ Tune applications (thread pools, GC tuning, Nginx workers).  
-- 🚀 Use **systemd limits** (`CPUQuota=50%`) for noisy daemons.  
-- 🔒 Monitor continuously with **CloudWatch**, **Prometheus**, or **Netdata**.  
-
----
-
-### 💡 In short  
-1. Run `top` → find high `%CPU` process.  
-2. Use `ps` or `pidstat` → confirm offender.  
-3. Check `mpstat` / `iostat` → verify CPU vs I/O issue.  
-4. `strace` or `jstack` → debug application loop.  
-5. Throttle (`cpulimit`) or restart if needed.  
-
-High CPU = **symptom**, not root cause — always correlate with **I/O, memory, and process behavior** before acting.
-
----
-## Q: How Do You Troubleshoot and Fix “Disk Full on Root ( / )” in Linux?
-
----
-
-### 🧠 Overview
-
-When the root filesystem (`/`) becomes full, critical services like **SSH, logging, cron, or systemd** may fail.
-This usually happens due to **log bloat, core dumps, temp files, Docker images, or old kernels**.
-
-The goal: **quickly identify large files/directories, clean them safely, and prevent recurrence**.
-
----
-
-### ⚙️ Purpose / How It Works
-
-The root (`/`) partition contains system directories: `/var`, `/etc`, `/usr`, `/tmp`, `/home`, etc.
-A full root filesystem can cause:
-
-* Failed package installs/updates
-* Unreachable system (cannot write PID/logs)
-* Crashed services (e.g., `systemd-journald`, `nginx`)
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Check Overall Disk Usage
-
-```bash
-df -h
-```
-
-**Example Output:**
-
-```
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/xvda1       20G   20G     0 100% /
-/dev/xvdb        50G   10G    40G  20% /data
-```
-
-> `Use% = 100%` confirms `/` is full.
-
----
-
-#### 🟢 2. Identify Which Directories Are Consuming Space
-
-Start from `/` and go down:
-
-```bash
-sudo du -xh --max-depth=1 / | sort -h
-```
-
-**Output:**
-
-```
-1.2G /etc
-3.5G /usr
-8.9G /var
-5.1G /home
-```
-
-Then drill deeper:
-
-```bash
-sudo du -xh --max-depth=1 /var | sort -h
-```
-
-> Often `/var/log`, `/var/lib/docker`, or `/tmp` are the culprits.
-
----
-
-#### 🟢 3. Find the Largest Files
-
-```bash
-sudo find / -xdev -type f -size +500M -exec ls -lh {} \; | sort -k5 -rh | head -10
-```
-
-**Example Output:**
-
-```
--rw------- 1 root root 8.2G /var/log/messages
--rw------- 1 root root 4.0G /var/log/journal/abcd123/system.journal
-```
-
-> Quickly pinpoints large log or dump files.
-
----
-
-#### 🟢 4. Clean Log Files Safely
-
-##### Option 1: Truncate Instead of Delete
-
-```bash
-sudo truncate -s 0 /var/log/messages
-sudo truncate -s 0 /var/log/syslog
-```
-
-##### Option 2: Clear Journald Logs
-
-```bash
-sudo journalctl --vacuum-size=500M
-```
-
-> Keeps only 500 MB of systemd logs.
-
-##### Option 3: Rotate Logs Manually
-
-```bash
-sudo logrotate -f /etc/logrotate.conf
-```
-
----
-
-#### 🟢 5. Remove Old Kernels (RHEL/Debian)
-
-Check installed kernels:
-
-```bash
-rpm -q kernel | wc -l    # RHEL/CentOS
-dpkg --list | grep linux-image  # Ubuntu/Debian
-```
-
-Remove old ones (keep at least 2):
-
-```bash
-sudo dnf remove kernel-oldversion
-sudo apt autoremove --purge
-```
-
----
-
-#### 🟢 6. Clean Temporary Files
-
-```bash
-sudo rm -rf /tmp/*
-sudo rm -rf /var/tmp/*
-```
-
-> ⚠️ Ensure no running processes use these dirs before cleaning.
-
----
-
-#### 🟢 7. Check for Large Deleted Files Still Open
-
-Sometimes logs deleted while in use still consume space.
-
-Check open deleted files:
-
-```bash
-sudo lsof | grep deleted
-```
-
-**Output Example:**
-
-```
-rsyslogd  890 root  txt REG 8,1 2.1G /var/log/messages (deleted)
-```
-
-> Restart the process holding the deleted file:
-
-```bash
-sudo systemctl restart rsyslog
-```
-
-→ Frees up space instantly.
-
----
-
-#### 🟢 8. Check Docker Images, Containers, and Volumes
-
-```bash
-docker system df
-docker system prune -af
-docker volume prune -f
-```
-
-> Docker often fills `/var/lib/docker`.
-
----
-
-#### 🟢 9. Check Package Cache
-
-**APT:**
-
-```bash
-sudo apt clean
-sudo apt autoremove
-```
-
-**YUM/DNF:**
-
-```bash
-sudo yum clean all
-sudo dnf clean all
-```
-
----
-
-#### 🟢 10. Identify Orphaned Files on Deleted Mounts
-
-If a partition (like `/var`) failed to mount, data may have filled `/var` on root instead.
-
-Check mounts:
-
-```bash
-mount | grep /var
-```
-
-> If missing, remount it correctly:
-
-```bash
-sudo mount /dev/xvdb1 /var
-```
-
----
-
-### 📋 Common Directories to Check
-
-| Directory          | Typical Cause             | Safe Cleanup                   |
-| ------------------ | ------------------------- | ------------------------------ |
-| `/var/log/`        | Log bloat                 | Truncate or vacuum             |
-| `/var/lib/docker/` | Container images          | `docker system prune -af`      |
-| `/tmp/`            | Temp files                | `rm -rf /tmp/*`                |
-| `/var/cache/`      | Package/cache files       | `apt clean` or `yum clean all` |
-| `/home/`           | User backups or downloads | Compress or move to /data      |
-| `/var/crash/`      | Core dumps                | Delete with `rm -f`            |
-
----
-
-### ✅ Prevention Measures
-
-* 🧠 Set up **log rotation** (`/etc/logrotate.conf`):
-
-  ```bash
-  /var/log/*.log {
-      weekly
-      rotate 4
-      compress
-      missingok
-      notifempty
-  }
-  ```
-
-* ⚙️ Limit journal size permanently:
-
-  ```bash
-  sudo vi /etc/systemd/journald.conf
-  SystemMaxUse=500M
-  ```
-
-* 🧩 Move heavy data to separate partitions:
-
-  ```
-  /dev/xvdb1  → /var
-  /dev/xvdc1  → /home
-  ```
-
-* 📊 Set up monitoring (CloudWatch, Prometheus, Netdata) for **disk alerts**:
-
-  * Trigger alerts at **80% usage threshold**.
-
----
-
-### 💡 In short
-
-1. Check usage → `df -h`
-2. Find large dirs/files → `du -xh --max-depth=1 /`
-3. Clear logs, caches, and temp files safely
-4. Restart services holding deleted files (`lsof | grep deleted`)
-5. Prune Docker data and old kernels
-6. Configure log rotation and disk monitoring
-
-✅ **Goal:** Bring root usage <80%, prevent recurrence with automation (logrotate + monitoring).
-
----
-## Q: How Do You Troubleshoot and Fix Slow SSH Login in Linux?
-
----
-
-### 🧠 Overview
-
-Slow SSH logins (delay before password prompt or key acceptance) are **very common** in cloud and on-prem environments.
-The delay usually happens **before authentication**, caused by **DNS lookups, GSSAPI/Kerberos, PAM checks, or entropy shortage**.
-Fixing it involves disabling unnecessary lookups and optimizing SSH daemon settings.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When an SSH client connects:
-
-1. Server performs **reverse DNS lookup** on the client IP.
-2. Tries **GSSAPI (Kerberos)** authentication if enabled.
-3. Runs **PAM modules**, **banner scripts**, or **login checks**.
-4. Only then shows a password or key prompt.
-
-Each of these can introduce seconds of delay if misconfigured.
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Measure Login Delay
-
-Check total connection time:
-
-```bash
-ssh -vvv user@server
-```
-
-**Look for:**
-
-* `Connecting to ...` → delay = network or DNS issue
-* `Authentications that can continue:` → delay = PAM/GSSAPI
-* `debug1: Offering public key:` → delay = key auth or permissions
-
-Example:
-
-```
-debug1: Connecting to 10.0.0.10 [10.0.0.10] port 22.
-debug1: Next authentication method: gssapi-with-mic
-```
-
-> Long gap before “Authentications that can continue” → DNS or GSSAPI issue.
-
----
-
-#### 🟢 2. Disable Reverse DNS Lookup on Server
-
-Edit SSH daemon config:
-
-```bash
-sudo vi /etc/ssh/sshd_config
-```
-
-Add or modify:
-
-```
-UseDNS no
-```
-
-Restart SSH:
-
-```bash
-sudo systemctl restart sshd
-```
-
-> This is **the most common fix** (saves 3–5 seconds per login).
-
----
-
-#### 🟢 3. Disable GSSAPI (Kerberos) Authentication
-
-In `/etc/ssh/sshd_config`:
-
-```
-GSSAPIAuthentication no
-```
-
-Restart service:
-
-```bash
-sudo systemctl restart sshd
-```
-
-> Prevents unnecessary Kerberos lookups in enterprise environments.
-
----
-
-#### 🟢 4. Check for Reverse DNS Configuration
-
-If `UseDNS` must remain enabled (security policies), ensure reverse DNS exists:
-
-```bash
-dig -x <client-ip>
-```
-
-If no result, add a PTR record or entry in `/etc/hosts`:
-
-```bash
-echo "10.0.0.25 devops-client" | sudo tee -a /etc/hosts
-```
-
-> Missing PTR records often cause SSH to hang before login.
-
----
-
-#### 🟢 5. Check Authentication Order
-
-In `/etc/ssh/sshd_config`, adjust the order:
-
-```
-AuthenticationMethods publickey,password
-PubkeyAuthentication yes
-PasswordAuthentication yes
-```
-
-> Ensures SSH tries key-based authentication first (faster, more secure).
-
----
-
-#### 🟢 6. Disable PAM if Not Needed
-
-```bash
-UsePAM no
-```
-
-> PAM runs multiple modules (like `mkhomedir`, `faillock`) that can slow logins.
-> Only disable if you don’t use PAM-based authentication.
-
----
-
-#### 🟢 7. Check Server Entropy (Slow Key Generation)
-
-Low entropy affects SSHD crypto operations:
-
-```bash
-cat /proc/sys/kernel/random/entropy_avail
-```
-
-If < 1000 → add entropy generator:
-
-```bash
-sudo apt install haveged -y
-sudo systemctl enable --now haveged
-```
-
-> Helps on VMs where random data generation is slow.
-
----
-
-#### 🟢 8. Check Login Scripts or Network Filesystems
-
-Inspect:
-
-```bash
-cat ~/.bashrc
-cat ~/.bash_profile
-```
-
-> Long-running scripts, NFS mounts, or remote commands here can delay login.
-
-If `/home` is NFS-mounted, test:
-
-```bash
-time ls /home
-```
-
-> If slow → NFS latency causes login delay.
-
----
-
-#### 🟢 9. Monitor SSHD Logs for Hints
-
-```bash
-sudo tail -f /var/log/auth.log    # Ubuntu/Debian
-sudo tail -f /var/log/secure      # RHEL/CentOS
-```
-
-Look for timestamps and gaps:
-
-```
-Nov 11 10:40 sshd[1024]: Connection from 10.0.0.25
-Nov 11 10:45 sshd[1024]: Accepted publickey for user
-```
-
-> The 5-minute gap indicates pre-auth delay (DNS, PAM, or GSSAPI).
-
----
-
-#### 🟢 10. Test from Another Host or Subnet
-
-```bash
-time ssh user@server exit
-```
-
-> Confirms if delay is **client-side (SSH config, DNS)** or **server-side (sshd)**.
-
----
-
-### 📋 Common Root Causes and Fixes
-
-| Root Cause         | Symptom                          | Fix                            |
-| ------------------ | -------------------------------- | ------------------------------ |
-| Reverse DNS lookup | Delay before password prompt     | `UseDNS no`                    |
-| GSSAPI / Kerberos  | 5–10s delay pre-auth             | `GSSAPIAuthentication no`      |
-| PAM checks         | Long delay before shell          | `UsePAM no` (optional)         |
-| Low entropy        | High CPU, slow SSHD startup      | Install `haveged`              |
-| NFS / remote home  | Slow shell after login           | Check `/etc/fstab` and mounts  |
-| Hostname mismatch  | Delay + “reverse mapping failed” | Add correct `/etc/hosts` entry |
-| Misordered auth    | Public key ignored               | Adjust `AuthenticationMethods` |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always disable **UseDNS** and **GSSAPI** unless required.
-* 🧠 Use **SSH keys**, not passwords, for faster login and automation.
-* 🚀 Keep `sshd_config` clean — avoid unnecessary modules.
-* 📊 Monitor `/var/log/auth.log` for consistent slow entries.
-* 🧩 For fleets (AWS, Azure), bake optimal SSHD configs into AMIs or Cloud-init.
-
----
-
-### 💡 In short
-
-Slow SSH login?
-
-1. `UseDNS no`
-2. `GSSAPIAuthentication no`
-3. Check reverse DNS (`dig -x <client-ip>`)
-4. Verify PAM and NFS mounts
-
-✅ Most login delays are caused by **DNS or GSSAPI lookups** — disabling them cuts login time from 10s → <1s instantly.
-
----
-## Q: How Do You Troubleshoot a Service That Fails to Start in Linux?
-
----
-
-### 🧠 Overview
-
-When a service fails to start (e.g., `nginx`, `docker`, `jenkins`, etc.), it’s typically due to **misconfiguration, missing dependencies, permission issues, or resource exhaustion**.
-Linux services are usually managed via **systemd** (`systemctl`) or **init.d**, and system logs are your best starting point.
-
----
-
-### ⚙️ Purpose / How It Works
-
-`systemd` manages service lifecycles:
-
-* Starts and stops processes via unit files (`/etc/systemd/system/*.service`).
-* Logs detailed errors to **`journalctl`**.
-* Tracks dependencies, environment variables, and restart policies.
-
-A failed service usually means **`ExecStart` failed**, the **binary crashed**, or a **dependency service isn’t available**.
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Check Service Status
-
-```bash
-sudo systemctl status <service-name>
-```
-
-**Example:**
-
-```bash
-sudo systemctl status nginx
-```
-
-**Output:**
-
-```
-● nginx.service - A high performance web server
-   Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled)
-   Active: failed (Result: exit-code) since Tue 2025-11-11 12:44:03 UTC; 15s ago
-  Process: 1214 ExecStart=/usr/sbin/nginx (code=exited, status=1/FAILURE)
-  Main PID: 1214 (code=exited, status=1/FAILURE)
-```
-
-> Focus on: **exit code**, **timestamp**, and **ExecStart** command.
-
----
-
-#### 🟢 2. View Detailed Logs
-
-```bash
-sudo journalctl -u <service-name> -xe
-```
-
-**Example:**
-
-```bash
-sudo journalctl -u nginx -xe
-```
-
-**Output Example:**
-
-```
-nginx[1214]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
-nginx[1214]: nginx: configuration file /etc/nginx/nginx.conf test failed
-```
-
-> Root cause: port conflict or config syntax error.
-
----
-
-#### 🟢 3. Test the Service Configuration
-
-Many services support built-in config validation:
-
-| Service          | Command                                                             | Purpose                 |
-| ---------------- | ------------------------------------------------------------------- | ----------------------- |
-| **Nginx**        | `sudo nginx -t`                                                     | Test config syntax      |
-| **Apache**       | `sudo apachectl configtest`                                         | Validate HTTPD configs  |
-| **sshd**         | `sudo sshd -t`                                                      | Test SSH configuration  |
-| **systemd unit** | `sudo systemd-analyze verify /etc/systemd/system/<service>.service` | Verify unit file syntax |
-
-> Run tests before restarting the service.
-
----
-
-#### 🟢 4. Check for Port Conflicts
-
-```bash
-sudo ss -ltnp | grep :<port>
-```
-
-**Example:**
-
-```bash
-sudo ss -ltnp | grep :80
-```
-
-**Output:**
-
-```
-LISTEN 0 128 0.0.0.0:80 users:(("httpd",pid=2021,fd=4))
-```
-
-> Another service (Apache) may already be using port 80 → stop it or change port in config.
-
----
-
-#### 🟢 5. Verify Permissions and Ownership
-
-```bash
-ls -l /var/run /var/log /etc/<service>/
-```
-
-Check that:
-
-* Service user (e.g., `nginx`, `jenkins`, `mysql`) can access its config and data directories.
-* Config files are not **owned by root** when the service runs as a non-root user.
-
-Example:
-
-```bash
-sudo chown -R nginx:nginx /var/www/html
-```
-
----
-
-#### 🟢 6. Check Resource Limits
-
-```bash
-free -h
-df -h
-ulimit -a
-```
-
-> If memory or disk space is full, service startup may fail.
-> Look for errors like:
-
-```
-Cannot allocate memory
-No space left on device
-```
-
----
-
-#### 🟢 7. Identify Dependency Failures
-
-List dependencies:
-
-```bash
-sudo systemctl list-dependencies <service-name>
-```
-
-Check their status:
-
-```bash
-sudo systemctl status <dependency>
-```
-
-Example:
-
-```
-docker.service requires containerd.service
-containerd.service failed → docker fails
-```
-
----
-
-#### 🟢 8. Restart Service and Watch Logs Live
-
-```bash
-sudo systemctl restart <service-name>
-sudo journalctl -fu <service-name>
-```
-
-> Follows live logs as the service starts.
-
----
-
-#### 🟢 9. Fix SELinux or Firewall Blocks (RHEL/CentOS)
-
-Check SELinux denials:
-
-```bash
-sudo ausearch -m avc -ts recent
-```
-
-Temporarily disable SELinux (for testing only):
-
-```bash
-sudo setenforce 0
-```
-
-Check firewall:
-
-```bash
-sudo firewall-cmd --list-all
-```
-
-> Ensure required ports (e.g., 80, 443, 8080) are open.
-
----
+🧩 **Command**
 
-#### 🟢 10. Check for Missing or Corrupted Binaries
-
-```bash
-sudo which <binary>
-rpm -V <package>        # RHEL/CentOS
-dpkg -V <package>       # Debian/Ubuntu
-```
-
-Reinstall if necessary:
-
-```bash
-sudo yum reinstall nginx -y
-sudo apt reinstall nginx -y
-```
-
----
-
-### 📋 Common Root Causes and Fixes
-
-| Root Cause         | Example Error                                 | Resolution                                    |
-| ------------------ | --------------------------------------------- | --------------------------------------------- |
-| Port conflict      | `Address already in use`                      | Stop conflicting service or change port       |
-| Bad config syntax  | `nginx: [emerg] invalid directive`            | Fix config file (`nginx -t`)                  |
-| Missing dependency | `Failed to start because X.service not found` | Install/start dependency                      |
-| Permission issue   | `Permission denied`                           | Fix file ownership or permissions             |
-| Low disk or memory | `No space left on device`                     | Free space or add swap                        |
-| SELinux blocking   | `avc: denied`                                 | Update SELinux context or disable temporarily |
-| Corrupt binary     | `Exec format error`                           | Reinstall service package                     |
-
----
-
-### ✅ Best Practices
-
-* 🧠 Always check logs (`journalctl -u <service> -xe`) first.
-* ⚙️ Validate configurations before restarting services.
-* 🔒 Keep proper ownership for `/etc/<service>` and `/var/lib/<service>`.
-* 🚀 Monitor system resources — low memory or full disk often cause startup failures.
-* 🧩 For systemd custom units, always reload config after changes:
-
-  ```bash
-  sudo systemctl daemon-reload
-  ```
-
----
-
-### 💡 In short
-
-1. `systemctl status <service>` → check failure reason
-2. `journalctl -u <service> -xe` → find exact error
-3. Validate configs (`nginx -t`, `sshd -t`, etc.)
-4. Fix ports, permissions, or dependencies
-5. Restart and verify logs live
-
-✅ **Root cause is almost always visible in journalctl output** — start there, fix the error, reload, and revalidate.
-
----
-## Q: How Do You Troubleshoot an Unreachable Linux Server?
-
----
-
-### 🧠 Overview
-
-When a server becomes **unreachable**, it could be due to **network, firewall, routing, SSH, or system failure**.
-The key is to **narrow down where the communication breaks** — client, network, or server — using systematic network-layer testing (ICMP, TCP, routing, DNS, etc.).
-
----
-
-### ⚙️ Purpose / How It Works
-
-Connectivity depends on multiple layers:
-
-1. **DNS resolution** (hostname → IP)
-2. **Network path** (ping, route)
-3. **Firewall/Security Group** (ports open)
-4. **Service availability** (e.g., SSHD running)
-5. **System state** (CPU, memory, crash, kernel panic)
-
-Troubleshooting should proceed layer by layer — from **local client → network → target host**.
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Check if Host Resolves via DNS
-
-```bash
-nslookup server.example.com
-# or
-dig server.example.com
-```
-
-**Output:**
-
-```
-server.example.com.  IN  A  10.0.0.25
-```
-
-> ❌ If DNS fails, use IP address directly or fix `/etc/resolv.conf`.
-
----
-
-#### 🟢 2. Test Network Reachability (Ping or Alternative)
-
-If ICMP is allowed:
-
-```bash
-ping -c 4 10.0.0.25
-```
-
-**Output:**
-
-```
-PING 10.0.0.25 (10.0.0.25): 56 data bytes
-Request timeout for icmp_seq 1
-```
-
-> If blocked (common in AWS/Azure), use TCP test instead:
-
-```bash
-nc -zv 10.0.0.25 22
-```
-
-or
-
 ```bash
-telnet 10.0.0.25 22
+systemctl enable nginx
+systemctl disable nginx
 ```
 
-> ✅ Success = server reachable at TCP level.
-> ❌ Failure = network/firewall issue.
+💡 **In short**
+`enable` adds symlinks so the service auto-starts at boot.
 
 ---
-
-#### 🟢 3. Check Routing from Client
-
-```bash
-ip route get 10.0.0.25
-```
-
-**Output:**
-
-```
-10.0.0.25 via 10.0.0.1 dev eth0 src 10.0.0.10
-```
-
-> If missing route or wrong interface, adjust routing or VPN configuration.
-
-For detailed path:
-
-```bash
-tracepath 10.0.0.25
-```
 
-or
-
-```bash
-traceroute 10.0.0.25
-```
+## Q50: What are runlevels in Linux?
 
-> Identify where traffic stops (router, firewall, gateway).
+🧠 **Overview**
+Runlevels define system states (traditional init-based systems). systemd replaces this with "targets".
 
----
+📋 **Traditional Runlevels**
 
-#### 🟢 4. Verify Security Group / Firewall Rules
+| Runlevel | Meaning             |
+| -------- | ------------------- |
+| 0        | Halt                |
+| 1        | Single-user mode    |
+| 3        | Multi-user (no GUI) |
+| 5        | Multi-user with GUI |
+| 6        | Reboot              |
 
-On **client**:
+📋 **systemd Equivalent**
 
-```bash
-sudo iptables -L -v -n
-sudo ufw status verbose
-```
+| Runlevel | Target            |
+| -------- | ----------------- |
+| 3        | multi-user.target |
+| 5        | graphical.target  |
 
-On **server** (via console access or rescue mode):
+🧩 **Check current target**
 
 ```bash
-sudo firewall-cmd --list-all
+systemctl get-default
 ```
 
-In **AWS/Azure/GCP**:
+💡 **In short**
+Runlevels define system state; systemd uses more flexible "targets".
 
-* Confirm Security Group allows inbound TCP 22 (SSH).
-* Verify NACL or subnet ACL rules.
-
-| Check                | Expected                  |
-| -------------------- | ------------------------- |
-| Inbound SSH (22/tcp) | ✅ Allowed                 |
-| Outbound responses   | ✅ Allowed                 |
-| ICMP                 | Optional (for ping tests) |
-
 ---
-
-#### 🟢 5. Confirm SSHD is Running on Server
-
-If console or management access is available (e.g., AWS EC2 Session Manager, VMware Console):
-
-```bash
-sudo systemctl status sshd
-```
-
-**Output:**
 
-```
-sshd.service - OpenSSH Daemon
-   Active: active (running)
-```
+## Q51: What is the difference between systemctl and service commands?
 
-> If inactive:
+🧠 **Overview**
+Both manage services, but `systemctl` is for **systemd**, while `service` is for older **SysVinit** systems (though still works as a wrapper).
 
-```bash
-sudo systemctl restart sshd
-```
+📋 **Comparison**
 
-If missing:
+| Feature  | systemctl                        | service               |
+| -------- | -------------------------------- | --------------------- |
+| System   | systemd                          | SysVinit (legacy)     |
+| Controls | services, units, targets, timers | only services         |
+| Logging  | journalctl integration           | no native logging     |
+| Syntax   | `systemctl start nginx`          | `service nginx start` |
 
-```bash
-sudo apt install openssh-server -y
-sudo systemctl enable --now sshd
-```
+💡 **In short**
+`systemctl` = modern, full-featured; `service` = legacy wrapper.
 
 ---
-
-#### 🟢 6. Check Server’s Network Interfaces
-
-```bash
-ip addr
-```
-
-**Output Example:**
-
-```
-eth0: inet 10.0.0.25/24 brd 10.0.0.255
-```
-
-> Ensure interface is **up** and has the correct IP.
-
-If interface is down:
 
-```bash
-sudo ip link set eth0 up
-sudo systemctl restart network
-```
+## Q52: How do you check system logs in Linux?
 
----
+🧠 **Overview**
+Logs are crucial for debugging services, kernel, authentication, and boot issues.
 
-#### 🟢 7. Check Default Gateway and Routes on Server
+🧩 **Examples**
 
 ```bash
-ip route
-```
-
-**Expected Output:**
-
+tail -f /var/log/syslog
+tail -f /var/log/messages
+journalctl -xe        # systemd logs
+journalctl -u nginx   # service logs
 ```
-default via 10.0.0.1 dev eth0
-```
-
-> Missing route = no outbound connectivity. Add manually:
 
-```bash
-sudo ip route add default via 10.0.0.1 dev eth0
-```
+💡 **In short**
+Check `/var/log/*` or use `journalctl` on systemd systems.
 
 ---
-
-#### 🟢 8. Check for Network Interface Errors
-
-```bash
-dmesg | grep eth
-```
-
-**Possible Errors:**
-
-```
-eth0: link is down
-Network unreachable
-```
 
-> May indicate NIC failure or misconfigured driver.
+## Q53: What is the purpose of journalctl?
 
----
+🧠 **Overview**
+`journalctl` reads logs from **systemd’s journald**. It provides unified, structured, queryable logs.
 
-#### 🟢 9. Check Disk Space and System Health (If Reachable via Console)
+🧩 **Common Commands**
 
 ```bash
-df -h
-top
-journalctl -p 3 -xb
+journalctl                # full log
+journalctl -u nginx       # service logs
+journalctl -xe            # errors + last entries
+journalctl --since "1 hour ago"
+journalctl -b             # logs from current boot
 ```
-
-> Full root filesystem (`/` 100%) or OOM can cause SSH and network daemons to hang.
-
----
-
-#### 🟢 10. Boot into Rescue or Console Mode (If Completely Unreachable)
-
-Use **cloud console access** (AWS EC2 Serial Console / Azure Serial Console / VMware Console):
 
-* Check `/var/log/messages` or `/var/log/syslog` for boot/network issues.
-* Fix misconfigured `/etc/network/interfaces` or `/etc/netplan/*.yaml`.
-* Restart network:
+💡 **In short**
+`journalctl` = centralized log viewer for systemd-managed systems.
 
-  ```bash
-  sudo systemctl restart NetworkManager
-  ```
-* Bring NIC up manually:
-
-  ```bash
-  sudo ip link set eth0 up
-  sudo dhclient eth0
-  ```
-
----
-
-### 📋 Common Causes and Fixes
-
-| Root Cause            | Symptom                           | Fix                                            |
-| --------------------- | --------------------------------- | ---------------------------------------------- |
-| DNS failure           | `ssh: Could not resolve hostname` | Check `/etc/resolv.conf` or DNS server         |
-| Firewall block        | Timeout on SSH                    | Open port 22 via `firewalld` or Security Group |
-| SSHD stopped          | “Connection refused”              | Start service: `systemctl restart sshd`        |
-| Interface down        | No ping/route                     | `ip link set eth0 up`                          |
-| IP conflict           | Intermittent reachability         | Check `arp -n`, fix duplicate IP               |
-| Disk full             | No response / hangs               | `df -h` → free up space                        |
-| Kernel panic          | Totally unresponsive              | Check via console logs or reboot               |
-| Route misconfig       | “Network unreachable”             | Add default route or correct gateway           |
-| Cloud SG / NACL block | Works from inside, not outside    | Update inbound/outbound rules                  |
-
----
-
-### ✅ Best Practices
-
-* ⚙️ Always keep **out-of-band access** (console, SSM, IPMI, etc.) configured.
-* 🔒 Limit SSH access to known IPs but confirm it’s **open for your admin source**.
-* 🧩 Use monitoring (CloudWatch, Pingdom, Prometheus) to detect downtime early.
-* 🧠 For automation, run **connectivity checks** in CI/CD (e.g., `nc -zv host 22`).
-* 🚀 Keep network configs (`/etc/netplan`, `/etc/sysconfig/network-scripts`) versioned.
-
----
-
-### 💡 In short
-
-1. `dig <hostname>` → check DNS
-2. `nc -zv <ip> 22` → check port reachability
-3. Verify **firewall & Security Group** rules
-4. Console in → check **sshd**, **network interfaces**, **default route**, **disk space**
-5. Fix and **restart networking** (`systemctl restart network` or `NetworkManager`)
-
-✅ **Most “unreachable” servers** are due to misconfigured firewall, downed NIC, or stopped SSHD — always start from network layer and move upward.
-
----
-## Q: How Do You Troubleshoot Missing Application Logs in Linux?
-
 ---
-
-### 🧠 Overview
-
-Missing application logs are a **critical issue** in DevOps and production environments — without logs, you lose visibility into errors, performance, and deployments.
-This typically happens due to **misconfigured log paths, permission issues, rotation/truncation, disk full, or application-level logging misconfigurations**.
-
-The goal: **find where logs should be**, verify **logging mechanisms**, and **restore continuous logging** safely.
-
----
-
-### ⚙️ Purpose / How It Works
-
-Applications log through one of these mechanisms:
-
-* **Direct file logging** → `/var/log/<app>/app.log`
-* **System logging (journald/syslog)** → `journalctl -u <service>`
-* **Container logs** → `/var/lib/docker/containers/.../json.log`
-* **Custom stdout/stderr handlers** in modern apps (e.g., microservices).
-
-When logs disappear, the issue usually lies in the **logging destination** or **permissions/config rotation**.
-
----
-
-### 🧩 Step-by-Step Troubleshooting
-
-#### 🟢 1. Identify How the Application Logs
-
-Check process details:
-
-```bash
-ps -ef | grep <app>
-```
-
-> Look for startup parameters like `--log-file`, `--log-dir`, or `-Dlogging.file`.
 
-Example:
-
-```
-/usr/bin/java -jar app.jar --logging.file=/var/log/myapp/app.log
-```
+## Q54: Where are system logs typically stored in Linux?
 
-> Tells you **where logs should exist**.
+🧠 **Overview**
+Most logs are in `/var/log/`, including system, application, and authentication logs.
 
-If it’s a systemd service:
+📋 **Common Log Paths**
 
-```bash
-sudo systemctl cat <app>.service
-```
+| Log File            | Purpose                         |
+| ------------------- | ------------------------------- |
+| `/var/log/syslog`   | System messages (Debian/Ubuntu) |
+| `/var/log/messages` | System messages (RHEL/CentOS)   |
+| `/var/log/auth.log` | Authentication logs             |
+| `/var/log/secure`   | Auth logs (RHEL/CentOS)         |
+| `/var/log/kern.log` | Kernel logs                     |
+| `/var/log/dmesg`    | Boot + kernel ring buffer       |
 
-> Inspect `ExecStart` or `Environment` lines for log paths or `StandardOutput` directives.
+💡 **In short**
+Logs live in `/var/log`; location varies by distro.
 
 ---
-
-#### 🟢 2. Check if Logs Are Redirected to Journald or Syslog
 
-```bash
-sudo journalctl -u <app> -f
-```
+## Q55: What is the difference between /var/log/syslog and /var/log/messages?
 
-> If logs appear here, the app is logging to **stdout/stderr** via **systemd journald** instead of files.
+📋 **Comparison**
 
-If using syslog:
+| File                  | Distro        | Contains                                              |
+| --------------------- | ------------- | ----------------------------------------------------- |
+| **/var/log/syslog**   | Debian/Ubuntu | System logs, services, kernel, general events         |
+| **/var/log/messages** | RHEL/CentOS   | General system messages, but fewer kernel/auth events |
 
-```bash
-sudo grep <app> /var/log/syslog
-sudo grep <app> /var/log/messages
-```
+🧠 **Key Point**
+Both are “general system logs,” but the naming depends on the OS family.
 
-> Application logs might be forwarded there instead of `/var/log/<app>/`.
+💡 **In short**
+Ubuntu → `/var/log/syslog`
+RHEL → `/var/log/messages`
 
 ---
-
-#### 🟢 3. Verify Log Directory and File Permissions
-
-```bash
-ls -ld /var/log/<app>
-ls -l /var/log/<app>/
-```
 
-**Example Output:**
+## Q56: How do you configure log rotation in Linux?
 
-```
-drwxr-xr-x 2 root root 4096 Nov 11  /var/log/myapp
--rw-r--r-- 1 root root  0 Nov 11  app.log
-```
-
-> If owned by `root`, but app runs as `tomcat`, `nginx`, or `jenkins` → it can’t write.
-
-Fix ownership:
-
-```bash
-sudo chown -R <appuser>:<appgroup> /var/log/<app>
-```
-
-Fix permissions:
+🧠 **Overview**
+Log rotation prevents log files from growing without limit by compressing, rotating, and purging older logs.
 
-```bash
-sudo chmod 755 /var/log/<app>
-sudo chmod 644 /var/log/<app>/*.log
-```
-
----
+⚙️ **Config Locations**
 
-#### 🟢 4. Check for Log Rotation or Deletion
+* Main config: `/etc/logrotate.conf`
+* App-specific configs: `/etc/logrotate.d/*`
 
-Check logrotate configuration:
+🧩 **Example Entry**
 
-```bash
-sudo cat /etc/logrotate.d/<app>
-```
-
-**Example:**
-
-```
-/var/log/myapp/*.log {
-    rotate 4
-    weekly
+```conf
+/var/log/nginx/*.log {
+    daily
+    rotate 7
     compress
     missingok
     notifempty
 }
 ```
 
-> If `notifempty` or `missingok` present, empty logs might be skipped silently.
-
-Force a rotation test:
-
-```bash
-sudo logrotate -f /etc/logrotate.conf
-```
-
-Check rotated archives:
-
-```bash
-ls -lh /var/log/myapp/*.gz
-```
-
-> Logs might have rotated and compressed.
+💡 **In short**
+Use logrotate configs to rotate logs daily/weekly and limit retention.
 
 ---
 
-#### 🟢 5. Check if Disk Is Full or Read-Only
+## Q57: What is logrotate and how does it work?
+
+🧠 **Overview**
+`logrotate` is the Linux tool that **automates log rotation**—splitting, compressing, and cleaning up logs.
+
+⚙️ **How It Works**
+
+* Reads configs from `/etc/logrotate*`
+* Rotates based on size/time
+* Compresses old logs (`.gz`)
+* Deletes logs past retention threshold
+* Usually triggered daily via cron or systemd timer
+
+🧩 **Manual rotation**
 
 ```bash
-df -h /
+logrotate -f /etc/logrotate.conf
 ```
 
-If `Use% = 100%`, no new logs can be written.
-Free space, then restart service.
+💡 **In short**
+logrotate manages log growth automatically.
 
-Also check filesystem status:
+---
+
+## Q58: How do you monitor real-time logs?
+
+🧠 **Overview**
+Real-time logs are essential for debugging running applications.
+
+🧩 **Examples**
 
 ```bash
-mount | grep /var/log
+tail -f /var/log/syslog
+tail -f /var/log/nginx/access.log
+journalctl -u nginx -f
 ```
 
-If it shows `(ro)`, remount as read-write:
+💡 **In short**
+Use `tail -f` or `journalctl -f` to stream logs live.
+
+---
+
+## Q59: What is the purpose of the dmesg command?
+
+🧠 **Overview**
+`dmesg` displays messages from the **kernel ring buffer**—mostly hardware, drivers, and boot events.
+
+🧩 **Examples**
+
+```bash
+dmesg | grep error
+dmesg | grep usb
+```
+
+⚙️ **Useful for**
+
+* Disk / I/O debugging
+* Kernel crashes
+* USB/network hardware events
+* Boot diagnostics
+
+💡 **In short**
+`dmesg` = kernel-level event log viewer.
+
+---
+
+## Q60: How do you troubleshoot boot issues using system logs?
+
+🧠 **Overview**
+Boot issues often relate to misconfigured services, failing mounts, kernel problems, or hardware errors. systemd-based systems provide detailed boot logs.
+
+🧩 **Useful Commands**
+
+```bash
+journalctl -b         # logs from current boot
+journalctl -b -1      # previous boot
+journalctl -xe        # errors + warnings
+systemctl --failed    # failed services
+dmesg | less          # kernel + hardware messages
+```
+
+⚙️ **Steps**
+
+1. Check failed units → `systemctl --failed`
+2. Inspect boot logs → `journalctl -b`
+3. Check kernel messages → `dmesg`
+4. Validate mount points in `/etc/fstab`
+
+💡 **In short**
+Use `journalctl -b`, `systemctl --failed`, and `dmesg` to identify the service or hardware issue.
+
+---
+
+## Q61: What is swap space in Linux?
+
+🧠 **Overview**
+Swap is disk space used as an extension of RAM when memory is full. It prevents OOM (Out-of-Memory) crashes but is slower than RAM.
+
+⚙️ **Used For**
+
+* Memory overflow handling
+* Hibernation (on desktops/laptops)
+
+💡 **In short**
+Swap = disk-backed virtual memory used when RAM runs out.
+
+---
+
+## Q62: How do you create and configure swap space?
+
+🧠 **Overview**
+You can create swap using a **swap file** or **swap partition**.
+
+🧩 **Create Swap File (Most Common)**
+
+```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+🧩 **Make Swap Persistent**
+Add to `/etc/fstab`:
+
+```
+/swapfile  none  swap  sw  0  0
+```
+
+💡 **In short**
+Create file → set permissions → `mkswap` → `swapon` → add to fstab.
+
+---
+
+## Q63: What is swappiness and how do you tune it?
+
+🧠 **Overview**
+Swappiness controls how aggressively Linux swaps memory to disk (0–100).
+
+📋 **Values**
+
+* **Low value (e.g., 10)** → avoid swap, use RAM more
+* **High value (e.g., 60 default)** → swap more aggressively
+
+🧩 **Check Current Value**
+
+```bash
+cat /proc/sys/vm/swappiness
+```
+
+🧩 **Set Temporarily**
+
+```bash
+sudo sysctl vm.swappiness=10
+```
+
+🧩 **Set Permanently**
+Add to `/etc/sysctl.conf`:
+
+```
+vm.swappiness = 10
+```
+
+💡 **In short**
+Swappiness = kernel’s swap aggressiveness; tune via sysctl.
+
+---
+
+## Q64: What are inodes in Linux?
+
+🧠 **Overview**
+Inodes store metadata about files (permissions, size, timestamps, pointers to data blocks). Every file uses an inode.
+
+⚙️ **Inode Does NOT Store**
+
+* Filename
+* File content
+
+💡 **In short**
+Inode = metadata structure describing a file on disk.
+
+---
+
+## Q65: How do you check inode usage?
+
+🧠 **Overview**
+Use `df -i` to check inode capacity and usage.
+
+🧩 **Examples**
+
+```bash
+df -i
+stat file.txt          # inode number
+ls -i                  # show inode for files
+```
+
+💡 **In short**
+Use `df -i` to see inode usage per filesystem.
+
+---
+
+## Q66: What happens when you run out of inodes?
+
+🧠 **Overview**
+Even if disk space is free, you cannot create new files if inodes are exhausted.
+
+⚙️ **Symptoms**
+
+* “No space left on device” errors
+* `touch`, or app writes fail
+* Lots of tiny files filling inodes
+
+🧩 **Check**
+
+```bash
+df -i
+```
+
+💡 **In short**
+Running out of inodes prevents new files from being created.
+
+---
+
+## Q67: What is the difference between hard links and soft links?
+
+📋 **Comparison Table**
+
+| Feature                  | Hard Link             | Soft Link (Symlink) |
+| ------------------------ | --------------------- | ------------------- |
+| Points to                | File inode            | File path           |
+| Breaks if target removed | No                    | Yes                 |
+| Cross filesystem support | No                    | Yes                 |
+| File type                | Identical to original | Shortcut            |
+| Inode count              | Increases             | No change           |
+
+💡 **In short**
+Hard link = same file; symlink = pointer to file path.
+
+---
+
+## Q68: What are the limitations of hard links?
+
+🧠 **Overview**
+
+| Limitation               | Explanation                   |
+| ------------------------ | ----------------------------- |
+| Cannot link directories  | Prevents recursive loops      |
+| Cannot cross filesystems | Must be same partition        |
+| Becomes confusing        | All hard links look identical |
+
+💡 **In short**
+Hard links only work within the same filesystem and not for directories.
+
+---
+
+## Q69: How does file system mounting work in Linux?
+
+🧠 **Overview**
+Mounting attaches a filesystem (disk, partition, NFS, USB) to a directory tree so it becomes accessible.
+
+⚙️ **Steps**
+
+1. Detect device: `/dev/sdb1`
+2. Create mount point: `mkdir /mnt/data`
+3. Mount filesystem:
+
+```bash
+mount /dev/sdb1 /mnt/data
+```
+
+🧩 **View Mounts**
+
+```bash
+mount | grep sdb1
+df -h
+```
+
+💡 **In short**
+Mounting exposes a filesystem at a directory path.
+
+---
+
+## Q70: What is /etc/fstab and what is its purpose?
+
+🧠 **Overview**
+`/etc/fstab` defines filesystems to mount at boot, including mount points, types, and options.
+
+🧩 **Example fstab Entry**
+
+```
+/dev/sdb1   /data   ext4    defaults   0  2
+```
+
+📋 **Fields**
+
+| Field | Meaning         |
+| ----- | --------------- |
+| 1     | Device          |
+| 2     | Mount point     |
+| 3     | Filesystem type |
+| 4     | Options         |
+| 5     | Dump            |
+| 6     | fsck order      |
+
+💡 **In short**
+`fstab` automates mounting of filesystems at boot.
+
+---
+
+## Q71: How do you mount and unmount file systems?
+
+🧠 **Overview**
+Use `mount` to attach and `umount` to detach filesystems.
+
+🧩 **Mount Examples**
+
+```bash
+sudo mount /dev/sdb1 /mnt/data
+sudo mount -t nfs 192.168.1.10:/share /mnt/nfs
+```
+
+🧩 **Unmount Examples**
+
+```bash
+sudo umount /mnt/data
+sudo umount /dev/sdb1
+```
+
+⚠️ **Warning**
+Unmount fails if the directory is in use:
+
+```bash
+lsof /mnt/data
+```
+
+💡 **In short**
+`mount` attaches; `umount` detaches; ensure no process is using the mount.
+
+---
+
+## Q72: What file systems are commonly used in Linux (ext4, xfs, btrfs)?
+
+🧠 **Overview**
+Different filesystems are optimized for performance, stability, scalability, and snapshotting.
+
+📋 **Comparison Table**
+
+| Filesystem | Best For                                | Features                               |
+| ---------- | --------------------------------------- | -------------------------------------- |
+| **ext4**   | General-purpose Linux servers           | Stable, mature, fast                   |
+| **XFS**    | Large files, enterprise environments    | High performance, scalable, journaling |
+| **Btrfs**  | Snapshots, checksums, advanced features | CoW, RAID, compression, snapshots      |
+
+💡 **In short**
+ext4 = default, XFS = high performance, Btrfs = advanced CoW features.
+
+---
+
+## Q73: How do you check file system integrity using fsck?
+
+🧠 **Overview**
+`fsck` checks and repairs filesystem inconsistencies. Must run on **unmounted** or **read-only** partitions.
+
+🧩 **Examples**
+
+```bash
+sudo fsck /dev/sdb1
+sudo fsck -y /dev/sdc1   # auto-fix
+```
+
+⚠️ **Warning**
+Never run `fsck` on a mounted filesystem—can corrupt data.
+
+💡 **In short**
+Use `fsck` offline to fix filesystem errors.
+
+---
+
+## Q74: What is LVM (Logical Volume Manager)?
+
+🧠 **Overview**
+LVM provides flexible storage management by abstracting disks into **physical volumes → volume groups → logical volumes**.
+
+📋 **LVM Layers**
+
+| Layer  | Description                                   |
+| ------ | --------------------------------------------- |
+| **PV** | Physical disks/partitions                     |
+| **VG** | Pool of PVs                                   |
+| **LV** | Virtual “disk” used as partitions/filesystems |
+
+💡 **In short**
+LVM = dynamic storage allowing resizing and flexible allocation.
+
+---
+
+## Q75: How do you create and manage logical volumes?
+
+🧠 **Overview**
+LVM commands manage PVs, VGs, and LVs.
+
+🧩 **Create Physical Volume**
+
+```bash
+pvcreate /dev/sdb1
+```
+
+🧩 **Create Volume Group**
+
+```bash
+vgcreate vgdata /dev/sdb1
+```
+
+🧩 **Create Logical Volume**
+
+```bash
+lvcreate -L 10G -n lvdata vgdata
+mkfs.ext4 /dev/vgdata/lvdata
+mount /dev/vgdata/lvdata /data
+```
+
+🧩 **Extend Logical Volume**
+
+```bash
+lvextend -L +5G /dev/vgdata/lvdata
+resize2fs /dev/vgdata/lvdata    # ext4
+```
+
+💡 **In short**
+Create PV → VG → LV → format → mount.
+
+---
+
+## Q76: What are the advantages of using LVM?
+
+📋 **Benefits**
+
+| Feature          | Description                              |
+| ---------------- | ---------------------------------------- |
+| **Resizing**     | Expand/shrink LVs dynamically            |
+| **Snapshots**    | Point-in-time backups                    |
+| **Disk pooling** | Combine multiple disks                   |
+| **Migration**    | Move data between disks without downtime |
+
+💡 **In short**
+LVM provides flexible, scalable, and dynamic storage management.
+
+---
+
+## Q77: How do you extend a logical volume without downtime?
+
+🧠 **Overview**
+Online resizing works for most filesystems (ext4, XFS).
+
+🧩 **Steps**
+
+1. Extend LV:
+
+```bash
+lvextend -L +5G /dev/vgdata/lvdata
+```
+
+2. Resize filesystem:
+
+**ext4**
+
+```bash
+resize2fs /dev/vgdata/lvdata
+```
+
+**XFS**
+
+```bash
+xfs_growfs /data
+```
+
+💡 **In short**
+Extend LV → grow filesystem; works online on modern filesystems.
+
+---
+
+## Q78: What is RAID and what RAID levels are supported in Linux?
+
+🧠 **Overview**
+RAID combines disks for redundancy and/or performance.
+
+📋 **Common RAID Levels**
+
+| Level       | Description                   |
+| ----------- | ----------------------------- |
+| **RAID 0**  | Striping, no redundancy, fast |
+| **RAID 1**  | Mirroring                     |
+| **RAID 5**  | Striping + parity             |
+| **RAID 6**  | Double parity                 |
+| **RAID 10** | Mirrors + stripe              |
+
+Linux uses the **mdadm** tool for software RAID.
+
+💡 **In short**
+RAID = redundancy/performance using multiple disks.
+
+---
+
+## Q79: How do you configure software RAID in Linux?
+
+🧠 **Overview**
+mdadm manages software RAID arrays.
+
+🧩 **Create RAID1 Array**
+
+```bash
+mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+```
+
+🧩 **Check Status**
+
+```bash
+cat /proc/mdstat
+```
+
+🧩 **Persist config**
+
+```bash
+mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+```
+
+💡 **In short**
+Create array → monitor with `/proc/mdstat` → persist config.
+
+---
+
+## Q80: What is the difference between cron and at commands?
+
+📋 **Comparison**
+
+| Feature | cron                                | at                          |
+| ------- | ----------------------------------- | --------------------------- |
+| Purpose | Recurring tasks                     | One-time tasks              |
+| Config  | crontab files                       | at queue                    |
+| Usage   | Schedules daily/weekly/hourly tasks | Run once at a specific time |
+
+🧩 **Examples**
+
+```bash
+at 2pm
+cron: * * * * * <cmd>
+```
+
+💡 **In short**
+cron = recurring; at = one-time scheduled jobs.
+
+---
+
+## Q81: How do you schedule tasks using crontab?
+
+🧠 **Overview**
+Crontab runs scheduled jobs at fixed intervals.
+
+🧩 **Edit Crontab**
+
+```bash
+crontab -e
+```
+
+🧩 **List Jobs**
+
+```bash
+crontab -l
+```
+
+🧩 **Example Cron Job**
+
+```
+0 2 * * * /usr/bin/backup.sh
+```
+
+💡 **In short**
+Use `crontab -e` to schedule recurring tasks.
+
+---
+
+## Q82: What is the syntax for cron expressions?
+
+📋 **Cron Fields**
+
+| Field | Meaning       | Example |
+| ----- | ------------- | ------- |
+| 1     | Minute (0–59) | 30      |
+| 2     | Hour (0–23)   | 14      |
+| 3     | Day of month  | 1       |
+| 4     | Month         | 1–12    |
+| 5     | Day of week   | 0–7     |
+
+🧩 **Examples**
+
+```
+* * * * *     # every minute
+0 3 * * 1     # every Monday at 3 AM
+*/5 * * * *   # every 5 minutes
+```
+
+💡 **In short**
+Cron uses 5 fields defining schedule frequency.
+
+---
+
+## Q83: How do you manage user cron jobs vs system cron jobs?
+
+🧠 **Overview**
+Linux differentiates between **per-user cron jobs** and **system-wide cron jobs**.
+
+📋 **Comparison Table**
+
+| Type                 | Location                                   | Use Case                            |
+| -------------------- | ------------------------------------------ | ----------------------------------- |
+| **User crontab**     | `crontab -e`, stored in `/var/spool/cron/` | User-specific tasks                 |
+| **System crontab**   | `/etc/crontab`                             | Tasks needing specific user context |
+| **System cron jobs** | `/etc/cron.daily`, `/etc/cron.hourly`      | Automated periodic tasks            |
+
+🧩 **Example System Crontab Entry**
+
+```
+0 1 * * * root /usr/local/bin/cleanup.sh
+```
+
+💡 **In short**
+User cron → `crontab -e`; system cron → `/etc/crontab` + cron.* directories.
+
+---
+
+## Q84: What is anacron and when would you use it?
+
+🧠 **Overview**
+`anacron` runs scheduled jobs **not tied to specific times**, useful for systems **not running 24/7** (laptops, desktops).
+
+📋 **Key Features**
+
+| Feature                      | Description                       |
+| ---------------------------- | --------------------------------- |
+| Not time-based               | Runs tasks *after boot* if missed |
+| Complements cron             | Ensures periodic jobs still run   |
+| Daily/weekly/monthly support | No minute-level schedules         |
+
+🧩 **Config**
+
+```bash
+/etc/anacrontab
+```
+
+💡 **In short**
+Use `anacron` when the system may be powered off during cron runs.
+
+---
+
+## Q85: How do you manage users and groups in Linux?
+
+🧠 **Overview**
+Users and groups control access and permissions for multi-user systems.
+
+🧩 **Commands**
+
+```bash
+# Users
+useradd username
+userdel username
+passwd username
+
+# Groups
+groupadd devops
+groupdel devops
+usermod -aG devops username
+```
+
+💡 **In short**
+Use `useradd`, `usermod`, `groupadd`, and `passwd` to manage accounts.
+
+---
+
+## Q86: What files store user and group information?
+
+🧠 **Overview**
+
+📋 **Key Files**
+
+| File           | Stores                                  |
+| -------------- | --------------------------------------- |
+| `/etc/passwd`  | User account info (UID, home, shell)    |
+| `/etc/shadow`  | Encrypted passwords + password policies |
+| `/etc/group`   | Group info                              |
+| `/etc/gshadow` | Secure group passwords                  |
+
+💡 **In short**
+User and group metadata lives in `/etc/passwd`, `/etc/shadow`, `/etc/group`.
+
+---
+
+## Q87: What is the purpose of /etc/passwd and /etc/shadow?
+
+📋 **Comparison**
+
+| File          | Purpose                                          | Security         |
+| ------------- | ------------------------------------------------ | ---------------- |
+| `/etc/passwd` | Basic user info: username, UID, GID, home, shell | World-readable   |
+| `/etc/shadow` | Hashed passwords + password aging rules          | Root-only access |
+
+🧩 **Example Entry**
+`/etc/passwd`
+
+```
+vasu:x:1001:1001:/home/vasu:/bin/bash
+```
+
+`/etc/shadow`
+
+```
+vasu:$6$hash...:19230:0:99999:7:::
+```
+
+💡 **In short**
+passwd = user metadata; shadow = secure password storage.
+
+---
+
+## Q88: How do you add and remove users in Linux?
+
+🧩 **Add User**
+
+```bash
+sudo useradd vasu
+sudo passwd vasu
+```
+
+🧩 **Add User With Home Directory**
+
+```bash
+sudo useradd -m vasu
+```
+
+🧩 **Remove User**
+
+```bash
+sudo userdel vasu
+sudo userdel -r vasu   # remove home directory too
+```
+
+💡 **In short**
+`useradd` + `passwd` to create; `userdel` to remove.
+
+---
+
+## Q89: What is the difference between useradd and adduser?
+
+📋 **Comparison**
+
+| Command     | Type               | Behavior                                              |
+| ----------- | ------------------ | ----------------------------------------------------- |
+| **useradd** | Low-level          | Requires manual config; minimal defaults              |
+| **adduser** | High-level wrapper | Interactive, creates home, sets shell, assigns groups |
+
+💡 **In short**
+`adduser` = friendly wrapper; `useradd` = raw low-level tool.
+
+---
+
+## Q90: How do you modify user account properties?
+
+🧠 **Overview**
+Use `usermod` to update shell, groups, home directory, lock account, etc.
+
+🧩 **Examples**
+
+```bash
+sudo usermod -aG sudo vasu       # add to group
+sudo usermod -s /bin/zsh vasu    # change shell
+sudo usermod -d /new/home vasu   # change home dir
+sudo usermod -L vasu             # lock account
+sudo usermod -U vasu             # unlock account
+```
+
+💡 **In short**
+`usermod` updates user properties; `-aG`, `-s`, `-L`, `-U` are common options.
+
+---
+
+## Q91: What is PAM (Pluggable Authentication Modules)?
+
+🧠 **Overview**
+PAM is a modular authentication framework used by Linux to control login, sudo, SSH, and password policies.
+
+📋 **Functions Controlled by PAM**
+
+* Password authentication
+* Account lockouts
+* Two-factor authentication
+* Password strength policies
+* Session rules
+
+📍 **Config Location**
+
+```
+/etc/pam.d/
+```
+
+💡 **In short**
+PAM = authentication logic layer behind logins and security policies.
+
+---
+
+## Q92: How do you configure password policies in Linux?
+
+🧠 **Overview**
+Password aging, complexity, and retry policies are configured via PAM and `/etc/login.defs`.
+
+🧩 **Password Aging (login.defs)**
+
+```
+PASS_MAX_DAYS 90
+PASS_MIN_DAYS 7
+PASS_WARN_AGE 7
+```
+
+🧩 **Enforce Password Complexity (PAM)**
+`/etc/pam.d/common-password` (Debian/Ubuntu)
+
+```
+password requisite pam_pwquality.so retry=3 minlen=12 dcredit=-1 ucredit=-1
+```
+
+🧩 **Lock Account After Failed Attempts**
+
+```
+auth required pam_faillock.so deny=5 unlock_time=600
+```
+
+💡 **In short**
+Use `/etc/login.defs` + PAM (`pam_pwquality`, `pam_faillock`) to enforce password rules.
+
+---
+
+## Q93: What is SELinux and what is its purpose?
+
+🧠 **Overview**
+SELinux (Security-Enhanced Linux) provides **mandatory access control (MAC)**, restricting processes based on security contexts.
+
+⚙️ **Purpose**
+
+* Restrict service access even if compromised
+* Enforce least-privilege access
+* Mandatory security policies independent of file permissions
+
+🧩 **Check Status**
+
+```bash
+getenforce
+sestatus
+```
+
+💡 **In short**
+SELinux adds strong, kernel-enforced security beyond standard permissions.
+
+---
+
+## Q94: What are SELinux modes (enforcing, permissive, disabled)?
+
+📋 **Modes**
+
+| Mode           | Behavior                                             |
+| -------------- | ---------------------------------------------------- |
+| **Enforcing**  | Policies enforced; blocked actions logged and denied |
+| **Permissive** | Violations logged only; not blocked                  |
+| **Disabled**   | SELinux is turned off                                |
+
+🧩 **Switch Temporarily**
+
+```bash
+sudo setenforce 0   # permissive
+sudo setenforce 1   # enforcing
+```
+
+💡 **In short**
+Enforcing = active protection; Permissive = debug mode; Disabled = off.
+
+---
+
+## Q95: How do you troubleshoot SELinux permission denials?
+
+🧠 **Overview**
+SELinux denials occur when a process tries to access something forbidden by SELinux policy.
+
+🧩 **Steps to Troubleshoot**
+
+1. **Check logs for denials**
+
+```bash
+sudo journalctl -t setroubleshoot
+sudo ausearch -m AVC -ts recent
+```
+
+2. **Use sealert for human-readable explanation**
+
+```bash
+sudo sealert -a /var/log/audit/audit.log
+```
+
+3. **Fix context mismatches**
+
+```bash
+sudo restorecon -Rv /var/www/html
+```
+
+4. **Check file/process context**
+
+```bash
+ls -Z file
+ps -Z -p <pid>
+```
+
+💡 **In short**
+Locate AVC denials → interpret via sealert → fix context (`restorecon`) or adjust SELinux rules.
+
+---
+
+## Q96: What is AppArmor and how does it differ from SELinux?
+
+📋 **Comparison Table**
+
+| Feature            | SELinux            | AppArmor       |
+| ------------------ | ------------------ | -------------- |
+| Model              | Label-based (MAC)  | Path-based     |
+| Complexity         | High               | Easier         |
+| Policy granularity | Very fine-grained  | Moderate       |
+| Default in         | RHEL/CentOS/Fedora | Ubuntu, Debian |
+| Logging            | AVC                | AppArmor logs  |
+
+🧠 **Key Point**
+SELinux uses security labels; AppArmor uses file paths.
+
+💡 **In short**
+SELinux = complex, label-based MAC; AppArmor = simpler, path-based MAC.
+
+---
+
+## Q97: How do you configure firewall rules using iptables?
+
+🧠 **Overview**
+`iptables` manages packet filtering and NAT on Linux.
+
+🧩 **Examples**
+
+```bash
+# Allow SSH
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Allow HTTP/HTTPS
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+
+# Drop all incoming traffic by default
+iptables -P INPUT DROP
+
+# Save rules
+iptables-save > /etc/iptables/rules.v4
+```
+
+💡 **In short**
+iptables defines packet rules via INPUT, OUTPUT, FORWARD chains and targets like ACCEPT/DROP.
+
+---
+
+## Q98: What is the difference between iptables and firewalld?
+
+📋 **Comparison**
+
+| Feature     | iptables               | firewalld                  |
+| ----------- | ---------------------- | -------------------------- |
+| Approach    | Rule-based             | Zone-based                 |
+| Ease of use | Manual, static         | Dynamic, simpler           |
+| Persistence | Manual save            | Automatic                  |
+| Backend     | nftables (new distros) | Uses nftables as backend   |
+| Support     | Legacy                 | Modern RHEL/CentOS default |
+
+💡 **In short**
+iptables = manual & static; firewalld = dynamic, zone-based, easier to manage.
+
+---
+
+## Q99: How do you configure networking in Linux?
+
+🧠 **Overview**
+Networking is configured via network interface files, NetworkManager, or `ip` commands.
+
+🧩 **Check Interfaces**
+
+```bash
+ip addr
+ip link
+ip route
+```
+
+🧩 **Manual Assignment**
+
+```bash
+sudo ip addr add 192.168.1.10/24 dev eth0
+sudo ip route add default via 192.168.1.1
+```
+
+🧩 **Persistent Config**
+
+* `/etc/network/interfaces` (Debian/Ubuntu legacy)
+* `/etc/sysconfig/network-scripts/ifcfg-*` (RHEL/CentOS)
+* `netplan` (Ubuntu modern)
+
+💡 **In short**
+Use `ip` for temporary settings; config files/Netplan/NetworkManager for persistence.
+
+---
+
+## Q100: What is the difference between ifconfig and ip commands?
+
+📋 **Comparison Table**
+
+| Feature   | ifconfig   | ip                                  |
+| --------- | ---------- | ----------------------------------- |
+| Status    | Deprecated | Modern replacement                  |
+| Functions | Basic      | Comprehensive (routes, links, addr) |
+| Package   | net-tools  | iproute2                            |
+| Syntax    | Simple     | More powerful, structured           |
+
+🧩 **Examples**
+
+```bash
+ifconfig
+ip addr show
+ip route
+```
+
+💡 **In short**
+`ip` is the modern, full-featured networking command; `ifconfig` is outdated.
+
+---
+
+## Q101: How do you configure static IP addresses in Linux?
+
+🧠 **Overview**
+Static IP configuration depends on the Linux distribution.
+
+🧩 **Ubuntu (Netplan)**
+`/etc/netplan/01-netcfg.yaml`
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [192.168.1.20/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [8.8.8.8]
+```
+
+Apply:
+
+```bash
+sudo netplan apply
+```
+
+🧩 **RHEL / CentOS**
+`/etc/sysconfig/network-scripts/ifcfg-eth0`
+
+```
+BOOTPROTO=none
+IPADDR=192.168.1.20
+PREFIX=24
+GATEWAY=192.168.1.1
+DNS1=8.8.8.8
+```
+
+💡 **In short**
+Use Netplan (Ubuntu), ifcfg files (RHEL), or NetworkManager for static IPs.
+
+---
+
+## Q102: What is NetworkManager and how does it work?
+
+🧠 **Overview**
+NetworkManager is a dynamic networking service that manages interfaces, Wi-Fi, routing, DNS, and VPNs.
+
+⚙️ **Features**
+
+* Automatically detects & manages interfaces
+* Supports GUI, CLI (`nmcli`), TUI (`nmtui`)
+* Integrates with systemd-resolved & netplan
+
+🧩 **Examples**
+
+```bash
+nmcli device status
+nmcli con show
+nmcli con mod eth0 ipv4.addresses 192.168.1.20/24
+nmcli con up eth0
+```
+
+💡 **In short**
+NetworkManager provides easy, dynamic network management on modern distros.
+
+---
+
+## Q103: How do you troubleshoot DNS resolution issues?
+
+🧠 **Overview**
+DNS issues cause failures in hostname resolution.
+
+🧩 **Troubleshooting Steps**
+
+```bash
+cat /etc/resolv.conf        # check DNS servers
+ping google.com             # test resolution
+dig google.com              # detailed DNS query
+nslookup github.com
+systemd-resolve --status    # check systemd-resolved (Ubuntu)
+```
+
+⚙️ **Common fixes**
+
+* Wrong DNS server → update resolv.conf or NetworkManager
+* Firewall blocking 53
+* systemd-resolved misconfiguration
+
+💡 **In short**
+Use dig/nslookup, verify `/etc/resolv.conf`, test connectivity.
+
+---
+
+## Q104: What is the purpose of /etc/resolv.conf?
+
+🧠 **Overview**
+`/etc/resolv.conf` defines DNS servers for name resolution.
+
+🧩 **Typical Entry**
+
+```
+nameserver 8.8.8.8
+nameserver 1.1.1.1
+search example.com
+```
+
+💡 **In short**
+resolv.conf = system DNS configuration file.
+
+---
+
+## Q105: How do you check network connectivity using ping and traceroute?
+
+🧠 **Overview**
+Used to validate connectivity and identify routing issues.
+
+🧩 **Examples**
+
+```bash
+ping google.com              # DNS + ICMP connectivity
+ping -c 5 8.8.8.8            # test raw network reachability
+
+traceroute google.com        # trace network hops
+tracepath google.com         # alternative to traceroute
+```
+
+💡 **In short**
+ping checks host reachability; traceroute identifies network path & failures.
+
+---
+
+## Q106: What is the purpose of netstat and ss commands?
+
+🧠 **Overview**
+Both show network connections, listening ports, and socket statistics.
+
+📋 **Comparison**
+
+| Command     | Status             | Features                        |
+| ----------- | ------------------ | ------------------------------- |
+| **netstat** | Deprecated         | Older tool for sockets, routing |
+| **ss**      | Modern replacement | Faster, more detailed output    |
+
+🧩 **Examples**
+
+```bash
+ss -tulpn        # listening TCP/UDP ports
+ss -an           # all sockets
+netstat -tulpn   # legacy equivalent
+```
+
+💡 **In short**
+`ss` is the modern, faster alternative to `netstat` for socket inspection.
+
+---
+
+## Q107: How do you identify which process is using a specific port?
+
+🧠 **Overview**
+Used during debugging when ports are blocked, already in use, or conflicting.
+
+🧩 **Commands**
+
+```bash
+sudo ss -tulpn | grep :8080
+sudo lsof -i :8080
+```
+
+📋 **Output Shows**
+
+* PID
+* Program name
+* Protocol
+* Listening state
+
+💡 **In short**
+Use `ss -tulpn` or `lsof -i` to find the process bound to a port.
+
+---
+
+## Q108: What is the difference between TCP and UDP at the Linux level?
+
+📋 **Comparison Table**
+
+| Feature         | TCP                       | UDP                   |
+| --------------- | ------------------------- | --------------------- |
+| Type            | Connection-oriented       | Connectionless        |
+| Reliability     | Guaranteed delivery       | No delivery guarantee |
+| Speed           | Slower                    | Faster                |
+| Use Cases       | HTTP, SSH, FTP            | DNS, DHCP, VoIP       |
+| Kernel Handling | Maintains state (SYN/ACK) | Stateless             |
+
+💡 **In short**
+TCP = reliable & stateful; UDP = lightweight & stateless.
+
+---
+
+## Q109: How do you capture network packets using tcpdump?
+
+🧠 **Overview**
+`tcpdump` captures and inspects raw network packets—useful for debugging connectivity, DNS, TLS, and routing.
+
+🧩 **Examples**
+
+```bash
+sudo tcpdump -i eth0
+sudo tcpdump -i eth0 port 80
+sudo tcpdump -w capture.pcap
+sudo tcpdump -nnvvXSs 0 -i eth0
+```
+
+💡 **In short**
+tcpdump = CLI packet capture tool; save to `.pcap` for Wireshark analysis.
+
+---
+
+## Q110: How do you analyze network traffic in Linux?
+
+🧠 **Overview**
+Use tools like tcpdump, tshark, iptraf, ss, and Wireshark.
+
+🧩 **Examples**
+
+```bash
+sudo tcpdump -r capture.pcap
+sudo tshark -i eth0
+sudo iptraf-ng
+sudo ss -tup
+```
+
+💡 **In short**
+Capture with tcpdump → analyze with tshark or Wireshark.
+
+---
+
+## Q111: What are environment variables and how do you set them?
+
+🧠 **Overview**
+Environment variables store configuration values for shell sessions and applications.
+
+🧩 **Set Temporarily**
+
+```bash
+export APP_ENV=prod
+echo $APP_ENV
+```
+
+🧩 **Unset**
+
+```bash
+unset APP_ENV
+```
+
+💡 **In short**
+Environment variables = dynamic shell configuration values.
+
+---
+
+## Q112: What is the difference between .bashrc and .bash_profile?
+
+📋 **Comparison**
+
+| File                | Used For           | When Loaded        |
+| ------------------- | ------------------ | ------------------ |
+| **~/.bashrc**       | Interactive shells | Every new terminal |
+| **~/.bash_profile** | Login shells       | On user login      |
+
+💡 **In short**
+`.bashrc` = terminal settings; `.bash_profile` = login initialization.
+
+---
+
+## Q113: How do you make environment variables persistent?
+
+🧠 **Overview**
+Persistent variables must be stored in shell startup files.
+
+🧩 **Add to .bashrc or .bash_profile**
+
+```bash
+echo 'export PATH=$PATH:/opt/bin' >> ~/.bashrc
+echo 'export APP_ENV=prod' >> ~/.bash_profile
+```
+
+🧩 **System-wide**
+
+```bash
+/etc/environment
+/etc/profile
+```
+
+💡 **In short**
+Add export statements to `.bashrc`, `.bash_profile`, or `/etc/environment`.
+
+---
+
+## Q114: What is the PATH variable and how does it work?
+
+🧠 **Overview**
+`PATH` defines where the shell searches for executables.
+
+🧩 **Check PATH**
+
+```bash
+echo $PATH
+```
+
+🧩 **Add a new path**
+
+```bash
+export PATH=$PATH:/opt/tools
+```
+
+⚙️ **How It Works**
+Shell searches directories in PATH sequentially when you run a command.
+
+💡 **In short**
+PATH = directory list for command lookup.
+
+---
+
+## Q115: How do you compile and install software from source?
+
+🧠 **Overview**
+Source builds are used for custom versions or software not in package repositories.
+
+🧩 **Steps**
+
+```bash
+tar -xvf source.tar.gz
+cd source/
+./configure
+make
+sudo make install
+```
+
+🧩 **Optional: Uninstall**
+
+```bash
+sudo make uninstall
+```
+
+💡 **In short**
+Configure → compile → install using `make`.
+
+---
+
+## Q116: What is the difference between apt, yum, and dnf package managers?
+
+📋 **Comparison Table**
+
+| Manager | Distros                | Features                                        |
+| ------- | ---------------------- | ----------------------------------------------- |
+| **apt** | Debian/Ubuntu          | Fast, dependency resolver, PPA support          |
+| **yum** | Older RHEL/CentOS      | Deprecated, replaced by dnf                     |
+| **dnf** | New RHEL/CentOS/Fedora | Faster resolver, modular repos, better handling |
+
+💡 **In short**
+apt = Debian-based; yum/dnf = RHEL-based; dnf is the modern replacement for yum.
+
+---
+
+## Q117: How do you search for packages using package managers?
+
+🧠 **Overview**
+
+🧩 **apt**
+
+```bash
+apt search nginx
+```
+
+🧩 **yum/dnf**
+
+```bash
+yum search nginx
+dnf search nginx
+```
+
+🧩 **pacman**
+
+```bash
+pacman -Ss nginx
+```
+
+💡 **In short**
+Use `search` with the relevant package manager.
+
+---
+
+## Q118: How do you update all packages on a Linux system?
+
+🧩 **apt**
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+🧩 **yum/dnf**
+
+```bash
+sudo yum update -y
+sudo dnf upgrade -y
+```
+
+🧩 **Arch Linux**
+
+```bash
+sudo pacman -Syu
+```
+
+💡 **In short**
+Update metadata → upgrade packages.
+
+---
+
+## Q119: What are package repositories and how do you add them?
+
+🧠 **Overview**
+Repositories store software packages for installation.
+
+📋 **Types**
+
+* Official repos
+* Third-party repos (EPEL, PPAs)
+* Local repositories
+
+🧩 **Add Repo (APT PPA)**
+
+```bash
+sudo add-apt-repository ppa:nginx/stable
+sudo apt update
+```
+
+🧩 **Add Repo (YUM/DNF)**
+
+```bash
+sudo yum-config-manager --add-repo=http://repo.example.com/repo.repo
+```
+
+💡 **In short**
+Repos = package sources; added via repo files or tools like `add-apt-repository` or `yum-config-manager`.
+
+---
+
+## Q120: How do you resolve package dependency conflicts?
+
+🧠 **Overview**
+Dependency conflicts occur when packages require incompatible versions.
+
+🧩 **Troubleshooting Steps**
+
+1. **Check broken dependencies**
+
+```bash
+sudo apt --fix-broken install
+```
+
+2. **Remove conflicting packages**
+
+```bash
+sudo apt remove <pkg>
+```
+
+3. **Force reinstall**
+
+```bash
+sudo apt install -f
+```
+
+4. **Clean metadata**
+
+```bash
+sudo apt clean
+sudo yum clean all
+```
+
+5. **Enable correct repos / disable conflicting ones**
+
+💡 **In short**
+Fix broken packages → clean caches → reinstall → adjust repositories.
+
+---
+
+# Advanced Questions
+
+## Q121: How does the Linux boot process work from BIOS/UEFI to login prompt?
+
+🧠 **Overview**
+The Linux boot sequence is a multi-stage pipeline that initializes hardware, loads the kernel, mounts the root filesystem, and starts system services.
+
+⚙️ **Boot Flow**
+
+1. **BIOS/UEFI** → Performs POST, initializes hardware, selects boot device.
+2. **Bootloader (GRUB)** → Loads kernel + initramfs into memory.
+3. **Kernel Initialization**
+
+   * Detects hardware
+   * Mounts initramfs
+   * Starts `/sbin/init` (systemd)
+4. **init/systemd**
+
+   * Mounts root filesystem
+   * Starts services
+   * Reaches default target (multi-user/graphical)
+5. **Login Prompt** → Provided by getty (console) or display manager.
+
+💡 **In short**
+BIOS → GRUB → Kernel → init/systemd → Login.
+
+---
+
+## Q122: What is the role of GRUB in the boot process?
+
+🧠 **Overview**
+GRUB (GRand Unified Bootloader) loads the kernel and initial RAM filesystem.
+
+⚙️ **Responsibilities**
+
+* Present boot menu
+* Load Linux kernel (`vmlinuz`)
+* Load initramfs
+* Pass kernel parameters
+* Boot different OSes (multiboot)
+
+🧩 **Config File**
+
+```
+/etc/default/grub
+```
+
+🧩 **Apply Changes**
+
+```bash
+sudo update-grub
+```
+
+💡 **In short**
+GRUB selects and loads the kernel + initramfs.
+
+---
+
+## Q123: How do you troubleshoot and recover from a failed boot?
+
+🧠 **Overview**
+Boot failures come from GRUB issues, kernel problems, or filesystem corruption.
+
+🧩 **Steps**
+
+1. **Access GRUB menu**
+
+   * Edit kernel boot params (press `e`)
+   * Add `systemd.unit=multi-user.target` or `single`
+
+2. **Boot into rescue mode**
+
+```bash
+systemctl rescue
+systemctl emergency
+```
+
+3. **Fix filesystem**
+
+```bash
+fsck /dev/sda1
+```
+
+4. **Reinstall GRUB**
+
+```bash
+grub-install /dev/sda
+update-grub
+```
+
+5. **Check broken services**
+
+```bash
+systemctl --failed
+journalctl -b -1
+```
+
+💡 **In short**
+Use GRUB rescue, single-user mode, fsck, and GRUB reinstall to fix boot failures.
+
+---
+
+## Q124: What is initramfs and why is it needed?
+
+🧠 **Overview**
+`initramfs` is a temporary root filesystem stored in memory during boot.
+
+⚙️ **Purpose**
+
+* Contains drivers needed before real root filesystem mounts
+* Initializes storage: LVM, RAID, encrypted disks
+* Loads kernel modules
+* Hands control to main OS root filesystem
+
+📍 **Location**
+
+```
+/boot/initramfs-<kernel>.img
+```
+
+💡 **In short**
+initramfs = pre-root filesystem used for hardware initialization.
+
+---
+
+## Q125: How do you customize the kernel boot parameters?
+
+🧠 **Overview**
+Kernel parameters control kernel behavior (memory, tuning, debug options).
+
+🧩 **Edit GRUB**
+Edit:
+
+```
+/etc/default/grub
+```
+
+Example:
+
+```
+GRUB_CMDLINE_LINUX="quiet splash intel_iommu=on"
+```
+
+Apply:
+
+```bash
+sudo update-grub
+```
+
+🧩 **Temporary Edit**
+
+* At GRUB menu → press `e` → edit kernel line → boot.
+
+💡 **In short**
+Edit GRUB → modify GRUB_CMDLINE_LINUX → update-grub.
+
+---
+
+## Q126: What are kernel modules and how do you manage them?
+
+🧠 **Overview**
+Kernel modules are loadable components (drivers) that extend kernel functionality without reboot.
+
+⚙️ **Examples**
+
+* Filesystem drivers (xfs, ext4)
+* Networking drivers (e1000, igb)
+* Firewall modules (ip_tables, nf_conntrack)
+
+🧩 **List Modules**
+
+```bash
+lsmod
+```
+
+🧩 **Module Info**
+
+```bash
+modinfo <module>
+```
+
+💡 **In short**
+Modules = on-demand kernel extensions (drivers, features).
+
+---
+
+## Q127: How do you load and unload kernel modules dynamically?
+
+🧠 **Overview**
+
+🧩 **Load Module**
+
+```bash
+sudo modprobe <module>
+```
+
+🧩 **Unload Module**
+
+```bash
+sudo modprobe -r <module>
+```
+
+🧩 **Insert/Remove Raw Module**
+
+```bash
+sudo insmod module.ko
+sudo rmmod module
+```
+
+⚠️ **Caution**
+Cannot remove modules in use → check with:
+
+```bash
+lsmod
+```
+
+💡 **In short**
+Use `modprobe` to load/unload modules with dependency handling.
+
+---
+
+## Q128: How would you compile a custom Linux kernel?
+
+🧠 **Overview**
+Custom kernels are used for performance tuning, debugging, or adding specific hardware support.
+
+🧩 **Steps**
+
+```bash
+sudo apt-get build-dep linux
+wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.tar.xz
+tar -xf linux-6.1.tar.xz
+cd linux-6.1
+make menuconfig           # customize options
+make -j $(nproc)          # compile
+sudo make modules_install
+sudo make install
+sudo update-grub
+```
+
+💡 **In short**
+Download → configure → compile → install → update GRUB.
+
+---
+
+## Q129: What kernel parameters would you tune for performance optimization?
+
+🧠 **Overview**
+Kernel tuning depends on workload: networking, memory, IO, and process management.
+
+📋 **Common Parameters**
+
+| Area             | Parameter                        | Purpose                |
+| ---------------- | -------------------------------- | ---------------------- |
+| Memory           | `vm.swappiness`                  | Swap behavior          |
+| Memory           | `vm.dirty_ratio`                 | Writeback tuning       |
+| Networking       | `net.core.somaxconn`             | Max connection backlog |
+| Networking       | `net.ipv4.tcp_fin_timeout`       | TCP cleanup speed      |
+| File Descriptors | `fs.file-max`                    | Max open files         |
+| Kernel Threads   | `kernel.sched_migration_cost_ns` | Scheduler tuning       |
+
+🧩 **Apply Temporary**
+
+```bash
+sysctl -w net.core.somaxconn=65535
+```
+
+🧩 **Permanent**
+
+```
+/etc/sysctl.conf
+```
+
+💡 **In short**
+Use sysctl to tune memory, IO, and network performance.
+
+---
+
+## Q130: How does the Linux scheduler work?
+
+🧠 **Overview**
+Linux uses the **Completely Fair Scheduler (CFS)** to allocate CPU time fairly across processes.
+
+⚙️ **CFS Concepts**
+
+* Each process gets “virtual runtime.”
+* Processes with lower runtime get CPU first.
+* Load balancing happens across CPU cores.
+* Priorities via *nice* values influence scheduling.
+
+🧩 **View Scheduling Stats**
+
+```bash
+cat /proc/sched_debug
+```
+
+💡 **In short**
+Linux scheduler ensures fair CPU distribution using CFS + priorities.
+
+---
+
+## Q131: What scheduling policies are available in Linux (CFS, real-time)?
+
+🧠 **Overview**
+Linux supports multiple scheduling classes, each designed for different workloads.
+
+📋 **Scheduling Policies**
+
+| Policy                | Type            | Description                               |
+| --------------------- | --------------- | ----------------------------------------- |
+| **CFS (SCHED_OTHER)** | Default         | Fair CPU sharing using virtual runtime    |
+| **SCHED_BATCH**       | Non-interactive | For background jobs; low responsiveness   |
+| **SCHED_IDLE**        | Lowest priority | Runs only when system idle                |
+| **SCHED_FIFO**        | Real-time       | First-in-first-out, strict priority       |
+| **SCHED_RR**          | Real-time       | Round-robin among equal-priority RT tasks |
+
+💡 **In short**
+CFS for normal tasks, FIFO/RR for real-time tasks requiring deadlines.
+
+---
+
+## Q132: How do you set process priorities using nice and renice?
+
+🧠 **Overview**
+nice/renice adjust a process’s “niceness,” affecting how often it gets CPU time.
+
+📋 **Range**
+
+* Nice values: **-20 (highest priority) to +19 (lowest)**
+
+🧩 **Start Process with Nice Value**
+
+```bash
+nice -n 10 ./script.sh
+```
+
+🧩 **Change Priority of Running Process**
+
+```bash
+renice -n -5 -p 1234
+```
+
+💡 **In short**
+Use `nice` to start with priority; `renice` to modify running processes.
+
+---
+
+## Q133: What is CPU affinity and how do you configure it?
+
+🧠 **Overview**
+CPU affinity binds a process to specific CPU cores to improve cache locality or limit CPU usage.
+
+🧩 **Set CPU Affinity**
+
+```bash
+taskset -c 0,2 my_app
+```
+
+🧩 **Modify Running Process**
+
+```bash
+taskset -cp 0 1234
+```
+
+💡 **In short**
+CPU affinity assigns processes to specific cores via `taskset`.
+
+---
+
+## Q134: How does Linux handle memory management?
+
+🧠 **Overview**
+Linux manages memory using paging, caching, swapping, and the buddy allocator.
+
+⚙️ **Components**
+
+* **Page Cache** → speeds up disk reads/writes
+* **Virtual Memory** → abstraction of memory space
+* **Swap** → overflow area
+* **OOM Killer** → handles memory exhaustion
+* **cgroups** → enforce memory limits
+
+💡 **In short**
+Linux balances RAM between processes, cache, and swap through virtual memory.
+
+---
+
+## Q135: What is the difference between virtual and physical memory?
+
+📋 **Comparison Table**
+
+| Memory Type         | Meaning                                    |
+| ------------------- | ------------------------------------------ |
+| **Physical Memory** | Actual RAM chips                           |
+| **Virtual Memory**  | Logical address space mapped to RAM + swap |
+
+🧠 **Key Point**
+Processes think they have continuous memory, but the kernel maps it to real RAM pages.
+
+💡 **In short**
+Virtual memory = abstraction; physical memory = real hardware.
+
+---
+
+## Q136: How does the OOM (Out of Memory) killer work?
+
+🧠 **Overview**
+When memory + swap are exhausted, OOM-killer terminates processes to prevent a system freeze.
+
+⚙️ **How It Chooses Process**
+
+* Badness score based on memory usage, priority, oom_score_adj
+* Prefers killing the largest memory consumers
+* Logs actions in `/var/log/syslog` or `dmesg`
+
+💡 **In short**
+OOM kills processes when RAM is exhausted to keep system alive.
+
+---
+
+## Q137: How do you tune OOM killer behavior?
+
+🧠 **Overview**
+Control OOM selection using **oom_score_adj** per process.
+
+🧩 **Check badness score**
+
+```bash
+cat /proc/<pid>/oom_score
+cat /proc/<pid>/oom_score_adj
+```
+
+🧩 **Increase or Decrease OOM Likelihood**
+
+```bash
+echo -500 > /proc/<pid>/oom_score_adj   # protect
+echo 500 > /proc/<pid>/oom_score_adj    # target for kill
+```
+
+💡 **In short**
+Use `oom_score_adj` to make processes more protected or more killable.
+
+---
+
+## Q138: What is memory overcommitment in Linux?
+
+🧠 **Overview**
+The kernel can allow processes to allocate more memory than physically available.
+
+⚙️ **Modes**
+
+```
+vm.overcommit_memory = 0  # heuristic
+vm.overcommit_memory = 1  # always allow
+vm.overcommit_memory = 2  # strict (no overcommit)
+```
+
+💡 **In short**
+Overcommit allows memory allocations beyond RAM, risking OOM.
+
+---
+
+## Q139: How do you analyze memory usage at a granular level?
+
+🧠 **Overview**
+Use tools that show per-process, per-page, or per-cgroup memory usage.
+
+🧩 **Commands**
+
+```bash
+top, htop
+ps aux --sort=-%mem
+smem -r
+cat /proc/meminfo
+cat /proc/<pid>/smaps
+```
+
+💡 **In short**
+Use `/proc/<pid>` and smem for deep memory insights.
+
+---
+
+## Q140: What tools would you use for memory profiling (valgrind, perf)?
+
+🧠 **Overview**
+Memory profiling helps detect leaks, fragmentation, and inefficient allocations.
+
+📋 **Tools**
+
+| Tool                    | Purpose                        |
+| ----------------------- | ------------------------------ |
+| **valgrind (memcheck)** | Detect leaks, invalid accesses |
+| **perf**                | CPU + memory performance       |
+| **gperf/gperftools**    | Heap profiling                 |
+| **strace**              | Syscall tracing                |
+| **massif (valgrind)**   | Heap memory usage breakdown    |
+
+🧩 **Example**
+
+```bash
+valgrind --leak-check=full ./app
+```
+
+💡 **In short**
+valgrind for correctness; perf for performance; massif/gperftools for heap profiling.
+
+---
+
+## Q141: How does Linux handle I/O scheduling?
+
+🧠 **Overview**
+I/O scheduling determines how read/write operations are prioritized to block devices.
+
+⚙️ **Goals**
+
+* Reduce seek time
+* Improve throughput
+* Fairness among processes
+
+💡 **In short**
+Linux uses schedulers to optimize disk operations for different workloads.
+
+---
+
+## Q142: What I/O schedulers are available (noop, deadline, cfq, mq-deadline)?
+
+📋 **I/O Schedulers**
+
+| Scheduler       | Best For                    | Notes                            |
+| --------------- | --------------------------- | -------------------------------- |
+| **noop**        | SSDs                        | Minimal scheduling; FIFO         |
+| **deadline**    | Latency-sensitive workloads | Guarantees max wait time         |
+| **cfq**         | General workloads           | Fair-sharing (deprecated)        |
+| **mq-deadline** | NVMe high-speed devices     | Multi-queue optimized            |
+| **none**        | NVMe                        | No scheduling; device handles it |
+
+💡 **In short**
+SSD/NVMe → noop/none/mq-deadline; HDD → deadline.
+
+---
+
+## Q143: How do you tune I/O scheduler for different workloads?
+
+🧠 **Overview**
+Change scheduler by writing to the device’s scheduler file.
+
+🧩 **Check Available Schedulers**
+
+```bash
+cat /sys/block/sda/queue/scheduler
+```
+
+🧩 **Set Scheduler**
+
+```bash
+echo deadline | sudo tee /sys/block/sda/queue/scheduler
+```
+
+💡 **In short**
+Choose deadline for latency, noop for SSDs, mq-deadline for NVMe.
+
+---
+
+## Q144: What is direct I/O and when would you use it?
+
+🧠 **Overview**
+Direct I/O bypasses the OS page cache and reads/writes directly to disk.
+
+📋 **Use Cases**
+
+* Databases (PostgreSQL, Oracle)
+* Applications doing their own caching
+* Benchmarking raw disk performance
+
+💡 **In short**
+Direct I/O = bypass page cache for predictable performance.
+
+---
+
+## Q145: How do you measure and optimize disk I/O performance?
+
+🧠 **Overview**
+Use benchmarking tools and tune kernel + filesystem parameters.
+
+🧩 **Tools**
+
+```bash
+fio       # synthetic testing
+iostat    # per-device stats
+vmstat
+dstat
+```
+
+🧩 **Optimization Areas**
+
+* Choose right I/O scheduler
+* Tune read-ahead:
+
+```bash
+echo 4096 | sudo tee /sys/block/sda/queue/read_ahead_kb
+```
+
+* Use LVM striping or RAID
+
+💡 **In short**
+Measure with fio/iostat → tune scheduler, readahead, RAID/LVM layout.
+
+---
+
+## Q146: What is the purpose of the iostat command?
+
+🧠 **Overview**
+`iostat` reports CPU + block device I/O stats.
+
+🧩 **Example**
+
+```bash
+iostat -xz 1
+```
+
+📋 **Key Metrics**
+
+* `r/s`, `w/s` → read/write operations
+* `await` → average wait time
+* `%util` → device saturation
+
+💡 **In short**
+iostat = detailed I/O performance + bottleneck indicator.
+
+---
+
+## Q147: How do you identify I/O bottlenecks in Linux?
+
+🧠 **Overview**
+Use performance metrics from iostat, vmstat, pidstat, and sar.
+
+🧩 **Checklist**
+
+1. High disk utilization
+
+```bash
+iostat -xz 1 | grep -v idle
+```
+
+2. Long I/O wait times (`iowait`)
+
+```bash
+vmstat 1
+```
+
+3. Process-level I/O
+
+```bash
+pidstat -d 1
+```
+
+4. Kernel dmesg errors (I/O, blocks)
+
+```bash
+dmesg | grep -i error
+```
+
+💡 **In short**
+High `%util`, high `await`, and high `iowait` = clear I/O bottlenecks.
+
+---
+
+## Q148: What is the page cache and how does it work?
+
+🧠 **Overview**
+The page cache stores recently accessed file data in RAM to speed up disk I/O.
+
+⚙️ **How It Works**
+
+* Reads are served from RAM if cached → fast
+* Writes go to cache first → flushed to disk later
+* Managed by kernel’s memory manager
+* Frees pages automatically when RAM is needed
+
+🧩 **Check Cache Usage**
+
+```bash
+grep -i cached /proc/meminfo
+```
+
+💡 **In short**
+Page cache accelerates I/O by keeping disk-backed data in RAM.
+
+---
+
+## Q149: How do you clear the page cache and when would you do it?
+
+🧠 **Overview**
+Clearing cache is mostly for benchmarking—not for normal operations.
+
+🧩 **Commands**
+
+```bash
+sync                      # flush dirty pages
+echo 1 > /proc/sys/vm/drop_caches    # clear page cache
+echo 2 > /proc/sys/vm/drop_caches    # clear dentries/inodes
+echo 3 > /proc/sys/vm/drop_caches    # clear everything
+```
+
+⚠️ **Use only for**:
+
+* Performance testing
+* Debugging memory leaks
+* Storage benchmarking
+
+💡 **In short**
+Use `drop_caches` only for tests—not in production.
+
+---
+
+## Q150: What is the difference between buffered and direct I/O?
+
+📋 **Comparison Table**
+
+| Type             | Uses Page Cache? | Use Cases                              |
+| ---------------- | ---------------- | -------------------------------------- |
+| **Buffered I/O** | Yes              | Most applications, general file access |
+| **Direct I/O**   | No               | Databases, low-latency workloads       |
+
+🧠 **Explanation**
+Buffered I/O leverages kernel cache; direct I/O bypasses the cache and reads/writes to disk directly.
+
+💡 **In short**
+Buffered I/O = cached; direct I/O = predictable, uncached.
+
+---
+
+## Q151: How do you implement disk quotas in Linux?
+
+🧠 **Overview**
+Disk quotas limit user/group disk usage.
+
+🧩 **Steps**
+
+1. **Enable quotas in fstab**
+
+```
+/dev/sda1 /home ext4 defaults,usrquota,grpquota 0 1
+```
+
+2. **Remount filesystem**
+
+```bash
+mount -o remount /home
+```
+
+3. **Create quota database**
+
+```bash
+quotacheck -cug /home
+quotaon /home
+```
+
+4. **Set quota for user**
+
+```bash
+edquota username
+```
+
+💡 **In short**
+Enable quotas → check database → activate → assign limits.
+
+---
+
+## Q152: What are control groups (cgroups) and what are they used for?
+
+🧠 **Overview**
+cgroups limit, isolate, and monitor resource usage for processes or containers.
+
+📋 **Resource Control**
+
+* CPU
+* Memory
+* I/O
+* PIDs
+* Hugepages
+
+💡 **In short**
+cgroups enforce resource limits and isolation.
+
+---
+
+## Q153: How do you configure resource limits using cgroups?
+
+🧩 **Steps (cgroups v1 Example)**
+
+1. **Create cgroup**
+
+```bash
+mkdir /sys/fs/cgroup/cpu/mygroup
+```
+
+2. **Set CPU limit**
+
+```bash
+echo 50000 > /sys/fs/cgroup/cpu/mygroup/cpu.cfs_quota_us
+echo 100000 > /sys/fs/cgroup/cpu/mygroup/cpu.cfs_period_us
+```
+
+3. **Attach process**
+
+```bash
+echo <pid> > /sys/fs/cgroup/cpu/mygroup/tasks
+```
+
+💡 **In short**
+Create cgroup → set limits → attach process.
+
+---
+
+## Q154: What is the difference between cgroups v1 and v2?
+
+📋 **Comparison Table**
+
+| Aspect            | cgroups v1              | cgroups v2                   |
+| ----------------- | ----------------------- | ---------------------------- |
+| Hierarchy         | Multiple per controller | Unified                      |
+| Controllers       | Independent             | Unified API                  |
+| Complexity        | Higher                  | Simpler                      |
+| Container engines | Old Docker used v1      | Modern Docker/K8s support v2 |
+| Features          | Lacks memory protection | Better memory control        |
+
+💡 **In short**
+cgroups v2 unifies all controllers and provides cleaner resource control.
+
+---
+
+## Q155: How do you isolate resources for containers using cgroups?
+
+🧠 **Overview**
+Container runtimes (Docker, containerd, CRI-O) automatically create cgroups.
+
+🧩 **Example (Docker limits)**
+
+```bash
+docker run --cpus=1 --memory=512m nginx
+```
+
+⚙️ **Behind the Scenes**
+
+* Docker creates cgroups
+* Moves container processes into them
+* Enforces limits via kernel
+
+💡 **In short**
+Containers use cgroups to limit CPU, memory, PIDs, I/O.
+
+---
+
+## Q156: What are namespaces in Linux and what types exist?
+
+🧠 **Overview**
+Namespaces isolate kernel resources between processes.
+
+📋 **Types of Namespaces**
+
+| Namespace  | Isolates                   |
+| ---------- | -------------------------- |
+| **PID**    | Process IDs                |
+| **NET**    | Network interfaces, routes |
+| **UTS**    | Hostname                   |
+| **IPC**    | Shared memory              |
+| **MNT**    | Filesystems                |
+| **USER**   | User IDs                   |
+| **CGROUP** | Cgroup hierarchy           |
+
+💡 **In short**
+Namespaces provide isolation similar to containers.
+
+---
+
+## Q157: How do namespaces enable container isolation?
+
+🧠 **Overview**
+Each container runs inside isolated namespaces, giving it a private view of system resources.
+
+⚙️ **Example**
+
+* PID namespace → container sees its own PID 1
+* NET namespace → own virtual NIC
+* MNT namespace → own filesystem mounts
+* USER namespace → remaps UIDs
+
+💡 **In short**
+Namespaces isolate views; cgroups isolate resources.
+
+---
+
+## Q158: How would you implement network isolation using network namespaces?
+
+🧩 **Example: Create isolated namespace**
+
+```bash
+ip netns add ns1
+```
+
+🧩 **Create veth pair**
+
+```bash
+ip link add veth0 type veth peer name veth1
+ip link set veth1 netns ns1
+```
+
+🧩 **Assign IPs**
+
+```bash
+ip addr add 10.0.0.1/24 dev veth0
+ip netns exec ns1 ip addr add 10.0.0.2/24 dev veth1
+```
+
+🧩 **Bring interfaces up**
+
+```bash
+ip link set veth0 up
+ip netns exec ns1 ip link set veth1 up
+```
+
+💡 **In short**
+Use network namespaces + veth pairs to create isolated network stacks.
+
+---
+
+## Q159: What are capabilities in Linux and how do they enhance security?
+
+🧠 **Overview**
+Capabilities split root’s privileges into fine-grained permissions, allowing least-privilege operation.
+
+📋 **Examples**
+
+* `CAP_NET_ADMIN` → network config
+* `CAP_SYS_ADMIN` → broad system control
+* `CAP_CHOWN` → change file ownership
+
+💡 **In short**
+Capabilities avoid giving full root privileges.
+
+---
+
+## Q160: How do you assign specific capabilities to processes?
+
+🧩 **Use setcap**
+
+```bash
+sudo setcap cap_net_bind_service=+ep /usr/bin/nginx
+```
+
+🧩 **Check capabilities**
+
+```bash
+getcap /usr/bin/nginx
+```
+
+⚙️ **This allows**:
+nginx to bind to port 80 without root privilege.
+
+💡 **In short**
+setcap grants fine-grained privileges to binaries.
+
+---
+
+## Q161: What is seccomp and how does it restrict system calls?
+
+🧠 **Overview**
+seccomp (Secure Computing Mode) filters system calls to reduce attack surface.
+
+📋 **Modes**
+
+* **Strict** → allow only read/write/exit
+* **Filter** → custom syscall allow/deny lists
+
+🧩 **Example (Docker)**
+
+```bash
+docker run --security-opt seccomp=/path/profile.json nginx
+```
+
+💡 **In short**
+seccomp blocks dangerous syscalls to harden apps and containers.
+
+---
+
+## Q162: How would you implement a hardened Linux system?
+
+🧠 **Checklist**
+
+* Enforce SELinux/AppArmor
+* Use strong password and PAM policies
+* Configure auditd
+* Restrict SSH (key-only login, disable root login)
+* Patch system regularly
+* Enable firewall + disable unused services
+* Use FDE (LUKS)
+* Enforce cgroup limits for workloads
+* Use seccomp/capabilities for apps
+
+💡 **In short**
+Combine MAC, firewalls, PAM, encryption, and syscall restrictions.
+
+---
+
+## Q163: What security benchmarks would you follow (CIS, STIG)?
+
+📋 **Comparison**
+
+| Benchmark          | Purpose                     | Used By            |
+| ------------------ | --------------------------- | ------------------ |
+| **CIS Benchmarks** | Hardening best practices    | Enterprises, cloud |
+| **DISA STIG**      | Strict government standards | DoD, Fed agencies  |
+
+🧠 **Key Point**
+Both provide step-by-step checks for OS & application hardening.
+
+💡 **In short**
+Follow CIS for commercial hardening; STIG for regulated environments.
+
+---
+
+## Q164: How do you implement disk encryption using LUKS?
+
+🧩 **Steps**
+
+1. **Install cryptsetup**
+
+```bash
+sudo apt install cryptsetup
+```
+
+2. **Encrypt disk**
+
+```bash
+sudo cryptsetup luksFormat /dev/sdb
+```
+
+3. **Open encrypted disk**
+
+```bash
+sudo cryptsetup luksOpen /dev/sdb secure_disk
+```
+
+4. **Create filesystem**
+
+```bash
+mkfs.ext4 /dev/mapper/secure_disk
+mount /dev/mapper/secure_disk /secure
+```
+
+💡 **In short**
+Use cryptsetup luksFormat → luksOpen → create FS → mount.
+
+---
+
+## Q165: What is dm-crypt and how does it relate to LUKS?
+
+🧠 **Overview**
+`dm-crypt` is the kernel subsystem providing block-level encryption.
+
+📋 **Relationship**
+
+| Component      | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| **dm-crypt**   | Low-level kernel encryption engine                           |
+| **LUKS**       | Standardized metadata + encryption format on top of dm-crypt |
+| **cryptsetup** | User tool to manage LUKS/dm-crypt                            |
+
+💡 **In short**
+dm-crypt does raw encryption; LUKS adds headers, keyslots, and usability.
+
+---
+## Q166: How do you secure SSH access to Linux servers?
+
+🧠 **Overview**
+
+* SSH is the primary remote access method; securing it reduces attack surface and prevents unauthorized access in production systems.
+
+⚙️ **Purpose / How it works**
+
+* Harden the SSH daemon (`sshd`) and authentication methods, restrict accounts/networks, and monitor access to reduce brute-force and credential theft risks.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Install OpenSSH (Debian/Ubuntu)
+sudo apt-get update && sudo apt-get install -y openssh-server
+
+# Basic sshd_config hardening (edit /etc/ssh/sshd_config)
+PermitRootLogin no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+PubkeyAuthentication yes
+AllowUsers ec2-user ops@192.0.2.0/24
+X11Forwarding no
+PermitTunnel no
+MaxAuthTries 3
+LoginGraceTime 30s
+```
+
+```bash
+# Reload sshd
+sudo systemctl reload sshd
+# Add public key
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+echo "ssh-rsa AAAA..." >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
+```
+
+📋 **Table — Quick controls**
+
+| Control       |                                File/Command | Effect                      |
+| ------------- | ------------------------------------------: | --------------------------- |
+| Disable root  | `/etc/ssh/sshd_config` `PermitRootLogin no` | Blocks root login           |
+| Key-only auth |                 `PasswordAuthentication no` | Requires SSH keys           |
+| IP allow      |                        `AllowUsers user@IP` | Limit by user/IP            |
+| Fail2ban      |                                  `fail2ban` | Blocks brute-force attempts |
+
+✅ **Best Practices**
+
+* Use key-based auth + passphrase-protected keys + SSH agent forwarding only when necessary.
+* Use jump/bastion hosts and `ProxyJump` in `~/.ssh/config`.
+* Enforce MFA (see Q168) and centrally manage keys (Vault, AWS SSM).
+* Rotate and audit keys regularly; log to central syslog/ELK.
+* Use `AllowUsers`/`AllowGroups` and network ACLs.
+
+💡 **In short**
+Disable password/root login, require keys, restrict by user/IP, log and rotate keys.
+
+---
+
+## Q167: What SSH hardening techniques would you implement?
+
+🧠 **Overview**
+
+* Hardening is layered: config changes, auth mechanisms, access controls, monitoring, and policy enforcement.
+
+⚙️ **Purpose / How it works**
+
+* Reduce attack vectors (brute-force, stolen creds), limit exposure, and improve detectability.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# /etc/ssh/sshd_config core lines
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
+MACs hmac-sha2-512-etm@openssh.com
+AllowUsers ops@203.0.113.10
+```
+
+```bash
+# Fail2ban basic
+sudo apt-get install fail2ban
+# /etc/fail2ban/jail.local
+[sshd]
+enabled = true
+maxretry = 5
+banaction = iptables-multiport
+```
+
+📋 **Table — Techniques & purpose**
+
+| Technique      |         Tool/File | Why                    |
+| -------------- | ----------------: | ---------------------- |
+| Key-only auth  |       sshd_config | Remove passwords       |
+| Strong ciphers |       sshd_config | Protect session crypto |
+| Rate-limiting  | fail2ban/iptables | Mitigate brute-force   |
+| Bastion hosts  |     SSH ProxyJump | Central control/audit  |
+| Key management |         Vault/SSM | Rotate & revoke keys   |
+| MFA            |   PAM/Google Auth | Protect credentials    |
+
+✅ **Best Practices**
+
+* Enforce least-privilege, use bastion + MFA, rotate keys, monitor `auth.log`, block suspicious IPs, and enforce compliance via configuration management (Ansible/Terraform).
+
+💡 **In short**
+Apply config hardening + network controls + monitoring + key lifecycle management.
+
+---
+
+## Q168: How do you implement two-factor authentication in Linux?
+
+🧠 **Overview**
+
+* Implement 2FA for SSH using a PAM module (time-based one-time password) or hardware tokens to require a second factor during login.
+
+⚙️ **Purpose / How it works**
+
+* Adds TOTP (Google Authenticator/Authenticator apps) or U2F (YubiKey) in addition to SSH keys/passwords via PAM hooks.
+
+🧩 **Examples / Commands / Config snippets**
+TOTP (libpam-google-authenticator):
+
+```bash
+# Install (Debian/Ubuntu)
+sudo apt-get install libpam-google-authenticator
+
+# Per-user setup (run on each account)
+google-authenticator
+
+# Edit /etc/pam.d/sshd - add at top:
+auth required pam_google_authenticator.so nullok
+
+# Edit /etc/ssh/sshd_config
+ChallengeResponseAuthentication yes
+AuthenticationMethods publickey,keyboard-interactive
+
+# Reload
+sudo systemctl reload sshd
+```
+
+U2F (YubiKey):
+
+```bash
+# Install pam_u2f and map keys for users in ~/.config/Yubico/u2f_keys
+# Add to /etc/pam.d/sshd: auth required pam_u2f.so
+```
+
+📋 **Table — 2FA options**
+
+| Method |                   Module |             UX | Use-case            |
+| ------ | -----------------------: | -------------: | ------------------- |
+| TOTP   | pam_google_authenticator | Mobile app OTP | Easy deploy         |
+| U2F    |                  pam_u2f | Hardware touch | Highest security    |
+| Duo    |             Duo Unix PAM |    Push or OTP | Enterprise with SSO |
+
+✅ **Best Practices**
+
+* Prefer SSH key + 2FA (AuthenticationMethods publickey,keyboard-interactive).
+* Use `nullok` carefully (allows bypass). Enforce for privileged accounts.
+* Document recovery/backup codes; use hardware tokens for critical accounts.
+
+💡 **In short**
+Add a PAM-based TOTP or U2F layer combined with SSH keys for strong 2FA.
+
+---
+
+## Q169: What is auditd and how do you configure system auditing?
+
+🧠 **Overview**
+
+* `auditd` is the Linux Audit Daemon for recording security-relevant events (syscalls, file access, auth events) to support forensics and compliance.
+
+⚙️ **Purpose / How it works**
+
+* Hooks into kernel audit subsystem; rules specify which events to log; outputs to `/var/log/audit/audit.log`.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Install
+sudo apt-get install auditd audispd-plugins
+
+# Start/enable
+sudo systemctl enable --now auditd
+
+# Add simple rule: watch /etc/passwd
+sudo auditctl -w /etc/passwd -p wa -k passwd_changes
+
+# Persist rule (Debian): add to /etc/audit/rules.d/audit.rules
+-w /etc/passwd -p wa -k passwd_changes
+
+# Audit syscall (execve)
+-a always,exit -F arch=b64 -S execve -k exec_calls
+```
+
+```bash
+# Search audit log using ausearch
+ausearch -k passwd_changes
+# Generate report with aureport
+aureport --summary
+```
+
+📋 **Table — Common rules**
+
+| Rule                                           | Meaning                        |
+| ---------------------------------------------- | ------------------------------ |
+| `-w /etc/shadow -p wa -k shadow`               | Watch modifications/attributes |
+| `-a always,exit -F arch=b64 -S execve -k exec` | Log executed binaries          |
+| `-w /var/log/auth.log -p r -k auth_logs`       | Read access to auth logs       |
+
+✅ **Best Practices**
+
+* Log minimal necessary events to avoid overload; focus on auth, privileged file changes, execs, and network binds.
+* Forward audit logs to a centralized collector and use immutable storage for compliance.
+* Monitor with alerting (SIEM) for suspicious patterns.
+
+💡 **In short**
+`auditd` captures kernel-level security events — configure rules, persist them, and centralize logs for analysis.
+
+---
+
+## Q170: How do you track and investigate security events using audit logs?
+
+🧠 **Overview**
+
+* Use audit logs for incident detection, root-cause analysis, and compliance: search, correlate, and reconstruct attacker actions.
+
+⚙️ **Purpose / How it works**
+
+* Collect logs (auditd), parse (ausearch/auparse), enrich (user, process, network), and forward to SIEM for correlation and alerts.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Find executions by a user
+ausearch -ua alice -k exec_calls
+
+# Show recent failed sudo attempts
+ausearch -m USER_AUTH -sv no
+
+# Convert to readable form
+ausearch -k passwd_changes -i
+# Generate summary for timeframe
+aureport --start today --end now --summary
+```
+
+Workflow:
+
+1. Pull relevant events (auth, exec, file write).
+2. Correlate with system logs (/var/log/auth.log, syslog).
+3. Check process tree (`ps -ef --forest`) and binary hashes.
+4. Isolate host, collect forensic image if needed.
+
+📋 **Table — Investigation steps**
+
+| Step          |           Command / Tool | Output            |
+| ------------- | -----------------------: | ----------------- |
+| Search events |      `ausearch -k <key>` | Raw audit entries |
+| Decode        | `aureport / ausearch -i` | Human-readable    |
+| Correlate     |       syslog + auth logs | Timeline          |
+| Forensics     |  `ps`, `lsof`, `netstat` | Live indicators   |
+
+✅ **Best Practices**
+
+* Timestamp-sync all hosts (NTP), centralize logs to SIEM, define alert rules (e.g., exec of suspicious binaries), and maintain retention policies for investigations.
+
+💡 **In short**
+Query auditd with `ausearch`/`aureport`, correlate logs, and follow a forensic workflow to investigate incidents.
+
+---
+
+## Q171: How would you implement centralized logging for multiple Linux servers?
+
+🧠 **Overview**
+
+* Centralized logging collects logs from many servers to a central store (ELK/EFK, Splunk, Loki) for search, alerting, and retention.
+
+⚙️ **Purpose / How it works**
+
+* Agents (rsyslog, Filebeat, Fluentd) forward logs over TLS to collectors; data gets indexed, visualized, and alerted on.
+
+🧩 **Examples / Commands / Config snippets**
+Filebeat → Elasticsearch:
+
+```yaml
+# filebeat.yml (agent on hosts)
+filebeat.inputs:
+- type: log
+  paths: ["/var/log/syslog","/var/log/auth.log","/var/log/myapp/*.log"]
+output.elasticsearch:
+  hosts: ["https://es-cluster.example:9200"]
+  username: "beat_user"
+  password: "secure"
+  ssl.certificate_authorities: ["/etc/ssl/ca.crt"]
+```
+
+rsyslog TLS forwarding:
+
+```conf
+# /etc/rsyslog.d/50-forward.conf
+$DefaultNetstreamDriverCAFile /etc/pki/tls/certs/ca.pem
+$ActionSendStreamDriver gtls
+*.* @@logserver.example:6514;RSYSLOG_SyslogProtocol23Format
+```
+
+📋 **Table — Agent choices**
+
+| Agent    |            Use-case | Notes                     |
+| -------- | ------------------: | ------------------------- |
+| Filebeat | File log forwarding | Lightweight, ECS modules  |
+| Fluentd  |     Complex parsing | Many plugins              |
+| rsyslog  |   Syslog forwarding | Native syslog integration |
+
+✅ **Best Practices**
+
+* Transport logs over TLS, authenticate agents, filter at source to reduce noise, index meaningful fields, and enforce retention/archival.
+* Use structured logging (JSON) for app logs.
+* Tag logs with host/application metadata (labels).
+
+💡 **In short**
+Deploy agents (Filebeat/rsyslog/Fluentd) on hosts, forward logs securely to central indexer (ELK/Loki/Splunk), and alert from SIEM.
+
+---
+
+## Q172: What is rsyslog and how does it differ from syslog-ng?
+
+🧠 **Overview**
+
+* Both `rsyslog` and `syslog-ng` are syslog implementations for collecting and forwarding logs; each offers different features and ecosystems.
+
+⚙️ **Purpose / How it works**
+
+* They read local syslog input, apply filters/transformations, and output to files, remote servers, databases, or message queues.
+
+🧩 **Examples / Commands / Config snippets**
+rsyslog TLS forward example (see Q171).
+syslog-ng config snippet:
+
+```conf
+source s_sys { system(); internal(); };
+destination d_network { tcp("logserver.example" port(514) tls( ca-dir("/etc/pki/tls/certs"))); };
+log { source(s_sys); destination(d_network); };
+```
+
+📋 **Table — rsyslog vs syslog-ng**
+
+| Feature            |                        rsyslog | syslog-ng                             |
+| ------------------ | -----------------------------: | ------------------------------------- |
+| Performance        |          High (multi-threaded) | High                                  |
+| Config syntax      |          Legacy + RainerScript | More declarative                      |
+| Modules/plugins    | Many (omgrok, omelasticsearch) | Many (parsers, transports)            |
+| Structured logging |        Supports JSON templates | Strong structured logging support     |
+| Community          |     Widely used in RHEL/Ubuntu | Preferred in some distros/enterprises |
+
+✅ **Best Practices**
+
+* Choose based on existing environment, required outputs, and team familiarity. Use TLS, structured logging templates, and central parsers.
+
+💡 **In short**
+Both are capable syslog daemons; choose `rsyslog` for wide distro defaults and `syslog-ng` when you prefer its config style or parsers.
+
+---
+
+## Q173: How do you configure high availability Linux clusters?
+
+🧠 **Overview**
+
+* HA clusters coordinate multiple nodes to provide failover of services (IP, services, storage) to minimize downtime.
+
+⚙️ **Purpose / How it works**
+
+* Use cluster manager (Pacemaker/Corosync) to monitor resources and orchestrate failover; shared storage for data consistency; fencing to split nodes.
+
+🧩 **Examples / Commands / Config snippets**
+Basic Pacemaker + Corosync bootstrap:
+
+```bash
+# Install
+sudo apt-get install pacemaker corosync
+
+# Corosync conf: /etc/corosync/corosync.conf (multicast or unicast)
+# Start services
+sudo systemctl enable --now corosync pacemaker
+
+# Create a primitive (example: IP)
+pcs resource create vip ocf:heartbeat:IPaddr2 ip=10.0.0.100 cidr_netmask=24 op monitor interval=30s
+```
+
+(Or use `pcs` on RHEL-family: `pcs cluster setup --name mycluster node1 node2`)
+
+📋 **Table — Components**
+
+| Component       | Role                         |
+| --------------- | ---------------------------- |
+| Corosync        | Messaging & membership       |
+| Pacemaker       | Resource manager             |
+| STONITH/Fencing | Force-node isolation         |
+| Shared storage  | Data availability (NFS/DRBD) |
+
+✅ **Best Practices**
+
+* Implement fencing (STONITH), quorum awareness, split-brain prevention, and test failover. Automate config via Ansible/Terraform. Monitor cluster health and logs.
+
+💡 **In short**
+Use Corosync + Pacemaker, shared storage, and fencing to provide robust service failover.
+
+---
+
+## Q174: What is Pacemaker and how does it manage cluster resources?
+
+🧠 **Overview**
+
+* Pacemaker is a cluster resource manager that enforces policies to start/stop/move resources across nodes based on health and constraints.
+
+⚙️ **Purpose / How it works**
+
+* It maintains desired state: primitives (services, IPs), groups, constraints (location, colocation, order) and monitors resources with agents (OCF/LRM).
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Create a resource (RHEL/CentOS with pcs)
+pcs resource create apache ocf:heartbeat:apache configfile=/etc/httpd/conf/httpd.conf op monitor interval=30s
+
+# Colocation constraint: ensure VIP and apache on same node
+pcs constraint colocation add apache with vip INFINITY
+
+# Show status
+pcs status
+```
+
+📋 **Table — Resource types**
+
+| Type       |                 Example | Use                       |
+| ---------- | ----------------------: | ------------------------- |
+| Primitive  |         IPaddr2, apache | Single resource           |
+| Group      |                DB + VIP | Start/stop order together |
+| Clone      | HAProxy (active/active) | Run on multiple nodes     |
+| Constraint |         location, order | Control placement         |
+
+✅ **Best Practices**
+
+* Use appropriate monitor intervals, set failure-timeouts, test resource scripts, and use STONITH for safe failover.
+
+💡 **In short**
+Pacemaker enforces resource state with primitives, groups, clones, and constraints, reacting to node/resource failures.
+
+---
+
+## Q175: How do you implement shared storage for HA clusters?
+
+🧠 **Overview**
+
+* Shared storage lets multiple nodes access the same data: implemented via NFS, clustered filesystems (GFS2, OCFS2), or block replication (DRBD) plus fencing.
+
+⚙️ **Purpose / How it works**
+
+* Choice depends on workload: NFS for simplicity, clustered FS for simultaneous multi-writer, DRBD for block-level replication with failover.
+
+🧩 **Examples / Commands / Config snippets**
+NFS server:
+
+```bash
+# Export /srv/data
+echo "/srv/data 10.0.0.0/24(rw,sync,no_root_squash)" >> /etc/exports
+exportfs -rav
+```
+
+DRBD + GFS2 pattern (simplified):
+
+```bash
+# Install drbd-utils, configure /etc/drbd.d/resource.res
+# Create filesystem on promoted node (when primary)
+drbdadm create-md r0
+drbdadm up r0
+drbdadm primary --force r0
+mkfs.gfs2 -p lock_dlm -t mycluster:fsname /dev/drbd0
+mount -t gfs2 /dev/drbd0 /mnt/cluster
+```
+
+📋 **Table — Shared storage options**
+
+| Option            |           Writer model | Use-case                    |
+| ----------------- | ---------------------: | --------------------------- |
+| NFS               | Single/multi via locks | Simple shared data          |
+| DRBD + FS         |   Active/Passive block | Replicated block devices    |
+| GFS2/OCFS2        |          Active/Active | Clustered concurrent access |
+| Object store (S3) |                  Multi | Stateless app data          |
+
+✅ **Best Practices**
+
+* Use fencing, quorum, and clustered locks for multi-writer filesystems. Prefer object storage for scale-out apps. Test failover and consistent mounts.
+
+💡 **In short**
+Select NFS/DRBD/clustered FS per access patterns; always combine with fencing and HA cluster management.
+
+---
+
+## Q176: What is split-brain in clustering and how do you prevent it?
+
+🧠 **Overview**
+
+* Split-brain occurs when cluster nodes lose communication but each believes it should be primary, causing data divergence or dual-active services.
+
+⚙️ **Purpose / How it works**
+
+* Happens due to network partition or quorum loss; prevention requires fencing, quorum devices, and tie-breakers.
+
+🧩 **Examples / Commands / Config snippets**
+Preventive measures:
+
+```bash
+# Configure STONITH (example with fence_ipmilan)
+pcs stonith create fence1 fence_ipmilan pcmk_host_list="node1,node2" ipaddr="1.2.3.4" ...
+# Use quorum device or set no-quorum-policy:
+pcs property set no-quorum-policy=stop
+```
+
+📋 **Table — Prevention techniques**
+
+| Technique            | Effect                                 |
+| -------------------- | -------------------------------------- |
+| STONITH fencing      | Forcefully isolates failed node        |
+| Quorum               | Ensures majority decision              |
+| Tie-breaker          | External witness (QDevice)             |
+| Network redundancy   | Reduce partitions                      |
+| Resource constraints | Prevent dual-active resource placement |
+
+✅ **Best Practices**
+
+* Always configure STONITH and proper quorum policy (`stop`), use redundant cluster networks, and test failure scenarios in staging.
+
+💡 **In short**
+Split-brain is dual-primary due to partitioning — prevent with fencing, quorum, and network redundancy.
+
+---
+
+## Q177: How do you configure load balancing at the Linux level?
+
+🧠 **Overview**
+
+* Linux-level load balancing uses software (HAProxy, Nginx, ipvs, LVS) or kernel features to distribute traffic across backends.
+
+⚙️ **Purpose / How it works**
+
+* Receive client traffic on a front-end, apply balancing algorithm, and forward to backends; can be L4 (ipvs/LVS) or L7 (HAProxy/nginx).
+
+🧩 **Examples / Commands / Config snippets**
+HAProxy minimal config:
+
+```haproxy
+global
+  daemon
+defaults
+  mode http
+  timeout connect 5s
+frontend http-in
+  bind *:80
+  default_backend web-backends
+backend web-backends
+  balance roundrobin
+  server web1 10.0.0.11:80 check
+  server web2 10.0.0.12:80 check
+```
+
+LVS via `ipvsadm`:
+
+```bash
+# Add virtual service
+sudo ipvsadm -A -t 10.0.0.100:80 -s rr
+# Add real servers
+sudo ipvsadm -a -t 10.0.0.100:80 -r 10.0.0.11:80 -m
+sudo ipvsadm -a -t 10.0.0.100:80 -r 10.0.0.12:80 -m
+```
+
+📋 **Table — LB options**
+
+| Tool       |              Layer |      Perf | Use-case                 |
+| ---------- | -----------------: | --------: | ------------------------ |
+| HAProxy    |              L4/L7 |      High | HTTP/HTTPS routing       |
+| Nginx      |                 L7 |      High | Reverse proxy + caching  |
+| LVS/ipvs   |                 L4 | Very high | Kernel-level forwarding  |
+| Keepalived | HA for virtual IPs |       N/A | VRRP failover (see Q178) |
+
+✅ **Best Practices**
+
+* Health checks, SSL termination, sticky sessions only when needed, metrics/exporters, and scale LBs horizontally. Use ipvs for very high throughput.
+
+💡 **In short**
+Use HAProxy/Nginx for L7, LVS/ipvs for L4 kernel-level performance, and combine with VRRP for HA.
+
+---
+
+## Q178: What is keepalived and how does it implement VRRP?
+
+🧠 **Overview**
+
+* `keepalived` provides HA by managing virtual IPs using VRRP and optionally performs health checks to failover services.
+
+⚙️ **Purpose / How it works**
+
+* VRRP elects a master for a virtual IP; keepalived runs on nodes, advertises priority, and moves VIP to backup on failure.
+
+🧩 **Examples / Commands / Config snippets**
+`/etc/keepalived/keepalived.conf`:
+
+```conf
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication { auth_type PASS; auth_pass secret }
+    virtual_ipaddress {
+        10.0.0.100/24
+    }
+}
+```
+
+Health check script example:
+
+```conf
+vrrp_script chk_haproxy {
+  script "/usr/local/bin/check_haproxy.sh"
+  interval 2
+  weight -20
+}
+```
+
+📋 **Table — VRRP fields**
+
+| Field               | Purpose                     |
+| ------------------- | --------------------------- |
+| `priority`          | Higher = master             |
+| `virtual_router_id` | VRRP group identifier       |
+| `advert_int`        | Advertisement interval      |
+| `state`             | MASTER/BACKUP initial state |
+
+✅ **Best Practices**
+
+* Use secure auth, consistent `virtual_router_id`, and health-check integration to only failover VIP when services actually fail.
+
+💡 **In short**
+`keepalived` provides VRRP-based VIP failover and integrates health checks to manage active/passive service endpoints.
+
+---
+
+## Q179: How would you optimize Linux for database workloads?
+
+🧠 **Overview**
+
+* Tune kernel, I/O, memory, and scheduler settings to reduce latency and increase throughput for DBMS (Postgres, MySQL).
+
+⚙️ **Purpose / How it works**
+
+* Prioritize direct I/O, reduce swapping, tune disk scheduler, and adjust network/timeouts for DB traffic.
+
+🧩 **Examples / Commands / Config snippets**
+`sysctl` tweaks:
+
+```bash
+# /etc/sysctl.d/99-db.conf
+vm.swappiness = 1
+vm.dirty_ratio = 10
+vm.dirty_background_ratio = 5
+vm.overcommit_memory = 2
+net.core.somaxconn = 1024
+fs.file-max = 2097152
+```
+
+Disk scheduler:
+
+```bash
+# For HDD
+echo noop > /sys/block/sda/queue/scheduler
+# For NVMe
+echo none > /sys/block/nvme0n1/queue/ioscheduler
+```
+
+Filesystem options:
+
+```bash
+# Mount with noatime
+UUID=... /var/lib/postgresql ext4 defaults,noatime,nodiratime,barrier=1 0 2
+```
+
+📋 **Table — Areas to tune**
+
+| Area       |                       Setting | Why                        |
+| ---------- | ----------------------------: | -------------------------- |
+| Memory     |    `swappiness`, `overcommit` | Avoid swapping DB pages    |
+| I/O        |          scheduler, `dirty_*` | Reduce write latency       |
+| Filesystem |             noatime, barriers | Reduce metadata writes     |
+| Network    | `somaxconn`, `tcp_deferred_*` | Handle many DB connections |
+
+✅ **Best Practices**
+
+* Provision dedicated disks (RAID/ENCRYPTION as needed), use low-latency storage (NVMe), monitor IO wait, and benchmark changes in staging.
+
+💡 **In short**
+Minimize swap, tune I/O and filesystem options, and provision low-latency storage for database performance.
+
+---
+
+## Q180: What kernel parameters affect network performance?
+
+🧠 **Overview**
+
+* Several `sysctl` network params control buffers, connection handling, and TCP behaviors which impact throughput and latency.
+
+⚙️ **Purpose / How it works**
+
+* Adjust socket buffers, backlog limits, and TCP options to match workload (high concurrency vs low latency).
+
+🧩 **Examples / Commands / Config snippets**
+Key parameters (`/etc/sysctl.d/99-network.conf`):
+
+```conf
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.netdev_max_backlog = 5000
+net.core.somaxconn = 1024
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.ipv4.tcp_congestion_control = cubic
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.ip_local_port_range = 1024 65535
+```
+
+Apply:
+
+```bash
+sudo sysctl --system
+```
+
+📋 **Table — Parameter groups**
+
+| Param                          | Purpose                      |
+| ------------------------------ | ---------------------------- |
+| `rmem_max/wmem_max`            | Max socket buffer sizes      |
+| `somaxconn/netdev_max_backlog` | Backlog for accept/packets   |
+| `tcp_*mem`                     | Kernel TCP memory thresholds |
+| `tcp_congestion_control`       | Congestion algorithm         |
+| `ip_local_port_range`          | Available ephemeral ports    |
+
+✅ **Best Practices**
+
+* Tune based on benchmarking; don’t arbitrarily inflate buffers. Ensure NIC offloads are correct and IRQ affinity is set for high throughput.
+
+💡 **In short**
+Tune socket buffers, backlog, TCP memory, and congestion control to optimize network throughput and latency.
+
+---
+
+## Q181: How do you tune TCP/IP stack parameters?
+
+🧠 **Overview**
+
+* Tuning TCP/IP involves adjusting sysctl parameters to fit application demands (more connections, higher throughput, lower latency).
+
+⚙️ **Purpose / How it works**
+
+* Configure kernel memory, timewait behavior, congestion control, and timeouts to avoid connection exhaustion and optimize transfer rates.
+
+🧩 **Examples / Commands / Config snippets**
+Common adjustments:
+
+```conf
+# /etc/sysctl.d/99-tcp.conf
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 0   # deprecated / unsafe on NAT
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_max_syn_backlog = 4096
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_tw_buckets = 200000
+net.ipv4.tcp_no_metrics_save = 1
+```
+
+Apply:
+
+```bash
+sudo sysctl -p /etc/sysctl.d/99-tcp.conf
+```
+
+📋 **Table — TCP tune targets**
+
+| Goal                     | Params to change                        |
+| ------------------------ | --------------------------------------- |
+| Reduce TIME_WAIT         | `tcp_tw_reuse`, `tcp_fin_timeout`       |
+| Prevent SYN flood        | `tcp_syncookies`, `tcp_max_syn_backlog` |
+| High throughput          | `tcp_rmem`, `tcp_wmem`, `rmem_max`      |
+| Lots of concurrent conns | `ip_local_port_range`                   |
+
+✅ **Best Practices**
+
+* Measure baseline, tune incrementally, be wary of `tcp_tw_recycle`, and retest under realistic load.
+
+💡 **In short**
+Adjust TCP memory, TIME_WAIT handling, and backlog/syn settings to match your connection and throughput needs.
+
+---
+
+## Q182: What is the purpose of sysctl and how do you use it?
+
+🧠 **Overview**
+
+* `sysctl` reads/writes kernel parameters at runtime (under `/proc/sys`) to tune system behavior.
+
+⚙️ **Purpose / How it works**
+
+* Use `sysctl` for network, VM, and kernel tunables without reboot. Persist changes via `/etc/sysctl.conf` or `/etc/sysctl.d/*.conf`.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# View a parameter
+sysctl net.ipv4.ip_forward
+
+# Set a parameter at runtime
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Persist: /etc/sysctl.d/99-custom.conf
+net.ipv4.ip_forward = 1
+net.core.somaxconn = 1024
+
+# Apply all
+sudo sysctl --system
+```
+
+📋 **Table — Common sysctl namespaces**
+
+| Namespace  | What it controls        |
+| ---------- | ----------------------- |
+| `vm.*`     | Virtual memory/swapping |
+| `net.*`    | Networking TCP/IP       |
+| `fs.*`     | Filesystem limits       |
+| `kernel.*` | Kernel behavior         |
+
+✅ **Best Practices**
+
+* Store overrides in `/etc/sysctl.d/` with small, named files. Use configuration management to enforce values.
+
+💡 **In short**
+`sysctl` modifies kernel params at runtime and persists via `/etc/sysctl.d/*` for system tuning.
+
+---
+
+## Q183: How do you make sysctl changes persistent?
+
+🧠 **Overview**
+
+* Persist sysctl changes by placing key=value pairs into files under `/etc/sysctl.d/` (or `/etc/sysctl.conf`) so they apply at boot.
+
+⚙️ **Purpose / How it works**
+
+* The init system loads `/etc/sysctl.conf` and `/etc/sysctl.d/*.conf` at boot; `sysctl --system` applies them immediately.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Create file
+sudo tee /etc/sysctl.d/99-custom.conf <<'EOF'
+vm.swappiness = 1
+net.core.somaxconn = 1024
+EOF
+
+# Apply now
+sudo sysctl --system
+```
+
+📋 **Table — File precedence**
+
+| File                   | Precedence             |
+| ---------------------- | ---------------------- |
+| `/etc/sysctl.d/*.conf` | Highest (alphabetical) |
+| `/etc/sysctl.conf`     | Lower                  |
+| `/run/sysctl.d/*.conf` | Runtime overrides      |
+
+✅ **Best Practices**
+
+* Use descriptive filenames and configuration management (Ansible/Terraform) for reproducibility. Avoid editing global `/etc/sysctl.conf` directly where possible.
+
+💡 **In short**
+Put key=value into `/etc/sysctl.d/99-name.conf` and run `sysctl --system` to persist and apply settings.
+
+---
+
+## Q184: How would you optimize Linux for web server workloads?
+
+🧠 **Overview**
+
+* Web workloads need quick request handling, low latency, and high concurrency; tune network, file descriptors, and web server settings.
+
+⚙️ **Purpose / How it works**
+
+* Optimize socket backlog, increase file descriptor limits, enable keepalive tuning, and use caching and compression.
+
+🧩 **Examples / Commands / Config snippets**
+System-level:
+
+```conf
+# /etc/sysctl.d/99-web.conf
+net.core.somaxconn = 1024
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_tw_reuse = 1
+```
+
+Nginx example:
+
+```nginx
+worker_processes auto;
+worker_rlimit_nofile 100000;
+events { worker_connections 4096; multi_accept on; }
+http {
+  sendfile on;
+  tcp_nopush on;
+  keepalive_timeout 15;
+  gzip on;
+}
+```
+
+Ulimits:
+
+```bash
+# /etc/security/limits.conf
+www-data soft nofile 65536
+www-data hard nofile 100000
+```
+
+📋 **Table — Tuning targets**
+
+| Area        |               Setting | Why                             |
+| ----------- | --------------------: | ------------------------------- |
+| FD limits   |           `ulimit -n` | Support many concurrent sockets |
+| TCP backlog |           `somaxconn` | Accept queue length             |
+| Caching     | Nginx cache / Varnish | Reduce origin load              |
+| SSL         |     TLS session cache | Reduce handshake cost           |
+
+✅ **Best Practices**
+
+* Use connection pooling, reverse proxy + caching, monitor 95/99th percentile latencies, and autoscale horizontally for load spikes.
+
+💡 **In short**
+Raise file descriptors/backlogs, tune web server workers/keepalive, and use caching to improve web server throughput.
+
+---
+
+## Q185: What performance monitoring tools would you use (perf, ftrace, bpftrace)?
+
+🧠 **Overview**
+
+* Use `perf`, `ftrace`, and `bpftrace` for deep kernel/user-space performance profiling and tracing. Each has trade-offs in granularity and ease-of-use.
+
+⚙️ **Purpose / How it works**
+
+* `perf` profiles CPU, `ftrace` traces kernel functions, and `bpftrace` uses eBPF for dynamic tracing with low overhead.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# perf top
+sudo perf top -p $(pidof myapp)
+
+# perf record + report
+sudo perf record -F 99 -p $(pidof myapp) -- sleep 30
+sudo perf report
+
+# ftrace example (trace function calls)
+echo function > /sys/kernel/debug/tracing/current_tracer
+echo 1 > /sys/kernel/debug/tracing/tracing_on
+
+# bpftrace one-liner: trace all execs
+sudo bpftrace -e 'tracepoint:sched:sched_process_exec { printf("%s %d %s\n", comm, pid, args->filename); }'
+```
+
+📋 **Table — Tool comparison**
+
+| Tool       |            Level | Strength                           |
+| ---------- | ---------------: | ---------------------------------- |
+| perf       | Kernel+userspace | CPU hotspots, flamegraphs          |
+| ftrace     |           Kernel | Low-level kernel tracing           |
+| bpftrace   |             eBPF | High-level, flexible, low overhead |
+| strace     |     User syscall | Syscall-level debugging            |
+| sar/iostat |   System metrics | Historical performance             |
+
+✅ **Best Practices**
+
+* Use perf for hotspots, bpftrace for dynamic metrics, and record baselines. Run in staging when possible and limit probe overhead in production.
+
+💡 **In short**
+Combine perf, ftrace, and bpftrace for complementary profiling and tracing needs.
+
+---
+
+## Q186: How do you use strace to debug application behavior?
+
+🧠 **Overview**
+
+* `strace` traces system calls and signals a process makes—useful to debug I/O, file access, permission errors, and blocking syscalls.
+
+⚙️ **Purpose / How it works**
+
+* Attach to a process or run a command under `strace` to see syscalls, arguments, return values, and timing.
+
+🧩 **Examples / Commands / Config snippets**
+
+```bash
+# Run command under strace
+strace -ff -o /tmp/strace.out -e trace=file,network -T myapp arg1
+
+# Attach to running process
+sudo strace -p 12345 -e trace=all
+
+# Filter by syscall and show timestamps
+strace -tt -e open,read,write myapp
+```
+
+Analyze:
+
+```bash
+# Combine per-thread logs
+cat /tmp/strace.out.* | less
+```
+
+📋 **Table — Common flags**
+
+| Flag        | Use                   |
+| ----------- | --------------------- |
+| `-e trace=` | Filter syscalls       |
+| `-ff -o`    | Follow forks to files |
+| `-tt`       | Timestamp each event  |
+| `-T`        | Show syscall timing   |
+
+✅ **Best Practices**
+
+* Use selective tracing (file, network) to reduce noise. Don’t run heavy tracing on production without load testing; collect outputs centrally if needed.
+
+💡 **In short**
+Use `strace` to see syscalls and pinpoint permission issues, missing files, or blocking calls in applications.
+
+---
+
+## Q187: How do you analyze system performance using sar?
+
+🧠 **Overview**
+
+* `sar` (sysstat) collects and reports historical system performance metrics (CPU, memory, I/O, network) for trend analysis.
+
+⚙️ **Purpose / How it works**
+
+* `sar` runs a background data collector (`sysstat` cron/systemd) and stores binary logs in `/var/log/sa/` for later reporting.
+
+🧩 **Examples / Commands / Config snippets**
+Install and enable:
+
+```bash
+sudo apt-get install sysstat
+sudo systemctl enable --now sysstat
+# Configure collection interval in /etc/default/sysstat or /etc/cron.d/sysstat
+```
+
+Usage:
+
+```bash
+# Show CPU report for today, interval 1s 5 times
+sar -u 1 5
+
+# Read historical file (e.g., sa21)
+sar -f /var/log/sa/sa21 -q
+# Show IO
+sar -b 1 3
+```
+
+📋 **Table — Useful sar metrics**
+
+| Command      | Metric                   |
+| ------------ | ------------------------ |
+| `sar -u`     | CPU usage                |
+| `sar -q`     | Load average / run queue |
+| `sar -b`     | I/O and transfer rates   |
+| `sar -n DEV` | Network interface stats  |
+| `sar -r`     | Memory usage             |
+
+✅ **Best Practices**
+
+* Keep appropriate retention, forward summaries to monitoring, and use `sar` for historical baselining and capacity planning.
+
+💡 **In short**
+Enable sysstat collection and use `sar` to review historical CPU, memory, I/O, and network trends.
+
+---
+
+## Q188: What is eBPF and what capabilities does it provide?
+
+🧠 **Overview**
+
+* eBPF (extended Berkeley Packet Filter) runs sandboxed programs in kernel context for observability, tracing, networking, and security with low overhead.
+
+⚙️ **Purpose / How it works**
+
+* Load small programs attached to hooks (tracepoints, kprobes, sockets); interact via maps to user-space; safe (verifier) and efficient.
+
+🧩 **Examples / Commands / Config snippets**
+Use `bpftool` / `bpftrace`:
+
+```bash
+# bpftrace one-liner: count syscalls open
+sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat { @[comm] = count(); }'
+```
+
+📋 **Table — eBPF capabilities**
+
+| Domain        | Use-cases                             |
+| ------------- | ------------------------------------- |
+| Observability | Tracing, metrics, flamegraphs         |
+| Networking    | XDP, tc, load-balancing, filtering    |
+| Security      | System call filters, LSM integrations |
+| Performance   | Low-overhead instrumentation          |
+
+✅ **Best Practices**
+
+* Use high-level tools (bpftrace, BCC) for quicker development; vet eBPF programs for verifier acceptance; prefer read-only probes in production for safety.
+
+💡 **In short**
+eBPF enables powerful, safe kernel-level instrumentation for tracing, networking, and security with minimal overhead.
+
+---
+
+## Q189: How would you use eBPF for performance monitoring?
+
+🧠 **Overview**
+
+* eBPF provides low-overhead tracing of kernel and userspace events to collect granular performance metrics and build flamegraphs or histograms.
+
+⚙️ **Purpose / How it works**
+
+* Attach eBPF probes (kprobes, uprobes, tracepoints) to measure function latencies, syscall frequency, and I/O patterns.
+
+🧩 **Examples / Commands / Config snippets**
+bpftrace examples:
+
+```bash
+# Latency of accept syscall per process
+sudo bpftrace -e 'tracepoint:syscalls:sys_enter_accept { @start[tid] = nsecs; }
+tracepoint:syscalls:sys_exit_accept /@start[tid]/ { @latency[comm] = hist((nsecs - @start[tid])/1000); delete(@start[tid]); }'
+```
+
+Using BCC `offcputime.py`:
+
+```bash
+# off-CPU time per process (bcc)
+sudo /usr/share/bcc/tools/offcputime -p $(pidof myapp) --threshold 1
+```
+
+📋 **Table — Typical eBPF metrics**
+
+| Metric           | Probe                            |
+| ---------------- | -------------------------------- |
+| Function latency | kprobe/uprobes                   |
+| Syscall counts   | tracepoints                      |
+| Off-CPU time     | stack traces + scheduling events |
+| Network drops    | XDP/tc hooks                     |
+
+✅ **Best Practices**
+
+* Aggregate metrics and export to Prometheus via exporters, sample intelligently to limit overhead, and profile in staging first.
+
+💡 **In short**
+Use eBPF probes to collect high-cardinality, low-overhead performance metrics and visualize via histograms/flamegraphs.
+
+---
+
+## Q190: How do you implement custom monitoring using eBPF programs?
+
+🧠 **Overview**
+
+* Build custom eBPF programs (using C, libbpf, BCC, or bpftrace) to capture application- or kernel-level events and export metrics/logs to user-space.
+
+⚙️ **Purpose / How it works**
+
+* Create probes, use maps for state, and use user-space readers to push metrics to monitoring systems (Prometheus, InfluxDB) or logs/alerts.
+
+🧩 **Examples / Commands / Config snippets**
+bpftrace simple script (save `http_latency.bt`):
+
+```bpftrace
+# Measure userland function latency (example: nginx function)
+uprobe:/usr/sbin/nginx:ngx_http_process_request { @s[tid] = nsecs; }
+uretprobe:/usr/sbin/nginx:ngx_http_process_request /@s[tid]/ {
+  @lat_ms = hist((nsecs - @s[tid])/1000000);
+  delete(@s[tid]);
+}
+```
+
+Run and export: parse `bpftrace` output and push to Prometheus via a small exporter (Python/Go) reading `bpffs` maps or parsing stdout.
+
+Using libbpf (C/CO-RE) pattern:
+
+* Write BPF program in C, compile with clang to object, use libbpf to load, attach probes, and read maps in user-space to expose metrics.
+
+📋 **Table — Development approaches**
+
+| Tooling        |               Ease | Use-case                  |
+| -------------- | -----------------: | ------------------------- |
+| bpftrace       |    Fast prototypes | Ad-hoc scripts            |
+| BCC (Python)   | Easier than libbpf | Rapid development         |
+| libbpf (CO-RE) | Production quality | Robust, portable programs |
+
+✅ **Best Practices**
+
+* Start with `bpftrace` prototype, validate performance, then implement libbpf CO-RE for production. Limit map sizes, ensure verifier acceptance, and expose metrics via a robust exporter with auth.
+
+💡 **In short**
+Prototype with bpftrace/BCC, then move to libbpf CO-RE for production—export maps to Prometheus or SIEM for alerting and dashboards.
+
+---
+
+# Troubleshooting / Scenarios
+
+Understood.
+Generating **all questions (Q191–Q206)** in **full README-style format** now.
+
+---
+
+# 🚨 **Linux Troubleshooting & Scenarios (Q191–Q206)**
+
+Production-grade, senior-level DevOps answers.
+
+---
+
+# ## Q191: Your Linux server is unresponsive and you cannot SSH into it. What steps would you take?
+
+🧠 **Overview**
+SSH failure + unresponsiveness usually indicates CPU starvation, memory exhaustion, disk I/O stall, network issues, or kernel panic. Troubleshooting focuses on isolating **host reachability**, **resource starvation**, and **console-level access**.
+
+⚙️ **Purpose / How it works**
+Use out-of-band access and network diagnostics to identify whether the host, kernel, or network stack is stuck.
+
+🧩 **Steps / Commands**
+
+### 1️⃣ **Check network reachability**
+
+```bash
+ping <server-ip>
+traceroute <server-ip>
+nc -zv <server-ip> 22
+```
+
+### 2️⃣ **Try alternate access**
+
+* Cloud console (AWS EC2 serial console, Azure Serial Console).
+* Hypervisor console (vSphere, Proxmox).
+* IPMI / iDRAC / iLO.
+
+### 3️⃣ **Check system health from console**
+
+```bash
+dmesg -T | tail
+top
+vmstat 1
+iostat -xz 1
+journalctl -xe
+```
+
+### 4️⃣ **Common failure indicators**
+
+| Symptom                    | Likely cause                  |
+| -------------------------- | ----------------------------- |
+| High load but low CPU idle | I/O wait / stuck disks        |
+| Kernel panic screen        | Driver issue, OOM             |
+| Frozen console             | Hardware fault / soft lockups |
+
+### 5️⃣ **Remediation**
+
+* Restart failed service / process.
+* Kill runaway process.
+* Unmount or isolate failing disk.
+* Last resort: reboot via console / cloud API.
+
+✅ **Best Practices**
+
+* Always enable serial console.
+* Use monitoring + alerts for sshd, load average, disk health.
+* Set up fallback access (bastion, SSM Session Manager).
+
+💡 **In short**
+Use console access, check I/O, CPU, logs, and recover services; reboot only when evidence confirms kernel/hardware freeze.
+
+---
+
+# ## Q192: The system load average is extremely high but CPU usage is low. What could cause this?
+
+🧠 **Overview**
+High load ≠ high CPU. Load also counts **processes waiting for I/O**, blocked on locks, or in uninterruptible sleep (D state).
+
+⚙️ **Purpose / How it works**
+Identify bottlenecks: I/O, disk, NFS, deadlocks, zombie processes, or kernel waits.
+
+🧩 **Commands / Diagnosis**
+
+```bash
+# See D-state tasks
+ps -eo pid,stat,cmd | grep ' D '
+
+# Check disk I/O
+iostat -xz 1
+
+# Hung NFS mounts
+df -hT
+mount | grep nfs
+
+# Kernel lockups
+dmesg -T | grep -i "block" -i "hung"
+```
+
+📋 **Common causes**
+
+| Condition                  | Explanation                |
+| -------------------------- | -------------------------- |
+| I/O wait                   | Slow disk / RAID rebuild   |
+| D-state processes          | Uninterruptible waits      |
+| NFS storage issues         | Mounted volume unreachable |
+| Mutex/lock contention      | DB/App deadlocks           |
+| Memory pressure + swapping | Thrashing                  |
+
+✅ **Best Practices**
+
+* Monitor disk latency (iostat, sar).
+* Avoid blocking NFS mounts (`soft` + proper timeouts).
+* Fix failing disks before user impact.
+
+💡 **In short**
+High load + low CPU → disk or I/O stall, NFS hangs, kernel locks, or blocked processes.
+
+---
+
+# ## Q193: Your server is running out of disk space. How do you identify what's consuming space?
+
+🧠 **Overview**
+Disk exhaustion impacts logs, apps, services, and OS stability. Find large files, directories, and growing logs.
+
+⚙️ **Purpose / How it works**
+Use du, find, lsof to detect both visible and deleted-but-open files.
+
+🧩 **Commands**
+
+### 1️⃣ Find large directories
+
+```bash
+du -ahx / | sort -hr | head -20
+```
+
+### 2️⃣ Find large individual files
+
+```bash
+find / -type f -size +500M -exec ls -lh {} \;
+```
+
+### 3️⃣ Check log files
+
+```bash
+du -sh /var/log/*
+```
+
+### 4️⃣ Check deleted-but-open files
+
+```bash
+lsof | grep deleted
+```
+
+### 5️⃣ Find journal logs
+
+```bash
+journalctl --disk-usage
+journalctl --vacuum-size=1G
+```
+
+📋 **Common space culprits**
+
+| Location            | Description                      |
+| ------------------- | -------------------------------- |
+| `/var/log`          | Rotated logs                     |
+| `/tmp` / `/var/tmp` | Temp growth                      |
+| Docker              | `/var/lib/docker` images, layers |
+| Coredumps           | Large crash dumps                |
+| App logs            | Unrotated logs                   |
+
+✅ **Best Practices**
+
+* Configure logrotate.
+* Use filesystem quotas.
+* Use monitoring alerts on disk usage.
+
+💡 **In short**
+Use du, find, and lsof to pinpoint large directories, files, and deleted open files.
+
+---
+
+# ## Q194: A process is consuming 100% CPU. How do you identify and troubleshoot it?
+
+🧠 **Overview**
+High CPU from a process may indicate loops, memory thrashing, bugs, or legitimate load.
+
+⚙️ **Purpose / How it works**
+Identify the process, inspect thread stack traces, and check system calls.
+
+🧩 **Commands**
+
+```bash
+top -Hp <pid>
+pidstat -p <pid> 1
+strace -p <pid>
+```
+
+### Check thread stack traces
+
+```bash
+sudo gstack <pid>
+```
+
+### Check what file or network ops it does
+
+```bash
+lsof -p <pid>
+```
+
+📋 **Possible causes**
+
+| Cause         | Evidence                           |
+| ------------- | ---------------------------------- |
+| Infinite loop | High CPU single thread             |
+| Memory leak   | Res mem ↑ steadily                 |
+| Bad queries   | DB-bound process                   |
+| High I/O      | strace shows repeated reads/writes |
+
+✅ **Best Practices**
+
+* Limit CPU via cgroups.
+* Optimize app code.
+* Use monitoring for CPU thresholds.
+
+💡 **In short**
+Find PID, inspect threads, trace syscalls, isolate cause, and fix code or restart.
+
+---
+
+# ## Q195: Your system is experiencing high memory usage and applications are being killed. How do you diagnose?
+
+🧠 **Overview**
+OOM (Out-of-memory) killer terminates processes when RAM is exhausted. Identify what is consuming memory and why.
+
+⚙️ **Purpose / How it works**
+Kernel selects a victim based on OOM score. Check logs and memory metrics.
+
+🧩 **Commands**
+
+### 1️⃣ Check OOM logs
+
+```bash
+dmesg -T | grep -i "killed process"
+```
+
+### 2️⃣ Check per-process memory
+
+```bash
+ps aux --sort=-%mem | head
+```
+
+### 3️⃣ Check slab memory
+
+```bash
+slabtop
+```
+
+### 4️⃣ Check kernel buffers
+
+```bash
+free -m
+vmstat 1
+```
+
+### 5️⃣ Check memory leaks
+
+```bash
+pmap <pid>
+```
+
+📋 **Common causes**
+
+| Cause               | Description            |
+| ------------------- | ---------------------- |
+| Memory leak         | App not freeing memory |
+| Cache pressure      | FS cache misconfigured |
+| Unbounded processes | Fork bombs             |
+| Too many containers | Consuming host RAM     |
+
+✅ **Best Practices**
+
+* Set cgroup memory limits.
+* Increase swap only for non-performance workloads.
+* Use monitoring to alert early.
+
+💡 **In short**
+Check OOM logs, identify memory hogs, inspect leaks, fix configs, set limits.
+
+---
+
+# ## Q196: You're seeing "too many open files" errors. How do you resolve this?
+
+🧠 **Overview**
+Every process has file descriptor limits (ulimit). When exceeded, the kernel blocks new file/socket creation.
+
+⚙️ **Purpose / How it works**
+Increase system limits and fix underlying leak.
+
+🧩 **Commands**
+
+### 1️⃣ Check current limits
+
+```bash
+ulimit -n
+cat /proc/<pid>/limits
+```
+
+### 2️⃣ Increase global limit
+
+```bash
+# /etc/sysctl.d/99-fd.conf
+fs.file-max = 2097152
+sysctl --system
+```
+
+### 3️⃣ Per-user/per-service limit
+
+```bash
+# /etc/security/limits.conf
+appuser soft nofile 65536
+appuser hard nofile 65536
+```
+
+### 4️⃣ For systemd services
+
+```bash
+# /etc/systemd/system/app.service
+LimitNOFILE=65536
+```
+
+📋 **Root causes**
+
+| Issue               | Why                         |
+| ------------------- | --------------------------- |
+| Socket leak         | App not closing connections |
+| Too many logs/files | Watchers opened             |
+| Burst connections   | Need higher limits          |
+
+✅ **Best Practices**
+
+* Fix leaks before raising limits.
+* Use monitoring for FD usage.
+
+💡 **In short**
+Raise OS + user limits and fix file/socket leaks.
+
+---
+
+# ## Q197: A service fails to start after system reboot. How would you troubleshoot?
+
+🧠 **Overview**
+Service startup issues usually arise from dependency failures, wrong permissions, missing files, or systemd misconfigurations.
+
+⚙️ **Purpose / How it works**
+Check systemd logs, environment, dependencies.
+
+🧩 **Commands**
+
+```bash
+systemctl status <service>
+journalctl -u <service> -b
+```
+
+### Check dependencies
+
+```bash
+systemctl list-dependencies <service>
+```
+
+### Verify paths and permissions
+
+```bash
+ls -l /etc/<svc> /var/lib/<svc>
+```
+
+### Validate systemd unit
+
+```bash
+systemd-analyze verify /etc/systemd/system/<svc>.service
+```
+
+📋 **Common reasons**
+
+| Cause               | Example                  |
+| ------------------- | ------------------------ |
+| Missing directories | /var/run/app not created |
+| Wrong permissions   | Denied by SELinux        |
+| Env vars missing    | ExecStart script fails   |
+| Port already in use | Bound by old process     |
+
+✅ **Best Practices**
+
+* Use `After=` and `Requires=` correctly.
+* Keep unit files simple and explicit.
+
+💡 **In short**
+Use systemctl + journal logs to trace startup issues; fix dependencies, permissions, or unit configs.
+
+---
+
+# ## Q198: DNS resolution is failing on your Linux server. What would you check?
+
+🧠 **Overview**
+DNS issues break networking for apps, packages, and services. Must validate resolver configuration and upstream DNS availability.
+
+⚙️ **Purpose / How it works**
+Check `/etc/resolv.conf`, DNS servers, firewall ports, systemd-resolved.
+
+🧩 **Commands**
+
+```bash
+cat /etc/resolv.conf
+dig google.com
+dig @8.8.8.8 google.com
+systemd-resolve --status
+```
+
+### Check UDP/TCP 53
+
+```bash
+sudo nc -uvz <dns-server-ip> 53
+```
+
+📋 **Common causes**
+
+| Issue                      | Description            |
+| -------------------------- | ---------------------- |
+| Wrong resolv.conf          | Bad nameserver entries |
+| systemd-resolved conflicts | Symlink overwritten    |
+| Firewall                   | Blocks DNS queries     |
+| Broken DNS server          | Local resolver down    |
+
+✅ **Best Practices**
+
+* Use at least 2 DNS servers.
+* Use monitoring for DNS failures.
+
+💡 **In short**
+Check resolv.conf → test dig → test DNS server reachability → fix nameservers or service.
+
+---
+
+# ## Q199: You cannot ping external IPs but can ping the gateway. How do you troubleshoot?
+
+🧠 **Overview**
+If gateway reachable but external IP unreachable → routing or firewall/NAT problem.
+
+⚙️ **Purpose / How it works**
+Identify outbound connectivity path failures beyond first hop.
+
+🧩 **Commands**
+
+### 1️⃣ Check default route
+
+```bash
+ip route show
+```
+
+### 2️⃣ Check NAT/masquerading
+
+```bash
+sudo iptables -t nat -L -n
+```
+
+### 3️⃣ Trace route
+
+```bash
+traceroute 8.8.8.8
+```
+
+### 4️⃣ Check firewall
+
+```bash
+sudo iptables -L -n
+sudo ufw status
+```
+
+### 5️⃣ Check MTU issues
+
+```bash
+ping -M do -s 1472 8.8.8.8
+```
+
+📋 **Common root causes**
+
+| Cause                 | Explanation               |
+| --------------------- | ------------------------- |
+| Missing default route | Can't exit local subnet   |
+| NAT misconfigured     | Private IP not translated |
+| ISP routing issue     | Beyond gateway failure    |
+| MTU mismatch          | Packets dropped           |
+
+💡 **In short**
+If gateway works, check routes, NAT, firewalls, and MTU issues.
+
+---
+
+# ## Q200: A user cannot log in with correct credentials. What would you investigate?
+
+🧠 **Overview**
+Login failures can stem from authentication, account lockouts, shell issues, or PAM module problems.
+
+⚙️ **Purpose / How it works**
+Trace the login flow: PAM → NSS → shell.
+
+🧩 **Commands**
+
+### 1️⃣ Check auth logs
+
+```bash
+grep -i "auth" /var/log/secure
+journalctl -xe
+```
+
+### 2️⃣ Verify user exists
+
+```bash
+id <username>
+getent passwd <username>
+```
+
+### 3️⃣ Check account expiry
+
+```bash
+chage -l <user>
+```
+
+### 4️⃣ Check shell validity
+
+```bash
+grep <user> /etc/passwd
+ls -l /bin/bash
+```
+
+### 5️⃣ Check permissions of home and ssh keys
+
+```bash
+ls -ld /home/<user>
+ls -l /home/<user>/.ssh
+```
+
+📋 **Possible causes**
+
+| Issue             | Symptoms              |
+| ----------------- | --------------------- |
+| Expired password  | PAM denies login      |
+| Locked account    | `/etc/shadow` has `!` |
+| Wrong shell       | `/bin/false` assigned |
+| Permissions wrong | SSH refuses keys      |
+
+💡 **In short**
+Check auth logs, user info, expiry, shell, home perms, SSH settings.
+
+---
+
+# ## Q201: The file system is showing as read-only. How do you diagnose and fix this?
+
+🧠 **Overview**
+FS goes read-only when kernel detects I/O errors to protect data integrity.
+
+⚙️ **Purpose / How it works**
+Check disk health, logs, and remount if safe.
+
+🧩 **Commands**
+
+### 1️⃣ Check dmesg for disk errors
+
+```bash
+dmesg -T | grep -i error
+```
+
+### 2️⃣ Check filesystem health (offline)
+
+```bash
+sudo umount /dev/sda1
+sudo fsck -f /dev/sda1
+```
+
+### 3️⃣ Attempt remount
 
 ```bash
 sudo mount -o remount,rw /
 ```
 
----
-
-#### 🟢 6. Confirm Application Log Configuration
-
-For Java apps (Spring Boot, Tomcat, etc.):
+### 4️⃣ Check SMART status
 
 ```bash
-grep "logging" application.properties
+smartctl -a /dev/sda
 ```
 
-**Examples:**
+📋 **Common causes**
 
-```
-logging.file.name=/var/log/myapp/app.log
-logging.level.root=INFO
-```
+| Cause              | Description      |
+| ------------------ | ---------------- |
+| Disk failure       | Bad sectors      |
+| Cable/RAID failure | I/O timeout      |
+| Journal corruption | FS inconsistency |
 
-> Missing or misconfigured `logging.file` entry = logs go to console only.
+💡 **In short**
+Inspect disk errors, run fsck, remount, replace failing disk if needed.
 
-For Nginx:
+---
+
+# ## Q202: Your system time is incorrect and causing authentication issues. How do you fix it?
+
+🧠 **Overview**
+Incorrect time breaks Kerberos, SSL, SSH, tokens, and logs.
+
+⚙️ **Purpose / How it works**
+Use NTP/chrony for time sync.
+
+🧩 **Commands**
+
+### 1️⃣ Check current time & sync status
 
 ```bash
-cat /etc/nginx/nginx.conf | grep log
+timedatectl
+chronyc tracking
 ```
 
-**Expected:**
-
-```
-access_log /var/log/nginx/access.log;
-error_log /var/log/nginx/error.log;
-```
-
-> If paths missing → add and restart service.
-
----
-
-#### 🟢 7. Check SELinux or AppArmor Restrictions
-
-SELinux can silently block write access to `/var/log`.
-
-Test:
+### 2️⃣ Configure NTP/chrony
 
 ```bash
-sudo ausearch -m avc -ts recent
+sudo apt install chrony
+sudo vi /etc/chrony/chrony.conf
+server time.google.com iburst
 ```
 
-If denied:
-
-```
-type=AVC msg=audit: ... denied { write } for pid=1234 comm="java" name="app.log"
-```
-
-Allow correct context:
+### 3️⃣ Restart service
 
 ```bash
-sudo restorecon -Rv /var/log/myapp/
+systemctl restart chrony
 ```
 
-Or disable temporarily for testing:
+📋 **Common issues**
+
+| Issue           | Effect         |
+| --------------- | -------------- |
+| Drift           | Token failures |
+| Stopped chronyd | No sync        |
+| Wrong timezone  | Log confusion  |
+
+💡 **In short**
+Enable chrony/NTP and verify time sync status.
+
+---
+
+# ## Q203: A disk is showing errors in dmesg. What steps would you take?
+
+🧠 **Overview**
+Disk errors often precede data loss. Diagnose ASAP.
+
+⚙️ **Purpose / How it works**
+Check SMART, isolate disk, backup, replace.
+
+🧩 **Commands**
 
 ```bash
-sudo setenforce 0
+dmesg -T | grep -i 'sd' -i 'error'
+smartctl -a /dev/sdX
+iostat -xz 1
 ```
 
----
-
-#### 🟢 8. Check Containerized Applications (Docker/Kubernetes)
-
-**Docker logs:**
+### Check filesystem
 
 ```bash
-docker logs <container_name> | tail
+umount /dev/sdX1
+fsck -f /dev/sdX1
 ```
 
-If missing, check Docker JSON logs:
+### Check RAID
 
 ```bash
-sudo ls -lh /var/lib/docker/containers/*/*-json.log
+cat /proc/mdstat
 ```
 
-> Logs may be rotated or deleted by Docker:
+📋 **Disk error types**
+
+| Error       | Meaning          |
+| ----------- | ---------------- |
+| I/O error   | Disk unreachable |
+| Bad sectors | Surface damage   |
+| Timeout     | Cable/RAID issue |
+
+💡 **In short**
+Check SMART, backup data, replace disk; run fsck only after unmounting.
+
+---
+
+# ## Q204: You're experiencing intermittent network packet loss. How would you diagnose?
+
+🧠 **Overview**
+Packet loss may originate from NIC, cable, switch, MTU mismatch, congestion, kernel buffers, or interrupts.
+
+⚙️ **Purpose / How it works**
+Trace loss across layers: L1 → L2 → L3 → L4.
+
+🧩 **Commands**
+
+### 1️⃣ Ping with pattern
 
 ```bash
-sudo docker system prune -af
+ping -c 100 <target>
 ```
 
-**Kubernetes logs:**
+### 2️⃣ Check NIC counters
 
 ```bash
-kubectl logs <pod> -n <namespace> --tail=50
+ip -s link
+ethtool -S eth0
 ```
 
-> If logs lost after pod restart → use persistent logging (FluentBit, CloudWatch, Loki, etc.).
-
----
-
-#### 🟢 9. Check for Manual Deletion or Truncation
+### 3️⃣ Check MTU mismatch
 
 ```bash
-sudo lsof | grep deleted | grep log
+ping -M do -s 1472 <target>
 ```
 
-**Example Output:**
-
-```
-java  2193 root  txt REG 8,1  2.1G /var/log/myapp/app.log (deleted)
-```
-
-> The file was deleted while app still writing to it → restart the service:
+### 4️⃣ Check routing & ARP
 
 ```bash
-sudo systemctl restart <app>
+ip route
+ip neigh
 ```
 
----
-
-#### 🟢 10. Verify Centralized Logging Configuration (ELK / CloudWatch / Fluentd)
-
-If logs are sent remotely, check agent health:
+### 5️⃣ Capture packets
 
 ```bash
-sudo systemctl status filebeat
-sudo systemctl status amazon-cloudwatch-agent
+tcpdump -i eth0
 ```
 
-> Misconfigured or stopped agents can cause local logs to rotate and vanish.
+📋 **Root causes**
+
+| Cause           | Symptom                 |
+| --------------- | ----------------------- |
+| Duplex mismatch | CRC errors              |
+| MTU mismatch    | Drops on large packets  |
+| Buffer overflow | Drops under load        |
+| Bad cable/NIC   | Increasing RX/TX errors |
+
+💡 **In short**
+Check NIC counters, MTU, routes, and packet captures.
 
 ---
 
-### 📋 Common Causes and Fixes
+# ## Q205: A cron job is not running as expected. How do you troubleshoot?
 
-| Root Cause               | Symptom                       | Resolution                                           |
-| ------------------------ | ----------------------------- | ---------------------------------------------------- |
-| Wrong file path          | Log file not generated        | Fix `logging.file` or `access_log` path              |
-| Permission denied        | Empty or missing log files    | `chown -R <appuser> /var/log/<app>`                  |
-| Log rotation             | Old logs archived             | Check `/var/log/<app>/*.gz`                          |
-| Disk full / read-only FS | No logs being written         | Free space / remount as rw                           |
-| SELinux block            | App running but no logs       | `restorecon -Rv /var/log/<app>`                      |
-| Logging disabled         | App runs but silent           | Check config for `logging.level` or `access_log off` |
-| Deleted log handle       | File missing but process open | Restart app                                          |
-| Cloud log redirection    | Logs missing locally          | Check CloudWatch / ELK / Loki agent                  |
+🧠 **Overview**
+Cron failures usually involve permissions, PATH issues, environment variables, or script errors.
 
----
+⚙️ **Purpose / How it works**
+Cron runs with minimal environment; scripts must be fully path-qualified.
 
-### ✅ Best Practices
+🧩 **Commands**
 
-* 🧠 Always define **absolute log paths** in app configs.
-* ⚙️ Configure **logrotate** to compress but not delete too aggressively.
-* 🧩 Set `/var/log/<app>` ownership to the **same user as the service**.
-* 🚀 Use centralized log shipping (ELK, CloudWatch, Loki) for retention.
-* 🔒 For containerized workloads, log to **stdout/stderr** — not local files.
-* 📊 Monitor `/var/log` disk space and rotation schedules.
-
----
-
-### 💡 In short
-
-1. Check journald: `journalctl -u <app>`
-2. Verify log path & permissions: `ls -l /var/log/<app>`
-3. Inspect rotation: `/etc/logrotate.d/<app>`
-4. Free disk space or remount FS
-5. Restart service after fixing
-
-✅ Most missing log issues come from **permissions, rotation, or deletion** — verify configuration and ownership before restarting.
-
----
-## Q: How Do You Recover or Handle an Accidentally Deleted File in Linux?
-
----
-
-### 🧠 Overview
-
-Accidentally deleting a file in Linux (`rm -rf`) is common and dangerous — especially in production environments.
-Unlike Windows, Linux doesn’t have a “recycle bin”; recovery depends on **file type**, **storage type (ext4, xfs, etc.)**, and whether the **file’s data blocks** have been overwritten.
-
-Your recovery approach changes based on:
-
-* Whether the file is **still open by a process** (recoverable easily).
-* Whether it’s on a **local disk**, **EBS volume**, or **mounted filesystem**.
-* Whether **backups or snapshots** exist.
-
----
-
-### ⚙️ Purpose / How It Works
-
-When a file is deleted:
-
-* The **directory entry** is removed, but **data blocks** remain until overwritten.
-* If a process still has it open, you can **recover contents from memory or file descriptor**.
-* Once overwritten → recovery becomes difficult without forensic tools.
-
----
-
-### 🧩 Step-by-Step Recovery Workflow
-
-#### 🟢 1. Stop Writing to the Disk Immediately
-
-**Do not** create new files or restart services — it may overwrite the deleted file’s data blocks.
-If possible, **mount the filesystem as read-only**:
+### 1️⃣ Check cron logs
 
 ```bash
-sudo mount -o remount,ro /
+grep CRON /var/log/syslog
+journalctl -u cron
 ```
 
-Or stop the application:
+### 2️⃣ Verify crontab
 
 ```bash
-sudo systemctl stop <app>
+crontab -l
 ```
 
-> This preserves the best chance of recovery.
-
----
-
-#### 🟢 2. Check if File Is Still Open by a Process
+### 3️⃣ Test script manually
 
 ```bash
-sudo lsof | grep deleted
+sudo -u <user> /path/script.sh
 ```
 
-**Example Output:**
-
-```
-java   2245  root  txt REG 8,1  2.1G /var/log/myapp/app.log (deleted)
-```
-
-> The file is deleted but still open in process `PID=2245`.
-
-Recover it immediately:
+### 4️⃣ Check file permissions
 
 ```bash
-sudo cp /proc/2245/fd/4 /tmp/recovered-app.log
+chmod +x /path/script.sh
 ```
 
-> Copies the still-open file handle to a safe location.
-
-💡 **Best case scenario** — 100% recovery possible if the file is still open.
-
----
-
-#### 🟢 3. Check Backups or Snapshots
-
-If on a cloud system (e.g., AWS, Azure, GCP):
-
-* **AWS EBS snapshot**:
-
-  ```bash
-  aws ec2 create-snapshot --volume-id <vol-id> --description "Post-delete recovery"
-  ```
-
-  Mount the snapshot to a recovery instance and restore the file.
-
-* **AMI / Cloud Backup / rsync / S3 Sync**:
-  Restore from the latest available backup:
-
-  ```bash
-  aws s3 cp s3://mybackup/app.log /var/log/myapp/
-  ```
-
-If using local backup:
+### 5️⃣ Add PATH variable inside cron
 
 ```bash
-sudo cp /backup/var/log/myapp/app.log /var/log/myapp/
+PATH=/usr/bin:/bin:/usr/local/bin
 ```
+
+📋 **Common causes**
+
+| Issue                   | Description             |
+| ----------------------- | ----------------------- |
+| Wrong PATH              | Programs not found      |
+| Permission denied       | Script non-executable   |
+| Missing environment     | Script expects env vars |
+| Cron daemon not running | Check systemctl         |
+
+💡 **In short**
+Review logs, validate script paths/permissions, add PATH, and test manually.
 
 ---
 
-#### 🟢 4. Use File Recovery Tools (If No Backup / Not Open)
+# ## Q206: The system boots to emergency mode. How do you recover?
 
-If the file isn’t open and no backup exists, use recovery utilities.
+🧠 **Overview**
+Emergency mode means critical boot components (fstab, root FS, SELinux, initramfs) failed.
 
-**Unmount filesystem first** (to avoid overwriting):
+⚙️ **Purpose / How it works**
+Use emergency shell to repair configuration or disk.
+
+🧩 **Steps**
+
+### 1️⃣ Check failure log
 
 ```bash
-sudo umount /dev/xvda1
+journalctl -xb
 ```
 
-Then run tools from a live or recovery system:
-
-**For ext4:**
+### 2️⃣ Check fstab errors
 
 ```bash
-sudo apt install extundelete -y
-sudo extundelete /dev/xvda1 --restore-file /var/log/myapp/app.log
+cat /etc/fstab
+mount -a
 ```
 
-> Restores deleted file if its data blocks are intact.
-
-**For xfs:**
+### 3️⃣ Repair root filesystem
 
 ```bash
-sudo yum install xfsprogs -y
-sudo xfs_undelete -i /dev/xvda1 -o /tmp/recovery
+fsck -f /dev/sda1
 ```
 
-**For generic file carving:**
+### 4️⃣ Rebuild initramfs
 
 ```bash
-sudo apt install testdisk -y
-sudo photorec
+dracut --force
+# or
+update-initramfs -u
 ```
 
-> Interactively scans and recovers file fragments based on signatures.
-
----
-
-#### 🟢 5. Check If File Was on a Mounted Partition
-
-If the file was under `/mnt/data` or `/var`, ensure the mount point is still valid:
+### 5️⃣ Fix SELinux relabeling
 
 ```bash
-mount | grep /mnt
+touch /.autorelabel
+reboot
 ```
 
-> Sometimes files appear “deleted” because the mount point changed or unmounted temporarily.
-
-Remount:
+### 6️⃣ Fix missing kernel/modules
 
 ```bash
-sudo mount /dev/xvdb1 /mnt/data
+yum reinstall kernel
 ```
+
+📋 **Common causes**
+
+| Cause            | Description       |
+| ---------------- | ----------------- |
+| Bad fstab entry  | Nonexistent mount |
+| Corrupt FS       | Disk failure      |
+| SELinux mislabel | Denied boot       |
+| Broken initramfs | Missing drivers   |
+
+💡 **In short**
+Inspect logs, fix fstab, repair FS, rebuild initramfs, relabel SELinux, reboot.
 
 ---
 
-#### 🟢 6. Check Version-Controlled or App-Level Logs
+Understood — delivering **all Q207–Q222** in **one large, fully detailed, README-style Markdown output**, just like the previous batch.
 
-If the file was configuration or code:
+---
+
+# # 🔧 Linux Troubleshooting & Scenarios (Q207–Q222)
+
+---
+
+# ## Q207: You accidentally deleted `/etc/passwd`. How do you recover?
+
+🧠 **Overview**
+`/etc/passwd` contains critical user metadata. Without it, login and many services fail. Recovery involves restoring from backups or recreating minimal system entries.
+
+⚙️ **Purpose / How it works**
+The system won’t authenticate, but root shell from console still works. Use recovery mode, rescue system, or cloud serial console.
+
+🧩 **Recovery Steps**
+
+### 1️⃣ Boot into rescue / single-user mode
+
+AWS: *EC2 serial console → "Recovery/Rescue" mode*
+Bare metal: *GRUB → edit → append `systemd.unit=rescue.target`*
+
+---
+
+### 2️⃣ Restore from backup (preferred)
+
+If running automated backups:
 
 ```bash
-git log -- <file>
-git checkout HEAD^ -- <file>
+cp /backup/etc/passwd /etc/passwd
+cp /backup/etc/shadow /etc/shadow
 ```
-
-> Restore from version control rather than disk recovery.
-
-If it was an application log or DB dump, check:
-
-* **/tmp** or rotated logs:
-
-  ```bash
-  ls -lh /var/log/*.gz
-  ```
-* **Service backups** (e.g., Jenkins `jobs/`, MySQL `mysqldump`).
 
 ---
 
-#### 🟢 7. If File System Is Corrupted or Damaged
+### 3️⃣ Recreate minimal `/etc/passwd`
 
-Run filesystem check:
+For most distros:
 
 ```bash
-sudo fsck /dev/xvda1
+cat <<EOF > /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+EOF
 ```
 
-> Fixes metadata or inode table issues that can make files appear “missing”.
+### 4️⃣ Rebuild `/etc/shadow`
 
----
-
-#### 🟢 8. Future Prevention
-
-* Enable **versioned backups**:
-
-  * Local: `rsnapshot`, `rsync`, or `restic`
-  * Cloud: S3 with `--versioning-enabled`
-* Protect critical files:
-
-  ```bash
-  chattr +i /etc/fstab   # Immutable flag prevents deletion
-  ```
-* Enable **logrotate with retention** to prevent manual deletion:
-
-  ```bash
-  /var/log/myapp/*.log {
-      rotate 7
-      compress
-      missingok
-      notifempty
-  }
-  ```
-
----
-
-### 📋 Recovery Scenarios Summary
-
-| Scenario                           | Recovery Method            | Success Chance |
-| ---------------------------------- | -------------------------- | -------------- |
-| File still open by process         | Copy from `/proc/<pid>/fd` | ✅ 100%         |
-| Backups/snapshots exist            | Restore from backup        | ✅ 100%         |
-| Recently deleted (ext4, unmounted) | `extundelete` / `testdisk` | ⚙️ 60–90%      |
-| Overwritten or old deletion        | Low-level forensic tools   | ⚠️ <30%        |
-| Mounted FS issue                   | Remount or check mounts    | ✅ Quick fix    |
-| Config/code under Git              | `git checkout`             | ✅ 100%         |
-
----
-
-### ✅ Best Practices
-
-* 🧠 Always use **backups or snapshots** for critical systems.
-* 🧩 Keep `/var/log`, `/etc`, `/data` under separate partitions.
-* ⚙️ Use **immutable flags (`chattr +i`)** for key configs.
-* 🚀 Add **“safe delete” alias** for interactive confirmation:
-
-  ```bash
-  alias rm='rm -i'
-  ```
-* 🧾 Automate daily offsite backups (S3, rsync, NFS).
-
----
-
-### 💡 In short
-
-1. Check if file is open → `lsof | grep deleted` → recover via `/proc/<pid>/fd/`.
-2. Restore from backup or snapshot if available.
-3. If no backup, use `extundelete` or `testdisk` on unmounted disk.
-4. Prevent future loss with immutable flags, backups, and “safe delete” policies.
-
-✅ **If a process still holds the file open, recover immediately — otherwise unmount and use recovery tools before writing new data.**
-
----
-# 🧩 Linux System Architecture Overview
-
-A Linux system is built using a **modular, layered architecture** where each component plays a specific role — from hardware control to user interaction.
-Here’s a clear, DevOps-friendly breakdown:
-
----
-
-## 🧠 Core Components and Their Purpose
-
-| **Component**                              | **Purpose / Functionality**                                                                                                                                                                             |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Kernel**                                 | 🧩 The **core of the OS** — directly interacts with hardware (CPU, memory, I/O, storage). Handles **process scheduling, device drivers, memory management, and system calls**.                          |
-| **System Libraries (glibc)**               | 🧠 Provide **standard APIs** (like `printf()`, `malloc()`) and **system call interfaces** for applications to interact with the kernel without dealing with hardware directly.                          |
-| **System Utilities**                       | ⚙️ Essential **user-space tools** like `ls`, `cat`, `grep`, `ps`, `df` that let users perform basic operations and maintenance. Found under `/bin`, `/usr/bin`.                                         |
-| **Shell**                                  | 💻 The **command-line interface (CLI)** between user and OS — interprets commands (e.g., Bash, Zsh, Fish). Also used for scripting and automation in DevOps.                                            |
-| **Init System (systemd / init / upstart)** | 🔄 Responsible for **booting the system**, **starting/stopping services**, and **managing daemons and processes**. Systemd units control dependencies and startup order.                                |
-| **File System Hierarchy**                  | 🗂️ Defines how data and configurations are organized under `/` (root):<br> `/etc` → configs<br> `/var` → logs/data<br> `/home` → user files<br> `/bin`, `/sbin` → system binaries<br> `/dev` → devices |
-| **Networking Stack**                       | 🌐 Manages **network interfaces, routing, DNS, sockets, and firewalling**. Uses tools like `ip`, `ss`, `iptables`, and kernel modules like `netfilter` for packet control.                              |
-
----
-
-## 🧩 How the Layers Interact
-
-```
-+---------------------------+
-|    User Applications      | ← (e.g., nginx, git, curl)
-+---------------------------+
-|   Shell & System Utilities| ← (bash, ls, ps)
-+---------------------------+
-|   System Libraries (glibc)| ← (standard C library, APIs)
-+---------------------------+
-|          Kernel           | ← (schedules, manages hardware)
-+---------------------------+
-|       Hardware Layer      | ← (CPU, RAM, Disk, NIC)
-+---------------------------+
+```bash
+pwconv
 ```
 
-> Applications interact with the **kernel** via **system libraries**, which translate user-space calls into **system calls** handled by the kernel.
+### 5️⃣ Fix permissions
+
+```bash
+chmod 644 /etc/passwd
+chmod 600 /etc/shadow
+```
+
+📋 **Table — Critical files**
+
+| File          | Purpose           |
+| ------------- | ----------------- |
+| `/etc/passwd` | User metadata     |
+| `/etc/shadow` | Password hashes   |
+| `/etc/group`  | Group definitions |
+
+💡 **In short**
+Boot into rescue mode → restore from backup → recreate minimal entries → regenerate shadow file.
 
 ---
 
-## ⚙️ Example: How a Command Executes (`ls /home`)
+# ## Q208: A server is experiencing very slow disk I/O. What would you investigate?
 
-1. **User Input:** You type `ls /home` in Bash.
-2. **Shell:** Parses the command and executes `/bin/ls`.
-3. **System Libraries:** `ls` calls C library functions (`opendir()`, `readdir()`) from glibc.
-4. **Kernel:** Executes system calls to read directory contents via the **VFS (Virtual File System)**.
-5. **Kernel ↔ Hardware:** Reads data blocks from disk via the **I/O scheduler and disk driver**.
-6. **Output:** Results are displayed in the terminal via the shell.
+🧠 **Overview**
+Slow I/O indicates disk bottlenecks, hardware failure, filesystem problems, or scheduler misconfiguration.
 
----
+⚙️ **Purpose / How it works**
+Analyze I/O latency, queue depth, disk health, and filesystem behavior.
 
-## 📋 Key Directories by Role
+🧩 **Commands**
 
-| **Directory**        | **Purpose**                            |
-| -------------------- | -------------------------------------- |
-| `/bin`, `/usr/bin`   | Core user commands                     |
-| `/sbin`, `/usr/sbin` | System administration binaries         |
-| `/etc`               | Configuration files                    |
-| `/var`               | Variable data (logs, cache, mail)      |
-| `/home`              | User directories                       |
-| `/dev`               | Device files (block/character devices) |
-| `/proc`, `/sys`      | Virtual kernel/system info             |
-| `/lib`, `/usr/lib`   | Shared libraries                       |
+### 1️⃣ Check disk latency
+
+```bash
+iostat -xz 1
+```
+
+Look at:
+
+* `await` → high latency
+* `svctm` → slow service time
+* `%util` → >90% busy
 
 ---
 
-## ✅ Best Practices for DevOps
+### 2️⃣ Check kernel logs
 
-* ⚙️ Keep **system logs** under `/var/log` monitored (`journalctl`, `rsyslog`).
-* 🧠 Use **systemd units** for service reliability and restarts.
-* 🧩 Store persistent data and configs in proper locations (`/etc`, `/opt`, `/var/lib`).
-* 🔒 Limit direct kernel interaction; use APIs or utilities.
-* 🚀 Understand layers — critical for **troubleshooting, performance tuning, and containerization**.
+```bash
+dmesg -T | grep -i "error" -i "blk"
+```
 
 ---
 
-### 💡 In short
+### 3️⃣ Check SMART health
 
-Linux architecture =
-**Hardware → Kernel → Libraries → Utilities → Shell → Applications**.
-Each layer abstracts complexity and isolates functionality — making Linux **stable, modular, and ideal for DevOps automation and containers.**
+```bash
+smartctl -a /dev/sdX
+```
+
+---
+
+### 4️⃣ Identify heavy I/O processes
+
+```bash
+iotop -ao
+```
+
+---
+
+### 5️⃣ Check filesystem and mount options
+
+```bash
+mount | grep /data
+```
+
+📋 **Common causes**
+
+| Cause          | Indicator                       |
+| -------------- | ------------------------------- |
+| Dying disk     | SMART "Reallocated sectors"     |
+| RAID rebuild   | High latency                    |
+| NFS hang       | D-state tasks                   |
+| Bad scheduler  | Wrong I/O scheduler on SSD/NVMe |
+| Heavy app load | High queue depth                |
+
+💡 **In short**
+Measure latency (iostat), inspect logs, check SMART, identify I/O-heavy processes.
+
+---
+
+# ## Q209: Multiple zombie processes are accumulating. What's the cause and solution?
+
+🧠 **Overview**
+Zombie processes are dead children whose exit status wasn’t reaped by the parent. They do *not* use CPU/RAM, but many indicate parent process bugs.
+
+⚙️ **Cause**
+Parent failed to call `wait()` or `waitpid()`.
+
+🧩 **Commands**
+
+### Identify zombies
+
+```bash
+ps aux | grep 'Z'
+```
+
+### Find parent PID
+
+```bash
+ps -o ppid= -p <zombie-pid>
+```
+
+### Restart parent process
+
+```bash
+systemctl restart <service>
+```
+
+### As last resort, kill parent process
+
+(Children then reparent to PID 1 which reaps them)
+
+```bash
+kill -9 <ppid>
+```
+
+📋 **Common root causes**
+
+| Cause              | Explanation             |
+| ------------------ | ----------------------- |
+| App bug            | Not reaping children    |
+| Orphaned processes | Parent terminated badly |
+| Fork bombs         | Too many children       |
+
+💡 **In short**
+Zombies → parent not reaping → restart or fix parent → reaping happens automatically.
+
+---
+
+# ## Q210: SSH connections are timing out. What could be causing this?
+
+🧠 **Overview**
+SSH timeout means packets aren’t reaching the server or the server is overloaded/unresponsive.
+
+⚙️ **Purpose / How it works**
+Check network path, firewall, sshd status, and resource starvation.
+
+🧩 **Commands**
+
+### 1️⃣ Check sshd is running
+
+```bash
+systemctl status sshd
+```
+
+### 2️⃣ Check port 22 reachability
+
+```bash
+nc -zv <server> 22
+```
+
+### 3️⃣ Firewall rules
+
+```bash
+iptables -L -n
+ufw status
+```
+
+### 4️⃣ Identify TCP drops
+
+```bash
+ss -tlnp | grep 22
+```
+
+### 5️⃣ Check server load / I/O wait
+
+```bash
+top
+vmstat 1
+iostat -xz 1
+```
+
+📋 **Common Causes**
+
+| Issue         | Explanation            |
+| ------------- | ---------------------- |
+| Firewall drop | Port 22 blocked        |
+| I/O freeze    | sshd stuck waiting     |
+| Network ACL   | Cloud SG rules         |
+| DNS latency   | Reverse lookup timeout |
+| Max sessions  | `MaxStartups` limit    |
+
+💡 **In short**
+Check sshd status → port 22 → firewall/NACL → server load → DNS delays.
+
+---
+
+# ## Q211: Your web server returns "connection refused" errors. How do you diagnose?
+
+🧠 **Overview**
+Connection refused = TCP RST, meaning nothing is listening on the target port.
+
+⚙️ **Purpose / How it works**
+Check the service, port binding, firewall, and network path.
+
+🧩 **Commands**
+
+### 1️⃣ Verify process listening
+
+```bash
+ss -tlnp | grep :80
+```
+
+### 2️⃣ Check service status
+
+```bash
+systemctl status nginx
+systemctl status httpd
+```
+
+### 3️⃣ Check firewall
+
+```bash
+iptables -L -n
+ufw status
+```
+
+### 4️⃣ Check SELinux
+
+```bash
+sudo ausearch -m AVC -ts recent
+```
+
+### 5️⃣ Check logs
+
+```bash
+journalctl -u nginx
+journalctl -u httpd
+```
+
+📋 **Common causes**
+
+| Cause               | Explanation             |
+| ------------------- | ----------------------- |
+| Service not running | Nothing listening       |
+| Port blocked        | Firewall drop           |
+| SELinux             | Denies bind to port     |
+| Wrong IP bind       | Bound to localhost only |
+
+💡 **In short**
+Check if service is listening → verify firewall → inspect logs → confirm SELinux context.
+
+---
+
+# ## Q212: The server ran out of inodes. How do you identify and resolve this?
+
+🧠 **Overview**
+Inodes represent file metadata. Too many small files → zero inodes left → FS becomes unusable.
+
+⚙️ **Purpose / How it works**
+Identify directories spawning excessive files and clean them.
+
+🧩 **Commands**
+
+### Check inode usage
+
+```bash
+df -i
+```
+
+### Find dirs with many files
+
+```bash
+sudo find / -xdev -type d -print0 | xargs -0 ls -U | wc -l
+```
+
+More accurate:
+
+```bash
+sudo du --inodes -x / | sort -rn | head
+```
+
+📋 **Common inode hogs**
+
+| Location           | Description            |
+| ------------------ | ---------------------- |
+| `/var/log`         | Rotating logs          |
+| `/tmp`             | Temp file leaks        |
+| Application caches | Millions of tiny files |
+| Mail queues        | Stale messages         |
+
+### Resolve:
+
+* Delete unnecessary small files
+
+```bash
+find /path -type f -delete
+```
+
+* Increase inode count (requires FS recreation)
+
+```bash
+mkfs.ext4 -N <number> /dev/sdX
+```
+
+💡 **In short**
+Check df -i, find dirs with too many files, delete them, recreate FS if needed.
+
+---
+
+# ## Q213: A process is stuck in "D" state (uninterruptible sleep). What does this mean and how do you handle it?
+
+🧠 **Overview**
+“D-state” means waiting on I/O that cannot be interrupted (disk, NFS, kernel). The process cannot be killed until I/O completes.
+
+⚙️ **Purpose / How it works**
+Kernel blocks thread until I/O returns.
+
+🧩 **Commands**
+
+### Identify D-state tasks
+
+```bash
+ps -eo pid,stat,cmd | grep ' D '
+```
+
+### Check disk/NFS issues
+
+```bash
+dmesg -T | grep -i "nfs" -i "blk" -i "error"
+```
+
+### Check blocked files
+
+```bash
+lsof -p <pid>
+```
+
+📋 **Common causes**
+
+| Issue              | Explanation     |
+| ------------------ | --------------- |
+| Disk I/O timeout   | Bad disk        |
+| Stale NFS mount    | Server down     |
+| Kernel driver hang | SCSI driver bug |
+
+### Solutions:
+
+* Fix underlying I/O issue.
+* Unmount bad NFS mount.
+* As last resort → reboot.
+
+💡 **In short**
+D-state = stuck I/O; cannot kill; fix underlying disk/NFS issue.
+
+---
+
+# ## Q214: Your server cannot resolve hostnames in `/etc/hosts`. What's wrong?
+
+🧠 **Overview**
+Hostname resolution order is controlled by `/etc/nsswitch.conf`. If not configured properly, `/etc/hosts` may be ignored.
+
+⚙️ **Purpose / How it works**
+Ensure "files" comes before "dns" in NSS configuration.
+
+🧩 **Commands**
+
+### Check nsswitch
+
+```bash
+cat /etc/nsswitch.conf | grep hosts
+```
+
+Correct entry:
+
+```
+hosts: files dns
+```
+
+📋 **Common causes**
+
+| Issue                | Explanation               |
+| -------------------- | ------------------------- |
+| Wrong nsswitch order | DNS used instead of hosts |
+| Missing permissions  | `/etc/hosts` unreadable   |
+| Wrong format         | Tabs/extra spaces         |
+
+💡 **In short**
+Set `hosts: files dns` and verify permissions/format.
+
+---
+
+# ## Q215: Swap usage is at 100% causing performance degradation. What would you do?
+
+🧠 **Overview**
+Full swap indicates memory pressure; system is thrashing.
+
+⚙️ **Purpose / How it works**
+Reduce memory footprint, adjust swappiness, add more RAM or swap.
+
+🧩 **Commands**
+
+### Check memory usage
+
+```bash
+free -m
+top
+vmstat 1
+```
+
+### Check which processes are swapping
+
+```bash
+smem -sw
+```
+
+### Reduce swappiness
+
+```bash
+echo "vm.swappiness=10" >> /etc/sysctl.d/99-swap.conf
+sysctl --system
+```
+
+### Add temporary swap
+
+```bash
+fallocate -l 4G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+```
+
+📋 **Root causes**
+
+| Cause             | Explanation          |
+| ----------------- | -------------------- |
+| Memory leak       | App consumes all RAM |
+| Too many services | Exhaustion           |
+| Heavy caching     | FS cache pressure    |
+
+💡 **In short**
+Reduce memory load, check leaks, tune swappiness, add swap/RAM.
+
+---
+
+# ## Q216: A filesystem mount is hanging. How do you troubleshoot and unmount it?
+
+🧠 **Overview**
+Hanging mounts (often NFS) cause uninterruptible D-state processes.
+
+⚙️ **Purpose / How it works**
+Fix underlying storage or force-detach.
+
+🧩 **Commands**
+
+### 1️⃣ Identify hung mount
+
+```bash
+mount | grep nfs
+df -hT
+```
+
+### 2️⃣ Show processes using mount
+
+```bash
+lsof +f -- /mnt/data
+fuser -vm /mnt/data
+```
+
+### 3️⃣ Attempt graceful unmount
+
+```bash
+umount /mnt/data
+```
+
+### 4️⃣ Force unmount
+
+```bash
+umount -f /mnt/data
+umount -l /mnt/data   # Lazy unmount
+```
+
+📋 **Common causes**
+
+| Cause                  | Explanation        |
+| ---------------------- | ------------------ |
+| NFS server unreachable | IO blocking        |
+| Disk failure           | Block device hangs |
+| Kernel bug             | Stuck driver       |
+
+💡 **In short**
+Identify mount → kill processes → lazy/force unmount → fix underlying storage.
+
+---
+
+# ## Q217: SELinux is blocking a legitimate application. How do you diagnose and fix?
+
+🧠 **Overview**
+SELinux denies actions outside policy; must inspect logs and assign correct labels or booleans.
+
+⚙️ **Purpose / How it works**
+Audit subsystem logs AVC denials, which guide policy fixes.
+
+🧩 **Commands**
+
+### 1️⃣ Check denials
+
+```bash
+ausearch -m AVC -ts recent
+journalctl -t setroubleshoot
+```
+
+### 2️⃣ Use audit2allow
+
+```bash
+audit2allow -w -a
+audit2allow -M mypolicy
+semodule -i mypolicy.pp
+```
+
+### 3️⃣ Check context
+
+```bash
+ls -Z /var/www/html
+restorecon -Rv /var/www/html
+```
+
+📋 **Fix types**
+
+| Fix                 | Example                                     |
+| ------------------- | ------------------------------------------- |
+| Restore context     | `restorecon -Rv /path`                      |
+| Enable boolean      | `setsebool -P httpd_can_network_connect on` |
+| Write custom policy | Using audit2allow                           |
+
+💡 **In short**
+View AVC logs → restore context → enable booleans → create custom policy if needed.
+
+---
+
+# ## Q218: Your server's network interface keeps going down. What would you check?
+
+🧠 **Overview**
+Intermittent NIC drops often stem from hardware, driver, cable, switch, or power-saving settings.
+
+⚙️ **Purpose / How it works**
+Inspect NIC counters, logs, link flaps, and physical layer.
+
+🧩 **Commands**
+
+### Check NIC status
+
+```bash
+ip link show eth0
+dmesg -T | grep eth0
+```
+
+### Check errors
+
+```bash
+ethtool -S eth0
+```
+
+### Disable power saving
+
+```bash
+ethtool -s eth0 wol d
+```
+
+### Check duplex/speed mismatch
+
+```bash
+ethtool eth0
+```
+
+📋 **Root causes**
+
+| Cause                     | Evidence           |
+| ------------------------- | ------------------ |
+| Bad cable                 | CRC errors         |
+| Switch issues             | Link flaps         |
+| Driver problems           | Dmesg warnings     |
+| Auto-negotiation failures | Wrong speed/duplex |
+
+💡 **In short**
+Check dmesg, NIC counters, cables, speed/duplex, drivers, and power-saving settings.
+
+---
+
+# ## Q219: A user's home directory has disappeared. How do you investigate?
+
+🧠 **Overview**
+Missing home directory affects login and data access; determine whether it was deleted, unmounted, or wrongly set.
+
+⚙️ **Purpose / How it works**
+Check user config, mounts, backup, and audit logs.
+
+🧩 **Commands**
+
+### Check user entry
+
+```bash
+getent passwd <user>
+```
+
+### Check if home is mounted
+
+```bash
+mount | grep home
+```
+
+### Look for deleted files
+
+```bash
+lsof | grep deleted
+```
+
+### Search for directory
+
+```bash
+find / -type d -name "<user>"
+```
+
+### Check audit logs
+
+```bash
+ausearch -f /home/<user>
+```
+
+📋 **Root causes**
+
+| Cause                  | Explanation        |
+| ---------------------- | ------------------ |
+| NFS/home mount missing | Home not mounted   |
+| Directory deleted      | Accidental removal |
+| Wrong UID path         | Home mismatch      |
+
+💡 **In short**
+Check passwd → check mount → search directory → review audit logs → restore from backup.
+
+---
+
+# ## Q220: System logs show kernel panic messages. How do you analyze the root cause?
+
+🧠 **Overview**
+Kernel panics indicate fatal kernel faults: memory, hardware, modules, drivers.
+
+⚙️ **Purpose / How it works**
+Analyze crash dumps, logs, and patterns.
+
+🧩 **Commands**
+
+### 1️⃣ Check logs
+
+```bash
+journalctl -k -b -1
+```
+
+### 2️⃣ Enable kdump
+
+```bash
+systemctl enable --now kdump
+```
+
+### 3️⃣ Analyze crash dump
+
+```bash
+crash /usr/lib/debug/lib/modules/$(uname -r)/vmlinux /var/crash/vmcore
+```
+
+### 4️⃣ Check hardware
+
+```bash
+memtest86
+smartctl -a /dev/sdX
+```
+
+📋 **Common causes**
+
+| Cause          | Evidence           |
+| -------------- | ------------------ |
+| Driver bugs    | Backtrace in stack |
+| Faulty RAM     | ECC errors         |
+| Disk failure   | I/O errors         |
+| Kernel modules | tainted kernel     |
+
+💡 **In short**
+Enable kdump, inspect crash logs, analyze vmcore, check hardware integrity.
+
+---
+
+# ## Q221: Package installation fails with dependency errors. How do you resolve?
+
+🧠 **Overview**
+Dependency issues arise from broken repos, mismatched versions, or partial upgrades.
+
+⚙️ **Purpose / How it works**
+Fix repo config, rebuild cache, or force reinstall.
+
+🧩 **Commands**
+
+### For RPM-based systems
+
+```bash
+yum clean all
+yum makecache
+yum deplist <package>
+yum install --skip-broken
+yum distro-sync
+```
+
+### For Debian-based systems
+
+```bash
+apt --fix-broken install
+apt-get update
+apt-get -f install
+```
+
+📋 **Common causes**
+
+| Cause             | Explanation          |
+| ----------------- | -------------------- |
+| Mixed repos       | Wrong versions       |
+| Partial upgrades  | Missing dependencies |
+| Old package cache | Stale metadata       |
+
+💡 **In short**
+Clean repo cache, fix broken dependencies, sync distro versions.
+
+---
+
+# ## Q222: Your NFS mount is stale. How do you fix it without affecting running processes?
+
+🧠 **Overview**
+A stale NFS mount means the server is unreachable or not responding. Force unmounting may break processes.
+
+⚙️ **Purpose / How it works**
+Perform lazy unmount or remount when safe.
+
+🧩 **Commands**
+
+### Check NFS status
+
+```bash
+dmesg -T | grep nfs
+showmount -e <server>
+```
+
+### Lazy unmount (does not affect active FDs)
+
+```bash
+umount -l /mnt/data
+```
+
+### Force remount
+
+```bash
+mount -o remount /mnt/data
+```
+
+### Restart NFS services (client side)
+
+```bash
+systemctl restart nfs-client.target
+```
+
+📋 **Causes**
+
+| Issue             | Effect         |
+| ----------------- | -------------- |
+| Server down       | Stale handle   |
+| Network issues    | Timeout        |
+| Permission change | Invalid handle |
+
+💡 **In short**
+Lazy unmount (`umount -l`), remount, fix server/network issues.
+
+---
+
+Perfect — I will always use **Option A: one single large README-style answer** for every batch moving forward.
+
+Below is the **full detailed output for Q223–Q234**, with the same structure (🧠 Overview → ⚙️ Purpose → 🧩 Commands → 📋 Tables → Best Practices → 💡 In short).
+
+---
+
+# # 🔧 Linux Troubleshooting & Scenarios (Q223–Q234)
+
+---
+
+# ## Q223: The server is experiencing time drift. How do you diagnose and configure NTP?
+
+🧠 **Overview**
+Time drift breaks authentication, TLS, distributed systems, logs, and databases. Use chrony or ntpd to ensure accurate clock sync.
+
+⚙️ **Purpose / How it works**
+NTP synchronizes system time with authoritative time servers through polling + correction algorithms.
+
+🧩 **Commands / Steps**
+
+### 1️⃣ Check current time status
+
+```bash
+timedatectl
+chronyc tracking
+```
+
+### 2️⃣ Check NTP sources
+
+```bash
+chronyc sources -v
+```
+
+### 3️⃣ Configure chrony
+
+Edit `/etc/chrony/chrony.conf`:
+
+```
+server time.google.com iburst
+server 0.pool.ntp.org iburst
+```
+
+Restart:
+
+```bash
+systemctl restart chronyd
+```
+
+### 4️⃣ Force sync
+
+```bash
+chronyc makestep
+```
+
+📋 **Common causes**
+
+| Cause                    | Explanation            |
+| ------------------------ | ---------------------- |
+| NTP disabled             | chronyd off            |
+| Firewall blocked UDP/123 | No sync                |
+| VM hosts drifting        | Hypervisor time issues |
+| Mixed NTP/chrony         | Conflicts              |
+
+💡 **In short**
+Check chrony sync → configure reliable NTP servers → allow UDP/123 → force sync.
+
+---
+
+# ## Q224: A script works manually but fails in cron. What could be the issue?
+
+🧠 **Overview**
+Cron runs with a *minimal environment*. Missing PATHs, environment variables, permissions, and relative paths commonly break scripts.
+
+⚙️ **Purpose / How it works**
+Cron jobs execute non-interactively under `/usr/sbin/cron`, lacking shell profile settings.
+
+🧩 **Diagnosis**
+
+### 1️⃣ Check cron logs
+
+```bash
+grep CRON /var/log/syslog
+```
+
+### 2️⃣ Add PATH explicitly
+
+```bash
+PATH=/usr/local/bin:/usr/bin:/bin
+```
+
+### 3️⃣ Use absolute paths in scripts
+
+❌ `python script.py`
+✔️ `/usr/bin/python /opt/scripts/script.py`
+
+### 4️⃣ Check permissions
+
+```bash
+chmod +x /opt/scripts/script.sh
+```
+
+### 5️⃣ Check environment needs
+
+```bash
+env > /tmp/env.txt    # Compare cron vs shell
+```
+
+📋 **Common issues**
+
+| Issue          | Why                     |
+| -------------- | ----------------------- |
+| Missing PATH   | Commands not found      |
+| Relative paths | Cron starts in `/`      |
+| No environment | Missing variables       |
+| SELinux        | Blocks execution        |
+| Wrong shell    | `/bin/sh` ≠ `/bin/bash` |
+
+💡 **In short**
+Cron = minimal environment → set PATH, use absolute paths, add env vars, check logs.
+
+---
+
+# ## Q225: Your server's entropy pool is depleted affecting cryptographic operations. What's the solution?
+
+🧠 **Overview**
+Low entropy slows random number generation affecting SSH, TLS, VPNs, and key generation.
+
+⚙️ **Purpose / How it works**
+Linux uses `/dev/random` (blocking) and `/dev/urandom` (non-blocking) backed by entropy from kernel sources.
+
+🧩 **Fixes**
+
+### 1️⃣ Check entropy
+
+```bash
+cat /proc/sys/kernel/random/entropy_avail
+```
+
+### 2️⃣ Install haveged (common solution)
+
+```bash
+sudo apt install haveged
+sudo systemctl enable --now haveged
+```
+
+### 3️⃣ Or enable rngd if hardware RNG available
+
+```bash
+sudo apt install rng-tools
+sudo rngd -r /dev/hwrng
+```
+
+📋 **Entropy sources**
+
+| Source     | Notes                       |
+| ---------- | --------------------------- |
+| haveged    | Userspace entropy generator |
+| rngd       | Hardware RNG                |
+| TPM RNG    | Modern servers              |
+| Jitter RNG | Kernel-based                |
+
+💡 **In short**
+Install haveged or rng-tools; ensure entropy >1000 for crypto operations.
+
+---
+
+# ## Q226: Port 80 is already in use but no process is showing in netstat. How do you find it?
+
+🧠 **Overview**
+If no process appears in netstat, it may be held by:
+
+* Kernel (IPVS)
+* Docker / container engine
+* Systemd socket activation
+* IPv6 vs IPv4 mismatch
+* Rootkit hiding processes
+
+⚙️ **Purpose / How it works**
+Use lower-level tools to inspect in-kernel listeners.
+
+🧩 **Commands**
+
+### 1️⃣ Use ss (more accurate than netstat)
+
+```bash
+ss -tulpn | grep :80
+```
+
+### 2️⃣ Check systemd socket activation
+
+```bash
+systemctl list-sockets | grep 80
+```
+
+### 3️⃣ Check IPVS / Kubernetes
+
+```bash
+ipvsadm -Ln | grep 80
+```
+
+### 4️⃣ Check Docker/Nginx in container
+
+```bash
+docker ps
+docker port <container-id>
+```
+
+### 5️⃣ Check hidden processes
+
+```bash
+lsof -i :80
+```
+
+📋 **Possible causes**
+
+| Cause          | Tool            |
+| -------------- | --------------- |
+| systemd socket | `list-sockets`  |
+| IPVS           | `ipvsadm`       |
+| Docker proxy   | `docker ps`     |
+| IPv6 only      | Check `[::]:80` |
+
+💡 **In short**
+Use ss/lsof/systemd sockets/IPVS/Kubernetes to identify real bind owner.
+
+---
+
+# ## Q227: File permissions look correct but users still cannot access files. What else would you check?
+
+🧠 **Overview**
+Permissions alone don’t guarantee access. Check parent directories, SELinux, ACLs, and mount options.
+
+⚙️ **Purpose / How it works**
+Access verification includes:
+
+* Directory traversal permissions
+* SELinux contexts
+* Extended ACLs
+* Filesystem flags
+
+🧩 **What to check**
+
+### 1️⃣ Parent directory execute permission
+
+```bash
+namei -l /path/to/file
+```
+
+### 2️⃣ SELinux context
+
+```bash
+ls -Z /path/to/file
+restorecon -Rv /path
+```
+
+### 3️⃣ ACLs
+
+```bash
+getfacl /path/file
+```
+
+### 4️⃣ Mount options
+
+```bash
+mount | grep noexec
+```
+
+📋 **Potential issues**
+
+| Issue                 | Explanation          |
+| --------------------- | -------------------- |
+| Wrong directory perms | Need `x` to traverse |
+| SELinux denies        | Logs show AVC        |
+| ACL overrides         | User not in ACL      |
+| noexec/nodev          | Prevents execution   |
+
+💡 **In short**
+Check directory exec perms, ACLs, SELinux, mount options.
+
+---
+
+# ## Q228: Your LVM volume group is showing as inactive. How do you activate it?
+
+🧠 **Overview**
+Inactive VG/LV means LVM metadata not loaded or disk not detected.
+
+⚙️ **Purpose / How it works**
+Reactivate PV → VG → LV chain.
+
+🧩 **Commands**
+
+### 1️⃣ Scan PVs
+
+```bash
+pvscan
+```
+
+### 2️⃣ Activate VG
+
+```bash
+vgchange -ay <vgname>
+```
+
+### 3️⃣ Activate LV
+
+```bash
+lvchange -ay <lvpath>
+```
+
+### 4️⃣ Mount
+
+```bash
+mount /dev/<vg>/<lv> /mnt
+```
+
+📋 **Common causes**
+
+| Cause              | Explanation           |
+| ------------------ | --------------------- |
+| Missing disks      | Cloud/VM not attached |
+| Corrupted metadata | Use `vgcfgrestore`    |
+| LVM filters        | Wrong device filters  |
+
+💡 **In short**
+Run pvscan → vgchange -ay → lvchange -ay → mount.
+
+---
+
+# ## Q229: A RAID array has a failed disk. What's your procedure for replacement?
+
+🧠 **Overview**
+RAID protects against disk failure, but failed disks must be replaced quickly.
+
+⚙️ **Purpose / How it works**
+Identify failed disk → remove → replace → rebuild.
+
+🧩 **Commands**
+
+### 1️⃣ Check RAID status
+
+```bash
+cat /proc/mdstat
+mdadm --detail /dev/md0
+```
+
+### 2️⃣ Mark failed disk
+
+```bash
+mdadm /dev/md0 --fail /dev/sdX
+```
+
+### 3️⃣ Remove disk
+
+```bash
+mdadm /dev/md0 --remove /dev/sdX
+```
+
+### 4️⃣ Add new disk
+
+```bash
+mdadm /dev/md0 --add /dev/sdY
+```
+
+### 5️⃣ Monitor rebuild
+
+```bash
+watch cat /proc/mdstat
+```
+
+📋 **RAID levels**
+
+| Level  | Tolerance |
+| ------ | --------- |
+| RAID1  | 1 disk    |
+| RAID5  | 1 disk    |
+| RAID6  | 2 disks   |
+| RAID10 | depends   |
+
+💡 **In short**
+Fail → remove → replace → rebuild → monitor.
+
+---
+
+# ## Q230: The system journal is consuming excessive disk space. How do you manage it?
+
+🧠 **Overview**
+`journald` retains logs on disk; default retention may be too large.
+
+⚙️ **Purpose / How it works**
+Use `journalctl` vacuum features and configure retention limits.
+
+🧩 **Commands**
+
+### 1️⃣ Check usage
+
+```bash
+journalctl --disk-usage
+```
+
+### 2️⃣ Reduce size
+
+```bash
+journalctl --vacuum-size=1G
+journalctl --vacuum-time=7d
+```
+
+### 3️⃣ Configure persist settings
+
+Edit `/etc/systemd/journald.conf`:
+
+```
+SystemMaxUse=1G
+SystemMaxFileSize=200M
+MaxRetentionSec=1week
+```
+
+Restart:
+
+```bash
+systemctl restart systemd-journald
+```
+
+💡 **In short**
+Vacuum logs → set retention limits in journald.conf.
+
+---
+
+# ## Q231: Your /tmp directory is mounted as noexec breaking installations. How do you handle this?
+
+🧠 **Overview**
+Executables cannot run in a `noexec` mount; installers, pip, and Java apps often fail.
+
+⚙️ **Purpose / How it works**
+Temporarily remount or configure tools to use alternative temp directories.
+
+🧩 **Fix options**
+
+### 1️⃣ Temporarily remount with exec
+
+```bash
+mount -o remount,exec /tmp
+```
+
+### 2️⃣ Use an alternate TMPDIR
+
+```bash
+export TMPDIR=/var/tmp
+```
+
+### 3️⃣ For systemd-managed /tmp
+
+Edit `/etc/fstab` if persistent fix needed:
+
+```
+tmpfs /tmp tmpfs defaults 0 0
+```
+
+📋 **Why noexec is used**
+
+| Reason                  |
+| ----------------------- |
+| Security hardening      |
+| Prevent running malware |
+
+💡 **In short**
+Either remount /tmp with exec or point applications to another writable location.
+
+---
+
+# ## Q232: Network throughput is much lower than expected. What would you investigate?
+
+🧠 **Overview**
+Low throughput can come from NIC negotiation issues, MTU mismatch, CPU bottlenecks, offload settings, or switch constraints.
+
+⚙️ **Purpose / How it works**
+Diagnose from NIC → kernel → network → app.
+
+🧩 **Commands**
+
+### 1️⃣ Check NIC speed/duplex
+
+```bash
+ethtool eth0
+```
+
+### 2️⃣ Check MTU mismatch
+
+```bash
+ip link show eth0
+ping -M do -s 1472 <target>
+```
+
+### 3️⃣ Check TCP offloading
+
+```bash
+ethtool -k eth0
+```
+
+### 4️⃣ Check IRQ distribution
+
+```bash
+cat /proc/interrupts
+```
+
+### 5️⃣ Measure performance
+
+```bash
+iperf3 -s
+iperf3 -c <server>
+```
+
+📋 **Common causes**
+
+| Cause             | Evidence           |
+| ----------------- | ------------------ |
+| Half-duplex       | Collisions, errors |
+| MTU mismatch      | Fragmentation      |
+| Disabled offloads | Slow TCP           |
+| CPU bottleneck    | SoftIRQ spikes     |
+
+💡 **In short**
+Check speed/duplex, MTU, offloads, IRQ load, and measure with iperf.
+
+---
+
+# ## Q233: A symbolic link is broken. How do you identify where it should point?
+
+🧠 **Overview**
+Broken symlinks occur when targets are removed or moved. Determine correct target and recreate.
+
+⚙️ **Purpose / How it works**
+Read link contents and locate intended target.
+
+🧩 **Commands**
+
+### 1️⃣ Show symlink target
+
+```bash
+ls -l /path/symlink
+readlink -f /path/symlink
+```
+
+### 2️⃣ Find possible real target
+
+```bash
+find / -name <target-name>
+```
+
+### 3️⃣ Recreate symlink
+
+```bash
+ln -s /correct/path /path/symlink
+```
+
+📋 **Common causes**
+
+| Issue                   | Explanation         |
+| ----------------------- | ------------------- |
+| Package upgrade         | File moved          |
+| Deleted directory       | Symlink now invalid |
+| Incorrect relative path | Wrong target        |
+
+💡 **In short**
+Check symlink → find correct target → recreate.
+
+---
+
+# ## Q234: Your server cannot mount a filesystem due to "bad superblock" error. How do you recover?
+
+🧠 **Overview**
+"Bad superblock" indicates filesystem metadata corruption.
+
+⚙️ **Purpose / How it works**
+Use filesystem-specific recovery tools and alternate superblocks.
+
+🧩 **Commands**
+
+### 1️⃣ Verify device
+
+```bash
+blkid /dev/sdX1
+fdisk -l
+```
+
+### 2️⃣ Check alternate superblocks (ext2/3/4)
+
+```bash
+dumpe2fs /dev/sdX1 | grep -i superblock
+```
+
+### 3️⃣ Run fsck using backup superblock
+
+```bash
+fsck -b <alternate-superblock> /dev/sdX1
+```
+
+### 4️⃣ If XFS
+
+```bash
+xfs_repair /dev/sdX1
+```
+
+### 5️⃣ Mount again
+
+```bash
+mount /dev/sdX1 /mnt
+```
+
+📋 **Root causes**
+| Cause | Explanation |
+|---|
+| Power loss | Dirty FS |
+| Disk errors | Bad sectors |
+| Metadata corruption | Journal corrupted |
+
+💡 **In short**
+Find alternate superblock → fsck repair → remount.
+
+---
+Great — as always, I will return a **single large, fully detailed README-style answer** for **Q235–Q250** with:
+
+* 🧠 Overview
+* ⚙️ Purpose / How it works
+* 🧩 Commands / Examples
+* 📋 Tables
+* ✅ Best Practices
+* 💡 In short
+
+Here is the complete output:
+
+---
+
+# # 🔧 Linux Troubleshooting & Scenarios (Q235–Q250)
+
+---
+
+# ## Q235: Users are experiencing random disconnections from SSH sessions. What would you check?
+
+🧠 **Overview**
+Random SSH drops generally result from network instability, idle timeouts, MTU issues, or server-side resource pressure.
+
+⚙️ **Purpose / How it works**
+SSH relies on stable TCP sessions; packet loss or timeouts will force disconnects.
+
+🧩 **Diagnosis**
+
+### 1️⃣ Check server logs
+
+```bash
+journalctl -u sshd
+grep -i ssh /var/log/auth.log
+```
+
+### 2️⃣ Check network stability
+
+```bash
+ping -c100 <client-ip>
+mtr <client-ip>
+```
+
+### 3️⃣ Check MTU issues
+
+```bash
+ping -M do -s 1472 <client-ip>
+```
+
+### 4️⃣ Enable keepalive
+
+Client-side:
+
+```
+ServerAliveInterval 60
+```
+
+Server-side `/etc/ssh/sshd_config`:
+
+```
+ClientAliveInterval 60
+ClientAliveCountMax 3
+```
+
+### 5️⃣ Check CPU / load
+
+```bash
+sar -n tcp 1
+vmstat 1
+```
+
+📋 **Common causes**
+
+| Issue                 | Description          |
+| --------------------- | -------------------- |
+| Firewall idle timeout | Drops idle sessions  |
+| MTU mismatch          | Packet fragmentation |
+| Network jitter        | Wireless/VPN hops    |
+| High load             | sshd starved         |
+
+💡 **In short**
+Check network quality, MTU, sshd keepalive settings, and server load.
+
+---
+
+# ## Q236: A file cannot be deleted despite having correct permissions. What could prevent deletion?
+
+🧠 **Overview**
+File deletion depends not only on file permissions but also on directory permissions, immutable attributes, mount settings, and open file handles.
+
+⚙️ **Purpose / How it works**
+Deletion requires write permission on the *directory*, not the file itself.
+
+🧩 **Commands to Diagnose**
+
+### 1️⃣ Check directory permissions
+
+```bash
+ls -ld <directory>
+```
+
+### 2️⃣ Check immutable flag
+
+```bash
+lsattr <file>
+chattr -i <file>
+```
+
+### 3️⃣ Check open handles
+
+```bash
+lsof | grep <file>
+```
+
+### 4️⃣ Check if filesystem is read-only
+
+```bash
+mount | grep <mountpoint>
+```
+
+📋 **Other blockers**
+
+| Issue               | Prevent deletion? | Notes              |
+| ------------------- | ----------------- | ------------------ |
+| Sticky bit          | Yes               | `/tmp` style dirs  |
+| Immutable attribute | Yes               | `chattr +i file`   |
+| NFS lock            | Yes               | Stale file handles |
+| Read-only FS        | Yes               | Any write blocked  |
+
+💡 **In short**
+Check directory perms, immutable bit, open handles, and FS mode.
+
+---
+
+# ## Q237: Your server's ARP table is full. What issues does this cause and how do you fix it?
+
+🧠 **Overview**
+ARP table exhaustion prevents the server from learning new MAC → IP mappings, causing intermittent connectivity failures.
+
+⚙️ **Purpose / How it works**
+Linux manages ARP entries based on memory limits; floods or misconfigurations fill ARP cache.
+
+🧩 **Diagnosis**
+
+### 1️⃣ View ARP entries
+
+```bash
+ip neigh
+```
+
+### 2️⃣ Check kernel limits
+
+```bash
+sysctl net.ipv4.neigh.default.gc_thresh*
+```
+
+### 3️⃣ Increase ARP thresholds
+
+```bash
+sysctl -w net.ipv4.neigh.default.gc_thresh1=1024
+sysctl -w net.ipv4.neigh.default.gc_thresh2=2048
+sysctl -w net.ipv4.neigh.default.gc_thresh3=4096
+```
+
+### 4️⃣ Check for ARP flood attacks
+
+```bash
+tcpdump -n -i eth0 arp
+```
+
+📋 **Impact**
+
+| Impact                | Description                |
+| --------------------- | -------------------------- |
+| New hosts unreachable | Cannot resolve MAC         |
+| Packet drops          | No ARP entry → no delivery |
+| Network stalls        | Random failures            |
+
+💡 **In short**
+Increase ARP table limits and investigate ARP floods or misconfigurations.
+
+---
+
+# ## Q238: System commands are running extremely slowly after an update. How do you diagnose?
+
+🧠 **Overview**
+Post-update slowness often ties to library mismatches, broken PATH, missing shared libraries, or failing storage.
+
+⚙️ **Purpose / How it works**
+Commands depend on dynamic loaders, shared libs, and shell PATH resolution.
+
+🧩 **Steps**
+
+### 1️⃣ Check command resolution
+
+```bash
+strace ls
+```
+
+Look for long delays → NFS, DNS, or missing libs.
+
+### 2️⃣ Check dynamic linker
+
+```bash
+ldd /bin/ls
+```
+
+### 3️⃣ Check disk I/O
+
+```bash
+iostat -xz 1
+```
+
+### 4️⃣ Check DNS delay
+
+```bash
+strace ping google.com
+```
+
+### 5️⃣ Check missing or broken libraries
+
+```bash
+ldconfig -p
+```
+
+📋 **Common causes**
+
+| Cause         | Why                               |
+| ------------- | --------------------------------- |
+| Broken glibc  | Commands stall                    |
+| DNS misconfig | Reverse lookups slow SSH/commands |
+| Slow NFS      | Commands waiting on I/O           |
+| Full disk     | Metadata operations block         |
+
+💡 **In short**
+Strace slow commands → check DNS, libraries, I/O performance.
+
+---
+
+# ## Q239: The server cannot allocate more process IDs. What's the issue and solution?
+
+🧠 **Overview**
+Linux enforces process ID limits; once exhausted, new forks fail.
+
+⚙️ **Purpose / How it works**
+If PIDs wrap but remain allocated, fork bombs or zombie buildup cause exhaustion.
+
+🧩 **Diagnosis**
+
+### 1️⃣ Check PID max
+
+```bash
+cat /proc/sys/kernel/pid_max
+```
+
+### 2️⃣ Count processes
+
+```bash
+ps -e | wc -l
+```
+
+### 3️⃣ Find fork bombs
+
+```bash
+top -b -n1 | grep defunct
+```
+
+### 4️⃣ Increase pid_max
+
+```bash
+sysctl -w kernel.pid_max=4194303
+```
+
+📋 **Common causes**
+
+| Cause        | Notes                          |
+| ------------ | ------------------------------ |
+| Fork bomb    | Too many child processes       |
+| Daemon leaks | Creates processes continuously |
+| Low pid_max  | Defaults too small             |
+
+💡 **In short**
+Find runaway process generators → increase pid_max if required.
+
+---
+
+# ## Q240: Your firewall rules are blocking legitimate traffic. How do you troubleshoot iptables rules?
+
+🧠 **Overview**
+iptables rules are order-dependent; earlier rules override later ones.
+
+⚙️ **Purpose / How it works**
+Inspect chains, trace packet flow, and log drops.
+
+🧩 **Commands**
+
+### 1️⃣ Show rules with line numbers
+
+```bash
+iptables -L -n --line-numbers
+```
+
+### 2️⃣ Insert debug logging
+
+```bash
+iptables -I INPUT 1 -j LOG --log-prefix "IPTABLES DROP: "
+```
+
+### 3️⃣ Use packet tracing
+
+```bash
+iptables -t raw -A PREROUTING -p tcp --dport 80 -j TRACE
+```
+
+### 4️⃣ Check policies
+
+```bash
+iptables -L | grep policy
+```
+
+📋 **Common causes**
+
+| Issue                 | Explanation            |
+| --------------------- | ---------------------- |
+| DROP earlier in chain | Blocks later ALLOW     |
+| Wrong interface       | `eth0` vs `ens3`       |
+| NAT missing           | Traffic not translated |
+| Invalid states        | Conntrack issues       |
+
+💡 **In short**
+Review rules with line numbers → add logging → test packet path.
+
+---
+
+# ## Q241: A disk shows as mounted but files are not accessible. What would you investigate?
+
+🧠 **Overview**
+Unmounted or partially mounted disks may appear mounted but point to wrong devices, corrupted FS, or stale mounts.
+
+⚙️ **Purpose / How it works**
+Validate device-path consistency and filesystem health.
+
+🧩 **Diagnosis**
+
+### 1️⃣ Verify mount device
+
+```bash
+mount | grep <mountpoint>
+lsblk -f
+```
+
+### 2️⃣ Check FS corruption
+
+```bash
+dmesg -T | grep -i "I/O" -i "error"
+```
+
+### 3️⃣ Run fsck (if unmounted)
+
+```bash
+fsck -f /dev/sdX1
+```
+
+### 4️⃣ Check permissions and ownership
+
+```bash
+ls -ld <mountpoint>
+```
+
+📋 **Possible causes**
+
+| Cause             | Description          |
+| ----------------- | -------------------- |
+| Mounted empty dir | Wrong device mounted |
+| FS corruption     | Missing metadata     |
+| NFS stale mount   | Hung operations      |
+
+💡 **In short**
+Confirm correct device, check corruption, verify permissions, unmount + fsck.
+
+---
+
+# ## Q242: Your server's mail queue is growing and causing issues. How do you clear it?
+
+🧠 **Overview**
+Large mail queues indicate unreachable mail servers, bad DNS, or spam floods.
+
+⚙️ **Purpose / How it works**
+Manage mail queue for Postfix or Exim.
+
+🧩 **Commands**
+
+### For Postfix
+
+Check queue:
+
+```bash
+mailq
+```
+
+Delete all:
+
+```bash
+postsuper -d ALL
+```
+
+Delete deferred messages:
+
+```bash
+postsuper -d ALL deferred
+```
+
+### For Exim
+
+```bash
+exim -bp
+exim -Mrm <msg-id>
+```
+
+📋 **Root causes**
+
+| Cause        | Why                 |
+| ------------ | ------------------- |
+| DNS failure  | Cannot resolve MX   |
+| SMTP block   | Port 25 blocked     |
+| Spam scripts | Compromised account |
+
+💡 **In short**
+Clear queue and fix DNS/SMTP issues; ensure no spam activity.
+
+---
+
+# ## Q243: CPU steal time is high on a virtualized server. What does this indicate?
+
+🧠 **Overview**
+CPU steal means the hypervisor is taking CPU away from your VM.
+
+⚙️ **Purpose / How it works**
+Indicates CPU contention on the host — oversubscription.
+
+🧩 **Commands**
+
+### Check steal %
+
+```bash
+top
+mpstat -P ALL 1
+```
+
+📋 **Interpretation**
+
+| Steal % | Meaning                |
+| ------- | ---------------------- |
+| <5%     | Normal                 |
+| 5–20%   | Mild contention        |
+| >20%    | Severe host contention |
+
+### Solutions
+
+* Move VM to different hypervisor host
+* Increase CPU allocation
+* Reduce overcommit
+* Use dedicated hosts
+
+💡 **In short**
+High steal → hypervisor competition → move VM or allocate dedicated CPU.
+
+---
+
+# ## Q244: A service keeps restarting every few seconds. How do you identify the cause?
+
+🧠 **Overview**
+Systemd restarts services based on failure status and `Restart=` rules.
+
+⚙️ **Purpose / How it works**
+Inspect logs, restart loops, and failing Exec commands.
+
+🧩 **Commands**
+
+### 1️⃣ Check logs
+
+```bash
+journalctl -u <service> -f
+```
+
+### 2️⃣ Check restart settings
+
+```bash
+systemctl cat <service>
+```
+
+Look for:
+
+```
+Restart=always
+RestartSec=1
+```
+
+### 3️⃣ Test service manually
+
+```bash
+/usr/bin/myservice
+```
+
+### 4️⃣ Check environment variables and permissions
+
+```bash
+systemctl show <service> | grep Environment
+```
+
+📋 **Common causes**
+
+| Issue             | Explanation          |
+| ----------------- | -------------------- |
+| Crash loop        | Runtime failure      |
+| Missing config    | App exits instantly  |
+| Permission denied | SELinux or ownership |
+| Wrong ExecStart   | Binary missing       |
+
+💡 **In short**
+Check logs → inspect Restart policies → run service manually → fix failure.
+
+---
+
+# ## Q245: Your server has duplicate IP addresses causing network issues. How do you resolve this?
+
+🧠 **Overview**
+Duplicate IPs lead to ARP conflicts and connectivity drops.
+
+⚙️ **Purpose / How it works**
+Identify both MACs responding to ARP for same IP.
+
+🧩 **Commands**
+
+### 1️⃣ Detect conflict
+
+```bash
+arping -I eth0 <ip>
+```
+
+### 2️⃣ Check ARP table
+
+```bash
+ip neigh | grep <ip>
+```
+
+### 3️⃣ Identify culprit
+
+```bash
+arp -a
+```
+
+### 4️⃣ Fix IP assignment
+
+* DHCP conflict
+* Static IP misconfigured
+* Cloud metadata mismatch
+
+📋 **Common conflict sources**
+
+| Cause               | Example             |
+| ------------------- | ------------------- |
+| Duplicate static IP | Two servers same IP |
+| DHCP misconfig      | Same lease issued   |
+| VM cloning          | Retains old IP      |
+
+💡 **In short**
+Find conflicting MAC via arping → fix static/DHCP assignments.
+
+---
+
+# ## Q246: Kernel modules are failing to load. What would you check?
+
+🧠 **Overview**
+Module loading fails due to version mismatch, missing dependencies, or incorrect kernel version.
+
+⚙️ **Purpose / How it works**
+Modules must match kernel build and dependencies.
+
+🧩 **Commands**
+
+### 1️⃣ Check error
+
+```bash
+dmesg -T | grep -i module
+```
+
+### 2️⃣ Check kernel version
+
+```bash
+uname -r
+```
+
+### 3️⃣ Check module exists
+
+```bash
+modinfo <module>
+```
+
+### 4️⃣ Update initramfs
+
+```bash
+update-initramfs -u
+# or
+dracut --force
+```
+
+📋 **Common causes**
+
+| Issue        | Explanation                    |
+| ------------ | ------------------------------ |
+| Wrong kernel | Booting older/different kernel |
+| Missing deps | Module needs others            |
+| Secure boot  | Blocks unsigned modules        |
+
+💡 **In short**
+Check kernel version, module info, dependencies, and secure boot.
+
+---
+
+# ## Q247: The server responds to ping but not to HTTP requests. How do you troubleshoot?
+
+🧠 **Overview**
+Ping (ICMP) works → server reachable. HTTP (TCP 80/443) failing indicates service, firewall, or routing issue.
+
+⚙️ **Purpose / How it works**
+Check listening sockets, process status, firewall, and SELinux.
+
+🧩 **Commands**
+
+### 1️⃣ Check service
+
+```bash
+systemctl status nginx
+```
+
+### 2️⃣ Check listening port
+
+```bash
+ss -tlnp | grep :80
+```
+
+### 3️⃣ Browser for error logs
+
+```bash
+tail -f /var/log/nginx/error.log
+```
+
+### 4️⃣ Firewall
+
+```bash
+iptables -L -n
+```
+
+### 5️⃣ SELinux
+
+```bash
+ausearch -m AVC
+```
+
+📋 **Common causes**
+
+| Issue                   | Why             |
+| ----------------------- | --------------- |
+| HTTP server down        | No listener     |
+| Port blocked            | Firewall        |
+| SELinux                 | Denies bind     |
+| Reverse proxy misconfig | Upstream errors |
+
+💡 **In short**
+Ping works → check HTTP listener, firewall, SELinux, logs.
+
+---
+
+# ## Q248: You're seeing "segmentation fault" errors for a critical application. How do you debug?
+
+🧠 **Overview**
+Segfault = invalid memory access → code bug, corrupt library, bad pointer, or memory corruption.
+
+⚙️ **Purpose / How it works**
+Use strace, gdb, core dumps, and library checks.
+
+🧩 **Commands**
+
+### 1️⃣ Enable core dumps
+
+```bash
+ulimit -c unlimited
+```
+
+### 2️⃣ Run app under gdb
+
+```bash
+gdb /path/app core
+bt
+```
+
+### 3️⃣ Use strace
+
+```bash
+strace -f /path/app
+```
+
+### 4️⃣ Check shared libraries
+
+```bash
+ldd /path/app
+```
+
+📋 **Common causes**
+
+| Issue            | Example     |
+| ---------------- | ----------- |
+| Null pointer     | Code bug    |
+| Library mismatch | Wrong glibc |
+| Corrupt files    | Disk error  |
+
+💡 **In short**
+Enable core → debug with gdb → check libraries → inspect code logic.
+
+---
+
+# ## Q249: The root filesystem is 100% full and system is unstable. How do you free up space safely?
+
+🧠 **Overview**
+Full root FS breaks systemd, journald, temp files, package installs.
+
+⚙️ **Purpose / How it works**
+Identify large files, logs, orphaned temporary files.
+
+🧩 **Commands**
+
+### 1️⃣ Check disk usage
+
+```bash
+df -h /
+```
+
+### 2️⃣ Clear journal logs
+
+```bash
+journalctl --vacuum-size=500M
+```
+
+### 3️⃣ Identify big files
+
+```bash
+du -ahx / | sort -hr | head -20
+```
+
+### 4️⃣ Clear package cache
+
+```bash
+apt-get clean
+yum clean all
+```
+
+### 5️⃣ Check deleted-but-open files
+
+```bash
+lsof | grep deleted
+```
+
+### 6️⃣ Move logs to another disk
+
+```bash
+mv /var/log /mnt/logs/
+ln -s /mnt/logs /var/log
+```
+
+📋 **Critical locations**
+
+| Path              | Notes               |
+| ----------------- | ------------------- |
+| `/var/log`        | Often large         |
+| `/tmp`            | Installer leftovers |
+| `/var/lib/docker` | Huge images         |
+| `/var/cache`      | Package cache       |
+
+💡 **In short**
+Vacuum logs, clean cache, investigate big files, move logs to other disk if needed.
+
+---
+
+# ## Q250: A user reports very slow login times. What could cause this and how do you fix it?
+
+🧠 **Overview**
+Slow logins usually stem from DNS delays, slow home directories, oversized profiles, or authentication backend issues.
+
+⚙️ **Purpose / How it works**
+Login sequence: NSS → PAM → Home mount → Shell init.
+
+🧩 **Diagnosis**
+
+### 1️⃣ Check DNS resolution delays
+
+```bash
+strace -T -e connect getent hosts <hostname>
+```
+
+### 2️⃣ Check home directory mount (NFS slow)
+
+```bash
+time ls /home/<user>
+```
+
+### 3️⃣ Check `.bashrc` or profile scripts
+
+```bash
+grep -E 'sleep|ping|slow' ~/.bashrc
+```
+
+### 4️⃣ Check LDAP/AD authentication delays
+
+```bash
+journalctl -u sssd
+```
+
+### 5️⃣ Profile shell startup
+
+```bash
+bash -x /etc/profile
+```
+
+📋 **Common causes**
+
+| Cause                 | Explanation           |
+| --------------------- | --------------------- |
+| DNS timeout           | Reverse lookup slow   |
+| NFS hang              | Home mount slow       |
+| Heavy startup scripts | Long-running commands |
+| LDAP/SSSD delays      | Network/auth issues   |
+
+💡 **In short**
+Check DNS, home mount performance, profile scripts, and identity services.
+

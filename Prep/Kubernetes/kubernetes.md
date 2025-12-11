@@ -1,9 +1,5 @@
 # Kubernetes
 
-Below is a **clear, production-grade, deeply detailed explanation of Kubernetes architecture**, followed by a **professional ASCII diagram** you can use in documentation or interviews.
-
----
-
 # 🧠 Kubernetes Architecture — Detailed Explanation
 
 Kubernetes uses a **control-plane + worker-node** model.

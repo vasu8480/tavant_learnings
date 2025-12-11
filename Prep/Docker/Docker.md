@@ -1,3798 +1,5507 @@
-## **1️⃣ Basics & Fundamentals**
+# Docker
 
-### 🧠 **Q: What is Docker?**
-
-**Docker** is a **containerization platform** that packages an application and all its dependencies into a **lightweight, portable container**.
-These containers can run consistently across environments — from a developer’s laptop to production servers — eliminating “works on my machine” issues.
+Below is your **README-style technical documentation** for **Q1–Q20 (Docker Basics)**.
 
 ---
 
-### ⚙️ **Key Concepts**
+## Q1: What is Docker and what problems does it solve?
 
-| **Component**             | **Description**                                                           |
-| ------------------------- | ------------------------------------------------------------------------- |
-| **Image**                 | A read-only blueprint for a container (includes OS, libraries, app code). |
-| **Container**             | A running instance of an image (isolated process).                        |
-| **Dockerfile**            | A text file with instructions to build a Docker image.                    |
-| **Docker Engine**         | The runtime that builds and runs containers.                              |
-| **Docker Hub / Registry** | Repository to store and share Docker images.                              |
+🧠 **Overview**
+Docker is a containerization platform that packages applications and dependencies into portable, lightweight units called *containers*. It solves problems like environment drift, dependency conflicts, and manual configuration inconsistencies across dev/stage/prod.
 
----
+⚙️ **Purpose / How it works**
 
-### 🧩 **Example**
+* Uses container runtimes (containerd) + Linux namespaces/cgroups.
+* Ensures reproducible builds and consistent deployments across environments.
 
-**Dockerfile**
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-**Commands**
+🧩 **Example**
 
 ```bash
-# Build image
-docker build -t myapp:latest .
-
-# Run container
-docker run -d -p 3000:3000 myapp:latest
+docker build -t myapp:v1 .
+docker run -p 8080:8080 myapp:v1
 ```
 
-✅ Runs the same way on any host with Docker installed.
+✅ **Best Practices**
+
+* Keep images small (multi-stage builds).
+* Pin versions (`FROM node:18-alpine`).
+
+💡 **In short:** Docker provides consistent, reproducible environments, reducing “works on my machine” issues.
 
 ---
 
-### ⚙️ **Why Use Docker**
+## Q2: What is the difference between a container and a virtual machine?
 
-| **Benefit**     | **Explanation**                                                      |
-| --------------- | -------------------------------------------------------------------- |
-| **Portability** | Runs anywhere — laptop, VM, Kubernetes, or cloud.                    |
-| **Isolation**   | Each container has its own filesystem, processes, and dependencies.  |
-| **Efficiency**  | Lightweight compared to full VMs — shares OS kernel.                 |
-| **Scalability** | Integrates easily with orchestrators like **Kubernetes** or **ECS**. |
-| **Consistency** | Ensures reproducible builds and environments.                        |
+🧠 **Overview**
+VMs virtualize hardware; containers virtualize the OS. Containers are faster, smaller, and ideal for microservices.
 
----
+📋 **Comparison Table**
 
-### ✅ **In short:**
+| Feature   | Containers           | Virtual Machines |
+| --------- | -------------------- | ---------------- |
+| Boots     | Seconds              | Minutes          |
+| Size      | MBs                  | GBs              |
+| Isolation | Process-level        | Full OS          |
+| Use case  | Microservices, CI/CD | Heavy workloads  |
 
-> **Docker** is a platform to build, ship, and run applications inside lightweight containers — ensuring consistency, portability, and isolation across environments.
-
----
----
-
-## **Q: What’s the difference between a Virtual Machine (VM) and a Docker Container?**
-
-### 🧠 **Overview**
-
-Both VMs and Docker containers isolate workloads, but **VMs virtualize hardware**, while **containers virtualize the OS** — making containers lighter, faster, and more portable.
+💡 **In short:** Containers share the host OS; VMs require full OS virtualization.
 
 ---
 
-### ⚙️ **Comparison Table**
+## Q3: What is a Docker image?
 
-| **Aspect**          | **Virtual Machine (VM)**                                               | **Docker Container**                                                     |
-| ------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **Architecture**    | Includes **entire OS** with virtualized hardware via a **hypervisor**. | Shares the **host OS kernel**; isolates apps using namespaces & cgroups. |
-| **Startup Time**    | Slow — boots full OS (minutes).                                        | Fast — starts in seconds.                                                |
-| **Resource Usage**  | Heavy — each VM runs its own OS (GBs of RAM).                          | Lightweight — shares OS kernel (MBs).                                    |
-| **Isolation Level** | Strong — hardware-level via hypervisor.                                | Process-level isolation — depends on kernel features.                    |
-| **Performance**     | Slight overhead due to full virtualization.                            | Near-native performance (minimal overhead).                              |
-| **Portability**     | VM image tied to hypervisor (e.g., VMware, Hyper-V).                   | Runs anywhere Docker is available.                                       |
-| **Management**      | Managed with hypervisors (VMware, KVM).                                | Managed with Docker CLI, Compose, or Kubernetes.                         |
-| **Use Case**        | Full OS environments, legacy apps, high isolation.                     | Microservices, CI/CD, cloud-native deployments.                          |
-| **Example**         | Ubuntu VM on VMware.                                                   | Node.js app in Docker container.                                         |
+🧠 **Overview**
+A Docker image is a read-only template that defines the filesystem and configuration required to run a container.
 
----
-
-### 🧩 **Visual Representation**
-
-```
-VMs:                    Containers:
-+------------------+    +----------------+
-| Guest OS (Ubuntu)|    |   App Binaries |
-| App & Libs       |    |   App Libs     |
-|------------------|    |----------------|
-| Hypervisor       |    | Docker Engine  |
-| Host OS          |    | Host OS Kernel |
-+------------------+    +----------------+
-```
-
----
-
-### ✅ **In short:**
-
-> **VMs** emulate full hardware and OS — heavier, slower, but fully isolated.
-> **Docker containers** share the host OS kernel — lightweight, faster, and ideal for **microservices and DevOps workflows**.
-
----
----
-
-## **Q: What is the difference between a Docker Image and a Docker Container?**
-
-### 🧠 **Overview**
-
-A **Docker image** is a **blueprint** (read-only template) that defines what’s inside your app environment — code, dependencies, OS packages.
-A **Docker container** is a **runtime instance** of that image — a live, running process.
-
----
-
-### ⚙️ **Comparison Table**
-
-| **Aspect**           | **Docker Image**                                                 | **Docker Container**                                           |
-| -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------- |
-| **Definition**       | Read-only **template** with app code, runtime, and dependencies. | **Running instance** of a Docker image.                        |
-| **State**            | Static — does not change once built.                             | Dynamic — can be started, stopped, deleted, or modified.       |
-| **Persistence**      | Immutable (build-time artifact).                                 | Temporary (data lost when stopped unless persisted to volume). |
-| **Storage**          | Stored in Docker registry (e.g., Docker Hub, ECR).               | Created on host filesystem when run.                           |
-| **Creation Command** | `docker build`                                                   | `docker run`                                                   |
-| **Lifecycle**        | Build → Push → Pull                                              | Create → Start → Stop → Remove                                 |
-| **Example**          | `nginx:latest` (image stored in registry).                       | Running `nginx` server process.                                |
-
----
-
-### 🧩 **Example**
-
-**1️⃣ Build an image**
+🧩 **Example**
 
 ```bash
-docker build -t myapp:latest .
-```
-
-**2️⃣ Run a container**
-
-```bash
-docker run -d -p 8080:80 myapp:latest
-```
-
-**What happens:**
-
-* `myapp:latest` → image (template)
-* Running instance → container (actual process)
-
----
-
-### ⚙️ **Visual**
-
-```
-Docker Image  →  Immutable template (like a class)
-Docker Container  →  Running instance (like an object)
-```
-
----
-
-### ✅ **In short:**
-
-> A **Docker image** is the **recipe** for your app environment,
-> a **Docker container** is the **running instance** created from that recipe.
----
----
-
-## **Q: What is a Dockerfile?**
-
-### 🧠 **Overview**
-
-A **Dockerfile** is a **text file** containing a list of **instructions** that tell Docker **how to build an image** — like a recipe for packaging your application (code, dependencies, OS libraries, etc.) into a Docker image.
-
----
-
-### ⚙️ **Key Facts**
-
-| **Aspect**  | **Description**                                              |
-| ----------- | ------------------------------------------------------------ |
-| **Purpose** | Automate Docker image creation.                              |
-| **Type**    | Simple text file (named `Dockerfile`).                       |
-| **Used By** | `docker build` command to produce an image.                  |
-| **Output**  | A reusable Docker **image** that can run as a **container**. |
-
----
-
-### 🧩 **Common Dockerfile Instructions**
-
-| **Instruction** | **Purpose**                             | **Example**             |
-| --------------- | --------------------------------------- | ----------------------- |
-| `FROM`          | Base image (starting point).            | `FROM node:18-alpine`   |
-| `WORKDIR`       | Set working directory inside container. | `WORKDIR /app`          |
-| `COPY`          | Copy files from host into image.        | `COPY package*.json ./` |
-| `RUN`           | Execute commands during image build.    | `RUN npm ci`            |
-| `EXPOSE`        | Document port used by container.        | `EXPOSE 3000`           |
-| `CMD`           | Default command when container starts.  | `CMD ["npm", "start"]`  |
-
----
-
-### ⚙️ **Example: Node.js App**
-
-**Dockerfile**
-
-```dockerfile
-# Use official Node.js base image
-FROM node:18-alpine
-
-# Set working directory
-WORKDIR /app
-
-# Copy dependencies and install
-COPY package*.json ./
-RUN npm ci
-
-# Copy application code
-COPY . .
-
-# Expose app port
-EXPOSE 3000
-
-# Start app
-CMD ["npm", "start"]
-```
-
-**Build & Run**
-
-```bash
-# Build image
-docker build -t myapp:latest .
-
-# Run container
-docker run -d -p 3000:3000 myapp:latest
-```
-
----
-
-### 🧠 **Analogy**
-
-A **Dockerfile** is like a **recipe**;
-the **image** is the **prepared dish**;
-the **container** is the **dish being served and eaten** (running process).
-
----
-
-### ✅ **In short:**
-
-> A **Dockerfile** is a script of build instructions that Docker uses to create an **image**,
-> which you can then run as a **container** — ensuring consistent environments everywhere.
----
----
-
-## **Q: What are the common Dockerfile commands?**
-
-### 🧠 **Overview**
-
-A **Dockerfile** uses a set of simple build commands to define how a **Docker image** should be created — specifying the base image, software installation, environment setup, and default runtime behavior.
-
----
-
-### ⚙️ **Most Common Dockerfile Commands**
-
-| **Command**       | **Purpose**                                                                        | **Example**                                                             |   |         |
-| ----------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | - | ------- |
-| **`FROM`**        | Defines the **base image** to build from. (First instruction in every Dockerfile.) | `FROM ubuntu:22.04`                                                     |   |         |
-| **`WORKDIR`**     | Sets the **working directory** inside the container.                               | `WORKDIR /app`                                                          |   |         |
-| **`COPY`**        | Copies files/folders from host → image.                                            | `COPY . /app`                                                           |   |         |
-| **`ADD`**         | Like `COPY`, but supports remote URLs & auto-extracts archives.                    | `ADD app.tar.gz /app/`                                                  |   |         |
-| **`RUN`**         | Executes **commands at build time** (install packages, build code).                | `RUN apt-get update && apt-get install -y nginx`                        |   |         |
-| **`CMD`**         | Sets the **default command** to run when the container starts.                     | `CMD ["npm", "start"]`                                                  |   |         |
-| **`ENTRYPOINT`**  | Defines the **main process**; combines with `CMD` for arguments.                   | `ENTRYPOINT ["python", "app.py"]`                                       |   |         |
-| **`EXPOSE`**      | Documents the port(s) the container listens on.                                    | `EXPOSE 8080`                                                           |   |         |
-| **`ENV`**         | Sets **environment variables** inside the container.                               | `ENV NODE_ENV=production`                                               |   |         |
-| **`ARG`**         | Defines **build-time variables** (used during image build).                        | `ARG VERSION=1.0`                                                       |   |         |
-| **`USER`**        | Specifies which **user** the container runs as.                                    | `USER appuser`                                                          |   |         |
-| **`VOLUME`**      | Creates a **mount point** for persistent data.                                     | `VOLUME /data`                                                          |   |         |
-| **`LABEL`**       | Adds **metadata** to the image (for tracking/ownership).                           | `LABEL maintainer="vasu@devops.io"`                                     |   |         |
-| **`HEALTHCHECK`** | Defines a command to **monitor container health**.                                 | `HEALTHCHECK CMD curl -f [http://localhost:8080](http://localhost:8080) |   | exit 1` |
-| **`ONBUILD`**     | Adds a **trigger instruction** for child images built from this one.               | `ONBUILD RUN npm install`                                               |   |         |
-| **`SHELL`**       | Changes the **default shell** for `RUN` commands.                                  | `SHELL ["/bin/bash", "-c"]`                                             |   |         |
-
----
-
-### 🧩 **Example: Simple Dockerfile**
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-EXPOSE 3000
-ENV NODE_ENV=production
-CMD ["npm", "start"]
-```
-
----
-
-### 🧠 **Best Practices**
-
-✅ Use `alpine` base images for lightweight builds.
-✅ Combine `RUN` steps to reduce image layers.
-✅ Use `.dockerignore` to skip unnecessary files.
-✅ Always pin image versions (`FROM node:18.18.0-alpine`).
-✅ Use `HEALTHCHECK` for container monitoring.
-
----
-
-### ✅ **In short:**
-
-> Common Dockerfile commands like **FROM, RUN, COPY, CMD, EXPOSE, ENV, and WORKDIR** define how to **build, configure, and run** a Docker image — each instruction forming a **layer** in the final container image.
----
----
-
-## **Q: How do you build and run a Docker image?**
-
-### 🧠 **Overview**
-
-You use two core Docker commands:
-
-* `docker build` → creates an **image** from a **Dockerfile**
-* `docker run` → starts a **container** from that image
-
----
-
-### ⚙️ **Step-by-Step Example**
-
-#### 1️⃣ **Create a Dockerfile**
-
-```dockerfile
-# Dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY . .
-RUN pip install -r requirements.txt
-EXPOSE 5000
-CMD ["python", "app.py"]
-```
-
----
-
-#### 2️⃣ **Build the image**
-
-```bash
-docker build -t myapp:latest .
-```
-
-| Flag              | Meaning                                                 |
-| ----------------- | ------------------------------------------------------- |
-| `-t myapp:latest` | Tags the image (name: `myapp`, tag: `latest`)           |
-| `.`               | Build context (current directory containing Dockerfile) |
-
-✅ Output:
-
-```
-Successfully built a1b2c3d4e5f6
-Successfully tagged myapp:latest
-```
-
----
-
-#### 3️⃣ **Verify image**
-
-```bash
+docker pull nginx:latest
 docker images
 ```
 
-Example output:
-
-```
-REPOSITORY   TAG       IMAGE ID       SIZE
-myapp        latest    a1b2c3d4e5f6   145MB
-```
+💡 **In short:** An image = blueprint for containers.
 
 ---
 
-#### 4️⃣ **Run the container**
+## Q4: What is a Docker container?
+
+🧠 **Overview**
+A container is a running instance of an image — isolated, lightweight, and portable.
+
+🧩 **Example**
 
 ```bash
-docker run -d -p 5000:5000 --name myapp-container myapp:latest
+docker run -d --name web nginx
 ```
 
-| Flag           | Description                        |
-| -------------- | ---------------------------------- |
-| `-d`           | Run in detached mode (background). |
-| `-p 5000:5000` | Map host port → container port.    |
-| `--name`       | Assign a custom container name.    |
-
-✅ Now your app is running at `http://localhost:5000`.
+💡 **In short:** Container = runtime; Image = template.
 
 ---
 
-#### 5️⃣ **Check running containers**
+## Q5: What is the difference between an image and a container?
 
-```bash
-docker ps
-```
+📋 **Comparison**
 
-#### 6️⃣ **Stop & remove**
+| Aspect     | Image     | Container              |
+| ---------- | --------- | ---------------------- |
+| State      | Static    | Dynamic                |
+| Type       | Template  | Runtime instance       |
+| Mutability | Immutable | Can write (layered FS) |
 
-```bash
-docker stop myapp-container
-docker rm myapp-container
-```
-
----
-
-### 🧩 **Optional Commands**
-
-| Command                                           | Purpose                           |
-| ------------------------------------------------- | --------------------------------- |
-| `docker logs myapp-container`                     | View app logs                     |
-| `docker exec -it myapp-container /bin/sh`         | Get shell access inside container |
-| `docker rmi myapp:latest`                         | Remove image                      |
-| `docker build -f ./Dockerfile.dev -t myapp-dev .` | Specify custom Dockerfile         |
+💡 **In short:** Image = immutable blueprint; Container = actual execution environment.
 
 ---
 
-### ✅ **In short:**
+## Q6: What is a Dockerfile?
 
-> Build with `docker build -t myapp:latest .`
-> Run with `docker run -d -p 8080:8080 myapp:latest`
-> This builds the image from your Dockerfile and launches a container from it.
----
----
+🧠 **Overview**
+A Dockerfile is the build script defining instructions to create an image.
 
-## **Q: How do you check running Docker containers?**
+🧩 **Example**
 
-### 🧠 **Overview**
+```Dockerfile
+FROM python:3.10
+COPY app.py /app/
+CMD ["python", "/app/app.py"]
+```
 
-You can list, inspect, and monitor running containers using Docker CLI commands like `docker ps`, `docker inspect`, and `docker logs`.
-
----
-
-### ⚙️ **Common Commands**
-
-| **Command**                           | **Purpose**                                                      | **Example Output**                                               |
-| ------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **`docker ps`**                       | Lists **running containers** only.                               | `CONTAINER ID  IMAGE  STATUS  PORTS  NAMES`                      |
-| **`docker ps -a`**                    | Lists **all containers** (running + stopped).                    | Includes `Exited` containers.                                    |
-| **`docker ps --format`**              | Custom output format (filter columns).                           | `docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"` |
-| **`docker container ls`**             | Same as `docker ps`.                                             | Modern syntax equivalent.                                        |
-| **`docker inspect <container_name>`** | Shows **detailed metadata** (IP, mounts, env vars, etc.).        | JSON output.                                                     |
-| **`docker logs <container_name>`**    | Displays logs from a running (or stopped) container.             | Useful for debugging.                                            |
-| **`docker top <container_name>`**     | Shows running **processes** inside container.                    | Like `ps aux` for containers.                                    |
-| **`docker stats`**                    | Real-time CPU, memory, network stats for all running containers. | Live performance metrics.                                        |
+💡 **In short:** A Dockerfile automates image creation.
 
 ---
 
-### 🧩 **Example**
+## Q7: What is the purpose of the FROM instruction in a Dockerfile?
 
-```bash
-docker ps
+🧠 **Overview**
+Defines the **base image** from which your image inherits.
+
+🧩 **Example**
+
+```Dockerfile
+FROM node:18-alpine
 ```
 
-**Output:**
-
-```
-CONTAINER ID   IMAGE         COMMAND             STATUS         PORTS                  NAMES
-e7a1c2f0a1b3   myapp:latest  "python app.py"     Up 2 minutes   0.0.0.0:5000->5000/tcp myapp-container
-```
-
-To include stopped containers:
-
-```bash
-docker ps -a
-```
+💡 **In short:** It sets the starting point for the build.
 
 ---
 
-### 🧱 **Inspect container details**
+## Q8: What does the RUN instruction do in a Dockerfile?
 
-```bash
-docker inspect myapp-container
+🧠 **Overview**
+Executes commands **during the image build** (e.g., installing packages).
+
+🧩 **Example**
+
+```Dockerfile
+RUN apk add --no-cache curl
 ```
 
-➡ Returns JSON with info like:
-
-* IP address
-* Mounts
-* Env variables
-* Network mode
+💡 **In short:** RUN modifies the image’s filesystem at build time.
 
 ---
 
-### 🧩 **Monitor resource usage**
+## Q9: What is the difference between CMD and ENTRYPOINT?
 
-```bash
-docker stats
+📋 **Comparison**
+
+| Feature      | CMD                   | ENTRYPOINT                |
+| ------------ | --------------------- | ------------------------- |
+| Purpose      | Default command       | Mandatory entry process   |
+| Overridable? | Yes, via `docker run` | Partially / args appended |
+| Typical use  | Run scripts           | Start main app            |
+
+🧩 **Example**
+
+```Dockerfile
+ENTRYPOINT ["python"]
+CMD ["app.py"]
 ```
 
-Example:
+💡 **In short:** ENTRYPOINT = executable; CMD = default arguments.
 
-```
-CONTAINER ID   NAME              CPU %   MEM USAGE / LIMIT   NET I/O
-e7a1c2f0a1b3   myapp-container   1.2%    85MiB / 2GiB        1.2MB / 1.0MB
+---
+
+## Q10: What is the COPY instruction used for?
+
+🧠 **Overview**
+Used to copy local files/directories into the container filesystem.
+
+🧩 **Example**
+
+```Dockerfile
+COPY requirements.txt /app/
 ```
 
 ---
 
-### ✅ **In short:**
+## Q11: What is the difference between COPY and ADD?
 
-> Use `docker ps` to view **running containers**,
-> `docker ps -a` for **all containers**,
-> and `docker stats` or `docker inspect` for **detailed runtime info**.
----
----
+📋 **Comparison**
 
-## **Q: How do you stop or remove Docker containers and images?**
+| Feature          | COPY | ADD              |
+| ---------------- | ---- | ---------------- |
+| Basic copy       | Yes  | Yes              |
+| Remote URLs      | ❌ No | ✅ Yes            |
+| Auto-extract tar | ❌ No | ✅ Yes            |
+| Recommended?     | Yes  | Only when needed |
 
-### 🧠 **Overview**
-
-Docker provides simple commands to **stop**, **remove**, and **clean up** containers and images safely.
-You can manage them individually or in bulk.
+💡 **In short:** Use COPY for consistency; ADD only for tar extraction or URLs.
 
 ---
 
-### ⚙️ **1️⃣ Stop Running Containers**
+## Q12: What is the WORKDIR instruction?
 
-| **Command**                          | **Description**                           |
-| ------------------------------------ | ----------------------------------------- |
-| `docker stop <container_id_or_name>` | Gracefully stops a running container.     |
-| `docker kill <container_id_or_name>` | Forcefully stops (immediate SIGKILL).     |
-| `docker ps`                          | View running containers to get IDs/names. |
+🧠 **Overview**
+Sets the working directory for subsequent Dockerfile instructions.
 
-**Example:**
+🧩 **Example**
 
-```bash
-docker stop myapp-container
+```Dockerfile
+WORKDIR /app
 ```
 
-✅ The container moves from **“Up” → “Exited”** state.
+💡 **In short:** It avoids using `cd` in Dockerfile.
 
 ---
 
-### ⚙️ **2️⃣ Remove Containers**
+## Q13: What does the EXPOSE instruction do?
 
-| **Command**                           | **Description**                                    |
-| ------------------------------------- | -------------------------------------------------- |
-| `docker rm <container_id_or_name>`    | Removes a stopped container.                       |
-| `docker rm -f <container_id_or_name>` | Force remove even if running (combines stop + rm). |
-| `docker container prune`              | Removes **all stopped** containers (cleanup).      |
+🧠 **Overview**
+Documents which ports the container listens on (for tools like Compose).
 
-**Example:**
+🧩 **Example**
 
-```bash
-docker rm myapp-container
-# or
-docker rm -f myapp-container
+```Dockerfile
+EXPOSE 8080
 ```
 
-**Bulk cleanup:**
+⚠️ Note: **Does not actually publish the port**.
 
-```bash
-docker container prune
-```
-
-🧹 Output:
-`Deleted Containers: ...`
-`Total reclaimed space: XX MB`
+💡 **In short:** Metadata only; publish using `-p`.
 
 ---
 
-### ⚙️ **3️⃣ Remove Images**
+## Q14: What is the ENV instruction used for?
 
-| **Command**                     | **Description**                                                               |
-| ------------------------------- | ----------------------------------------------------------------------------- |
-| `docker rmi <image_id_or_name>` | Deletes a Docker image.                                                       |
-| `docker rmi -f <image_id>`      | Force delete (even if used by stopped containers).                            |
-| `docker image prune`            | Removes **unused** images.                                                    |
-| `docker system prune -a`        | Cleans up **containers, images, networks, build cache** (aggressive cleanup). |
+🧠 **Overview**
+Sets environment variables inside the image/container.
 
-**Example:**
+🧩 **Example**
 
-```bash
-docker rmi myapp:latest
-```
-
-**List images:**
-
-```bash
-docker images
-```
-
-**Prune unused ones:**
-
-```bash
-docker image prune -a
+```Dockerfile
+ENV APP_ENV=production
 ```
 
 ---
 
-### ⚙️ **4️⃣ Remove All Containers & Images (use with caution)**
+## Q15: What is Docker Hub?
 
-```bash
-# Stop and remove all containers
-docker stop $(docker ps -aq)
-docker rm $(docker ps -aq)
+🧠 **Overview**
+Docker Hub is a public registry hosting container images (official & custom).
 
-# Remove all images
-docker rmi $(docker images -q)
-```
+🧩 **Example**
+
+* Images like `nginx`, `redis`, `ubuntu` come from Docker Hub.
 
 ---
 
-### 🧠 **Best Practices**
+## Q16: How do you pull an image from Docker Hub?
 
-✅ Stop containers before removing.
-✅ Use `docker system prune -a` only in non-production systems.
-✅ Avoid `-f` unless you’re sure — it can delete running or dependent resources.
-✅ Use labels to filter cleanup (e.g., `docker ps -a --filter "label=env=dev"`).
-
----
-
-### ✅ **In short:**
-
-> Stop containers with `docker stop`, remove them with `docker rm`,
-> delete images with `docker rmi`, and clean up unused data using `docker system prune -a`.
----
----
-
-## **Q: What are Docker Volumes?**
-
-### 🧠 **Overview**
-
-A **Docker volume** is a **persistent storage mechanism** that allows data to **live outside** a container’s lifecycle.
-When a container is removed, its data (in a volume) **remains intact** — enabling data sharing and persistence between containers.
-
----
-
-### ⚙️ **Why Volumes Are Needed**
-
-| **Without Volumes**                               | **With Volumes**                                        |
-| ------------------------------------------------- | ------------------------------------------------------- |
-| Container writes data to its internal filesystem. | Data stored in a separate managed location on the host. |
-| When the container is deleted → data is lost.     | Data **persists** even after container removal.         |
-| Data can’t easily be shared between containers.   | Multiple containers can **mount the same volume**.      |
-
----
-
-### ⚙️ **Types of Docker Storage**
-
-| **Type**        | **Description**                                  | **Use Case**                           |
-| --------------- | ------------------------------------------------ | -------------------------------------- |
-| **Volume**      | Managed by Docker in `/var/lib/docker/volumes/`. | Preferred for persistent, shared data. |
-| **Bind Mount**  | Maps a host directory into the container.        | Development (edit local files live).   |
-| **Tmpfs Mount** | Stored in memory only (not persisted).           | Temporary or sensitive data (fast).    |
-
----
-
-### 🧩 **Basic Commands**
-
-| **Command**                    | **Purpose**               |
-| ------------------------------ | ------------------------- |
-| `docker volume create <name>`  | Create a named volume.    |
-| `docker volume ls`             | List existing volumes.    |
-| `docker volume inspect <name>` | View details of a volume. |
-| `docker volume rm <name>`      | Remove a volume.          |
-| `docker volume prune`          | Delete unused volumes.    |
-
----
-
-### 🧩 **Example: Using a Volume**
-
-**1️⃣ Create a volume**
-
-```bash
-docker volume create mydata
-```
-
-**2️⃣ Run a container using the volume**
-
-```bash
-docker run -d \
-  -v mydata:/var/lib/mysql \
-  --name mysql-db \
-  mysql:8
-```
-
-✅ The MySQL database files are stored in the **`mydata` volume**, not inside the container.
-
-**3️⃣ Check volumes**
-
-```bash
-docker volume ls
-```
-
-```
-DRIVER    VOLUME NAME
-local     mydata
-```
-
-**4️⃣ Inspect volume**
-
-```bash
-docker volume inspect mydata
-```
-
----
-
-### 🧩 **Example: Bind Mount (for dev environments)**
-
-```bash
-docker run -d \
-  -v $(pwd):/usr/share/nginx/html \
-  -p 8080:80 \
-  nginx
-```
-
-✅ Mounts your local folder into the container — ideal for live code reload during development.
-
----
-
-### ⚙️ **Named vs Anonymous Volumes**
-
-| **Type**             | **Created How**   | **Persistence**                                             |
-| -------------------- | ----------------- | ----------------------------------------------------------- |
-| **Named Volume**     | `-v mydata:/path` | Persists with a recognizable name.                          |
-| **Anonymous Volume** | `-v /path`        | Docker assigns random name; deleted when container removed. |
-
----
-
-### 🧠 **Best Practices**
-
-✅ Use **named volumes** for databases or stateful apps.
-✅ Use **bind mounts** only for dev/test (can cause permission drift).
-✅ Always mount to **application-specific paths** (e.g., `/data`, `/var/lib/mysql`).
-✅ Combine with `--mount` syntax for clarity:
-
-```bash
-docker run --mount type=volume,source=mydata,target=/app/data myapp
-```
-
----
-
-### ✅ **In short:**
-
-> **Docker volumes** store persistent data **outside containers**, allowing it to **survive restarts, rebuilds, and updates** — perfect for databases, logs, or shared application state.
----
----
-
-## **Q: What is Docker Hub?**
-
-### 🧠 **Overview**
-
-**Docker Hub** is **Docker’s official cloud-based registry service** where developers can **store, share, and distribute Docker images**.
-It acts like **GitHub for container images** — the default registry that `docker pull` and `docker push` commands use.
-
----
-
-### ⚙️ **Key Features**
-
-| **Feature**              | **Description**                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------- |
-| **Image Registry**       | Stores public and private Docker images.                                           |
-| **Public Repositories**  | Free, open access images (e.g., `nginx`, `mysql`, `ubuntu`).                       |
-| **Private Repositories** | Secure, access-controlled image storage for teams.                                 |
-| **Automated Builds**     | Build images directly from GitHub/GitLab commits.                                  |
-| **Webhooks**             | Trigger CI/CD actions after a successful image push.                               |
-| **Organization & Teams** | Manage user permissions and collaboration.                                         |
-| **Verified Publishers**  | Official images from trusted vendors (e.g., `amazon/aws-cli`, `microsoft/dotnet`). |
-
----
-
-### ⚙️ **Common CLI Commands**
-
-| **Command**            | **Purpose**                        |
-| ---------------------- | ---------------------------------- |
-| `docker login`         | Authenticate with Docker Hub.      |
-| `docker pull <image>`  | Download an image from Docker Hub. |
-| `docker push <image>`  | Upload an image to Docker Hub.     |
-| `docker search <term>` | Search for images on Docker Hub.   |
-
----
-
-### 🧩 **Example Workflow**
-
-#### 1️⃣ Login to Docker Hub
-
-```bash
-docker login
-```
-
-#### 2️⃣ Pull a public image
+🧩 **Command**
 
 ```bash
 docker pull nginx:latest
 ```
 
-#### 3️⃣ Tag and push your own image
+---
+
+## Q17: How do you run a Docker container?
+
+🧩 **Command**
 
 ```bash
-docker tag myapp:latest vasu/myapp:1.0
-docker push vasu/myapp:1.0
-```
-
-#### 4️⃣ Run directly from Docker Hub
-
-```bash
-docker run -d -p 8080:80 vasu/myapp:1.0
+docker run -d -p 80:80 --name web nginx
 ```
 
 ---
 
-### ⚙️ **Repository Types**
+## Q18: What does docker ps command do?
 
-| **Type**         | **Visibility**                                   | **Example**                  |
-| ---------------- | ------------------------------------------------ | ---------------------------- |
-| **Public Repo**  | Anyone can pull (e.g., open-source base images). | `docker pull nginx`          |
-| **Private Repo** | Only authorized users can access.                | `docker pull myorg/app:prod` |
+🧠 **Overview**
+Shows running containers.
 
----
-
-### 🧠 **Best Practices**
-
-✅ Use **versioned tags** (e.g., `app:1.2.3`) — avoid `latest` in production.
-✅ Enable **2FA** and access tokens for secure pushes.
-✅ Use **Automated Builds** or CI/CD pipelines to publish images.
-✅ Clean up unused or outdated image tags to save space.
-
----
-
-### ✅ **In short:**
-
-> **Docker Hub** is Docker’s **central image registry** for storing and sharing container images —
-> developers use it to **push** their own images and **pull** base or official images for their apps.
----
----
-
-## **Q: What’s the difference between `COPY` and `ADD` in a Dockerfile?**
-
-### 🧠 **Overview**
-
-Both `COPY` and `ADD` place files into a Docker image during build,
-but `ADD` has **extra features** (auto-extracting archives and fetching remote URLs) — which can introduce unintended behavior.
-👉 **Best practice:** use `COPY` unless you specifically need `ADD`’s extras.
-
----
-
-### ⚙️ **Comparison Table**
-
-| **Aspect**                        | **`COPY`**                                                        | **`ADD`**                                                                        |
-| --------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **Purpose**                       | Copies local files/directories from build context into the image. | Copies local files **or** downloads from URLs **or** auto-extracts tar archives. |
-| **Supports Remote URLs**          | ❌ No                                                              | ✅ Yes (`ADD https://example.com/file.tar.gz /app/`)                              |
-| **Auto-Extracts `.tar` Archives** | ❌ No (copies as-is)                                               | ✅ Yes (automatically extracts `.tar`, `.tar.gz`, `.tgz`, etc.)                   |
-| **Simplicity**                    | Very explicit — only copies local files.                          | Multi-purpose — can lead to unexpected results.                                  |
-| **Recommended Use**               | Always use for static file copies.                                | Use **only** for `.tar` extraction or remote file download.                      |
-
----
-
-### 🧩 **Example: Using `COPY`**
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-```
-
-✅ Straightforward and predictable.
-Copies files from your local directory into `/app` inside the image.
-
----
-
-### 🧩 **Example: Using `ADD` for specific purpose**
-
-```dockerfile
-# 1️⃣ Auto-extracts tar.gz archive
-ADD app.tar.gz /opt/app/
-
-# 2️⃣ Downloads a remote file
-ADD https://example.com/config.json /etc/config/
-```
-
-⚠️ These are valid uses of `ADD`, but use cautiously — remote URLs can cause caching issues.
-
----
-
-### 🧠 **Caching Impact**
-
-* Docker’s layer caching can behave differently if a remote URL changes with `ADD`.
-* `COPY` only changes the image layer if the **source file** changes, making builds more predictable.
-
----
-
-### ✅ **Best Practices**
-
-✅ Prefer `COPY` for all local file transfers.
-✅ Use `ADD` **only** when you need its special abilities (auto-extract or remote fetch).
-✅ Avoid `ADD` for downloading files — use `RUN curl` or `RUN wget` for explicit control.
-
----
-
-### ✅ **In short:**
-
-> `COPY` → Simple, predictable file copy (recommended).
-> `ADD` → Can also fetch URLs and auto-extract archives — **use sparingly** to avoid hidden side effects.
----
----
-
-## **Q: What’s the difference between `CMD` and `ENTRYPOINT` in a Dockerfile?**
-
-### 🧠 **Overview**
-
-Both **`CMD`** and **`ENTRYPOINT`** define what command runs when a container starts.
-But their **behavior differs** — `ENTRYPOINT` sets the **main executable**, and `CMD` provides **default arguments** (or a fallback command).
-
----
-
-### ⚙️ **Comparison Table**
-
-| **Aspect**            | **`CMD`**                                                      | **`ENTRYPOINT`**                                                                         |
-| --------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| **Purpose**           | Provides **default command or arguments** to run.              | Defines the **main executable** that always runs.                                        |
-| **Override Behavior** | Completely overridden if arguments are passed to `docker run`. | Not overridden — arguments from `docker run` are **passed to ENTRYPOINT** as parameters. |
-| **Typical Use**       | Default behavior (like `python app.py`).                       | Define fixed command (like `python`) that should always execute.                         |
-| **Syntax**            | `CMD ["executable", "param1"]` or `CMD command param1`         | `ENTRYPOINT ["executable", "param1"]` or `ENTRYPOINT command param1`                     |
-| **Best Practice**     | Use for providing defaults that users can override.            | Use for defining a container’s “main command”.                                           |
-
----
-
-### 🧩 **Example 1: Using `CMD` Alone**
-
-```dockerfile
-FROM ubuntu
-CMD ["echo", "Hello World"]
-```
-
-**Run:**
-
-```bash
-docker run myimage
-# Output: Hello World
-```
-
-**Override CMD:**
-
-```bash
-docker run myimage echo "Hi Vasu"
-# Output: Hi Vasu
-```
-
-✅ `CMD` is **fully replaced** by new arguments.
-
----
-
-### 🧩 **Example 2: Using `ENTRYPOINT` Alone**
-
-```dockerfile
-FROM ubuntu
-ENTRYPOINT ["echo", "Hello"]
-```
-
-**Run:**
-
-```bash
-docker run myimage World
-# Output: Hello World
-```
-
-✅ `ENTRYPOINT` is **not overridden** — it always runs `echo`, and you just pass arguments.
-
----
-
-### 🧩 **Example 3: Combine `ENTRYPOINT` + `CMD`**
-
-```dockerfile
-FROM python:3.11
-ENTRYPOINT ["python", "app.py"]
-CMD ["--env=prod"]
-```
-
-**Run (default):**
-
-```bash
-docker run myapp
-# Runs → python app.py --env=prod
-```
-
-**Run (override CMD only):**
-
-```bash
-docker run myapp --env=dev
-# Runs → python app.py --env=dev
-```
-
-✅ Perfect combo — `ENTRYPOINT` defines *what* runs, `CMD` defines *how* it runs.
-
----
-
-### ⚙️ **Best Practices**
-
-| ✅ Recommended Pattern                | 💡 Example                               |
-| ------------------------------------ | ---------------------------------------- |
-| Fixed executable → `ENTRYPOINT`      | `ENTRYPOINT ["nginx", "-g"]`             |
-| Default arguments → `CMD`            | `CMD ["daemon off;"]`                    |
-| Use **exec form** (`["cmd", "arg"]`) | Avoid shell form for signal handling     |
-| Combine both for flexibility         | Works well for configurable apps/scripts |
-
----
-
-### ✅ **In short:**
-
-> 🧩 **`ENTRYPOINT`** = sets the **main command** (always runs)
-> 🧩 **`CMD`** = sets **default arguments** or fallback command (can be overridden)
----
-# Short answer (2 lines)
-
-Use **multi-stage builds**, tiny base images (Alpine / distroless / slim), and remove build-time deps & caches so only runtime artifacts remain. Combine RUN steps, use a `.dockerignore`, and analyze layers (dive/docker history) — iterate until your image is minimal and reproducible.
-
-# How to reduce Docker image size — practical checklist + examples
-
-## Quick checklist (apply these in order)
-
-* Use **multi-stage builds**: build in one stage, copy only final artifacts to runtime stage.
-* Prefer **smaller bases**: `node:18-alpine`, `python:3.11-slim`, or `gcr.io/distroless/*`.
-* **Remove build dependencies** after compile (or don’t install them in final stage).
-* Combine `RUN` lines and clean package manager caches in the same layer.
-* Use **`--no-install-recommends`** for `apt-get` and `--no-cache` for `apk`.
-* Add a **`.dockerignore`** (exclude node_modules, .git, tests, docs).
-* Use production-only install steps (npm `--production` / `npm prune --production`, `pip install --no-dev` or use wheels).
-* Strip debug symbols / remove docs, locales, tests from packages if possible.
-* Use `COPY --from=builder` to copy only runtime files.
-* Analyze with `docker history`, `docker image inspect`, and `dive` to find big layers.
-* Automate size checks in CI and fail on regressions.
-
----
-
-## Useful commands
-
-```bash
-# build image
-docker build -t myapp:latest .
-
-# list images with size
-docker images
-
-# show layer history
-docker history myapp:latest
-
-# interactive layer explorer (install separately)
-dive myapp:latest
-
-# remove dangling images/cache
-docker system prune -a --volumes
-```
-
----
-
-## Examples
-
-### Node.js — Multi-stage build (recommended)
-
-```dockerfile
-# Stage 1: builder
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --production=false
-COPY . .
-RUN npm run build        # produce dist/ or build artifacts
-
-# Stage 2: runtime (minimal)
-FROM node:18-alpine AS runtime
-WORKDIR /app
-ENV NODE_ENV=production
-# copy only built files + package.json for runtime deps
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-RUN npm ci --production=true --no-audit --no-fund
-USER node
-CMD ["node", "dist/index.js"]
-```
-
-Notes:
-
-* Build tools (compilers, dev deps) remain in builder stage only.
-* Final image contains only runtime deps + built artifacts.
-
----
-
-### Python — Multi-stage with slim & wheel caching
-
-```dockerfile
-# Stage 1: builder
-FROM python:3.11-slim AS builder
-WORKDIR /app
-RUN apt-get update && apt-get install -y build-essential --no-install-recommends && rm -rf /var/lib/apt/lists/*
-COPY pyproject.toml poetry.lock ./
-RUN pip install --upgrade pip build
-RUN pip wheel --no-deps --wheel-dir /wheels .
-COPY . .
-RUN pip install --no-deps --no-index --find-links /wheels -r requirements.txt
-
-# Stage 2: runtime (distroless or slim)
-FROM python:3.11-slim AS runtime
-WORKDIR /app
-COPY --from=builder /wheels /wheels
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /app /app
-ENV PYTHONUNBUFFERED=1
-USER 1000
-CMD ["python", "app/main.py"]
-```
-
-Notes:
-
-* Use wheels to avoid build tools in runtime.
-* Consider distroless for even smaller images (no shell).
-
----
-
-## `.dockerignore` example
-
-```
-node_modules
-.git
-.gitignore
-Dockerfile*
-README.md
-tests
-.vscode
-.env
-```
-
-Always add `node_modules`/`venv` to avoid copying heavy dev files into the image context.
-
----
-
-## Layer & package manager tips
-
-* Combine apt-get commands:
-
-  ```dockerfile
-  RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
-      && do-build \
-      && apt-get purge -y build-essential \
-      && rm -rf /var/lib/apt/lists/*
-  ```
-
-  This ensures build deps and caches are removed in the same layer.
-* For Alpine:
-
-  ```dockerfile
-  RUN apk add --no-cache build-base python3-dev \
-      && build-stuff \
-      && apk del build-base python3-dev
-  ```
-* For npm, build with `npm ci` and install runtime deps only in final stage: `npm ci --production`.
-
----
-
-## Advanced options
-
-* Use **distroless** or **scratch** for smallest runtime (no package manager, no shell) — great for single-binary apps.
-* Use **multi-arch** and `--platform` to pick smaller base images (some base images are lighter on certain architectures).
-* Use image minifiers like `docker-slim` (experimental) to strip unused files.
-* Use `upx` to compress binaries (for Go / static binaries).
-
----
-
-## How to analyze where size comes from
-
-* `docker history <image>` shows layer sizes — identify which `RUN`/`COPY` caused bloat.
-* `dive <image>` lets you inspect each layer and the filesystem contents (excellent for root-cause).
-* `docker image ls --format "{{.Repository}}:{{.Tag}}\t{{.Size}}"` for quick overview.
-
----
-
-## Small checklist for CI
-
-* Fail CI if image > threshold.
-* Run `dive` or automated script to extract large files and report.
-* Cache intermediate build artifacts in CI to avoid re-building everything every pipeline run.
-
----
-
-### Final one-line tip
-
-Start with multi-stage builds and a strict `.dockerignore` — then iterate with `dive` to remove the biggest offenders (dev deps, build caches, large static files).
-
----
----
-
-## **Q: What is a Multi-Stage Build in Docker?**
-
-### 🧠 **Overview**
-
-A **multi-stage build** is a Docker technique that lets you use **multiple `FROM` statements** in a single Dockerfile — so you can **build** your application in one stage (with all tools/dependencies) and **copy only the final artifacts** into a **smaller runtime image**.
-
-✅ **Goal:** produce a **lightweight, secure image** without build tools or unnecessary files.
-
----
-
-### ⚙️ **Why It’s Needed**
-
-| **Without Multi-Stage Build**                           | **With Multi-Stage Build**                   |
-| ------------------------------------------------------- | -------------------------------------------- |
-| Single image contains compilers, caches, and dev tools. | Only final binaries or app files are copied. |
-| Large, insecure, slow to deploy.                        | Smaller, faster, production-ready image.     |
-| Must manually clean dependencies.                       | Automatically discarded after build stage.   |
-
----
-
-### 🧩 **Basic Syntax**
-
-```dockerfile
-# ---- Stage 1: Build ----
-FROM golang:1.21 AS builder
-WORKDIR /app
-COPY . .
-RUN go build -o myapp .
-
-# ---- Stage 2: Runtime ----
-FROM gcr.io/distroless/base
-WORKDIR /app
-COPY --from=builder /app/myapp .
-CMD ["./myapp"]
-```
-
-✅ Result:
-
-* The first stage builds the binary.
-* The second stage copies only the compiled binary — no Go compiler, no source code.
-
----
-
-### 🧩 **Example: Node.js App**
-
-```dockerfile
-# ---- Stage 1: Build ----
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# ---- Stage 2: Runtime ----
-FROM node:18-alpine AS runtime
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-RUN npm ci --omit=dev
-CMD ["node", "dist/server.js"]
-```
-
-✅ **Advantages:**
-
-* Keeps build tools (TypeScript, Webpack, etc.) out of the final image.
-* Cuts image size from ~700 MB → ~150 MB.
-
----
-
-### ⚙️ **Common Use Cases**
-
-* **Compiled apps** (Go, Java, Rust, C#): keep only binary/JAR.
-* **Web apps**: build front-end bundles and copy static assets only.
-* **CI/CD pipelines**: generate one Dockerfile for both build & deploy stages.
-* **Security**: final stage has fewer packages and no compilers.
-
----
-
-### ⚙️ **Inspecting Multi-Stage Builds**
-
-```bash
-docker build -t myapp:latest .
-docker images  # Only shows the final stage image
-docker build --target builder -t myapp-builder .  # Optionally keep build stage
-```
-
----
-
-### ✅ **In short:**
-
-> A **multi-stage build** lets you **build and package** in one Dockerfile using multiple `FROM` stages —
-> copy only what’s needed into the final stage to create **smaller, faster, and more secure images**.
----
----
-
-## **Q: What are Docker Networks?**
-
-### 🧠 **Overview**
-
-**Docker networks** allow containers to **communicate with each other** and the **outside world** securely and efficiently.
-Each network defines how containers connect — isolating traffic, managing DNS, and enabling service discovery.
-
----
-
-### ⚙️ **Purpose of Docker Networks**
-
-* Enable **container-to-container communication** (e.g., app ↔ database).
-* Provide **isolation** between environments (e.g., dev, test, prod).
-* Control **connectivity and access** (like private subnets).
-* Provide **automatic DNS resolution** — containers can use names instead of IPs.
-
----
-
-### ⚙️ **Types of Docker Networks**
-
-| **Network Type**       | **Description**                                                                       | **Use Case**                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **bridge** *(default)* | Containers share a private network on the same host; communicate via container names. | Most common for standalone apps.                                |
-| **host**               | Removes network isolation; container uses the **host’s network stack**.               | High-performance apps (e.g., monitoring agents).                |
-| **none**               | No network access (completely isolated).                                              | Security or offline jobs.                                       |
-| **overlay**            | Multi-host network using Docker Swarm; connects containers across hosts.              | Clustered / distributed apps.                                   |
-| **macvlan**            | Assigns a container a **unique MAC address** on the host’s LAN.                       | Integrate containers with physical network (e.g., legacy apps). |
-
----
-
-### 🧩 **Example: Bridge Network**
-
-**1️⃣ Create a custom bridge**
-
-```bash
-docker network create mynet
-```
-
-**2️⃣ Run two containers on the same network**
-
-```bash
-docker run -d --name db --network mynet mysql:8
-docker run -d --name app --network mynet myapp:latest
-```
-
-**3️⃣ Verify communication**
-Inside `app` container:
-
-```bash
-ping db
-```
-
-✅ Works! Docker auto-creates DNS for container names (`db` resolves to container IP).
-
----
-
-### 🧩 **Inspect Networks**
-
-```bash
-docker network ls
-```
-
-```
-NETWORK ID     NAME      DRIVER    SCOPE
-a1b2c3d4e5f6   bridge    bridge    local
-b2c3d4e5f6g7   host      host      local
-```
-
-Inspect a network in detail:
-
-```bash
-docker network inspect mynet
-```
-
----
-
-### 🧩 **Connect/Disconnect Containers Dynamically**
-
-```bash
-docker network connect mynet app-container
-docker network disconnect mynet app-container
-```
-
----
-
-### ⚙️ **Example: Compose YAML**
-
-Docker Compose automatically creates networks:
-
-```yaml
-services:
-  web:
-    image: nginx
-    networks:
-      - appnet
-  db:
-    image: mysql
-    networks:
-      - appnet
-
-networks:
-  appnet:
-    driver: bridge
-```
-
-✅ Both `web` and `db` share `appnet` and can reach each other by name.
-
----
-
-### 🧠 **Best Practices**
-
-✅ Use **user-defined bridge** networks (not default) — better DNS and isolation.
-✅ Avoid exposing internal services (like DB) to `0.0.0.0`.
-✅ Use **`--network-alias`** for multiple hostnames.
-✅ In Swarm/Kubernetes, prefer **overlay networks** for cross-node traffic.
-
----
-
-### ✅ **In short:**
-
-> **Docker networks** connect containers securely and define how they communicate.
-> Use **bridge** for local apps, **overlay** for multi-host, and **host** for high-performance or monitoring workloads.
----
----
-
-## **Q: How do you inspect container details like IP, environment variables, and mounts?**
-
-### 🧠 **Overview**
-
-You can use the **`docker inspect`** command to view **complete metadata** about any container — including **network settings (IP)**, **environment variables**, **mounts**, **volumes**, and **runtime config**.
-
----
-
-### ⚙️ **1️⃣ Basic Command**
-
-```bash
-docker inspect <container_name_or_id>
-```
-
-✅ Returns detailed **JSON output** with all container properties:
-
-* Network settings (IP, MAC)
-* Mounts / volumes
-* Environment variables
-* Image, entrypoint, command
-* Host configuration (ports, binds, resources)
-
----
-
-### ⚙️ **2️⃣ Filter Specific Fields (using `--format`)**
-
-You can extract only the info you need using **Go template syntax**:
-
-| **Info**                   | **Command**                                                                                  | **Example Output**                                              |
-| -------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Container IP**           | `docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container>`    | `172.18.0.3`                                                    |
-| **Container Name**         | `docker inspect -f '{{.Name}}' <container>`                                                  | `/myapp`                                                        |
-| **Image Used**             | `docker inspect -f '{{.Config.Image}}' <container>`                                          | `myapp:latest`                                                  |
-| **Environment Variables**  | `docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' <container>`                  | `NODE_ENV=prod` ...                                             |
-| **Mount Points / Volumes** | `docker inspect -f '{{json .Mounts}}' <container>`                                           | `[{ "Source": "/var/lib/docker/volumes/app_data/_data", ... }]` |
-| **Network Name**           | `docker inspect -f '{{range $k, $v := .NetworkSettings.Networks}}{{$k}}{{end}}' <container>` | `mynet`                                                         |
-| **Ports Mapped**           | `docker inspect -f '{{json .NetworkSettings.Ports}}' <container>`                            | `{ "80/tcp": [{"HostPort": "8080"}] }`                          |
-
----
-
-### 🧩 **Example**
-
-```bash
-docker inspect -f 'Container IP: {{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' myapp
-```
-
-Output:
-
-```
-Container IP: 172.18.0.5
-```
-
----
-
-### ⚙️ **3️⃣ Inspect Mounts**
-
-```bash
-docker inspect -f '{{range .Mounts}}{{println .Source "->" .Destination}}{{end}}' myapp
-```
-
-Output:
-
-```
-/var/lib/docker/volumes/mydata/_data -> /app/data
-```
-
----
-
-### ⚙️ **4️⃣ Check Environment Variables**
-
-```bash
-docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' myapp
-```
-
-Output:
-
-```
-NODE_ENV=production
-DB_HOST=db
-PORT=3000
-```
-
----
-
-### 🧩 **Alternative: `docker exec` (quick view)**
-
-If the container is running, you can inspect live values:
-
-```bash
-docker exec -it myapp env       # show environment vars
-docker exec -it myapp hostname -I  # show IP
-docker exec -it myapp df -h      # check mounted volumes
-```
-
----
-
-### ⚙️ **5️⃣ List all network details**
-
-```bash
-docker inspect -f '{{json .NetworkSettings}}' myapp | jq
-```
-
-Shows IP addresses, gateways, and MAC addresses across all attached networks.
-
----
-
-### 🧠 **Best Practices**
-
-✅ Use `--format` to avoid parsing large JSON manually.
-✅ Combine with `jq` for structured output.
-✅ Always check `.NetworkSettings.Networks` for container IP — not `.IPAddress` (deprecated).
-
----
-
-### ✅ **In short:**
-
-> Use `docker inspect <container>` to view **container metadata**.
-> Add `--format` to extract fields like **IP**, **environment vars**, and **mounts** quickly.
-> Example:
->
-> ```bash
-> docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' myapp
-> ```
----
-Short answer (2 lines)
-Authenticate using the AWS ECR login helper (`aws ecr get-login-password | docker login ...`), tag the image with the ECR repo URI, then `docker push`. In CI use OIDC or an assume-role flow (no long-lived keys), build in the pipeline, tag, and push with the temporary creds.
-
----
-
-# README.md — Push Docker images to AWS ECR (copy-ready)
-
-## Overview
-
-Steps to log in and push images to a private AWS ECR registry from local or CI:
-
-1. Ensure an ECR repo exists (create if needed).
-2. Authenticate Docker to ECR with `aws ecr get-login-password`.
-3. Build, tag the image with the ECR repo URI, then `docker push`.
-4. In CI: use OIDC or `sts:AssumeRole` to obtain temporary credentials (preferred).
-
----
-
-## Pre-reqs
-
-* AWS CLI v2 installed and configured OR CI that can assume a role / use OIDC.
-* Docker installed.
-* IAM principal has ECR permissions: `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, `ecr:InitiateLayerUpload`, `ecr:UploadLayerPart`, `ecr:CompleteLayerUpload`, `ecr:CreateRepository` (if creating repos).
-
----
-
-## 1) Create repo (if it doesn’t exist)
-
-```bash
-aws ecr describe-repositories --repository-names my-app || \
-aws ecr create-repository --repository-name my-app --image-scanning-configuration scanOnPush=true
-```
-
----
-
-## 2) Authenticate Docker to ECR (local / ephemeral creds)
-
-Replace `<ACCOUNT>`, `<REGION>` and optionally `<AWS_PROFILE>`.
-
-```bash
-aws ecr get-login-password --region <REGION> \
-  | docker login --username AWS --password-stdin <ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com
-```
-
-If using a named profile:
-
-```bash
-aws --profile myprofile ecr get-login-password --region <REGION> \
-  | docker login --username AWS --password-stdin <ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com
-```
-
----
-
-## 3) Build, tag, push
-
-```bash
-# build
-docker build -t myapp:1.2.3 .
-
-# tag for ECR (URI format: <account>.dkr.ecr.<region>.amazonaws.com/<repo>:<tag>)
-docker tag myapp:1.2.3 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:1.2.3
-
-# push
-docker push 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app:1.2.3
-```
-
-If you use manifest lists / multi-arch images, use `docker buildx` and push the manifest.
-
----
-
-## 4) GitLab CI snippet (recommended: OIDC or assume-role)
-
-Example using **assume-role** (works in most runners). Prefer OIDC in managed runners when available.
-
-```yaml
-stages: [build, push]
-
-variables:
-  AWS_REGION: "us-east-1"
-  ECR_ACCOUNT: "123456789012"
-  ECR_REPO: "my-app"
-  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
-
-before_script:
-  - apk add --no-cache python3 py3-pip jq docker-cli  # runner image needs docker client / awscli
-  - pip install awscli --upgrade
-  # If using assume-role:
-  - |
-    if [ -n "$ASSUME_ROLE_ARN" ]; then
-      CREDS=$(aws sts assume-role --role-arn "$ASSUME_ROLE_ARN" --role-session-name gitlab-ci --duration-seconds 900 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
-      export AWS_ACCESS_KEY_ID=$(echo $CREDS | awk '{print $1}')
-      export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | awk '{print $2}')
-      export AWS_SESSION_TOKEN=$(echo $CREDS | awk '{print $3}')
-    fi
-  - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com
-
-build:
-  stage: build
-  script:
-    - docker build -t $ECR_REPO:$IMAGE_TAG .
-    - docker tag $ECR_REPO:$IMAGE_TAG $ECR_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
-    - docker push $ECR_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
-  only:
-    - branches
-```
-
-If your runner supports OIDC, replace assume-role with OIDC token exchange (preferred—no secrets).
-
----
-
-## 5) CI best practices
-
-* Use **short-lived credentials** (OIDC or STS assume-role).
-* Protect image tags for `latest` and `prod` pushes (use protected branches/tags).
-* Scan images on push (ECR image scanning or third-party scanners).
-* Use immutable tags (SHA, semantic tags) and avoid `latest` for prod.
-* Push multi-arch images with `docker buildx` and `docker buildx push`.
-
----
-
-## Troubleshooting
-
-* `no basic auth credentials` → Docker not logged in; run `aws ecr get-login-password | docker login ...`.
-* `denied: requested access to the resource is denied` → wrong account or repo name, or IAM lacks ECR permissions.
-* `repository not found` → create the repo first or check URI.
-* Large pushes failing → check network; consider pushing smaller layers or using a CI runner in same region/VPC.
-
----
-
-## Quick checklist
-
-* [ ] Repo exists (`aws ecr create-repository` if needed)
-* [ ] Docker authenticated (`aws ecr get-login-password`)
-* [ ] Image tagged to full ECR URI
-* [ ] Push succeeded (`docker push`)
-* [ ] CI uses OIDC/assume-role; images scanned and tags protected
-
----
-
-### One-line summary
-
-Log in with `aws ecr get-login-password | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com`, tag your image to the ECR URI, then `docker push` — and in CI use short-lived creds (OIDC or assume-role) and protect prod pushes.
-
----
----
-
-## **Q: How do you exec into a running Docker container?**
-
-### 🧠 **Overview**
-
-You can use the **`docker exec`** command to **open a shell session** inside a running container — just like SSH into a VM — to inspect logs, run commands, or debug applications.
-
----
-
-### ⚙️ **1️⃣ Basic Syntax**
-
-```bash
-docker exec -it <container_name_or_id> <command>
-```
-
-| Flag | Description                                |
-| ---- | ------------------------------------------ |
-| `-i` | Interactive mode (keeps STDIN open).       |
-| `-t` | Allocates a pseudo-TTY (for shell access). |
-
----
-
-### 🧩 **2️⃣ Common Examples**
-
-| **Use Case**                                              | **Command**                     |
-| --------------------------------------------------------- | ------------------------------- |
-| Open an **interactive shell** (`bash`)                    | `docker exec -it myapp bash`    |
-| If the container uses **Alpine** or **busybox** (no bash) | `docker exec -it myapp sh`      |
-| Run a **single command** inside container                 | `docker exec myapp ls /app`     |
-| Check running **processes**                               | `docker exec myapp ps aux`      |
-| View **environment variables**                            | `docker exec myapp env`         |
-| Check **container’s IP address**                          | `docker exec myapp hostname -I` |
-
----
-
-### 🧩 **3️⃣ Identify Container Name/ID**
-
-List running containers first:
+🧩 **Command**
 
 ```bash
 docker ps
 ```
 
-Example output:
+---
 
-```
-CONTAINER ID   IMAGE          COMMAND            STATUS          PORTS         NAMES
-e1b2c3d4f5g6   myapp:latest   "python app.py"    Up 2 minutes    8080->80/tcp  myapp
-```
+## Q19: What is the difference between docker ps and docker ps -a?
 
-Then exec into it:
+📋 **Comparison**
+
+| Command        | Shows                              |
+| -------------- | ---------------------------------- |
+| `docker ps`    | Running containers                 |
+| `docker ps -a` | All containers (stopped + running) |
+
+---
+
+## Q20: How do you stop a running container?
+
+🧩 **Command**
 
 ```bash
-docker exec -it myapp bash
+docker stop <container_id>
 ```
-
----
-
-### ⚙️ **4️⃣ Exit the Container**
-
-Type:
-
-```
-exit
-```
-
-or press
-**Ctrl + D**
-➡ This returns you to your host shell, the container keeps running.
-
----
-
-### 🧠 **5️⃣ If Container Has No Shell**
-
-Some minimal images (like `scratch` or `distroless`) don’t include shells.
-In those cases:
-
-* You **can’t exec into them** interactively.
-* Use sidecar containers or debugging images (like `busybox` or `alpine`) on the same network/namespace:
-
-  ```bash
-  docker run -it --network container:<container_name> busybox sh
-  ```
-
-  This lets you inspect the same network/filesystem.
-
----
-
-### ✅ **In short:**
-
-> Use `docker exec -it <container> bash` (or `sh`) to get a shell inside a running container.
-> It’s the standard way to **debug or inspect live containers** without restarting them.
-
----
----
-
-## **Q: What is `.dockerignore` used for?**
-
-### 🧠 **Overview**
-
-A **`.dockerignore`** file tells Docker **which files and directories to exclude** from the **build context** when running `docker build`.
-It works just like `.gitignore` — keeping unnecessary files out of your image and speeding up builds.
-
----
-
-### ⚙️ **Purpose**
-
-| **Goal**                          | **Explanation**                                                              |
-| --------------------------------- | ---------------------------------------------------------------------------- |
-| 🧹 **Reduce image size**          | Prevents copying unwanted files (e.g., logs, build artifacts, node_modules). |
-| ⚡ **Speed up builds**             | Smaller build context → faster upload to Docker daemon.                      |
-| 🔒 **Improve security**           | Avoids leaking sensitive files like `.env`, SSH keys, secrets.               |
-| 📦 **Prevent cache invalidation** | Changes in ignored files don’t break build cache.                            |
-
----
-
-### 🧩 **Example `.dockerignore`**
-
-```bash
-# Ignore build system files
-.git
-.gitignore
-Dockerfile
-.dockerignore
-
-# Node.js example
-node_modules
-npm-debug.log
-yarn.lock
-coverage
-dist
-
-# Python example
-__pycache__/
-*.pyc
-venv/
-
-# Environment / secrets
-.env
-*.pem
-*.key
-
-# OS files
-.DS_Store
-Thumbs.db
-```
-
-✅ Result:
-Only the required app source files and dependencies get sent into the Docker build context.
-
----
-
-### ⚙️ **How It Works**
-
-1️⃣ When you run `docker build`, Docker sends the **build context** (current directory) to the Docker daemon.
-2️⃣ `.dockerignore` filters out matching paths — these never leave your disk.
-3️⃣ The remaining files are used for instructions like `COPY` or `ADD`.
 
 Example:
 
 ```bash
-docker build -t myapp:latest .
+docker stop web
 ```
 
-If `.env` and `.git` are listed in `.dockerignore`, they **won’t be included** in the image or even sent to the daemon.
+---
+
+Below is your **README-style DevOps documentation** for **Q21–Q40 (Docker Basics Continued)**.
 
 ---
 
-### 🧠 **Best Practices**
+## Q21: How do you remove a container?
 
-✅ Always include `.git`, `.env`, `node_modules`, and temp folders.
-✅ Keep `.dockerignore` at the root next to your Dockerfile.
-✅ Keep it updated as your project grows.
-✅ For CI/CD pipelines, verify it matches your `.gitignore` but keep sensitive files explicitly ignored.
-
----
-
-### ✅ **In short:**
-
-> The `.dockerignore` file excludes unnecessary or sensitive files from the Docker build context —
-> making builds **faster**, **smaller**, and **more secure**.
-
----
----
-
-## **Q: How do you pass environment variables to Docker containers?**
-
-### 🧠 **Overview**
-
-Environment variables let you **configure container behavior** (e.g., DB credentials, API URLs, runtime mode) without modifying the image.
-You can pass them at **runtime**, from **files**, or directly inside a **Dockerfile**.
-
----
-
-### ⚙️ **1️⃣ Pass via `docker run -e`**
+🧩 **Command**
 
 ```bash
-docker run -d \
-  -e ENV=prod \
-  -e DB_HOST=db.example.com \
-  -p 8080:80 \
-  myapp:latest
+docker rm <container_id>
 ```
 
-| Flag          | Description                                 |
-| ------------- | ------------------------------------------- |
-| `-e`          | Pass an environment variable (`KEY=VALUE`). |
-| Multiple `-e` | You can pass several variables at once.     |
-
-Check inside container:
+Force remove (running containers):
 
 ```bash
-docker exec myapp env
+docker rm -f <container_id>
 ```
+
+💡 **In short:** `docker rm` deletes stopped containers; use `-f` to force.
 
 ---
 
-### ⚙️ **2️⃣ Load from an Environment File**
+## Q22: How do you remove a Docker image?
 
-**Create `.env` file:**
+🧩 **Command**
 
 ```bash
-ENV=staging
-DB_USER=admin
-DB_PASS=secret123
+docker rmi <image_id>
 ```
 
-**Run container:**
-
-```bash
-docker run --env-file .env myapp:latest
-```
-
-✅ Cleaner and reusable for multiple containers.
-
----
-
-### ⚙️ **3️⃣ Define in Dockerfile (build-time default)**
-
-```dockerfile
-FROM node:18-alpine
-ENV NODE_ENV=production
-ENV PORT=3000
-CMD ["npm", "start"]
-```
-
-✅ These become default environment variables in all containers based on that image.
-They can still be **overridden** at runtime with `-e`.
-
----
-
-### ⚙️ **4️⃣ Pass from Host Environment**
-
-If you already have variables in your shell:
-
-```bash
-export API_KEY=abcd1234
-docker run -e API_KEY myapp
-```
-
-✅ Docker picks up `$API_KEY` from your host environment.
-
----
-
-### ⚙️ **5️⃣ Docker Compose (Recommended for Multi-Service)**
-
-**docker-compose.yml**
-
-```yaml
-version: "3.9"
-services:
-  app:
-    image: myapp:latest
-    ports:
-      - "8080:80"
-    env_file:
-      - .env
-    environment:
-      - NODE_ENV=production
-      - LOG_LEVEL=debug
-```
-
-✅ Compose automatically injects `.env` and inline environment variables.
-
----
-
-### ⚙️ **6️⃣ Verify Environment Variables**
-
-Inside container:
-
-```bash
-docker exec -it myapp env
-```
-
-Or using `inspect`:
-
-```bash
-docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' myapp
-```
-
----
-
-### 🧠 **Best Practices**
-
-✅ Prefer `--env-file` or Compose for maintainability.
-✅ Never bake secrets directly into Dockerfile (`ENV DB_PASS=password` ❌).
-✅ Use secret managers (AWS Secrets Manager, Vault, Docker secrets) for sensitive data.
-✅ Use consistent naming (e.g., `APP_ENV`, `DB_HOST`, `DB_USER`).
-
----
-
-### ✅ **In short:**
-
-> Pass env vars using `-e`, `--env-file`, or via Docker Compose.
-> Example:
->
-> ```bash
-> docker run -e ENV=prod --env-file .env myapp
-> ```
->
-> Use `.env` files for config and secret managers for sensitive values.
----
-Short answer (2 lines)
-Use **volumes** (named volumes or bind mounts) to store data outside the container filesystem so it survives container restart/recreate. For multi-host or production use cases use a network-backed volume (EFS/NFS, cloud block storage, or Kubernetes PVs) and handle backups/permissions explicitly.
-
----
-
-## Quick checklist
-
-* Use **named volumes** for portability and Docker-managed persistence.
-* Use **bind mounts** (`host_dir:/container_dir`) for dev or when you need host files.
-* For multi-host or scale-out, use **EFS/NFS/CIFS** or cloud block volumes (EBS, EFS, EFS Access Points).
-* Always handle UID/GID and file permissions, and add a backup/restore strategy.
-
----
-
-## Commands & examples
-
-### 1) Named volume (recommended for persistent data)
-
-```bash
-# create volume
-docker volume create mydata
-
-# run container using named volume
-docker run -d --name mydb -v mydata:/var/lib/mysql mysql:8
-
-# inspect where Docker stores it on the host
-docker volume inspect mydata
-```
-
-Named volumes are managed by Docker and survive container removal (`docker rm`) unless you explicitly remove the volume (`docker volume rm mydata`).
-
----
-
-### 2) Bind mount (host directory) — great for dev
-
-```bash
-docker run -d \
-  --name myapp-dev \
-  -v $(pwd)/app_data:/app/data \
-  myapp:latest
-```
-
-Use bind mounts to see host-side files live (hot-reload). Be careful with permissions and portability.
-
----
-
-### 3) Docker Compose example (named volume)
-
-```yaml
-version: "3.8"
-services:
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-    volumes:
-      - db-data:/var/lib/mysql
-
-volumes:
-  db-data:
-    driver: local
-```
-
-`docker-compose up -d` will create `db-data` and persist it across container restarts/removals.
-
----
-
-### 4) Backup & restore a volume (tar via temporary container)
-
-```bash
-# backup
-docker run --rm -v mydata:/data -v $(pwd):/backup busybox \
-  sh -c "cd /data && tar czf /backup/mydata.tar.gz ."
-
-# restore
-docker run --rm -v mydata:/data -v $(pwd):/backup busybox \
-  sh -c "cd /data && tar xzf /backup/mydata.tar.gz"
-```
-
----
-
-### 5) Migrating data to another host
-
-* Export with backup method above, copy archive to new host, restore into a new volume there.
-
----
-
-## Multi-host / production persistence
-
-* **Single-host**: named volumes or bind mounts are fine.
-* **Multi-host / clustered**: use network storage:
-
-  * AWS: **EBS** for single-node stateful or **EFS** for multi-AZ shared volumes.
-  * NFS/CIFS for on-prem.
-  * Docker plugins (e.g., rexray, portworx) or orchestrator volumes (Kubernetes PVs) for distributed storage.
-* For ECS/Fargate: use **EFS** (mount targets + access points). For Kubernetes, use **PersistentVolumes** backed by cloud storage.
-
----
-
-## Permissions & ownership
-
-Containers often run as a uid/gid — ensure host volume ownership matches or `chown` at container start:
-
-```dockerfile
-# in Dockerfile or entrypoint script (runtime)
-chown -R 1000:1000 /app/data
-exec "$@"
-```
-
-Or use Docker `--user` to run container as matching UID.
-
----
-
-## Tips & gotchas
-
-* **Removing container ≠ removing volume.** `docker rm` doesn't remove named volumes by default. Use `docker rm -v` to remove anonymous volumes tied to container. `docker volume prune` removes unused volumes.
-* **Do not rely on ephemeral tmpfs** for persistence — tmpfs is memory-only and lost on stop.
-* **Backups are essential** for databases/files. Automate snapshots (EBS/EFS), or use `mysqldump`/database-native backups.
-* **Performance**: bind mounts may be slower on some platforms (Docker Desktop on macOS/Windows); consider volume drivers or remote mount.
-* **Consistency**: for clustered apps, avoid shared writable volumes unless the filesystem and app support concurrent access (use proper locking or per-node storage + replication).
-
----
-
-## Example: MySQL with persistent named volume (ready-for-prod quick pattern)
-
-```bash
-docker volume create mysql-data
-
-docker run -d --name mysql \
-  -e MYSQL_ROOT_PASSWORD=SecretPwd \
-  -v mysql-data:/var/lib/mysql \
-  mysql:8
-```
-
-Then stop/start or recreate the container — the DB files remain in `mysql-data`.
-
----
-
-### One-line summary
-
-Use Docker **named volumes** (or bind mounts for dev) to persist container data across restarts; for multi-host production use a network-backed volume (EFS/NFS, cloud block) and implement backups, permission fixes, and proper orchestration.
-
----
----
-
-## **Q: How do you handle container logs in Docker?**
-
-### 🧠 **Overview**
-
-Docker automatically captures **stdout** and **stderr** from containers and stores them using a **logging driver** (default: `json-file`).
-You can view, stream, or forward these logs to external systems like ELK, CloudWatch, or Loki.
-
----
-
-### ⚙️ **1️⃣ View Logs**
-
-| **Command**                           | **Description**                     |
-| ------------------------------------- | ----------------------------------- |
-| `docker logs <container>`             | Show logs (stdout + stderr).        |
-| `docker logs -f <container>`          | Stream logs live (like `tail -f`).  |
-| `docker logs --since 10m <container>` | Show logs from the last 10 minutes. |
-| `docker logs --tail 100 <container>`  | Show last 100 lines only.           |
-
-**Example:**
-
-```bash
-docker logs -f myapp
-```
-
----
-
-### ⚙️ **2️⃣ Default Log Storage**
-
-By default, logs are stored as JSON under:
-
-```
-/var/lib/docker/containers/<container-id>/<container-id>-json.log
-```
-
-> Each container has its own log file.
-> The file can grow large — manage it with rotation options or an external aggregator.
-
----
-
-### ⚙️ **3️⃣ Configure Log Rotation (important for production)**
-
-Edit `/etc/docker/daemon.json`:
-
-```json
-{
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m",
-    "max-file": "3"
-  }
-}
-```
-
-Restart Docker:
-
-```bash
-sudo systemctl restart docker
-```
-
-✅ Limits each log file to 100 MB, keeps 3 files max (auto-rotates).
-
----
-
-### ⚙️ **4️⃣ Change Logging Driver**
-
-You can switch the logging backend at **container run time** or **globally**.
-
-#### Example — syslog:
-
-```bash
-docker run -d \
-  --log-driver=syslog \
-  --log-opt syslog-address=udp://192.168.1.10:514 \
-  myapp
-```
-
-#### Common Drivers:
-
-| **Driver**  | **Description**                             |
-| ----------- | ------------------------------------------- |
-| `json-file` | Default local log storage (plain JSON).     |
-| `journald`  | For systemd-based systems.                  |
-| `syslog`    | Send logs to syslog servers.                |
-| `awslogs`   | Send logs to AWS CloudWatch.                |
-| `gelf`      | Send logs to Graylog or Logstash.           |
-| `fluentd`   | Send logs to Fluentd/Fluent Bit collectors. |
-| `none`      | Disable logging (use carefully).            |
-
----
-
-### ⚙️ **5️⃣ Centralized Log Aggregation (recommended)**
-
-For multiple containers or hosts, forward logs to a centralized solution:
-
-| **Tool**                                                  | **Purpose**                              |
-| --------------------------------------------------------- | ---------------------------------------- |
-| **ELK / EFK** (Elasticsearch + Logstash/Fluentd + Kibana) | Full-featured log analytics.             |
-| **AWS CloudWatch**                                        | Managed log aggregation for ECS/EKS.     |
-| **Grafana Loki**                                          | Lightweight log storage + visualization. |
-| **Fluent Bit / Fluentd**                                  | Collect and forward logs efficiently.    |
-
-**Example (Fluent Bit):**
-
-```bash
-docker run -d \
-  --log-driver=fluentd \
-  --log-opt fluentd-address=localhost:24224 \
-  --log-opt tag=docker.myapp \
-  myapp
-```
-
----
-
-### ⚙️ **6️⃣ For Docker Compose**
-
-You can configure logging drivers per service:
-
-```yaml
-services:
-  web:
-    image: nginx
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "5"
-```
-
----
-
-### ⚙️ **7️⃣ Application-Level Logging Best Practices**
-
-✅ Log to **stdout/stderr** — not to files inside containers.
-✅ Use structured JSON logging (easy to parse).
-✅ Don’t log sensitive info.
-✅ Add correlation IDs / request IDs for tracing.
-✅ Use log rotation and centralized collection for scale.
-
----
-
-### ✅ **In short:**
-
-> Docker captures logs from `stdout` and `stderr` by default.
-> View with `docker logs -f <container>`, configure rotation via `daemon.json`,
-> and forward logs to centralized systems like **ELK, CloudWatch, or Loki** for scalable management.
-
----
----
-
-## **Q: How do you secure Docker containers?**
-
-### 🧠 **Overview**
-
-Docker security means minimizing the **attack surface** at every layer — image, container runtime, host, and network.
-The goal: **least privilege**, **isolation**, and **immutability**.
-
----
-
-### ⚙️ **1️⃣ Secure the Docker Host**
-
-| **Action**                  | **Why it matters**                                                   |
-| --------------------------- | -------------------------------------------------------------------- |
-| 🔒 Keep Docker & OS updated | Security patches fix known exploits.                                 |
-| 🧍‍♂️ Limit root access     | Only trusted users should run Docker commands (Docker runs as root). |
-| 🚫 Disable SSH root login   | Prevents host compromise → container compromise.                     |
-| 🧱 Use firewall rules       | Limit exposed ports and inter-container traffic.                     |
-| 🔍 Enable audit logs        | Track container and image changes.                                   |
-
----
-
-### ⚙️ **2️⃣ Use Minimal & Trusted Images**
-
-| **Practice**                                                                         | **Description** |
-| ------------------------------------------------------------------------------------ | --------------- |
-| ✅ Use **official base images** from Docker Hub / verified publishers.                |                 |
-| ⚙️ **Pin image versions** (e.g., `nginx:1.25.3-alpine`) to avoid unverified updates. |                 |
-| 🧩 Use **Alpine / distroless** images — fewer packages, smaller attack surface.      |                 |
-| 🧼 **Scan images** using tools like `docker scan`, Trivy, or Clair.                  |                 |
-| 🧹 **Remove build tools** & caches via multi-stage builds.                           |                 |
-
-Example:
-
-```bash
-docker scan myapp:latest
-```
-
----
-
-### ⚙️ **3️⃣ Run Containers with Least Privilege**
-
-| **Recommendation**                   | **Example / Command**                       |
-| ------------------------------------ | ------------------------------------------- |
-| ⚠️ Avoid `--privileged` mode         | `--privileged` = full host access ❌         |
-| 👤 Drop root user                    | Use `USER` in Dockerfile: `USER appuser`    |
-| 📦 Read-only filesystem              | `--read-only` flag or `tmpfs` for writes    |
-| 🔐 Limit capabilities                | `--cap-drop ALL --cap-add NET_BIND_SERVICE` |
-| 🚫 Disable host mounts unless needed | Avoid `-v /:/host` patterns                 |
-| ⚙️ Set seccomp / AppArmor profiles   | `--security-opt seccomp=default.json`       |
-
-Example:
-
-```bash
-docker run -d --read-only --cap-drop ALL --user 1000:1000 myapp
-```
-
----
-
-### ⚙️ **4️⃣ Secure Networking**
-
-| **Action**                                          | **Reason**                      |
-| --------------------------------------------------- | ------------------------------- |
-| Use **user-defined bridge** networks (not default). | Better isolation, internal DNS. |
-| Restrict container-to-container traffic.            | Prevent lateral movement.       |
-| Use **TLS** for exposed endpoints.                  | Encrypt in-transit data.        |
-| Don’t expose sensitive ports with `-p 0.0.0.0`.     | Use internal-only networking.   |
-
-Example:
-
-```bash
-docker network create secure-net
-docker run --network secure-net myapp
-```
-
----
-
-### ⚙️ **5️⃣ Manage Secrets Securely**
-
-| **Best Practice**                                                                | **Description** |
-| -------------------------------------------------------------------------------- | --------------- |
-| ❌ Don’t bake secrets into images (`ENV DB_PASS=...`).                            |                 |
-| ✅ Use Docker **secrets** or environment variables injected securely.             |                 |
-| ✅ Integrate with **AWS Secrets Manager**, **Vault**, or **SSM Parameter Store**. |                 |
-| ✅ Use `--env-file` but never commit `.env` to Git.                               |                 |
-
----
-
-### ⚙️ **6️⃣ Apply Resource Limits**
-
-Prevent DoS by constraining resource usage:
-
-```bash
-docker run -m 512m --cpus=1 myapp
-```
-
-| Flag              | Description                 |
-| ----------------- | --------------------------- |
-| `-m` / `--memory` | Memory limit                |
-| `--cpus`          | CPU quota                   |
-| `--pids-limit`    | Max processes per container |
-
----
-
-### ⚙️ **7️⃣ Regular Security Scans & Compliance**
-
-| **Tool**                      | **Purpose**                          |
-| ----------------------------- | ------------------------------------ |
-| **Trivy / Grype**             | Image vulnerability scanning.        |
-| **Docker Bench for Security** | Audit Docker daemon & host configs.  |
-| **Hadolint**                  | Lint Dockerfiles for best practices. |
-
-Example:
-
-```bash
-docker run --rm aquasec/trivy image myapp:latest
-```
-
----
-
-### ⚙️ **8️⃣ Use Signed & Verified Images**
-
-* Enable **Docker Content Trust (DCT)**:
-
-  ```bash
-  export DOCKER_CONTENT_TRUST=1
-  ```
-
-  Ensures only signed images are pulled/run.
-
-* Use **Notary v2 / cosign** for image signing in CI/CD pipelines.
-
----
-
-### ⚙️ **9️⃣ Secure CI/CD Pipeline**
-
-* Build in **isolated runners**, not shared agents.
-* Use **short-lived credentials** (OIDC, STS) for registry push/pull.
-* Scan images pre-deploy (fail build if CVEs found).
-* Sign images after scan and before push.
-
----
-
-### ⚙️ **🔟 Monitor Runtime & Containers**
-
-| **Tool**                   | **Use**                                           |
-| -------------------------- | ------------------------------------------------- |
-| Falco                      | Detect runtime anomalies (syscalls, file access). |
-| Sysdig Secure              | Runtime threat detection.                         |
-| AWS GuardDuty / CloudTrail | Cloud-level monitoring for ECR/ECS.               |
-
----
-
-### ✅ **In short:**
-
-> Secure Docker by hardening **host**, using **minimal images**, enforcing **least privilege**, isolating **networks**, managing **secrets properly**, and enabling **resource & runtime security**.
-> Combine **image scanning + runtime monitoring** for full lifecycle protection.
-
----
----
-
-## **Q: What’s the difference between a Bind Mount and a Volume in Docker?**
-
-### 🧠 **Overview**
-
-Both **bind mounts** and **volumes** let containers persist data beyond their lifecycle,
-but they differ in **management, location, portability, and performance**.
-
----
-
-### ⚙️ **Comparison Table**
-
-| **Feature**                | **Bind Mount**                                                 | **Volume**                                                      |
-| -------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Definition**             | Maps a **host directory or file** directly into the container. | Managed storage created and controlled by **Docker**.           |
-| **Path Location**          | Any path on host (e.g. `/home/user/data`).                     | Stored under Docker-managed path: `/var/lib/docker/volumes/...` |
-| **Created By**             | User manually specifies full path.                             | Docker automatically manages (via `docker volume create`).      |
-| **Portability**            | Not portable — depends on host directory path.                 | Portable — Docker can reattach volume across hosts.             |
-| **Backup & Restore**       | Manual (since it's on the host).                               | Easier — can use `docker volume` commands.                      |
-| **Isolation**              | Tight coupling to host filesystem.                             | Fully abstracted — safer and cleaner.                           |
-| **When Container Removed** | Data persists, but depends on host path.                       | Data persists until volume is explicitly deleted.               |
-| **Use Case**               | Dev environments (live code sync, debugging).                  | Production data persistence (DBs, stateful apps).               |
-| **Performance (Linux)**    | Slightly slower (depends on filesystem type).                  | Optimized by Docker (uses storage drivers).                     |
-| **Security**               | Risky — direct access to host FS.                              | Safer — Docker enforces access isolation.                       |
-
----
-
-### 🧩 **Example: Bind Mount**
-
-```bash
-docker run -d \
-  -v /home/vasu/app-data:/usr/src/app/data \
-  myapp:latest
-```
-
-✅ Directly mounts a host directory (`/home/vasu/app-data`) into the container path.
-
-* Great for **development** — edit code locally, auto-reflect inside container.
-* Not ideal for **production** (tight host coupling).
-
----
-
-### 🧩 **Example: Volume**
-
-```bash
-# create a named volume
-docker volume create appdata
-
-# use the volume
-docker run -d \
-  -v appdata:/usr/src/app/data \
-  myapp:latest
-```
-
-✅ Data stored in `/var/lib/docker/volumes/appdata/_data`.
-
-* Safe, managed, and reusable across containers.
-* Preferred for **databases**, **logs**, or **persistent state**.
-
----
-
-### ⚙️ **Inspect Volumes**
-
-```bash
-docker volume ls
-docker volume inspect appdata
-```
-
----
-
-### ⚙️ **Docker Compose Example**
-
-```yaml
-services:
-  db:
-    image: mysql:8
-    volumes:
-      - dbdata:/var/lib/mysql
-
-volumes:
-  dbdata:
-```
-
-✅ Automatically creates and mounts a **named volume** (`dbdata`).
-
----
-
-### 🧠 **Best Practices**
-
-✅ Use **bind mounts** for development — quick, flexible, host-coupled.
-✅ Use **volumes** for production — managed, secure, and easy to back up.
-✅ Never mount critical host directories (like `/`, `/etc`, `/var/lib/docker`) as bind mounts.
-✅ Use named volumes with databases to avoid accidental data loss.
-
----
-
-### ✅ **In short:**
-
-> **Bind Mount:** Direct link to a **host path** — fast but less portable.
-> **Volume:** **Docker-managed storage**, safer and ideal for production persistence.
-
----
----
-
-## **Q: How do you clean unused Docker resources (images, containers, volumes, networks)?**
-
-### 🧠 **Overview**
-
-Over time, Docker accumulates **stopped containers**, **dangling images**, **unused volumes**, and **networks** — all consuming disk space.
-Docker provides simple commands to **prune** (clean) these safely.
-
----
-
-### ⚙️ **1️⃣ Clean Up Stopped Containers**
-
-```bash
-docker container prune
-```
-
-🧹 Removes all stopped containers.
-
-Optional prompt bypass:
-
-```bash
-docker container prune -f
-```
-
----
-
-### ⚙️ **2️⃣ Remove Unused Images**
-
-```bash
-docker image prune
-```
-
-Removes **dangling images** (not tagged or used by any container).
-
-To remove **all unused images**:
+Remove unused images:
 
 ```bash
 docker image prune -a
 ```
 
-⚠️ This deletes all images not linked to any running/stopped container.
+💡 **In short:** `docker rmi` removes images; prune clears unused layers.
 
 ---
 
-### ⚙️ **3️⃣ Remove Unused Volumes**
+## Q23: What is the docker build command used for?
+
+🧠 **Overview**
+Builds a Docker image from a Dockerfile and directory context.
+
+🧩 **Example**
 
 ```bash
-docker volume prune
+docker build -t myapp:v1 .
 ```
 
-Removes **volumes not used by any container**.
-💡 Safe for space cleanup — doesn’t affect active containers.
+💡 **In short:** Converts a Dockerfile → Docker image.
 
 ---
 
-### ⚙️ **4️⃣ Remove Unused Networks**
+## Q24: What is a Docker tag?
+
+🧠 **Overview**
+A tag is a label assigned to an image version (e.g., `latest`, `v1.0.1`).
+
+💡 **In short:** Tags differentiate versions of the same image.
+
+---
+
+## Q25: How do you tag a Docker image?
+
+🧩 **Command**
 
 ```bash
-docker network prune
+docker tag SOURCE_IMAGE TARGET_IMAGE
 ```
 
-Removes **user-defined networks** not connected to any container.
-(Default `bridge`, `host`, and `none` networks are preserved.)
-
----
-
-### ⚙️ **5️⃣ Full Cleanup in One Command**
+Example:
 
 ```bash
-docker system prune
+docker tag myapp:latest myrepo/myapp:v1
 ```
 
-Removes:
+---
 
-* Stopped containers
-* Unused networks
-* Dangling images
-* Build cache
+## Q26: What is the docker exec command used for?
 
-To include **unused images and volumes**:
+🧠 **Overview**
+Allows running commands **inside a running container** (debugging, inspections).
+
+🧩 **Example**
 
 ```bash
-docker system prune -a --volumes
+docker exec -it web bash
 ```
 
-✅ Example output:
-
-```
-Total reclaimed space: 4.2GB
-```
+💡 **In short:** Exec = interactive shell or command inside a container.
 
 ---
 
-### ⚙️ **6️⃣ View Disk Usage Before Cleaning**
+## Q27: How do you view logs from a Docker container?
+
+🧩 **Command**
 
 ```bash
-docker system df
+docker logs <container_id>
 ```
 
-Shows:
-
-* Container space
-* Image space
-* Local volumes
-* Build cache
-
----
-
-### ⚙️ **7️⃣ Remove Specific Resources (manually)**
-
-| Resource  | Command                            |
-| --------- | ---------------------------------- |
-| Container | `docker rm <container_id>`         |
-| Image     | `docker rmi <image_id>`            |
-| Volume    | `docker volume rm <volume_name>`   |
-| Network   | `docker network rm <network_name>` |
-
----
-
-### 🧠 **8️⃣ Automate Periodic Cleanup (optional)**
-
-Schedule via **cron** or **systemd timer**:
+Follow logs:
 
 ```bash
-0 3 * * 0 /usr/bin/docker system prune -af --volumes > /var/log/docker-prune.log 2>&1
+docker logs -f web
 ```
 
-✅ Runs weekly cleanup every Sunday at 3 AM.
+---
+
+## Q28: What is port mapping in Docker?
+
+🧠 **Overview**
+It exposes a container's internal port to the host so apps inside containers are accessible externally.
+
+📌 Example scenario: Exposing a Node.js app on port 8080.
+
+💡 **In short:** Maps container port → host port.
 
 ---
 
-### ⚠️ **Cleanup Safety Notes**
+## Q29: How do you map container ports to host ports?
 
-* `docker system prune -a` removes **all unused images**, even if you’ll rebuild them later.
-* Never run prune on **production nodes** without understanding what’s active.
-* Use `docker system df` before pruning.
-* Always confirm volume names before `volume prune` — data loss risk.
+🧩 **Command**
 
----
+```bash
+docker run -p <host_port>:<container_port> image
+```
 
-### ✅ **In short:**
+Example:
 
-> Use `docker system prune -a --volumes` to remove **all unused Docker data** (containers, images, networks, volumes).
->
-> For targeted cleanup:
->
-> * Containers → `docker container prune`
-> * Images → `docker image prune -a`
-> * Volumes → `docker volume prune`
-> * Networks → `docker network prune`
-
----
----
-
-## **Q: How do you link Docker containers together?**
-
-### 🧠 **Overview**
-
-You can link containers so they **communicate over a private network**.
-The modern, recommended way is to use **user-defined bridge networks** (not the old `--link` flag, which is deprecated).
+```bash
+docker run -p 8080:3000 myapp
+```
 
 ---
 
-### ⚙️ **1️⃣ Modern Method — Use a User-Defined Bridge Network**
+## Q30: What is a Docker volume?
 
-Docker automatically creates DNS entries for containers on the same network —
-so you can connect by **container name** instead of IP.
+🧠 **Overview**
+Volumes provide persistent storage independent of container lifecycle.
 
-#### **Step 1: Create a custom network**
+💡 **In short:** Data stored in volumes survives container deletion.
+
+---
+
+## Q31: Why would you use Docker volumes?
+
+⚙️ Use Cases
+
+* Persistent DB data (MySQL, PostgreSQL).
+* Avoid losing logs/configs when containers restart.
+* Share data between containers safely.
+* Better performance & isolation vs bind mounts.
+
+---
+
+## Q32: What is the difference between volumes and bind mounts?
+
+📋 **Comparison Table**
+
+| Feature     | Volumes            | Bind Mounts                 |
+| ----------- | ------------------ | --------------------------- |
+| Location    | Managed by Docker  | Direct host path            |
+| Security    | Safer, isolated    | Depends on host permissions |
+| Portability | High               | Low                         |
+| Use case    | DB data, prod apps | Local development           |
+
+💡 **In short:** Volumes = Docker-managed storage; Bind mounts = host path mapping.
+
+---
+
+## Q33: How do you create a Docker volume?
+
+🧩 **Command**
+
+```bash
+docker volume create myvol
+```
+
+Using volume in a container:
+
+```bash
+docker run -v myvol:/data nginx
+```
+
+---
+
+## Q34: What is Docker Compose?
+
+🧠 **Overview**
+A tool for defining and running multi-container applications using a YAML file (`docker-compose.yml`).
+
+⚙️ Helps with:
+
+* Running microservices locally
+* Defining networks, volumes, services
+* Simplifying multi-container orchestration
+
+---
+
+## Q35: What is the purpose of a docker-compose.yml file?
+
+🧠 **Overview**
+Defines services, networks, volumes, environment variables, and build/run configuration for multi-container applications.
+
+🧩 **Example**
+
+```yaml
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"
+```
+
+💡 **In short:** Infrastructure-as-code for local Docker environments.
+
+---
+
+## Q36: How do you start services defined in docker-compose.yml?
+
+🧩 **Command**
+
+```bash
+docker-compose up
+```
+
+Detached mode:
+
+```bash
+docker-compose up -d
+```
+
+---
+
+## Q37: What is the difference between docker-compose up and docker-compose start?
+
+📋 **Comparison Table**
+
+| Command                | Action                                             |
+| ---------------------- | -------------------------------------------------- |
+| `docker-compose up`    | Creates containers, builds images, starts services |
+| `docker-compose start` | Starts already created containers only             |
+
+💡 **In short:** `up` = create + start; `start` = start existing only.
+
+---
+
+## Q38: How do you scale services in Docker Compose?
+
+🧩 **Command**
+
+```bash
+docker-compose up --scale web=3 -d
+```
+
+💡 **In short:** Use `--scale <service>=<count>`.
+
+---
+
+## Q39: What is a Docker network?
+
+🧠 **Overview**
+A Docker network enables communication between containers or between containers and external systems.
+
+Types include bridge, host, overlay, MACVLAN.
+
+💡 **In short:** Networking layer that lets containers talk to each other.
+
+---
+
+## Q40: What are the default Docker network types?
+
+📋 **Types**
+
+| Network    | Description                                     |
+| ---------- | ----------------------------------------------- |
+| **bridge** | Default for standalone containers; provides NAT |
+| **host**   | Shares host network namespace                   |
+| **none**   | Completely disables networking                  |
+
+Example:
+
+```bash
+docker network ls
+```
+
+---
+
+# Intermediate
+
+Below is your **README-style DevOps documentation** for **Q41–Q63 (Intermediate Docker)**.
+
+---
+
+## Q41: What is the Docker daemon?
+
+🧠 **Overview**
+The Docker daemon (`dockerd`) is the background service that manages containers, images, networks, and volumes. It executes all Docker commands sent by the client.
+
+⚙️ **Purpose**
+
+* Build and run containers
+* Manage images & networks
+* Handle API requests
+
+💡 **In short:** `dockerd` = the engine that performs all Docker operations.
+
+---
+
+## Q42: What is the Docker client?
+
+🧠 **Overview**
+The Docker client is the CLI (`docker`) that users interact with. It sends API requests to the Docker daemon.
+
+🧩 **Example**
+
+```bash
+docker run nginx
+```
+
+💡 **In short:** Client = UI; Daemon = backend.
+
+---
+
+## Q43: How does the Docker client communicate with the daemon?
+
+🧠 **Overview**
+Communication happens over a **REST API**, via:
+
+* Unix socket (`/var/run/docker.sock`) — default
+* TCP socket (remote daemon)
+
+💡 **In short:** Client ↔ Daemon via REST API over sockets.
+
+---
+
+## Q44: What is the Docker registry?
+
+🧠 **Overview**
+A Docker registry is a storage system that hosts Docker images (public or private).
+
+Examples: Docker Hub, ECR, GCR, private registry.
+
+💡 **In short:** Registry = image repository service.
+
+---
+
+## Q45: What is the difference between Docker Hub and a private registry?
+
+📋 **Comparison**
+
+| Feature    | Docker Hub        | Private Registry             |
+| ---------- | ----------------- | ---------------------------- |
+| Visibility | Public by default | Fully controlled             |
+| Security   | Shared infra      | Enterprise-grade isolation   |
+| Cost       | Free/premium      | Self-hosted or cloud-managed |
+| Use case   | Open images       | Internal apps, compliance    |
+
+💡 **In short:** Hub = public; private registry = self-controlled + secure.
+
+---
+
+## Q46: How do you set up a private Docker registry?
+
+🧩 **Command**
+
+```bash
+docker run -d -p 5000:5000 --name registry registry:2
+```
+
+Push example:
+
+```bash
+docker tag myapp localhost:5000/myapp
+docker push localhost:5000/myapp
+```
+
+---
+
+## Q47: What is Docker Content Trust?
+
+🧠 **Overview**
+Docker Content Trust (DCT) ensures image integrity and authenticity using digital signatures.
+
+💡 **In short:** Prevents running unverified/tampered images.
+
+---
+
+## Q48: How do you sign and verify Docker images?
+
+🧩 **Enable DCT**
+
+```bash
+export DOCKER_CONTENT_TRUST=1
+```
+
+🧩 **Sign an image**
+
+```bash
+docker trust sign myrepo/myimage:latest
+```
+
+🧩 **Verify**
+
+```bash
+docker trust inspect --pretty myrepo/myimage:latest
+```
+
+---
+
+## Q49: What are Docker image layers?
+
+🧠 **Overview**
+Layers are stacked filesystem changes created from each Dockerfile instruction. They allow caching, deduplication, and efficient distribution.
+
+💡 **In short:** Each instruction = a new readonly layer.
+
+---
+
+## Q50: How does layer caching work in Docker?
+
+🧠 **Overview**
+Docker reuses previously built layers if:
+
+* The instruction hasn’t changed
+* The content hasn’t changed
+
+⚙️ Improves build speed & reduces storage.
+
+---
+
+## Q51: What is the difference between ADD and COPY for layer optimization?
+
+📋 **Comparison**
+
+| Feature         | COPY   | ADD                                     |
+| --------------- | ------ | --------------------------------------- |
+| Predictability  | High   | Lower (auto-extract tar)                |
+| Cache stability | Better | Worse (tar extraction changes checksum) |
+
+💡 **In short:** COPY is more cache-friendly.
+
+---
+
+## Q52: How do you optimize Dockerfile layer caching?
+
+✅ **Best Practices**
+
+* Order instructions from least → most frequently changing
+* Use multi-stage builds
+* Combine RUN commands
+* Use `.dockerignore`
+* Pin dependencies
+
+🧩 **Example**
+
+```Dockerfile
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+```
+
+---
+
+## Q53: What is a multi-stage build in Docker?
+
+🧠 **Overview**
+A technique where multiple `FROM` instructions are used to create separate build and runtime stages.
+
+🧩 **Example**
+
+```Dockerfile
+FROM golang:1.21 AS builder
+RUN go build -o app .
+
+FROM alpine
+COPY --from=builder /app /app
+CMD ["/app"]
+```
+
+💡 **In short:** Build heavy → copy minimal artifacts.
+
+---
+
+## Q54: Why would you use multi-stage builds?
+
+⚙️ **Benefits**
+
+* Smaller final images
+* Remove build tools (gcc, go, npm)
+* Secure & optimized production images
+
+---
+
+## Q55: How do multi-stage builds reduce image size?
+
+🧠 **Overview**
+Only the final stage is included in the final image, dropping all build layers and dependencies.
+
+💡 **In short:** Final image contains only runtime binaries — no build artifacts.
+
+---
+
+## Q56: What is the .dockerignore file?
+
+🧠 **Overview**
+A file specifying paths to exclude from the Docker build context (like `.gitignore`).
+
+🧩 **Example**
+
+```
+node_modules
+.git
+logs/
+*.tmp
+```
+
+---
+
+## Q57: How does .dockerignore improve build performance?
+
+⚙️ **Benefits**
+
+* Reduces context size
+* Improves caching
+* Avoids sending unnecessary files to the daemon
+
+💡 **In short:** Smaller context → faster builds.
+
+---
+
+## Q58: What is the ARG instruction in Dockerfile?
+
+🧠 **Overview**
+Defines variables available **at build time** only.
+
+🧩 **Example**
+
+```Dockerfile
+ARG APP_VERSION=1.0
+RUN echo $APP_VERSION
+```
+
+---
+
+## Q59: What is the difference between ARG and ENV?
+
+📋 **Comparison**
+
+| Feature               | ARG                     | ENV             |
+| --------------------- | ----------------------- | --------------- |
+| Scope                 | Build time only         | Build + runtime |
+| Visible in container? | No                      | Yes             |
+| Default usage         | Build secrets, versions | App configs     |
+
+💡 **In short:** ARG = build-time; ENV = runtime.
+
+---
+
+## Q60: How do you pass build-time variables to Docker build?
+
+🧩 **Command**
+
+```bash
+docker build --build-arg APP_VERSION=2.0 .
+```
+
+---
+
+## Q61: What are Docker build contexts?
+
+🧠 **Overview**
+The **build context** is the directory sent to the daemon during `docker build`.
+Dockerfile instructions like `COPY` work **inside this context only**.
+
+💡 **In short:** Context = files available to the Docker build.
+
+---
+
+## Q62: What is the difference between ENTRYPOINT and CMD?
+
+📋 **Comparison Table**
+
+| Feature      | ENTRYPOINT                  | CMD               |
+| ------------ | --------------------------- | ----------------- |
+| Purpose      | Main executable             | Default arguments |
+| Overridable? | Harder (only args replaced) | Fully overridable |
+| Ideal use    | Long-running processes      | Optional defaults |
+
+🧩 **Example**
+
+```Dockerfile
+ENTRYPOINT ["python"]
+CMD ["app.py"]
+```
+
+---
+
+## Q63: How do you override CMD at runtime?
+
+🧩 **Command**
+
+```bash
+docker run myimage echo "Hello"
+```
+
+🧩 **Dockerfile**
+
+```Dockerfile
+CMD ["app.py"]
+```
+
+Runtime override:
+
+```
+docker run app_image python server.py
+```
+
+💡 **In short:** Anything you append to `docker run` replaces CMD.
+
+---
+
+Below is your **README-style technical documentation** for **Q64–Q87 (Advanced Docker Networking, Storage & Health Checks)**.
+
+---
+
+## Q64: How do you override ENTRYPOINT at runtime?
+
+🧩 **Command**
+
+```bash
+docker run --entrypoint <new_command> myimage
+```
+
+Example:
+
+```bash
+docker run --entrypoint bash myimage
+```
+
+💡 **In short:** Use `--entrypoint` to replace ENTRYPOINT at runtime.
+
+---
+
+## Q65: What is the SHELL instruction in Dockerfile?
+
+🧠 **Overview**
+Defines the default shell used for `RUN` commands in Windows or Linux images.
+
+🧩 **Example**
+
+```Dockerfile
+SHELL ["/bin/bash", "-c"]
+```
+
+💡 **In short:** Customizes the shell interpreter for subsequent commands.
+
+---
+
+## Q66: What are Docker bridge networks?
+
+🧠 **Overview**
+The default local network mode for containers. Bridge networks provide NAT-based networking allowing containers to communicate internally while being isolated from the host.
+
+🧩 **Example**
+
+```bash
+docker network create mybridge
+```
+
+---
+
+## Q67: What are Docker host networks?
+
+🧠 **Overview**
+The container **shares the host network namespace** — no NAT, no isolation.
+
+⚠️ Use carefully; high-performance networking, less isolation.
+
+🧩 **Example**
+
+```bash
+docker run --network host nginx
+```
+
+---
+
+## Q68: What are Docker overlay networks?
+
+🧠 **Overview**
+Overlay networks enable communication between containers across **multiple Docker hosts**, used mainly in Docker Swarm or multi-host setups.
+
+💡 **In short:** Cluster-wide virtual network.
+
+---
+
+## Q69: When would you use overlay networks?
+
+⚙️ **Use cases**
+
+* Multi-host container communication
+* Docker Swarm services
+* Distributed microservices
+* Clustered databases
+
+💡 **In short:** Use when containers need cross-node communication.
+
+---
+
+## Q70: What is the none network in Docker?
+
+🧠 **Overview**
+A network mode that **disables all networking** for a container.
+
+🧩 **Example**
+
+```bash
+docker run --network none alpine
+```
+
+💡 **In short:** Isolated containers with no network access.
+
+---
+
+## Q71: How do containers communicate on the same network?
+
+🧠 **Overview**
+They communicate using Docker-internal DNS. Containers can reach each other by **service name or container name**.
+
+🧩 **Example**
+
+```bash
+curl http://app2:8080
+```
+
+---
+
+## Q72: How do you connect a container to multiple networks?
+
+🧩 **Command**
+
+```bash
+docker network connect <network> <container>
+```
+
+Example:
+
+```bash
+docker network connect backend web
+```
+
+---
+
+## Q73: What is Docker DNS and how does it work?
+
+🧠 **Overview**
+Docker provides an internal DNS resolver for containers on user-defined networks. It automatically registers container names as DNS entries.
+
+⚙️ **How it works**
+
+* Each service/container gets a DNS entry
+* DNS is managed via Docker's embedded DNS server
+* Works only on user-defined networks
+
+💡 **In short:** Docker DNS provides service discovery inside networks.
+
+---
+
+## Q74: How do you create a custom Docker network?
+
+🧩 **Command**
 
 ```bash
 docker network create mynet
 ```
 
-#### **Step 2: Run containers on that network**
+Specify driver:
 
 ```bash
-# Run database container
-docker run -d --name db --network mynet mysql:8
-
-# Run app container and connect to db by name
-docker run -d --name web --network mynet -e DB_HOST=db myapp:latest
+docker network create --driver bridge mybridge
 ```
 
-✅ Now, inside `web`:
+---
+
+## Q75: What are named volumes vs anonymous volumes?
+
+📋 **Comparison**
+
+| Type                 | Behavior                                  | Use Case           |
+| -------------------- | ----------------------------------------- | ------------------ |
+| **Named volume**     | Explicitly created and referenced by name | Persistent storage |
+| **Anonymous volume** | Auto-created without a name               | Temporary data     |
+
+💡 **In short:** Named = managed; anonymous = auto-created for convenience.
+
+---
+
+## Q76: How do you mount a volume to a container?
+
+🧩 **Command**
 
 ```bash
-ping db
+docker run -v myvol:/data nginx
 ```
-
-and environment variable `DB_HOST=db` will resolve to the container’s IP automatically.
 
 ---
 
-### ⚙️ **2️⃣ Docker Compose (Recommended for Multi-Container Apps)**
+## Q77: What is the difference between -v and --mount flags?
 
-Docker Compose automatically creates a **shared network** for all services in a file.
+📋 **Comparison**
 
-```yaml
-version: "3.9"
-services:
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-  app:
-    image: myapp:latest
-    environment:
-      DB_HOST: db
-    depends_on:
-      - db
-```
+| Feature     | `-v`         | `--mount`                       |
+| ----------- | ------------ | ------------------------------- |
+| Syntax      | Short, older | Long, more explicit             |
+| Options     | Limited      | Rich (type, src, dst, readonly) |
+| Recommended | ❌ Legacy     | ✅ Modern                        |
 
-Run:
+🧩 **Example**
 
 ```bash
-docker compose up -d
+docker run --mount type=volume,src=myvol,dst=/data nginx
 ```
-
-✅ Both containers share an internal network — `app` can reach `db` at hostname `db`.
 
 ---
 
-### ⚙️ **3️⃣ Legacy Method (Deprecated) — Using `--link`**
+## Q78: How do you share volumes between containers?
+
+🧩 **Command**
 
 ```bash
-docker run -d --name db mysql:8
-docker run -d --name web --link db:db myapp:latest
+docker run -v sharedvol:/data container1
+docker run -v sharedvol:/data container2
 ```
 
-This:
-
-* Injects `db`'s IP into `/etc/hosts` inside `web`.
-* Also sets env vars like `DB_PORT_3306_TCP`.
-
-⚠️ **Deprecated:** doesn’t support dynamic IP updates, limited scope, and no DNS resolution — use **user-defined networks** instead.
+💡 **In short:** Use the same volume name in multiple containers.
 
 ---
 
-### ⚙️ **4️⃣ Check Connectivity Between Linked Containers**
+## Q79: What are tmpfs mounts in Docker?
 
-Inside the app container:
+🧠 **Overview**
+A tmpfs mount stores data **in memory**, not on disk. Used for sensitive or volatile data.
+
+🧩 **Example**
 
 ```bash
-docker exec -it web ping db
+docker run --tmpfs /run tmpfs_size=64m alpine
 ```
 
-Or test DB connection:
+---
+
+## Q80: When would you use tmpfs mounts?
+
+⚙️ **Use cases**
+
+* Sensitive data (certs, secrets)
+* High-performance temporary files
+* Avoid disk writes (ephemeral workloads)
+
+💡 **In short:** Use tmpfs for memory-only ephemeral data.
+
+---
+
+## Q81: What is Docker's storage driver?
+
+🧠 **Overview**
+Storage drivers handle how Docker manages layered filesystems for images and containers.
+
+Examples: `overlay2`, `aufs`, `devicemapper`.
+
+💡 **In short:** The storage driver determines how container filesystems are created and stored.
+
+---
+
+## Q82: What storage drivers are available (overlay2, aufs, devicemapper)?
+
+📋 **Comparison**
+
+| Driver           | Description             | Notes                         |
+| ---------------- | ----------------------- | ----------------------------- |
+| **overlay2**     | Modern union filesystem | Default on most Linux distros |
+| **aufs**         | Older union FS          | Deprecated on many systems    |
+| **devicemapper** | Block-level driver      | Used in older RHEL/CentOS     |
+
+💡 **In short:** overlay2 = preferred and fastest.
+
+---
+
+## Q83: How do you check which storage driver Docker is using?
+
+🧩 **Command**
 
 ```bash
-docker exec -it web mysql -h db -uroot -p
+docker info | grep Storage
+```
+
+Example output:
+
+```
+Storage Driver: overlay2
 ```
 
 ---
 
-### 🧠 **5️⃣ View Network Details**
+## Q84: What is container filesystem and how is it different from volumes?
+
+📋 **Comparison**
+
+| Feature     | Container FS                | Volume                     |
+| ----------- | --------------------------- | -------------------------- |
+| Persistence | Lost when container removed | Persistent                 |
+| Performance | Slower                      | Faster                     |
+| Sharing     | Not sharable                | Sharable across containers |
+
+💡 **In short:** Container layers are temporary; volumes are persistent.
+
+---
+
+## Q85: What are health checks in Docker?
+
+🧠 **Overview**
+Health checks monitor if a container is functioning correctly. Docker updates status to: `healthy`, `unhealthy`, or `starting`.
+
+💡 **In short:** Built-in container health monitoring.
+
+---
+
+## Q86: How do you define a HEALTHCHECK in Dockerfile?
+
+🧩 **Example**
+
+```Dockerfile
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8080/health || exit 1
+```
+
+---
+
+## Q87: What is the purpose of the --health-cmd flag?
+
+🧠 **Overview**
+`--health-cmd` defines the command Docker will run periodically to determine if the container is healthy.
+
+🧩 **Example**
 
 ```bash
-docker network ls
-docker network inspect mynet
+docker run --health-cmd="curl -f http://localhost/health || exit 1" myapp
 ```
 
-Shows connected containers and IPs.
+💡 **In short:** It sets the actual health-check command.
 
 ---
 
-### ✅ **Best Practices**
-
-✅ Use **user-defined networks** (default `bridge` is shared and less secure).
-✅ Use **Compose** for multi-service applications.
-✅ Avoid hardcoding IPs — always use **container names** as DNS hosts.
-✅ Keep sensitive containers (like DBs) in **private networks** (no `-p` exposed).
+Below is your **README-style DevOps documentation** for **Q88–Q120 (Advanced Docker Runtime, Compose, Storage & Cleanup)**.
 
 ---
 
-### ✅ **In short:**
+## Q88: How do you view container health status?
 
-> To link containers, use a **user-defined bridge network** or **Docker Compose** —
-> containers on the same network can communicate via **container names** (built-in DNS),
-> replacing the old `--link` approach.
-
----
----
-
-## **Q: What’s the difference between `docker-compose` and `docker run`?**
-
-### 🧠 **Overview**
-
-Both are used to run containers —
-but `docker run` launches **a single container manually**,
-while `docker-compose` orchestrates **multi-container applications** declaratively using a **YAML file**.
-
----
-
-### ⚙️ **Comparison Table**
-
-| **Aspect**                | **`docker run`**                         | **`docker-compose`**                                  |
-| ------------------------- | ---------------------------------------- | ----------------------------------------------------- |
-| **Purpose**               | Run one container from the command line. | Define and run multi-container apps.                  |
-| **Configuration**         | CLI flags (`-p`, `-v`, `-e`, etc.).      | YAML file (`docker-compose.yml`).                     |
-| **Complexity**            | Simple, manual, one container at a time. | Automates multiple containers, networks, and volumes. |
-| **Networking**            | Must manually use `--network`.           | Auto-creates a shared network for all services.       |
-| **Environment variables** | Passed with `-e` or `--env-file`.        | Declared under `environment:` or `env_file:` in YAML. |
-| **Scaling**               | Must run multiple `docker run` commands. | Use `docker-compose up --scale service=n`.            |
-| **Reproducibility**       | Harder (manual CLI repetition).          | Fully reproducible from one file.                     |
-| **Logs**                  | `docker logs <container>` per container. | `docker compose logs` for all services combined.      |
-| **Lifecycle management**  | No built-in orchestration.               | Supports `up`, `down`, `restart`, `ps`, `logs`.       |
-| **Best suited for**       | Simple testing or single container apps. | Multi-container stacks (app + DB + cache, etc.).      |
-
----
-
-### 🧩 **Example 1: Using `docker run`**
+🧩 **Command**
 
 ```bash
-# Run backend API
-docker run -d --name api -p 8080:8080 -e ENV=prod myapp:latest
-
-# Run database
-docker run -d --name db -e MYSQL_ROOT_PASSWORD=secret mysql:8
+docker ps --format "table {{.Names}}\t{{.Status}}"
 ```
 
-You must manually create networks and link them if needed.
-
----
-
-### 🧩 **Example 2: Using `docker-compose.yml`**
-
-```yaml
-version: "3.9"
-services:
-  api:
-    image: myapp:latest
-    ports:
-      - "8080:8080"
-    environment:
-      ENV: prod
-    depends_on:
-      - db
-
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-```
-
-Then:
+Or detailed:
 
 ```bash
-docker compose up -d
+docker inspect --format='{{json .State.Health}}' <container>
 ```
 
-✅ Automatically creates network, starts both containers, and links them.
+💡 **In short:** Health shows as *healthy / unhealthy / starting*.
 
 ---
 
-### ⚙️ **Key Commands**
+## Q89: What are Docker restart policies?
 
-| **`docker run` Equivalent**   | **`docker compose` Alternative**     |
-| ----------------------------- | ------------------------------------ |
-| `docker run`                  | `docker compose up`                  |
-| `docker stop`                 | `docker compose down`                |
-| `docker ps`                   | `docker compose ps`                  |
-| `docker logs <name>`          | `docker compose logs`                |
-| `docker exec -it <name> bash` | `docker compose exec <service> bash` |
+🧠 **Overview**
+Restart policies control how Docker reacts when a container exits.
 
----
-
-### 🧠 **Best Practices**
-
-✅ Use `docker run` for quick one-off containers (debugging, testing).
-✅ Use `docker-compose` for applications requiring multiple services (API + DB + Cache + Queue).
-✅ Keep configuration in version control (`docker-compose.yml`).
-✅ In CI/CD, use Compose to bring up full integration stacks easily.
-
----
-
-### ✅ **In short:**
-
-> **`docker run`** = manual, single-container CLI command.
-> **`docker-compose`** = YAML-based, multi-container orchestration tool — automates networking, dependencies, and lifecycle with one command.
-
----
-Perfect 🔥 — here’s a **complete, interview-ready Docker Q&A set** tailored for **DevOps and Cloud Engineer roles**, focusing on **real-world, production-level concepts** (not just basics).
-Answers are concise (2–3 lines), practical, and include short examples or commands.
-
----
-
-## 🟢 **Docker Basics**
-
-| **Question**                                       | **Answer (Concise & Practical)**                                                                                                                              |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1. What is Docker?**                             | Docker is a containerization platform that packages apps with dependencies into lightweight, portable containers. It ensures consistency across environments. |
-| **2. Difference between VM and Docker container?** | VMs virtualize hardware; Docker virtualizes OS. Containers share the host kernel and are faster, smaller, and more portable.                                  |
-| **3. What is a Docker image vs container?**        | An **image** is a read-only template (blueprint). A **container** is a running instance of an image.                                                          |
-| **4. What is a Dockerfile?**                       | A script of instructions to build a Docker image. Example: <br>`FROM nginx:alpine` → base image, `COPY . /usr/share/nginx/html` → add files.                  |
-| **5. Common Dockerfile commands?**                 | `FROM`, `RUN`, `COPY`, `ADD`, `EXPOSE`, `ENV`, `CMD`, `ENTRYPOINT`, `WORKDIR`.                                                                                |
-| **6. How to build and run an image?**              | `bash docker build -t myapp:v1 .  docker run -d -p 8080:80 myapp:v1 `                                                                                         |
-| **7. How to check running containers?**            | `docker ps` (active), `docker ps -a` (all).                                                                                                                   |
-| **8. How to stop/remove containers and images?**   | `bash docker stop <id> docker rm <id> docker rmi <image> `                                                                                                    |
-| **9. What are Docker volumes?**                    | Volumes persist container data on the host. Example: `docker run -v /data:/var/lib/mysql mysql`.                                                              |
-| **10. What is Docker Hub?**                        | A public registry to store and share Docker images. You can also use private registries like AWS ECR or Nexus.                                                |
-
----
-
-## 🟡 **Intermediate / Practical**
-
-| **Question**                                                        | **Answer (Concise & Practical)**                                                                                                             |                                                                                           |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **11. What’s the difference between COPY and ADD in Dockerfile?**   | `COPY` is for static files. `ADD` can also extract tar files or fetch remote URLs. Prefer `COPY` for clarity.                                |                                                                                           |
-| **12. What is the difference between CMD and ENTRYPOINT?**          | - `CMD`: default command (can be overridden).<br>- `ENTRYPOINT`: fixed executable (arguments appended).                                      |                                                                                           |
-| **13. How to reduce Docker image size?**                            | Use minimal base images (`alpine`), multi-stage builds, and clean up temp files with `RUN apt-get clean`.                                    |                                                                                           |
-| **14. What is multi-stage build?**                                  | Technique to build and copy only needed artifacts to the final image. Example: build app in one stage, copy binary to a lightweight runtime. |                                                                                           |
-| **15. What are Docker networks?**                                   | Networks let containers communicate. Types: bridge (default), host, none, and overlay (for Swarm/K8s).                                       |                                                                                           |
-| **16. How to inspect container details (IP, env, mounts)?**         | `docker inspect <container_id>`                                                                                                              |                                                                                           |
-| **17. How to log in and push to private registry (e.g., AWS ECR)?** | ```bash aws ecr get-login-password                                                                                                           | docker login --username AWS --password-stdin <ECR_URI> docker push <ECR_URI>/myapp:v1 ``` |
-| **18. How to exec into a running container?**                       | `docker exec -it <container_id> /bin/bash`                                                                                                   |                                                                                           |
-| **19. What is `.dockerignore` used for?**                           | Similar to `.gitignore`; excludes files from build context to reduce image size.                                                             |                                                                                           |
-| **20. How to pass environment variables to containers?**            | `bash docker run -e ENV=prod -e DEBUG=false myapp ` or define in `ENV` inside Dockerfile.                                                    |                                                                                           |
-
----
-
-## 🔵 **Advanced / Production-Level**
-
-| **Question**                                                             | **Answer (Concise & Practical)**                                                                                                                  |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **21. How to persist data between container restarts?**                  | Use named volumes or bind mounts. Example: `docker run -v dbdata:/var/lib/mysql mysql`.                                                           |
-| **22. How do you handle container logs?**                                | Use `docker logs <id>` or configure log drivers (e.g., `awslogs`, `fluentd`, `json-file`). For production — centralize via ELK/CloudWatch.        |
-| **23. How do you secure Docker containers?**                             | Use non-root users, minimal images, scan with `trivy`, sign images, enable seccomp/apparmor, limit resources (`--memory`, `--cpus`).              |
-| **24. Difference between bind mount and volume?**                        | - **Bind mount:** host path → container path.<br>- **Volume:** managed by Docker under `/var/lib/docker/volumes`. Volumes are portable and safer. |
-| **25. How do you clean unused Docker resources?**                        | `docker system prune -a` → removes stopped containers, unused images, and networks.                                                               |
-| **26. How to link containers together?**                                 | Use user-defined bridge networks or Docker Compose service names for DNS resolution.                                                              |
-| **27. What’s the difference between `docker-compose` and `docker run`?** | `docker-compose` manages multi-container apps via YAML, whereas `docker run` runs one container at a time.                                        |
-| **28. What’s inside a Docker image (layers)?**                           | Each Dockerfile instruction creates a read-only **layer**. Layers are cached and reused to optimize builds.                                       |
-| **29. How do you scan Docker images for vulnerabilities?**               | Use `docker scan <image>` or third-party tools like **Trivy**, **Grype**, or **Anchore**.                                                         |
-| **30. How to limit container resources (CPU, memory)?**                  | `bash docker run --memory=512m --cpus=1 nginx ` — ensures containers don’t consume all host resources.                                            |
-
----
-
-## ⚙️ **Real-World Scenarios**
-
-| **Scenario**                               | **Best Practice / Solution**                                                 |
-| ------------------------------------------ | ---------------------------------------------------------------------------- |
-| App not reflecting new code changes?       | Ensure image rebuild (`docker build --no-cache`) and container restart.      |
-| Container crashes repeatedly?              | Check logs with `docker logs <id>`; verify `CMD/ENTRYPOINT` correctness.     |
-| Need multiple services (DB + App + Redis)? | Use **Docker Compose** with a shared network.                                |
-| Need CI/CD integration?                    | Use Docker in Jenkins/GitLab pipelines to build → push → deploy via ECR/K8s. |
-| Large image size issue?                    | Switch to `alpine` base image or use multi-stage builds.                     |
-
----
-
-## 🧠 **Bonus: Docker Compose Basics**
-
-| **Command**              | **Purpose**                         |
-| ------------------------ | ----------------------------------- |
-| `docker-compose up -d`   | Start all services in detached mode |
-| `docker-compose down`    | Stop and remove containers/networks |
-| `docker-compose ps`      | List running services               |
-| `docker-compose logs -f` | Follow container logs               |
-| `docker-compose build`   | Rebuild service images              |
-
-Example `docker-compose.yml`:
-
-```yaml
-version: '3'
-services:
-  web:
-    image: nginx
-    ports:
-      - "8080:80"
-  db:
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-```
-
----
-
-## 🚀 **Quick Summary**
-
-| **Concept**    | **Key Idea**                                    |
-| -------------- | ----------------------------------------------- |
-| **Dockerfile** | Blueprint to build container images             |
-| **Image**      | Immutable, reusable template                    |
-| **Container**  | Running instance of an image                    |
-| **Volume**     | Persistent data storage                         |
-| **Network**    | Enables container communication                 |
-| **Compose**    | Defines multi-container apps                    |
-| **Registry**   | Stores and distributes images (Hub, ECR, Nexus) |
-
----
-
-Would you like me to generate a **formatted Markdown version (README.md)** of these Docker Q&As with code blocks and downloadable link (like your CDK one)?
-
----
-Short answer (2 lines)
-Scan images with a vulnerability scanner (Trivy/Grype/docker scan), generate an SBOM (syft), fail CI on high/critical hits, and automate fixes (dependabot/renovate, rebuild with patched base). Run scans locally, in CI, and before pushing to registries.
-
----
-
-## Practical checklist
-
-* Choose a scanner: **Trivy**, **Grype**, or `docker scan` (Snyk-backed) are simplest to adopt.
-* Generate an **SBOM** (Syft) for audit/compliance.
-* Run scans **in CI** (fail on configurable severities).
-* Block/policy-enforce vulnerable images (registry policies, admission controllers).
-* Automate upgrades (Dependabot/Renovate) and rebuild images ASAP.
-
----
-
-## Tools & one-line commands
-
-* **Trivy** (fast, popular)
+🧩 **Example**
 
 ```bash
-# quick report (local)
-trivy image myorg/myapp:1.2.3
-
-# fail on HIGH/CRITICAL and exit non-zero
-trivy image --severity HIGH,CRITICAL --exit-code 1 myorg/myapp:1.2.3
-
-# save JSON report
-trivy image --format json -o trivy-report.json myorg/myapp:1.2.3
+docker run --restart=always myapp
 ```
 
-* **Grype**
+---
+
+## Q90: What is the difference between no, on-failure, always, and unless-stopped?
+
+📋 **Comparison Table**
+
+| Policy             | Behavior                                  |
+| ------------------ | ----------------------------------------- |
+| **no**             | Default; never restart                    |
+| **on-failure**     | Restart only if exit code ≠ 0             |
+| **always**         | Always restart, even after daemon restart |
+| **unless-stopped** | Restart always unless manually stopped    |
+
+---
+
+## Q91: How do you set resource limits for containers?
+
+🧩 **Command**
 
 ```bash
-grype myorg/myapp:1.2.3
-grype myorg/myapp:1.2.3 -o json > grype-report.json
+docker run --memory="512m" --cpus="1.5" myapp
 ```
 
-* **Docker Scan** (Snyk-backed; requires Docker Desktop / Docker CLI login)
+---
+
+## Q92: What is the --memory flag used for?
+
+🧠 **Overview**
+Sets maximum memory available to the container.
+
+🧩 **Example**
 
 ```bash
-docker scan myorg/myapp:1.2.3
+docker run --memory=1g nginx
 ```
 
-* **SBOM (Syft)** — generate Software Bill of Materials
+---
+
+## Q93: What is the --cpus flag?
+
+🧠 **Overview**
+Limits number of CPU cores the container can use.
+
+🧩 **Example**
 
 ```bash
-syft myorg/myapp:1.2.3 -o json > sbom.json
+docker run --cpus=0.5 nginx
 ```
 
-* **Optional**: `anchore` / `clair` for on-prem scanning or deeper policy engines.
-
 ---
 
-## Example — GitLab CI job (Trivy)
+## Q94: How do you limit container CPU usage?
 
-```yaml
-stages: [build, scan, push]
-
-scan_image:
-  image: aquasec/trivy:latest
-  stage: scan
-  variables:
-    IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-  script:
-    - docker pull $IMAGE || true
-    - trivy image --format json --output trivy-report.json --severity HIGH,CRITICAL $IMAGE || true
-    - cat trivy-report.json
-    # Fail pipeline if any HIGH/CRITICAL found (exit code 1 triggers job failure)
-    - trivy image --severity HIGH,CRITICAL --exit-code 1 $IMAGE
-  only:
-    - branches
-```
-
-Notes: run scan after build or after pulling from registry; use `--exit-code` to enforce policy.
-
----
-
-## Where in the pipeline to scan
-
-* **Build stage**: scan the image you just built (quick feedback to dev).
-* **Pre-push / registry**: scan before pushing to production registry.
-* **Post-push**: registry-level scans & image promotion gating.
-* **Runtime**: complement with runtime detection (Falco, Sysdig).
-
----
-
-## Remediation workflow
-
-1. Review report → identify vulnerable packages and CVEs.
-2. If vulnerability is in your app dependency, bump the dependency and rebuild.
-3. If in base image, upgrade base (e.g., `node:18-alpine` → newer patch) or switch to a smaller/maintained base.
-4. If no fix exists, apply mitigations (reduce capability, disable feature, restrict network).
-5. Regenerate SBOM + re-scan, then redeploy.
-
----
-
-## Best practices
-
-* Fail CI for **HIGH/CRITICAL** by default; WARN for MEDIUM/LOW.
-* Pin base image versions (avoid floating `latest`) and track upstream CVEs.
-* Automate dependency updates (Dependabot/Renovate) and rebuild images.
-* Generate and store **SBOMs** for every image build.
-* Sign images (`cosign`) after scanning; verify signatures in deploy pipelines.
-* Enforce registry/policy gates (block unscanned or vulnerable images).
-* Run scheduled full scans of registry images (nightly) to catch new CVEs.
-
----
-
-## Quick remediation tips
-
-* `docker history` / `dive` to find offending layer/files.
-* Re-order Dockerfile to maximize cache for dependencies, making upgrades/rebuilds easier.
-* Prefer minimal, frequently-patched base images (Alpine/distroless/scratch where possible).
-* If an old package is unfixable, consider multi-stage rebuild that removes that package or vendor a patched binary.
-
----
-
-If you want, I can:
-
-* produce a ready-to-drop **GitLab CI** snippet that scans, generates SBOM, uploads reports as artifacts, and fails on severity — tailored to your existing pipeline (give me your pipeline stages and preferred severity rules).
----
----
-
-## **Q: How do you limit container resources (CPU, Memory, etc.)?**
-
-### 🧠 **Overview**
-
-Docker lets you **throttle CPU, memory, and process limits** to prevent containers from overusing host resources — using **cgroups (control groups)** under the hood.
-You can define these limits when running containers or inside Compose/Kubernetes configs.
-
----
-
-### ⚙️ **1️⃣ Limit Memory Usage**
+🧩 **Command**
 
 ```bash
-docker run -d \
-  --name myapp \
-  -m 512m \
-  --memory-swap 1g \
-  myapp:latest
+docker run --cpus=".75" myapp
 ```
 
-| **Option**             | **Description**                                             |
-| ---------------------- | ----------------------------------------------------------- |
-| `-m`, `--memory`       | Max memory container can use.                               |
-| `--memory-swap`        | Total memory + swap allowed (e.g., 512m RAM + 512m swap).   |
-| `--memory-reservation` | Soft limit (container can exceed if free memory available). |
-
-**Example:**
-
-* `-m 512m --memory-swap 1g` → container gets 512 MB RAM, can swap up to total 1 GB.
-* `--memory-swap 512m` → disables swap (strict limit).
-
-✅ If memory limit exceeded → OOM (Out Of Memory) → container killed and restarted (if managed by Compose/K8s).
-
----
-
-### ⚙️ **2️⃣ Limit CPU Usage**
+Or via CFS shares:
 
 ```bash
-docker run -d \
-  --cpus="1.5" \
-  myapp:latest
-```
-
-| **Option**            | **Description**                          |
-| --------------------- | ---------------------------------------- |
-| `--cpus="1.5"`        | Restrict CPU to 1.5 cores.               |
-| `--cpu-shares`        | Relative CPU weight (e.g., 512 vs 1024). |
-| `--cpuset-cpus="0,1"` | Bind container to specific cores.        |
-
-**Example:**
-
-```bash
-docker run -d --cpus=0.5 myapp   # uses 50% of one core
-docker run -d --cpuset-cpus="1,2" myapp  # pinned to CPU cores 1 & 2
+docker run --cpu-shares=512 myapp
 ```
 
 ---
 
-### ⚙️ **3️⃣ Limit PIDs (Processes)**
+## Q95: What is Docker stats command?
 
-```bash
-docker run --pids-limit=100 myapp
-```
+🧠 **Overview**
+Shows **live** resource usage (CPU, memory, I/O, network).
 
-Prevents fork bombs or runaway processes consuming all host PIDs.
-
----
-
-### ⚙️ **4️⃣ Disk I/O Limits (optional)**
-
-```bash
-docker run \
-  --device-read-bps /dev/sda:10mb \
-  --device-write-bps /dev/sda:5mb \
-  myapp
-```
-
-Limits read/write speed per device.
-
----
-
-### ⚙️ **5️⃣ Using Docker Compose**
-
-```yaml
-version: "3.9"
-services:
-  app:
-    image: myapp:latest
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
-        reservations:
-          cpus: '0.5'
-          memory: 256M
-```
-
-> ⚠️ Note: `deploy.resources` works in **Docker Swarm**.
-> For standalone Compose, use `mem_limit` and `cpus`:
-
-```yaml
-services:
-  app:
-    image: myapp
-    mem_limit: 512m
-    cpus: 1.5
-```
-
----
-
-### ⚙️ **6️⃣ Check Resource Usage**
+🧩 **Command**
 
 ```bash
 docker stats
 ```
 
-Output:
-
-```
-CONTAINER ID   NAME     CPU %   MEM USAGE / LIMIT   MEM %   NET I/O   BLOCK I/O
-a1b2c3d4e5f6   myapp    75.2%   230MiB / 512MiB     44.9%   12MB / 8MB   0B / 0B
-```
-
 ---
 
-### ⚙️ **7️⃣ Best Practices**
+## Q96: How do you monitor container resource usage in real-time?
 
-✅ Always set both memory **and** CPU limits for predictable performance.
-✅ Use `--memory-reservation` for soft limits in shared environments.
-✅ Tune limits based on load testing, not guesses.
-✅ Combine limits with **healthchecks** to restart unhealthy containers after OOM.
-✅ For production, monitor usage via **Prometheus + cAdvisor** or **Grafana** dashboards.
-
----
-
-### ✅ **In short:**
-
-> Limit memory using `-m`, CPUs using `--cpus`, and PIDs using `--pids-limit`.
-> Example:
->
-> ```bash
-> docker run -d -m 512m --cpus=1 myapp
-> ```
->
-> Prevents one container from starving others — a key part of **resource isolation & stability**.
-
----
-### Short answer (1–2 lines)
-
-Most often it's a **build / cache / mount** issue: the container is still running an old image or a host bind mount is hiding the new files. Rebuild the image, confirm the running container’s image, and check for bind-mounts or cache layers.
-
----
-
-## Quick troubleshooting checklist (ordered, actionable)
-
-1. **Check container logs (fast hint)**
-
-   * `docker logs -f <container>` — look for startup errors or evidence of old code running.
-
-2. **Confirm which image the container is using**
-
-   * `docker ps --format "table {{.Names}}\t{{.Image}}\t{{.ID}}"`
-   * If image tag is `latest` or a mutable tag, the running container may still reference an old image.
-
-3. **Rebuild and restart (local single-container)**
-
-   * `docker build -t myapp:dev .`
-   * `docker stop myapp && docker rm myapp`
-   * `docker run -d --name myapp -p 3000:3000 myapp:dev`
-
-4. **If using Docker Compose**
-
-   * Rebuild without cache and restart:
-
-     * `docker compose build --no-cache`
-     * `docker compose up -d --force-recreate`
-   * Or fully tear down then up:
-
-     * `docker compose down --volumes` (careful: drops volumes)
-     * `docker compose up -d --build`
-
-5. **Check for bind-mounts shadowing image files**
-
-   * If you mount host dir into container (dev mode), the container shows host files, not image contents:
-
-     * `docker inspect <container> --format '{{json .Mounts}}' | jq`
-   * If present, update files on host or remove the mount to use built image.
-
-6. **Inspect image layers / cache issues**
-
-   * Use `docker history myapp:tag` and `dive myapp:tag` to find which layer contains your code.
-   * Ensure you COPY sources **after** installing deps to preserve cache:
-
-     * Good pattern:
-
-       ```dockerfile
-       COPY package*.json ./
-       RUN npm ci
-       COPY . .
-       ```
-
-7. **Ensure build context includes the files**
-
-   * Build context is the `.` folder you pass to `docker build`. Missing files in context → not copied into image.
-   * Check `.dockerignore` isn’t excluding your source.
-
-8. **Check entrypoint / command**
-
-   * `docker inspect <container> --format '{{.Config.Cmd}} {{.Config.Entrypoint}}'`
-   * Maybe container runs a different file or a server that doesn’t auto-reload.
-
-9. **If using volumes for persistent data (DB/uploads)**
-
-   * Host volume may contain old assets; update or remove volume if you expect new files to appear from the image.
-
-10. **Browser / client caching**
-
-    * For web frontends, hard-refresh or check network tab. Also ensure static assets weren’t cached or fingerprinted.
-
-11. **CI/CD or registry gotcha**
-
-    * If pushing to registry: ensure you pushed the new tag and the runtime pulls that exact tag.
-    * In Kubernetes/ECS, set imagePullPolicy to `Always` or use immutable tags (SHA) and restart the pod/service.
-
-12. **Force cleanup if you suspect stale images/containers**
-
-    * `docker stop $(docker ps -q)`
-      `docker rm $(docker ps -aq)`
-      `docker rmi $(docker images -q)`
-      (Use carefully—this removes everything on the host.)
-
-13. **Quick in-container sanity check**
-
-    * `docker exec -it <container> sh` (or `bash`) then inspect files, `cat` version file, run `ls -la` of app dir to confirm code.
-
----
-
-## Useful commands summary
-
-* Show running containers: `docker ps`
-* Show images: `docker images`
-* Rebuild & run:
-  `docker build -t myapp:dev . && docker run -d --name myapp myapp:dev`
-* Compose rebuild: `docker compose up -d --build --force-recreate`
-* Inspect mounts: `docker inspect <container> --format '{{json .Mounts}}' | jq`
-* Inspect entrypoint/cmd: `docker inspect <container> --format '{{.Config.Entrypoint}} {{.Config.Cmd}}'`
-* Clean build cache: `docker builder prune` / `docker system prune -a` (careful)
-
----
-
-## Common root causes (one-liners)
-
-* Forgot to rebuild image after code change.
-* Container running an old image/tag (didn’t recreate).
-* Host bind-mount hides image files (dev mode).
-* `.dockerignore` excluded your code from build context.
-* Entrypoint runs precompiled assets, not source (you updated source but didn’t rebuild assets).
-* CI pushed image with same tag but runtime pulled cached version (use immutable tags or `Always` pull).
-* Browser caching static assets.
-
----
-
-If you tell me: your runtime (Docker Compose / ECS / Kubernetes), the commands you use to build/deploy, and whether you use bind-mounts, I’ll give the exact commands and a minimal checklist to fix it right away.
-
----
-Short interview answer (2 lines)
-Treat repeated crashes as a classic 3-step loop: **observe → isolate → fix**. Start by checking `docker logs` and `docker inspect` (health, restart policy, OOM), run the container interactively to reproduce, then apply fixes (resource limits, dependency fixes, entrypoint, permissions, or code bug) and add proper healthchecks/restart policies.
-
----
-
-## Quick actionable troubleshooting checklist (run these now)
-
-1. **See why it crashed (logs)**
+🧩 **Command**
 
 ```bash
-docker logs --tail 200 --timestamps <container>        # recent logs
-docker logs -f <container>                            # follow live
+docker stats <container>
 ```
 
-2. **Inspect container metadata (restart policy, health, exit code)**
+💡 **In short:** Real-time equivalent of `top` for containers.
+
+---
+
+## Q97: What are container labels and how are they used?
+
+🧠 **Overview**
+Labels are metadata for organizing, filtering, and integrating with tooling.
+
+🧩 **Example**
 
 ```bash
-docker inspect <container> --format '{{json .State}}' | jq
-# or check specific fields
-docker inspect -f 'ExitCode={{.State.ExitCode}} Status={{.State.Status}} Reason={{.State.Error}} RestartCount={{.RestartCount}}' <container>
-docker inspect -f '{{json .State.Health}}' <container>  # if healthcheck present
+docker run --label env=prod --label team=devops nginx
 ```
 
-3. **Check host-level events and crashes**
+💡 **Use cases:** Monitoring, CI/CD rules, cleanup scripts.
+
+---
+
+## Q98: How do you filter containers by labels?
+
+🧩 **Command**
 
 ```bash
-journalctl -u docker.service --since "10m"      # docker daemon errors (Linux)
-dmesg | tail -n 50                               # OOM killer notices
+docker ps --filter "label=env=prod"
 ```
 
-4. **Check OOM / resource issues & live metrics**
+---
+
+## Q99: What is docker inspect command used for?
+
+🧠 **Overview**
+Displays detailed JSON metadata for containers, images, networks, etc.
+
+🧩 **Example**
 
 ```bash
-docker stats --no-stream <container>             # CPU / mem usage
-docker stats                                       # monitor all
-# Check if kernel OOM killed process: look for "Killed process" in dmesg/journalctl
+docker inspect web
 ```
 
-5. **Inspect mounts, env, entrypoint — common causes**
+---
+
+## Q100: How do you extract specific information using docker inspect?
+
+🧩 **Command**
 
 ```bash
-docker inspect --format '{{json .Config}}' <container> | jq
-docker inspect --format '{{json .Mounts}}' <container> | jq
+docker inspect -f '{{.NetworkSettings.IPAddress}}' web
 ```
 
-* Missing env vars, wrong ENTRYPOINT/CMD, or a mount hiding app files are common.
-
-6. **Reproduce interactively to debug**
+Another example:
 
 ```bash
-# Run image with same command but interactive shell to poke around
-docker run --rm -it --entrypoint sh <image>   # or bash if available
-# Or override CMD to start app manually and see immediate error
-docker run --rm -it <image> sh -c "your-start-cmd"
+docker inspect -f '{{json .Config.Env}}' web
 ```
 
-7. **Check image health / integrity**
+---
+
+## Q101: What is Docker Compose depends_on directive?
+
+🧠 **Overview**
+Specifies service dependency ordering (start order only).
+
+🧩 **Example**
+
+```yaml
+depends_on:
+  - db
+```
+
+---
+
+## Q102: What are the limitations of depends_on?
+
+⚠️ **Limitations**
+
+* Does **not** wait for service readiness
+* Only ensures start *attempt* order
+* Does not check health checks unless using version 3.9+ with health-based conditions
+
+---
+
+## Q103: How do you ensure service startup order in Docker Compose?
+
+🧩 **Use health checks**
+
+```yaml
+depends_on:
+  db:
+    condition: service_healthy
+```
+
+💡 **In short:** Use health checks + depends_on.
+
+---
+
+## Q104: What are Docker Compose profiles?
+
+🧠 **Overview**
+Profiles enable selective activation of services.
+
+🧩 **Example**
+
+```yaml
+profiles: ["debug"]
+```
+
+Run:
 
 ```bash
-docker image ls
-docker history <image>
-# Rebuild image locally and run to ensure build not the culprit:
-docker build -t myapp:debug .
-docker run --rm -it myapp:debug
+docker compose --profile debug up
 ```
 
-8. **If crash is immediate, collect exit code and stack traces**
+---
 
-* `ExitCode` 137 → OOM (killed).
-* `ExitCode` 139 → segmentation fault (native crash).
-* `ExitCode` 1/2/3 → app-level error (check logs and startup scripts).
+## Q105: How do you use environment variables in docker-compose.yml?
 
-9. **Use strace / ldd / core dumps for native crashes**
+🧩 **Example**
+
+```yaml
+environment:
+  - APP_ENV=${APP_ENV}
+```
+
+Or:
+
+```yaml
+env_file: .env
+```
+
+---
+
+## Q106: What is the .env file in Docker Compose?
+
+🧠 **Overview**
+A file holding environment variables automatically loaded by Docker Compose.
+
+🧩 **Example**
+
+```
+APP_ENV=production
+DB_USER=admin
+```
+
+---
+
+## Q107: How do you override docker-compose.yml settings?
+
+🧩 **Command**
 
 ```bash
-# If image has strace available (or run a debug image)
-docker run --rm --cap-add SYS_PTRACE --security-opt seccomp=unconfined -it <image> strace -f -o /tmp/trace.txt <your-cmd>
-# For core dumps: enable ulimit in run command and inspect core file with gdb
-docker run --ulimit core=-1 --cap-add SYS_PTRACE -it <image> sh -c 'ulimit -c unlimited; your-cmd'
+docker compose -f docker-compose.yml -f override.yml up
 ```
 
-10. **Check restart loop behavior & change restart policy during debugging**
+---
+
+## Q108: What is docker-compose.override.yml?
+
+🧠 **Overview**
+A default override file that Docker Compose loads automatically to extend/modify configurations.
+
+💡 **Use case:** Dev overrides for ports, volumes, environment.
+
+---
+
+## Q109: How do you specify multiple compose files?
+
+🧩 **Command**
 
 ```bash
-# See restart count
-docker inspect -f '{{.RestartCount}}' <container>
-
-# Temporarily stop auto-restart to debug
-docker update --restart=no <container>   # prevents immediate restart so you can inspect
+docker compose -f base.yml -f prod.yml up
 ```
 
 ---
 
-## Common root causes & fixes (short)
+## Q110: What are Docker Compose networks?
 
-* **OOM / resource shortage** → Increase memory/CPU or set limits to prevent host OOM.
-  `docker run -m 1g --cpus=1.0 ...` or lower app memory usage; investigate leaks.
-* **Missing environment variables / secrets** → Ensure envs passed (`-e` / `--env-file`) or read from secret manager.
-* **Bad ENTRYPOINT/CMD or script exiting** → Check entrypoint script for `set -e` and unhandled errors; run it interactively.
-* **Port conflict** → Ensure host port not already used; check `docker ps` and host `ss -ltnp`.
-* **Permission errors on mounted volumes** → `chown` files or run with correct user (`--user`), or fix UID/GID in container.
-* **Healthcheck failing → container killed by orchestrator** → fix app to pass healthcheck or adjust healthcheck command/interval/retries.
-* **Immediate native crash (segfault)** → inspect core, rebuild with debug symbols, or replace problematic native dependency.
-* **Dependency/service not ready (app crashes connecting to DB)** → add start-up retry/backoff or make startup wait for dependencies.
+🧠 **Overview**
+Networks defined within Compose for container communication and isolation.
 
----
+🧩 **Example**
 
-## Preventive & production hygiene
-
-* Add **proper healthcheck** in Dockerfile or compose so orchestrator can avoid tight crash loops:
-
-```dockerfile
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
-```
-
-* Use **restart policy with backoff**: `--restart on-failure[:max-retries]` or rely on swarm/k8s backoff settings.
-* Log structured errors to stdout/stderr and centralize logs (ELK/CloudWatch) so you can search crashes.
-* Add **resource limits** to avoid host instability; monitor with Prometheus/Grafana.
-* In CI/CD, run smoke tests after deploy to catch runtime issues.
-
----
-
-## Quick recovery recipe (safe order)
-
-1. `docker logs <container>` — capture recent errors.
-2. `docker update --restart=no <container>` — stop restart loop.
-3. `docker inspect` — collect exit code, mounts, envs.
-4. `docker run --rm -it --entrypoint sh <image>` — reproduce and fix.
-5. Apply fix (config/resource/code), rebuild image, deploy.
-
----
-
-If you paste the **recent `docker logs` output** or the `docker inspect` `State`/`Config` JSON (or tell me whether you’re on Docker Compose / ECS / Kubernetes), I’ll give exact commands and the minimal change you should make to stop the crash loop and fix the root cause.
-
----
----
-
-## 🧠 **Docker Compose Basics — with Equivalent `docker` Commands**
-
-Docker Compose simplifies **multi-container management** using a `docker-compose.yml` file —
-while plain `docker` commands manage containers one-by-one.
-
-Below is a clear side-by-side comparison with **examples** 👇
-
----
-
-### ⚙️ **1️⃣ Start Services**
-
-| **Action**                       | **Docker Compose**         | **Docker Equivalent**                                    |
-| -------------------------------- | -------------------------- | -------------------------------------------------------- |
-| Start all services in background | `docker compose up -d`     | Multiple `docker run -d ...` commands for each container |
-| Start in foreground (show logs)  | `docker compose up`        | Manually attach: `docker logs -f <container>`            |
-| Start only one service           | `docker compose up -d web` | `docker run -d --name web myapp:latest`                  |
-
-**Example:**
-
-```bash
-docker compose up -d
-```
-
-✅ Brings up all containers, networks, and volumes defined in `docker-compose.yml`.
-
----
-
-### ⚙️ **2️⃣ Stop / Restart / Remove Containers**
-
-| **Action**         | **Docker Compose**       | **Docker Equivalent**           |
-| ------------------ | ------------------------ | ------------------------------- |
-| Stop containers    | `docker compose stop`    | `docker stop $(docker ps -q)`   |
-| Restart containers | `docker compose restart` | `docker restart <container>`    |
-| Remove containers  | `docker compose down`    | `docker rm -f $(docker ps -aq)` |
-
-**Example:**
-
-```bash
-docker compose down
-```
-
-✅ Stops and removes containers, networks, and by default keeps volumes.
-
-Add volumes too:
-
-```bash
-docker compose down -v
+```yaml
+networks:
+  backend:
+    driver: bridge
 ```
 
 ---
 
-### ⚙️ **3️⃣ Build Images**
+## Q111: How do you define custom networks in docker-compose.yml?
 
-| **Action**               | **Docker Compose**                | **Docker Equivalent**                 |
-| ------------------------ | --------------------------------- | ------------------------------------- |
-| Build all service images | `docker compose build`            | `docker build -t myapp .` (per image) |
-| Rebuild without cache    | `docker compose build --no-cache` | `docker build --no-cache .`           |
-
-**Example:**
-
-```bash
-docker compose build web
-```
-
-✅ Builds only the `web` service image defined in YAML.
-
----
-
-### ⚙️ **4️⃣ Check Status**
-
-| **Action**              | **Docker Compose**     | **Docker Equivalent** |
-| ----------------------- | ---------------------- | --------------------- |
-| List running services   | `docker compose ps`    | `docker ps`           |
-| List all (even stopped) | `docker compose ps -a` | `docker ps -a`        |
-
----
-
-### ⚙️ **5️⃣ Logs**
-
-| **Action**                | **Docker Compose**        | **Docker Equivalent**                                  |
-| ------------------------- | ------------------------- | ------------------------------------------------------ |
-| View logs of all services | `docker compose logs`     | `docker logs <container>` (run separately per service) |
-| Follow logs live          | `docker compose logs -f`  | `docker logs -f <container>`                           |
-| Logs for one service      | `docker compose logs web` | `docker logs web`                                      |
-
----
-
-### ⚙️ **6️⃣ Execute Commands in Running Container**
-
-| **Action**             | **Docker Compose**               | **Docker Equivalent**           |
-| ---------------------- | -------------------------------- | ------------------------------- |
-| Shell into a container | `docker compose exec web sh`     | `docker exec -it web sh`        |
-| Run one-time command   | `docker compose run web ls /app` | `docker run --rm myapp ls /app` |
-
-**Example:**
-
-```bash
-docker compose exec db mysql -uroot -p
-```
-
-✅ Opens MySQL shell inside the `db` container.
-
----
-
-### ⚙️ **7️⃣ Scale Services**
-
-| **Action**     | **Docker Compose**                   | **Docker Equivalent**                |
-| -------------- | ------------------------------------ | ------------------------------------ |
-| Scale replicas | `docker compose up --scale web=3 -d` | Run `docker run -d` 3 times manually |
-| Stop scaling   | `docker compose down`                | Manually stop each                   |
-
----
-
-### ⚙️ **8️⃣ Manage Networks**
-
-| **Action**    | **Docker Compose**                      | **Docker Equivalent**           |
-| ------------- | --------------------------------------- | ------------------------------- |
-| View networks | `docker compose network ls`             | `docker network ls`             |
-| Inspect       | `docker compose network inspect <name>` | `docker network inspect <name>` |
-
-> Compose auto-creates a project network — e.g., if project = `myapp`, network = `myapp_default`.
-
----
-
-### ⚙️ **9️⃣ Manage Volumes**
-
-| **Action**    | **Docker Compose**         | **Docker Equivalent** |
-| ------------- | -------------------------- | --------------------- |
-| List volumes  | `docker compose volume ls` | `docker volume ls`    |
-| Remove unused | `docker compose down -v`   | `docker volume prune` |
-
----
-
-### ⚙️ **🔟 Environment Variables**
-
-| **Compose YAML** | **CLI Equivalent** |
-| ---------------- | ------------------ |
-| `env_file: .env` | `--env-file .env`  |
-| `environment:`   | `-e VAR=value`     |
-
-**Example (`docker-compose.yml`):**
+🧩 **Example**
 
 ```yaml
 services:
   app:
-    image: myapp
-    environment:
-      - ENV=prod
-    env_file:
-      - .env
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
 ```
 
 ---
 
-### ⚙️ **🔢 Compose Lifecycle Summary**
+## Q112: What is the difference between docker commit and docker build?
 
-| **Task**            | **Compose Command**            | **Plain Docker Command(s)**                 |
-| ------------------- | ------------------------------ | ------------------------------------------- |
-| Build images        | `docker compose build`         | `docker build -t ...`                       |
-| Run containers      | `docker compose up -d`         | `docker run -d ...`                         |
-| Stop containers     | `docker compose stop`          | `docker stop ...`                           |
-| Logs                | `docker compose logs -f`       | `docker logs -f ...`                        |
-| Exec into container | `docker compose exec <svc> sh` | `docker exec -it ... sh`                    |
-| Clean up            | `docker compose down -v`       | `docker rm -f ...` + `docker volume rm ...` |
+📋 **Comparison Table**
+
+| Feature       | docker commit           | docker build           |
+| ------------- | ----------------------- | ---------------------- |
+| Method        | Capture container state | Declarative Dockerfile |
+| Reproducible  | ❌ No                    | ✅ Yes                  |
+| Best practice | ❌ Avoid                 | ✅ Use                  |
 
 ---
 
-### ⚙️ **Example: `docker-compose.yml`**
+## Q113: Why is docker commit generally discouraged?
+
+⚠️ **Reasons**
+
+* Non-repeatable
+* Hidden changes
+* No version control
+* Violates IaC principles
+
+💡 **In short:** Always prefer Dockerfile-based builds.
+
+---
+
+## Q114: How do you export and import Docker images?
+
+🧩 **Export**
+
+```bash
+docker save myimage:latest -o myimage.tar
+```
+
+🧩 **Import**
+
+```bash
+docker load -i myimage.tar
+```
+
+---
+
+## Q115: What is the difference between docker save and docker export?
+
+📋 **Comparison**
+
+| Command           | Exports                   | Use Case                    |
+| ----------------- | ------------------------- | --------------------------- |
+| **docker save**   | Image + layers            | Move images between hosts   |
+| **docker export** | Container filesystem only | Flattened filesystem backup |
+
+---
+
+## Q116: How do you load a Docker image from a tar file?
+
+🧩 **Command**
+
+```bash
+docker load -i image.tar
+```
+
+---
+
+## Q117: What is Docker prune and what does it clean?
+
+🧠 **Overview**
+Prunes unused Docker objects.
+
+🧩 **Clean everything**
+
+```bash
+docker system prune
+```
+
+🧩 **Clean deeply**
+
+```bash
+docker system prune -a
+```
+
+---
+
+## Q118: How do you remove all stopped containers?
+
+🧩 **Command**
+
+```bash
+docker container prune
+```
+
+---
+
+## Q119: How do you remove unused images?
+
+🧩 **Command**
+
+```bash
+docker image prune -a
+```
+
+---
+
+## Q120: How do you clean up unused volumes?
+
+🧩 **Command**
+
+```bash
+docker volume prune
+```
+
+---
+
+# Advanced
+
+Below is your **README-style technical documentation** for **Q121–Q135 (Advanced Docker Security, Isolation & Hardening)**.
+
+---
+
+## Q121: How does Docker implement container isolation?
+
+🧠 **Overview**
+Docker isolation is achieved through **Linux kernel features**:
+
+* **Namespaces** → isolate processes, networking, file systems
+* **cgroups** → limit resource usage
+* **Seccomp/AppArmor/SELinux** → syscall filtering & MAC
+* **Capabilities** → granular privilege control
+
+💡 **In short:** Containers share the host kernel but remain isolated using namespaces + cgroups + security policies.
+
+---
+
+## Q122: What are Linux namespaces and how does Docker use them?
+
+🧠 **Overview**
+Namespaces isolate system resources per container. Each container gets its own namespace instance.
+
+⚙️ **Docker uses namespaces to isolate:**
+
+* Processes (PID)
+* Networks (NET)
+* Mount points (MNT)
+* Hostnames (UTS)
+* Interprocess communication (IPC)
+* Users / groups (USER)
+
+💡 **In short:** Namespaces give each container its own view of the system.
+
+---
+
+## Q123: What namespace types does Docker use (PID, NET, IPC, MNT, UTS)?
+
+📋 **Namespace Breakdown**
+
+| Namespace | Purpose                                   |
+| --------- | ----------------------------------------- |
+| **PID**   | Isolates process tree                     |
+| **NET**   | Provides container-level networking stack |
+| **IPC**   | Shared memory isolation                   |
+| **MNT**   | Filesystem mount separation               |
+| **UTS**   | Hostname / domain name isolation          |
+| **USER**  | UID/GID mappings                          |
+
+💡 **In short:** Each namespace isolates one OS subsystem.
+
+---
+
+## Q124: What are cgroups and how does Docker use them for resource management?
+
+🧠 **Overview**
+Control Groups (cgroups) limit and track system resources for containers.
+
+⚙️ **Docker uses cgroups to control:**
+
+* CPU
+* Memory
+* Disk I/O
+* PIDs
+
+🧩 **Example**
+
+```bash
+docker run --memory=512m --cpus=1 myapp
+```
+
+💡 **In short:** cgroups enforce resource boundaries to prevent noisy-neighbor issues.
+
+---
+
+## Q125: How does Docker implement security with seccomp?
+
+🧠 **Overview**
+Seccomp (secure computing mode) filters Linux syscalls. Docker applies a **default seccomp profile** blocking ~40 dangerous syscalls (e.g., `ptrace`, `kexec_load`).
+
+🧩 **Custom profile**
+
+```bash
+docker run --security-opt seccomp=custom.json myapp
+```
+
+💡 **In short:** Seccomp prevents containers from executing unsafe system calls.
+
+---
+
+## Q126: What is AppArmor and how does it integrate with Docker?
+
+🧠 **Overview**
+AppArmor is a Mandatory Access Control (MAC) system. Docker applies **AppArmor profiles** to restrict filesystem access and behavior.
+
+🧩 **Run with custom profile**
+
+```bash
+docker run --security-opt apparmor=myprofile nginx
+```
+
+💡 **In short:** AppArmor enforces per-container security policies.
+
+---
+
+## Q127: What are Docker capabilities and how do they enhance security?
+
+🧠 **Overview**
+Capabilities break root privileges into smaller units (e.g., `NET_ADMIN`, `SYS_ADMIN`). Docker drops many capabilities by default.
+
+🧩 **List capabilities**
+
+```bash
+docker run --cap-drop ALL myapp
+```
+
+💡 **In short:** Capabilities provide fine-grained privilege control.
+
+---
+
+## Q128: How do you run containers with minimal capabilities?
+
+🧩 **Command**
+
+```bash
+docker run --cap-drop ALL --cap-add NET_BIND_SERVICE myapp
+```
+
+💡 **In short:** Drop everything and selectively add back what's required.
+
+---
+
+## Q129: What is the --privileged flag and why is it dangerous?
+
+🧠 **Overview**
+`--privileged` gives container full device and kernel access → effectively root on the host.
+
+⚠️ **Risks**
+
+* Escape vulnerabilities
+* Full control of host devices
+* Host filesystem modification
+
+💡 **In short:** Avoid unless absolutely required.
+
+---
+
+## Q130: What are the security implications of running containers as root?
+
+⚠️ **Risks**
+
+* Escalation to host root
+* Malicious code can modify host filesystem
+* Kernel attack surface increases
+* Breaks tenant isolation
+
+💡 **In short:** Root inside container is dangerous; prefer non-root users.
+
+---
+
+## Q131: How do you implement rootless Docker?
+
+🧠 **Overview**
+Rootless Docker allows Docker to run without root privileges using user namespaces.
+
+🧩 **Commands (Linux)**
+
+```bash
+dockerd-rootless-setuptool.sh install
+export PATH=/usr/bin:$PATH
+systemctl --user start docker
+```
+
+💡 **In short:** Docker runs as an unprivileged user, reducing host attack surface.
+
+---
+
+## Q132: What is Docker user namespaces remapping?
+
+🧠 **Overview**
+User namespace remapping maps container root (UID 0) to a **non-root UID on the host**.
+
+💡 **In short:** Even if container thinks it is root, host sees it as an unprivileged user.
+
+---
+
+## Q133: How do you configure user namespace remapping?
+
+🧩 **Steps**
+
+1️⃣ Edit Docker daemon config:
+
+```json
+{
+  "userns-remap": "default"
+}
+```
+
+2️⃣ Restart Docker:
+
+```bash
+systemctl restart docker
+```
+
+3️⃣ Verify:
+
+```bash
+docker info | grep userns
+```
+
+---
+
+## Q134: What strategies would you use for container image security?
+
+🛡️ **Best Practices**
+
+* Use minimal base images (distroless, alpine)
+* Scan images (Trivy, Clair, Snyk)
+* Sign images (Docker trust, Notary)
+* Pin image digests
+* Remove unused tools (curl, bash)
+* Apply multi-stage builds
+* Enable seccomp/AppArmor profiles
+* Drop capabilities
+
+💡 **In short:** Reduce attack surface + verify integrity + enforce policies.
+
+---
+
+## Q135: How do you implement image scanning in CI/CD?
+
+🧩 **Example (Trivy in CI)**
+GitLab:
 
 ```yaml
-version: "3.9"
+scan:
+  image: aquasec/trivy
+  script:
+    - trivy image myapp:latest
+```
+
+GitHub Actions:
+
+```yaml
+- uses: aquasecurity/trivy-action@v0.11.2
+  with:
+    image-ref: myapp:latest
+```
+
+Jenkins:
+
+```bash
+trivy image myapp:latest --exit-code 1
+```
+
+💡 **In short:** Integrate scanners in pipelines and fail builds on vulnerabilities.
+
+---
+
+Below is your **README-style technical documentation** for **Q136–Q151 (Docker Security, Secrets, BuildKit, BuildX, Manifests)**.
+
+---
+
+## Q136: What tools would you use for vulnerability scanning (Trivy, Clair, Anchore)?
+
+🧠 **Overview**
+Image scanners detect CVEs in OS packages & app dependencies.
+
+📋 **Comparison Table**
+
+| Tool              | Strengths                                                    |
+| ----------------- | ------------------------------------------------------------ |
+| **Trivy**         | Fast, simple CLI, supports FS, SBOM, registry scanning       |
+| **Clair**         | API-based, used in registries (Harbor), enterprise workflows |
+| **Anchore/Grype** | Policy enforcement, CI integration, SBOM support             |
+
+🧩 **Usage**
+
+```bash
+trivy image myapp:latest
+grype myapp:latest
+```
+
+💡 **In short:** Trivy for CI simplicity, Clair for registry integration, Anchore for compliance.
+
+---
+
+## Q137: How do you implement least privilege for container processes?
+
+🛡️ **Strategies**
+
+* Run as non-root:
+
+```Dockerfile
+USER 1000:1000
+```
+
+* Drop unneeded capabilities:
+
+```bash
+docker run --cap-drop ALL --cap-add NET_BIND_SERVICE myapp
+```
+
+* Use seccomp/AppArmor profiles
+* Use read-only root filesystem
+* Limit resources via cgroups
+
+💡 **In short:** Remove root access and reduce privilege scope.
+
+---
+
+## Q138: What is read-only root filesystem and how do you implement it?
+
+🧠 **Overview**
+A mode where container root filesystem becomes **immutable** → prevents tampering, malware persistence.
+
+🧩 **Command**
+
+```bash
+docker run --read-only myapp
+```
+
+Docker Compose:
+
+```yaml
+read_only: true
+```
+
+---
+
+## Q139: How do you handle writable directories with read-only filesystem?
+
+🧩 **Approaches**
+
+* Use **tmpfs** for ephemeral writes:
+
+```bash
+docker run --read-only --tmpfs /tmp myapp
+```
+
+* Use mounted volumes for persistent writes:
+
+```bash
+docker run --read-only -v data:/var/lib/app myapp
+```
+
+💡 **In short:** Add tmpfs or volumes for writable paths.
+
+---
+
+## Q140: What strategies would you use for secrets management in Docker?
+
+🛡️ **Best Practices**
+
+* Never bake secrets into images
+* Avoid passing secrets via env vars
+* Use Docker Swarm secrets
+* Use read-only volumes for secrets
+* Integrate with external secret stores (Vault, AWS Secrets Manager, SSM)
+* Use BuildKit secrets during builds
+
+💡 **In short:** Keep secrets out of images, env, and logs.
+
+---
+
+## Q141: What are Docker secrets in Swarm mode?
+
+🧠 **Overview**
+Swarm secrets are encrypted blobs stored in Raft logs and exposed to containers as in-memory files.
+
+🧩 **Example**
+
+```bash
+echo "mypassword" | docker secret create db_pass -
+```
+
+Services:
+
+```yaml
+secrets:
+  - db_pass
+```
+
+💡 **In short:** Secure, encrypted secrets management for Swarm services.
+
+---
+
+## Q142: How do you pass secrets to standalone Docker containers?
+
+⚙️ **Options**
+
+* Mounted files:
+
+```bash
+docker run -v /secure/secret.txt:/run/secret.txt myapp
+```
+
+* Docker CLI stdin pass-through (not secure long term)
+* BuildKit secrets during builds
+* External secret management (Vault/SSM/ASM)
+
+💡 **In short:** No built-in secrets for plain Docker → use file mounts or external secret stores.
+
+---
+
+## Q143: What are the security risks of using environment variables for secrets?
+
+⚠️ **Risks**
+
+* Visible in `docker inspect`
+* Logged in CI/CD systems
+* Inherited by child processes
+* May leak via core dumps
+* Exposed via `/proc/<pid>/environ`
+
+💡 **In short:** Env vars are convenient but insecure for secrets.
+
+---
+
+## Q144: How would you integrate external secret management (Vault, AWS Secrets Manager)?
+
+🧩 **Vault Example**
+
+```bash
+vault kv get secret/dbpassword
+docker run -e DB_PASS=$(vault kv get -field=password secret/db) app
+```
+
+🧩 **AWS Secrets Manager**
+
+```bash
+aws secretsmanager get-secret-value --secret-id db-pass
+```
+
+CI/CD:
+
+* Fetch at runtime
+* Inject as files or ephemeral variables
+* Ensure secrets never enter images
+
+💡 **In short:** Retrieve secrets at runtime, not build time.
+
+---
+
+## Q145: What is Docker Buildkit and what advantages does it offer?
+
+🧠 **Overview**
+BuildKit is a next-gen image builder with:
+
+* Faster parallel builds
+* Better caching
+* Secret mounts
+* SSH forwarding
+* Smaller images
+
+💡 **In short:** BuildKit = faster, secure, efficient builds.
+
+---
+
+## Q146: How do you enable BuildKit?
+
+🧩 **Environment variable**
+
+```bash
+export DOCKER_BUILDKIT=1
+```
+
+🧩 **Daemon config**
+
+```json
+{ "features": { "buildkit": true } }
+```
+
+---
+
+## Q147: What are BuildKit cache mounts?
+
+🧠 **Overview**
+Cache mounts allow reusing build artifacts between builds.
+
+🧩 **Example**
+
+```Dockerfile
+RUN --mount=type=cache,target=/root/.cache/go-build go build .
+```
+
+💡 **In short:** Cache mounts drastically speed up builds.
+
+---
+
+## Q148: How do BuildKit secrets differ from multi-stage builds for secrets?
+
+📋 **Comparison**
+
+| Feature       | BuildKit secrets                        | Multi-stage builds                    |
+| ------------- | --------------------------------------- | ------------------------------------- |
+| Exposure risk | None (mounted in memory, not in layers) | Risky (possibility of leak in layers) |
+| Usage         | Build time                              | Build time only                       |
+| Clean removal | Auto-removed                            | Manual cleanup needed                 |
+| Security      | High                                    | Medium                                |
+
+🧩 **BuildKit secret example**
+
+```Dockerfile
+RUN --mount=type=secret,id=mysecret cat /run/secrets/mysecret
+```
+
+💡 **In short:** BuildKit secrets are safer and never persist in the final image.
+
+---
+
+## Q149: What is Docker BuildX?
+
+🧠 **Overview**
+BuildX extends BuildKit with:
+
+* Multi-platform builds
+* Cross-compilation
+* Advanced cache drivers
+* Distributed builds
+
+💡 **In short:** BuildX is a modern builder frontend for advanced build workflows.
+
+---
+
+## Q150: How do you build multi-platform images with BuildX?
+
+🧩 **Example**
+
+```bash
+docker buildx create --use
+docker buildx build --platform linux/amd64,linux/arm64 -t myapp:latest --push .
+```
+
+💡 **In short:** BuildX + `--platform` builds multi-arch images.
+
+---
+
+## Q151: What are Docker manifest lists?
+
+🧠 **Overview**
+A manifest list groups multiple architecture-specific images under a single tag (e.g., `ubuntu:latest` supports ARM and x86).
+
+🧩 **Example**
+
+```bash
+docker manifest inspect ubuntu:latest
+```
+
+💡 **In short:** Multi-arch image index → same tag, different architectures.
+
+---
+
+Below is your **README-style DevOps documentation** for **Q152–Q169 (Expert Docker Images, Optimization, Promotion, Logging)**.
+
+---
+
+## Q152: How do you create and push multi-architecture images?
+
+🧠 **Overview**
+Use **Docker BuildX** + `--platform` to build images for ARM64, AMD64, etc., then push a manifest list.
+
+🧩 **Example**
+
+```bash
+docker buildx create --use
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t myrepo/myapp:1.0 \
+  --push .
+```
+
+💡 **In short:** BuildX builds + pushes multi-arch images under one tag.
+
+---
+
+## Q153: What strategies would you use for optimizing Docker image size?
+
+🛠️ **Methods**
+
+* Use small base images (distroless, alpine)
+* Multi-stage builds
+* Minimize layers (combine RUN commands)
+* Remove build tools in final stage
+* Copy only what’s required (`COPY --chown`, target paths)
+* Use `.dockerignore` effectively
+* Avoid package managers in final image
+
+🧩 **Example**
+
+```Dockerfile
+RUN apk add --no-cache curl && rm -rf /var/cache/apk/*
+```
+
+---
+
+## Q154: How do you analyze image layers to identify bloat?
+
+🧩 **Tools**
+
+* `docker history <image>` → shows layer size
+* `dive <image>` → interactive layer analysis
+
+🧩 **Command**
+
+```bash
+docker history myapp:latest
+```
+
+---
+
+## Q155: What tools would you use for image analysis (dive, docker history)?
+
+📋 **Comparison**
+
+| Tool               | Purpose                     | Strength               |
+| ------------------ | --------------------------- | ---------------------- |
+| **dive**           | Layer-by-layer analysis     | Highlight wasted space |
+| **docker history** | Show layer commands & sizes | Quick CLI check        |
+| **trivy sbom**     | Dependency inventory        | Security + composition |
+
+💡 **In short:** Use *dive* to visually inspect bloat.
+
+---
+
+## Q156: How do you implement distroless images?
+
+🧠 **Overview**
+Distroless images contain **only your app + runtime libraries**, no shell or package manager.
+
+🧩 **Example (multi-stage)**
+
+```Dockerfile
+FROM golang:1.21 AS builder
+RUN go build -o app .
+
+FROM gcr.io/distroless/base
+COPY --from=builder /app /app
+CMD ["/app"]
+```
+
+💡 **In short:** Build in one stage → copy binary into distroless base.
+
+---
+
+## Q157: What are the benefits and challenges of distroless images?
+
+📋 **Comparison**
+
+| Benefit                | Challenge                     |
+| ---------------------- | ----------------------------- |
+| Minimal attack surface | No shell → debugging harder   |
+| Smaller images         | Requires proper health checks |
+| Stronger security      | Must embed everything needed  |
+| No package manager     | Harder for troubleshooting    |
+
+💡 **In short:** Great for production, harder for debugging.
+
+---
+
+## Q158: How would you implement scratch-based images?
+
+🧠 **Overview**
+`scratch` is an empty base image → only works for static binaries.
+
+🧩 **Example**
+
+```Dockerfile
+FROM golang:1.21 AS builder
+RUN CGO_ENABLED=0 go build -a -ldflags='-s -w' -o app .
+
+FROM scratch
+COPY --from=builder /app /app
+ENTRYPOINT ["/app"]
+```
+
+💡 **In short:** Use scratch for fully static binaries.
+
+---
+
+## Q159: When would you use Alpine vs Ubuntu vs Distroless base images?
+
+📋 **Comparison**
+
+| Base           | Use Case                | Pros            | Cons             |
+| -------------- | ----------------------- | --------------- | ---------------- |
+| **Alpine**     | Small apps, simple deps | Tiny, fast      | musl libc issues |
+| **Ubuntu**     | Complex deps, debugging | Full ecosystem  | Large size       |
+| **Distroless** | Production workloads    | Secure, minimal | Debug complexity |
+
+💡 **In short:** Alpine = small, Ubuntu = flexible, Distroless = secure.
+
+---
+
+## Q160: What strategies would you use for Docker layer caching in CI/CD?
+
+🛠️ **Strategies**
+
+* Pin base images
+* Cache dependency install layers
+* Separate frequently changing layers (`COPY . .`)
+* Use BuildKit cache mounts
+* Use remote registries to store cache
+
+🧩 **Example**
+
+```Dockerfile
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+```
+
+---
+
+## Q161: How do you implement remote caching for Docker builds?
+
+🧩 **BuildX example using registry cache**
+
+```bash
+docker buildx build \
+  --cache-to=type=registry,ref=myrepo/cache:latest \
+  --cache-from=type=registry,ref=myrepo/cache:latest \
+  -t myapp:latest .
+```
+
+💡 **In short:** Push cache to a registry → reuse it across CI runs.
+
+---
+
+## Q162: What is Docker registry caching and how does it work?
+
+🧠 **Overview**
+Registry caching mirrors images locally so pulls are faster and reduce rate limits.
+
+💡 **Flow**
+
+1. Pull image → cached in local proxy registry
+2. Next requests use cached copy
+
+Used in Artifactory, Nexus, Harbor.
+
+---
+
+## Q163: How would you implement a pull-through cache for Docker Hub?
+
+🧩 **Example (Harbor or Nexus)**
+Configure a **proxy registry** pointing to Docker Hub.
+
+Harbor:
+
+```yaml
+registry:
+  type: docker-hub-proxy
+```
+
+Docker daemon:
+
+```json
+{
+  "registry-mirrors": ["http://my-proxy:5000"]
+}
+```
+
+💡 **In short:** Proxy registry → cache → avoid Hub rate limits.
+
+---
+
+## Q164: What strategies would you use for Docker image promotion across environments?
+
+🛠️ **Promotion Strategies**
+
+* Tag-based promotion (`dev → stage → prod`)
+* Immutable digests (`sha256:<digest>`)
+* Separate ECR repos per environment
+* CI/CD pipeline-controlled promotion (GitOps style)
+
+---
+
+## Q165: How do you implement immutable tags vs mutable tags strategy?
+
+📋 **Comparison**
+
+| Strategy                          | Usage                                          |
+| --------------------------------- | ---------------------------------------------- |
+| **Immutable tags** (digest-based) | `image@sha256:abcd` — cannot change            |
+| **Mutable tags**                  | `latest`, `prod`, `stable` — overwrite allowed |
+
+🧩 **Best approach**
+
+```bash
+docker pull myapp@sha256:<digest>
+```
+
+💡 **In short:** Use digests for deployments, tags for humans.
+
+---
+
+## Q166: What is the latest tag anti-pattern and why should you avoid it?
+
+⚠️ **Problems**
+
+* Non-reproducible deployments
+* Hard to roll back
+* CI/CD pipelines become unpredictable
+* Environments drift
+
+💡 **In short:** Never deploy `latest` — always use versioned tags or digests.
+
+---
+
+## Q167: How would you implement semantic versioning for Docker images?
+
+🧩 **Tag pattern**
+
+```
+v1.2.3
+v1.2
+v1
+```
+
+CI/CD example:
+
+```bash
+docker build -t myapp:$VERSION -t myapp:$MAJOR.$MINOR -t myapp:$MAJOR .
+docker push myapp:$VERSION
+```
+
+💡 **In short:** Tag hierarchical versions for compatibility guarantees.
+
+---
+
+## Q168: What strategies would you use for Docker logging at scale?
+
+🛠️ **Strategies**
+
+* Use centralized logging (ELK, Loki, CloudWatch, Datadog)
+* Use JSON logging driver for structured logs
+* Rotate logs using `max-size` and `max-file`
+* Avoid writing logs to container filesystem
+* Route logs via Fluentd / Logstash sidecars
+
+---
+
+## Q169: What are Docker logging drivers?
+
+🧠 **Overview**
+Logging drivers control how container logs are collected and stored.
+
+📋 **Common drivers**
+
+| Driver        | Purpose                 |
+| ------------- | ----------------------- |
+| **json-file** | Default local logs      |
+| **syslog**    | Send to syslog server   |
+| **fluentd**   | Centralized logging     |
+| **awslogs**   | Send logs to CloudWatch |
+| **gelf**      | Graylog / Logstash      |
+| **none**      | Disable logging         |
+
+🧩 **Example**
+
+```bash
+docker run --log-driver=syslog myapp
+```
+
+---
+Below is your **README-style DevOps documentation** for **Q170–Q184 (Advanced Logging, Monitoring, Metrics, Distributed Tracing & Docker Swarm)**.
+
+---
+
+## Q170: How do you configure json-file, syslog, journald, and other log drivers?
+
+🧠 **Overview**
+Docker log drivers are configured per-container or globally in `/etc/docker/daemon.json`.
+
+🧩 **Per-container example**
+
+```bash
+docker run --log-driver=syslog myapp
+```
+
+🧩 **Global daemon config**
+
+```json
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+```
+
+🧩 **Journald**
+
+```json
+{ "log-driver": "journald" }
+```
+
+💡 **In short:** Configure via `--log-driver` or daemon.json.
+
+---
+
+## Q171: What is the difference between local and centralized logging?
+
+📋 **Comparison Table**
+
+| Type                    | Description                                              | Pros                 | Cons                          |
+| ----------------------- | -------------------------------------------------------- | -------------------- | ----------------------------- |
+| **Local logging**       | Logs stored on host (json-file, journald)                | Simple               | Hard to aggregate, disk usage |
+| **Centralized logging** | Logs shipped to external systems (ELK, Loki, CloudWatch) | Scalable, searchable | Requires infra                |
+
+💡 **In short:** Local = simple; centralized = scalable.
+
+---
+
+## Q172: How would you implement log rotation for Docker containers?
+
+🧩 **Daemon config**
+
+```json
+{
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "5"
+  }
+}
+```
+
+🧩 **Per-container**
+
+```bash
+docker run --log-opt max-size=10m --log-opt max-file=5 myapp
+```
+
+💡 **In short:** Use `log-opts` with json-file driver.
+
+---
+
+## Q173: What strategies would you use for container monitoring?
+
+🛠️ **Monitoring Stack**
+
+* **cAdvisor** → container metrics
+* **Prometheus** → scraping + alerting
+* **Grafana** → dashboards
+* **Node Exporter** → host metrics
+* **ELK / Loki** → logs
+* **Jaeger / Zipkin** → tracing
+
+💡 **In short:** Use Prometheus + cAdvisor + Grafana for container-level monitoring.
+
+---
+
+## Q174: How do you expose container metrics for Prometheus?
+
+🧠 **Overview**
+Application must expose **/metrics** endpoint in Prometheus format.
+
+🧩 **Dockerfile**
+
+```Dockerfile
+EXPOSE 9090
+```
+
+🧩 **Prometheus scrape config**
+
+```yaml
+scrape_configs:
+  - job_name: app
+    static_configs:
+      - targets: ["app:9090"]
+```
+
+Alternatively, run **cAdvisor**:
+
+```bash
+docker run -p 8080:8080 gcr.io/cadvisor/cadvisor
+```
+
+---
+
+## Q175: What is cAdvisor and how does it integrate with Docker?
+
+🧠 **Overview**
+cAdvisor (Container Advisor) collects real-time container metrics: CPU, memory, I/O, network.
+
+🧩 **Example**
+
+```bash
+docker run -d -p 8080:8080 \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run/docker.sock:/var/run/docker.sock:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  gcr.io/cadvisor/cadvisor
+```
+
+💡 **In short:** Prometheus scrapes cAdvisor → Grafana visualizes metrics.
+
+---
+
+## Q176: How would you implement distributed tracing for containerized applications?
+
+🛠️ **Approach**
+
+* Use tracing libraries (OpenTelemetry SDK)
+* Deploy backend collector (Jaeger, Zipkin, Tempo)
+* Instrument apps for spans & trace propagation
+* Expose tracing endpoints via sidecars or exporters
+
+🧩 **Jaeger example**
+
+```yaml
+docker run -d -p 16686:16686 jaegertracing/all-in-one
+```
+
+💡 **In short:** Use OpenTelemetry + Jaeger/Zipkin.
+
+---
+
+## Q177: What is Docker Swarm mode?
+
+🧠 **Overview**
+Swarm mode is Docker’s built-in container orchestration engine providing clustering, scheduling, load balancing and service management.
+
+💡 **In short:** Native Docker orchestration.
+
+---
+
+## Q178: What are the components of Docker Swarm (manager, worker nodes)?
+
+📋 **Components**
+
+| Component   | Role                                      |
+| ----------- | ----------------------------------------- |
+| **Manager** | Orchestration, scheduling, Raft consensus |
+| **Worker**  | Runs tasks/containers                     |
+| **Tasks**   | Container instances managed by Swarm      |
+
+---
+
+## Q179: How does Swarm differ from Kubernetes?
+
+📋 **Comparison Table**
+
+| Feature        | Swarm                 | Kubernetes             |
+| -------------- | --------------------- | ---------------------- |
+| Installation   | Simple                | Complex                |
+| Learning curve | Low                   | High                   |
+| Features       | Basic orchestration   | Full ecosystem         |
+| Scaling        | Good                  | Best                   |
+| Networking     | Built-in              | CNI plugins            |
+| Use case       | Small–medium clusters | Large-scale enterprise |
+
+💡 **In short:** Swarm = simplicity; Kubernetes = full power.
+
+---
+
+## Q180: When would you use Swarm over Kubernetes?
+
+🧠 **Use Cases**
+
+* Small teams needing simple orchestration
+* Edge or IoT deployments
+* Local HA clusters
+* Fast onboarding & minimal overhead
+
+💡 **In short:** Ideal when simplicity > advanced orchestration features.
+
+---
+
+## Q181: What are Docker services in Swarm?
+
+🧠 **Overview**
+A service is the Swarm abstraction that defines:
+
+* Image
+* Replicas
+* Network
+* Volumes
+* Constraints
+
+🧩 **Example**
+
+```bash
+docker service create --name web --replicas 3 nginx
+```
+
+💡 **In short:** Services manage replicated tasks.
+
+---
+
+## Q182: How do you deploy a stack in Docker Swarm?
+
+🧩 **Command**
+
+```bash
+docker stack deploy -c stack.yml mystack
+```
+
+Stack example:
+
+```yaml
 services:
   web:
     image: nginx
-    ports:
-      - "8080:80"
-
-  app:
-    build: .
-    depends_on:
-      - db
-    environment:
-      - ENV=dev
-
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: root
+    deploy:
+      replicas: 3
 ```
 
-Then run:
+---
+
+## Q183: What is the difference between replicated and global services?
+
+📋 **Comparison**
+
+| Type           | Behavior                      |
+| -------------- | ----------------------------- |
+| **Replicated** | Run *N* replicas across nodes |
+| **Global**     | Run *one task on each node*   |
+
+🧩 **Examples**
 
 ```bash
-docker compose up -d
-docker compose ps
-docker compose logs -f
-docker compose down
+docker service create --mode replicated --replicas 3 web
+docker service create --mode global node-exporter
 ```
 
 ---
 
-### 🧠 **Best Practices**
+## Q184: How does Swarm handle load balancing?
 
-✅ Use Compose for **multi-service stacks** (web + db + cache).
-✅ Keep **`.env`** and **`docker-compose.yml`** versioned for reproducible setups.
-✅ Use `depends_on` for startup ordering.
-✅ Never use `latest` tags in production; pin versions.
-✅ For CI/CD, use `docker compose up -d --build` and destroy with `down` after tests.
+🧠 **Overview**
+Swarm uses:
+
+* **Routing Mesh** → exposes service on every node
+* **VIP-based load balancing** → internal virtual IP
+* **Ingress load balancing** → L4 load distribution
+
+🧩 **Example**
+
+```bash
+curl http://<any-node>:80
+```
+
+💡 **In short:** Swarm automatically balances traffic across replicas using routing mesh + VIPs.
 
 ---
 
-### ✅ **In short:**
+---
 
-> **`docker`** = one container at a time (manual).
-> **`docker compose`** = full app stack management (automated).
-> Compose bundles build, network, volumes, envs, and dependencies — all from one YAML file.
+## Q185: What is the routing mesh in Docker Swarm?
+
+🧠 **Overview**
+Routing Mesh is Swarm’s built-in ingress layer that exposes a service port on **every node**, then routes incoming connections to available service tasks (replicas) across the cluster.
+
+⚙️ **How it works**
+
+* Each service gets a Virtual IP (VIP).
+* Every node listens on the published port and forwards traffic into the swarm (ingress).
+* Traffic is distributed via internal load-balancing (VIP) to tasks.
+
+🧩 **Commands / Example**
+
+```bash
+docker service create --name web --publish published=80,target=80 nginx
+# Now curl any node's port 80 -> routed to service replicas
+```
+
+✅ **Best Practices**
+
+* Use service constraints/placement for locality-sensitive apps.
+* Combine with external LB for advanced routing (TLS, sticky sessions).
+
+💡 **In short:** Routing Mesh exposes services on all nodes and routes traffic to running tasks.
+
+---
+
+## Q186: How do you implement rolling updates in Swarm?
+
+🧠 **Overview**
+Swarm supports declarative rolling updates via the service `update_config` or `docker service update` flags — it updates tasks incrementally with configurable parallelism, delay, and failure action.
+
+⚙️ **How it works**
+
+* Define `parallelism`, `delay`, `order`, and `failure_action`.
+* Swarm stops/creates tasks according to those settings.
+
+🧩 **Examples**
+Compose `deploy`:
+
+```yaml
+deploy:
+  update_config:
+    parallelism: 1
+    delay: 10s
+    failure_action: rollback
+    order: start-first
+```
+
+CLI:
+
+```bash
+docker service update --image myapp:2.0 --update-parallelism 1 --update-delay 10s web
+```
+
+📋 **Key options**
+
+| Option           | Meaning                         |
+| ---------------- | ------------------------------- |
+| `parallelism`    | Number of tasks updated at once |
+| `delay`          | Wait between batches            |
+| `order`          | `start-first` vs `stop-first`   |
+| `failure_action` | `rollback` or `continue`        |
+
+✅ **Best Practices**
+
+* Use health checks + `failure_action: rollback`.
+* Use `start-first` for zero-downtime where possible.
+
+💡 **In short:** Configure `update_config` to control rolling updates safely.
+
+---
+
+## Q187: What strategies would you use for zero-downtime deployments?
+
+🧠 **Overview**
+Zero-downtime requires overlapping old/new versions, health checks, load-balancing, and careful state handling.
+
+⚙️ **Strategies**
+
+* Rolling updates with `start-first` (create new tasks before killing old).
+* Health checks & readiness probes to only route to healthy tasks.
+* Blue/green or canary deployments with traffic shifting at LB level.
+* Session affinity avoidance (or sticky sessions with replication).
+* Use connection draining on old instances.
+
+🧩 **Example (canary pattern)**
+
+* Deploy 1 replica of new version, monitor metrics/traces, increase traffic or replicas gradually.
+
+✅ **Best Practices**
+
+* Prefer stateless services; externalize session/store.
+* Use automated rollback on failures.
+* Monitor latency/error rates during rollout.
+
+💡 **In short:** Combine rolling updates, health checks, and LB traffic control to avoid downtime.
+
+---
+
+## Q188: How do you handle stateful applications in Docker?
+
+🧠 **Overview**
+Stateful apps require persistent storage, careful scaling, and consistent identity (stable hostnames/volumes).
+
+⚙️ **Approaches**
+
+* Use persistent volumes (hostPath, NFS, block storage, CSI-backed volumes).
+* Use StatefulSets (Kubernetes) or dedicated placement constraints in Swarm.
+* Use clustered DBs with proper quorum (Postgres replication, Cassandra, MySQL primary/replica).
+* Ensure backup/restore and data migration strategies.
+
+🧩 **Example (Docker + volume)**
+
+```bash
+docker service create --name pg \
+  --mount type=volume,source=pgdata,target=/var/lib/postgresql/data \
+  --constraint 'node.role==worker' postgres:15
+```
+
+✅ **Best Practices**
+
+* Avoid scaling DBs horizontally without a clustering solution.
+* Use dedicated nodes/storage classes for stateful workloads.
+* Test failover and backup restores regularly.
+
+💡 **In short:** Give stateful apps persistent, reliable storage and treat them differently from stateless services.
+
+---
+
+## Q189: What are the challenges of running databases in containers?
+
+🧠 **Overview**
+Containers add flexibility but bring operational challenges for stateful DBs.
+
+⚠️ **Challenges**
+
+* **Persistence & durability:** Ensuring reliable storage and I/O performance.
+* **Networking stability:** IP/hostname changes can break clustering.
+* **Storage consistency:** Filesystem drivers, snapshotting and backups complexity.
+* **Resource contention:** Noisy neighbors & I/O throttling.
+* **Recovery & scaling:** Complex to scale vertically/horizontally; requires replication.
+* **Monitoring & backups:** Need consistent backup strategies and testing.
+* **Operational complexity:** Upgrades, maintenance windows, and data migrations are riskier.
+
+✅ **Mitigations**
+
+* Use cloud-managed DBs where possible (RDS, Cloud SQL).
+* Use block/replicated storage, QoS, and dedicated nodes.
+* Test failover, backup/restore, and restore RPO/RTO.
+
+💡 **In short:** Containers are great for apps, but DBs need careful storage, networking, and operational practices.
+
+---
+
+## Q190: What strategies would you use for persistent storage in containers?
+
+🧠 **Overview**
+Persistent storage must be durable, performant, and suitable for the application’s access patterns.
+
+⚙️ **Strategies**
+
+* **Cloud block storage** (EBS, Persistent Disks) for single-writer DBs.
+* **Network file systems** (NFS, EFS) for shared access where consistent POSIX semantics are OK.
+* **Distributed file/block storage** (Ceph, Gluster, Portworx) for HA and multi-writer scenarios.
+* **CSI drivers** in orchestrators for dynamic provisioning.
+* **StatefulSet/volumeClaimTemplates** (Kubernetes) for per-pod volumes.
+
+🧩 **Example (K8s PVC)**
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: gp2
+  resources:
+    requests:
+      storage: 50Gi
+```
+
+✅ **Best Practices**
+
+* Choose storage based on IOPS/latency needs.
+* Use replication and snapshots for backups.
+* Avoid hostPath for production (node affinity issues).
+
+💡 **In short:** Match storage type (block, file, distributed) to app requirements and use orchestrator primitives for provisioning.
+
+---
+
+## Q191: How would you implement backup strategies for containerized databases?
+
+🧠 **Overview**
+Backups must be consistent, automated, tested, and stored off-cluster.
+
+⚙️ **Strategies**
+
+* Logical backups (pg_dump, mysqldump) for portability.
+* Physical backups / snapshots (LVM, EBS snapshots) for speed and consistency.
+* Use volume snapshots with quiesce where supported.
+* Offload backups to remote object storage (S3) and version them.
+* Scheduled backups + retention policies + periodic restores (DR drills).
+* Point-in-time recovery (WAL shipping, binlog replication) for low RPO.
+
+🧩 **Example (Postgres WAL + basebackup)**
+
+* `pg_basebackup` for full backups + ship WAL segments to S3.
+
+✅ **Best Practices**
+
+* Automate backup verification by restoring to test clusters.
+* Encrypt backups and restrict access.
+* Monitor backup success/failure alerts.
+
+💡 **In short:** Combine snapshots and logical backups, store off-site, and regularly test restores.
+
+---
+
+## Q192: What is Docker's plugin system?
+
+🧠 **Overview**
+Docker plugins extend Docker functionality (volumes, networks, logging, authorization) with pluggable components that integrate into Docker’s API.
+
+⚙️ **How it works**
+Plugins run as containers and communicate with Docker via a defined plugin API.
+
+🧩 **List plugins**
+
+```bash
+docker plugin ls
+docker plugin install rexray/ebs:latest
+```
+
+✅ **Best Practices**
+
+* Vet plugins for security & maintenance.
+* Use trusted vendors (Portworx, Rex-Ray) or in-cluster CSI drivers for Kubernetes.
+
+💡 **In short:** Plugins provide modular extensions for storage, network, and more.
+
+---
+
+## Q193: What types of plugins does Docker support (volume, network, authorization)?
+
+📋 **Types**
+
+* **Volume plugins** — custom storage backends (Rex-Ray, Portworx).
+* **Network plugins** — alternate network drivers (Weave, Cilium via libnetwork/CNI in other orchestrators).
+* **Logging plugins** — forward logs (fluentd, splunk).
+* **Authorization plugins** — policy enforcement for API calls.
+* **Metrics / monitoring plugins** — expose telemetry.
+
+💡 **In short:** Plugins cover storage, networking, logging, and access control.
+
+---
+
+## Q194: How do you install and manage Docker plugins?
+
+🧩 **Install**
+
+```bash
+docker plugin install <plugin-name> --grant-all-permissions
+```
+
+**Enable / disable / remove**
+
+```bash
+docker plugin enable <plugin>
+docker plugin disable <plugin>
+docker plugin remove <plugin>
+```
+
+**List**
+
+```bash
+docker plugin ls
+```
+
+⚠️ **Security note:** Only install trusted plugins and use least privileges.
+
+---
+
+## Q195: What are third-party volume plugins (Rex-Ray, Portworx)?
+
+🧠 **Overview**
+Third-party plugins connect Docker to enterprise storage backends and provide features like replication, snapshots, encryption, and multi-host volumes.
+
+📋 **Examples**
+
+* **Rex-Ray** — integrations with cloud block storage (EBS, Cinder).
+* **Portworx** — distributed storage with HA, replication, encryption, snapshots.
+* **StorageOS**, **OpenEBS** — container-native storage solutions.
+
+💡 **In short:** Use these for production-grade persistent volumes across nodes.
+
+---
+
+## Q196: How would you implement high availability for Docker infrastructure?
+
+🧠 **Overview**
+HA requires redundancy at control plane, worker nodes, storage, and networking.
+
+⚙️ **Approach**
+
+* Run multiple manager nodes (Swarm) or control plane nodes (K8s) across AZs.
+* Use HA registries (replicated Harbor/Artifactory) and proxy caches.
+* Use resilient, replicated storage (Ceph, cloud block storage with replication).
+* Use monitoring, automated failover, and health checks.
+* Automate node replacement (immutable infra + terraform/auto-scaling).
+* Backup cluster state (etcd/raft logs) regularly.
+
+✅ **Best Practices**
+
+* Distribute control plane across failure domains.
+* Monitor quorum and failover behavior.
+* Test restore and failure scenarios.
+
+💡 **In short:** Redundancy + replication + tested failover = HA.
+
+---
+
+## Q197: What strategies would you use for Docker registry high availability?
+
+🧠 **Overview**
+Registry HA ensures image availability and reduces risk of downtime.
+
+⚙️ **Strategies**
+
+* Deploy a highly-available registry (Harbor / Nexus / Artifactory) in clustered mode.
+* Use backend storage that is highly available (S3, GCS, or replicated block storage).
+* Front with a load balancer across registry instances.
+* Configure registry replication across regions (push-mirroring).
+* Implement pull-through cache nodes close to CI/CD runners.
+* Enable authentication, rate-limiting and monitoring.
+
+🧩 **Example (Harbor)**
+
+* Configure Harbor with HA chart (K8s) and object storage backend.
+
+✅ **In short:** Use clustered registry + HA storage + LB + cross-region replication.
+
+---
+
+## Q198: How do you implement disaster recovery for Docker environments?
+
+🧠 **Overview**
+DR covers control plane, images, data, and configuration.
+
+⚙️ **Key components**
+
+* Backup orchestrator state (etcd, swarm raft).
+* Backup persistent volumes (snapshots, offsite storage).
+* Replicate registries and critical images to remote region.
+* Keep IaC (Terraform, CloudFormation) and manifests in version control.
+* Document and automate restore processes; run DR drills.
+* Store secrets externally and back them up securely.
+
+✅ **Best Practices**
+
+* Maintain recovery runbooks with RTO/RPO targets.
+* Automate failover with IaC & orchestration.
+* Regularly test restores.
+
+💡 **In short:** Backup state + images + data + IaC, test restores frequently.
+
+---
+
+## Q199: What are the considerations for Docker in production at scale?
+
+🧠 **Overview**
+Scaling Docker in production requires attention to orchestration, security, storage, networking, and operational processes.
+
+⚙️ **Considerations**
+
+* Use orchestration (Kubernetes/ECS/Swarm) for scheduling and scaling.
+* Centralized logging, monitoring, and tracing.
+* Robust CI/CD with image promotion and immutable artifacts.
+* Registry performance, caching, and access control.
+* Storage performance (IOPS) and volume management.
+* Network policies, service meshes for traffic control and observability.
+* Security posture: image scanning, runtime protection, secrets management.
+* Capacity planning, autoscaling, and cost management.
+* Compliance, auditing, and RBAC.
+
+✅ **Best Practices**
+
+* Standardize images & base OS.
+* Automate infrastructure and deployments.
+* Implement SLOs, alerts, and runbooks.
+
+💡 **In short:** Production at scale requires automation, orchestration, observability, and hardened processes.
+
+---
+
+## Q200: How would you implement container orchestration beyond Docker Compose?
+
+🧠 **Overview**
+For production-grade orchestration you move to specialized orchestrators that provide scheduling, scaling, service discovery, and storage integration.
+
+⚙️ **Options**
+
+* **Kubernetes** — industry standard: pods, StatefulSets, CSI, Helm, operators.
+* **Amazon ECS / EKS / Fargate** — managed container services (AWS).
+* **Nomad** — HashiCorp scheduler (simpler than K8s).
+* **Docker Swarm** — simpler clusters for smaller workloads.
+
+🧩 **Example: Move from Compose to Kubernetes**
+
+* Convert `docker-compose.yml` → K8s manifests (Kompose/Helm).
+* Replace `volumes` with PVCs, `depends_on` with readiness probes.
+* Use Deployments, Services, Ingress, and ConfigMaps/Secrets.
+
+✅ **Best Practices**
+
+* Use GitOps (ArgoCD/Flux) for declarative deployments.
+* Adopt service mesh (Istio/Linkerd) only if needed.
+* Use managed control planes to reduce operational burden.
+
+💡 **In short:** Use Kubernetes or a managed orchestration service for production-scale container orchestration — Compose is great for local/dev only.
+
+---
+
+# Troubleshooting / Scenarios
+
+Below is your **README-style DevOps troubleshooting documentation** for **Q201–Q211 (Docker Troubleshooting & Scenarios)**.
+
+---
+
+## Q201: A container exits immediately after starting. How do you troubleshoot?
+
+🧠 **Overview**
+Containers exit when the **main process (PID 1)** ends. Often caused by missing commands, misconfigured ENTRYPOINT/CMD, or errors during startup.
+
+🧩 **Troubleshooting Steps**
+
+```bash
+docker logs <container>
+docker inspect <container> --format='{{.State.ExitCode}}'
+docker run -it --entrypoint bash <image>
+```
+
+📋 **Common causes**
+
+* Wrong CMD/ENTRYPOINT
+* Script runs and exits
+* App crashes due to missing config/env vars
+* Binary missing execute permissions
+
+💡 **In short:** Check logs → exec into image → verify entrypoint & config.
+
+---
+
+## Q202: Docker build is failing with "No space left on device". What would you check?
+
+🧩 **Checklist**
+
+* Disk usage:
+
+```bash
+df -h
+```
+
+* Docker storage directory (`/var/lib/docker`):
+
+```bash
+du -sh /var/lib/docker/*
+```
+
+* Remove unused artifacts:
+
+```bash
+docker system prune -a
+docker builder prune
+```
+
+* Check inode exhaustion:
+
+```bash
+df -i
+```
+
+💡 **In short:** Disk full under `/var/lib/docker` or inode exhaustion.
+
+---
+
+## Q203: A container cannot connect to another container on the same network. How do you debug?
+
+🧩 **Steps**
+1️⃣ Check if containers share a user-defined network:
+
+```bash
+docker network inspect <network>
+```
+
+2️⃣ Test DNS resolution:
+
+```bash
+docker exec app ping api
+```
+
+3️⃣ Test port reachability:
+
+```bash
+docker exec app curl http://api:8080
+```
+
+4️⃣ Validate service is listening inside container:
+
+```bash
+docker exec api netstat -tulpn
+```
+
+📋 **Common causes**
+
+* Wrong network driver
+* Service not binding to `0.0.0.0`
+* Firewall rules
+* Wrong port exposed/published
+
+💡 **In short:** Check network, DNS, ports, and service bind addresses.
+
+---
+
+## Q204: Docker daemon fails to start. What logs would you examine?
+
+🧩 **Daemon logs**
+
+```bash
+journalctl -u docker -xe
+```
+
+or:
+
+```bash
+/var/log/docker.log
+```
+
+🧩 **System health**
+
+```bash
+systemctl status docker
+```
+
+📋 **Common issues**
+
+* Corrupted `/var/lib/docker`
+* Incompatible storage driver
+* Misconfigured `daemon.json`
+* Kernel issues (cgroups, overlayfs)
+
+💡 **In short:** Check daemon logs + storage driver + config errors.
+
+---
+
+## Q205: A container is running but not responding to requests. How do you investigate?
+
+🧩 **Checks**
+1️⃣ **Application logs**
+
+```bash
+docker logs <container>
+```
+
+2️⃣ **Internal port listening**
+
+```bash
+docker exec <container> netstat -tulpn
+```
+
+3️⃣ **Network mode**
+
+```bash
+docker inspect <container> | jq .[0].HostConfig.NetworkMode
+```
+
+4️⃣ **Ensure app binds to 0.0.0.0**
+Many frameworks bind to localhost by default.
+
+5️⃣ **Host-level firewall**
+
+```bash
+sudo iptables -L
+```
+
+6️⃣ **Health checks failure**
+
+```bash
+docker inspect --format='{{json .State.Health}}' <container>
+```
+
+💡 **In short:** Verify logs → port binding → health → firewall → networking.
+
+---
+
+## Q206: Docker build is extremely slow. What would you optimize?
+
+🛠️ **Optimizations**
+
+* Reduce build context (use `.dockerignore`)
+* Use BuildKit
+* Enable remote cache:
+
+```bash
+docker buildx build --cache-to=type=registry …
+```
+
+* Order layers to maximize caching
+* Avoid large package installs
+* Use small base images
+* Ensure local disk isn’t slow or full
+
+🧩 **Check build context size**
+
+```bash
+du -sh .
+```
+
+💡 **In short:** Optimize caching + context + base images + disk I/O.
+
+---
+
+## Q207: Image layers are not being cached during build. Why?
+
+📋 **Common causes**
+
+* Changed layer content (COPY order wrong)
+* Base image changed (`latest` tag issue)
+* Build context modified unintentionally
+* `.dockerignore` missing entries → invalidates cache
+* Using `ADD` with remote URLs → content changes frequently
+* Not using BuildKit (legacy builder limited)
+
+🧩 **Fix layering**
+
+```Dockerfile
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+```
+
+💡 **In short:** Cache breaks when layer content or order changes.
+
+---
+
+## Q208: A container is using excessive memory. How do you identify the cause?
+
+🧩 **Troubleshooting Steps**
+1️⃣ **Container stats**
+
+```bash
+docker stats <container>
+```
+
+2️⃣ **Inspect memory limits**
+
+```bash
+docker inspect <container> | jq .[].HostConfig.Memory
+```
+
+3️⃣ **Check logs for OOM kills**
+
+```bash
+dmesg | grep -i oom
+```
+
+4️⃣ **Profile application (heap, GC, leaks)**
+
+* Node: `clinic`, Chrome DevTools
+* Java: `jmap`, JFR
+* Python: `tracemalloc`, `memray`
+
+5️⃣ **Look for runaway processes**
+
+```bash
+docker exec <container> top
+```
+
+💡 **In short:** Use `docker stats`, inspect OOM, profile the app.
+
+---
+
+## Q209: Port mapping is not working and the application is not accessible. What would you check?
+
+🧩 **Checklist**
+1️⃣ Correct port publish?
+
+```bash
+docker run -p 8080:80 myapp
+```
+
+2️⃣ App binding?
+
+* Must bind to `0.0.0.0`, not `127.0.0.1`.
+
+3️⃣ Check container port:
+
+```bash
+docker exec <c> netstat -tulpn
+```
+
+4️⃣ Host firewall:
+
+```bash
+sudo ufw status
+```
+
+5️⃣ Conflicting processes on host port:
+
+```bash
+sudo lsof -i :8080
+```
+
+6️⃣ Wrong network mode (`host` mode bypasses `-p`).
+
+💡 **In short:** Check binding, mapping, firewall, and port conflicts.
+
+---
+
+## Q210: Docker pull is failing with "TLS handshake timeout". How do you resolve this?
+
+🧩 **Fixes**
+
+* Check DNS:
+
+```bash
+dig registry-1.docker.io
+```
+
+* Increase timeout:
+
+```bash
+export DOCKER_CLIENT_TIMEOUT=300
+export COMPOSE_HTTP_TIMEOUT=300
+```
+
+* Use registry mirrors:
+
+```json
+{ "registry-mirrors": ["https://mirror.gcr.io"] }
+```
+
+* Check firewall/SSL inspection devices
+* Validate proxy settings:
+
+```bash
+env | grep -i proxy
+```
+
+💡 **In short:** Fix DNS/network latency or use a registry mirror.
+
+---
+
+## Q211: A volume mount is not working and files are not visible in the container. What's wrong?
+
+📋 **Common causes**
+
+* Wrong mount path or directory doesn’t exist
+* Bind mount overwriting image-internal directory
+* SELinux/AppArmor blocking mount
+* Using relative paths incorrectly
+* User permissions mismatch
+* Trying to mount on a location owned by root
+
+🧩 **Debug**
+
+```bash
+docker inspect <container> | jq .[].Mounts
+```
+
+🧩 **Fix (bind mount)**
+
+```bash
+docker run -v $(pwd)/data:/app/data myapp
+```
+
+🧩 **Fix (permission)**
+
+```bash
+sudo chown -R 1000:1000 ./data
+```
+
+💡 **In short:** Most issues come from incorrect paths, permissions, or mount ordering.
+
+---
+Below is your **README-style troubleshooting documentation** for **Q212–Q221 (Advanced Docker Scenarios)**.
+
+---
+
+## Q212: Docker Compose up fails with "network not found". How do you fix this?
+
+🧠 **Overview**
+Compose expects networks defined in `docker-compose.yml` or previously created. Missing or orphaned networks cause this error.
+
+🧩 **Fix Steps**
+1️⃣ Ensure network is defined:
+
+```yaml
+networks:
+  backend:
+```
+
+2️⃣ Recreate missing network:
+
+```bash
+docker network create backend
+```
+
+3️⃣ Remove orphaned networks:
+
+```bash
+docker network prune
+```
+
+4️⃣ Ensure Compose project name matches:
+
+```bash
+docker compose -p myproj up
+```
+
+📋 **Common causes**
+
+* Typo in network name
+* Old Compose project referencing stale networks
+* Manually deleted networks
+
+💡 **In short:** Define or recreate the network; ensure names match.
+
+---
+
+## Q213: Containers cannot resolve DNS names. What would you investigate?
+
+🧩 **Checklist**
+1️⃣ Check Docker DNS:
+
+```bash
+docker exec app cat /etc/resolv.conf
+```
+
+2️⃣ Verify internal DNS works:
+
+```bash
+docker exec app ping api
+```
+
+3️⃣ Check host DNS:
+
+```bash
+cat /etc/resolv.conf
+```
+
+4️⃣ Inspect network:
+
+```bash
+docker network inspect <network>
+```
+
+5️⃣ If using corporate proxy: DNS interception/firewall issues.
+
+📋 **Common causes**
+
+* Network not user-defined (bridge default has limited DNS)
+* Host DNS misconfigured
+* CNI failures (in orchestrators)
+
+💡 **In short:** Inspect `/etc/resolv.conf`, check network, test container-level DNS.
+
+---
+
+## Q214: A container is in "Created" state but won't start. How do you debug?
+
+🧩 **Debug Steps**
+
+```bash
+docker container start <id>
+docker logs <id>
+docker inspect <id>
+```
+
+Check:
+
+* ENTRYPOINT/CMD errors
+* Missing files or permissions
+* Port conflicts
+* Read-only FS issues
+* Required env vars missing
+
+🧩 Run with shell:
+
+```bash
+docker run -it --entrypoint sh <image>
+```
+
+💡 **In short:** Logs + inspect + shell into container image.
+
+---
+
+## Q215: Docker ps shows different container IDs than what you expected. Why?
+
+📋 **Reasons**
+
+* Containers recreated by Compose (project-prefixed names)
+* Old container removed and a new one created with new ID
+* Using `docker ps` vs `docker ps -a` (stopped vs running)
+* Multiple compose projects with the same service name
+* Container ID *prefixes* are shown, not full IDs
+
+🧩 Check with:
+
+```bash
+docker ps -a --no-trunc
+```
+
+💡 **In short:** Containers are recreated often, IDs change; `ps` shows only shortened IDs.
+
+---
+
+## Q216: Container logs are not appearing with docker logs command. What could be wrong?
+
+📋 **Possible causes**
+
+* Using a **non-logging driver** (e.g., `--log-driver=none`)
+* Logging driver set to syslog/fluentd; logs not local
+* App writes logs to files instead of STDOUT/STDERR
+* TTY mode suppressing logs (`-t` used incorrectly)
+* Container exited too early and logs rotated out
+
+🧩 Check driver:
+
+```bash
+docker inspect <c> --format '{{.HostConfig.LogConfig.Type}}'
+```
+
+💡 **In short:** Docker logs only show STDOUT when using json-file driver.
+
+---
+
+## Q217: A health check is failing but the application seems to work. How do you debug?
+
+🧩 **Steps**
+1️⃣ Inspect health state:
+
+```bash
+docker inspect <c> --format '{{json .State.Health}}'
+```
+
+2️⃣ Run the same command manually:
+
+```bash
+docker exec <c> sh -c "<HEALTHCHECK_CMD>"
+```
+
+3️⃣ Check:
+
+* Wrong port
+* App takes longer to start → adjust `start-period`
+* Missing dependencies
+* Command exits with wrong exit code
+* Container DNS failures inside health check
+
+🧩 Example fix:
+
+```Dockerfile
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
+  CMD curl -f http://localhost:8080/health || exit 1
+```
+
+💡 **In short:** Manually run the health check inside the container.
+
+---
+
+## Q218: Docker build fails with "unable to prepare context". What's the issue?
+
+📋 **Common causes**
+
+* Path to Dockerfile or context incorrect
+* Missing permissions on build directory
+* Special characters or symlinks causing issues
+* Running build outside correct directory
+
+🧩 Fix
+
+```bash
+docker build -t app .
+docker build -f Dockerfile .
+```
+
+Check `.dockerignore` — it may accidentally exclude Dockerfile.
+
+💡 **In short:** Fix the build context path or permissions.
+
+---
+
+## Q219: A multi-stage build is not reducing image size as expected. What would you check?
+
+📋 **Checklist**
+
+* Ensure you’re using the **final stage**:
+
+```bash
+docker build -t app --target final .
+```
+
+* Check if large files sneak in via COPY:
+
+```Dockerfile
+COPY . .   # BAD — use selective copy
+```
+
+* Check base images: alpine/distroless instead of ubuntu
+* Use `dive` to analyze remaining layers
+* Confirm build artifacts not accidentally copied:
+
+```Dockerfile
+COPY --from=builder /app/bin .
+```
+
+💡 **In short:** Validate COPY paths and base image choice.
+
+---
+
+## Q220: Environment variables are not being passed to the container. How do you fix this?
+
+🧩 **Check 1: ENV vs ARG**
+ARG works only at build time — won’t appear at runtime.
+
+🧩 **Fix examples**
+
+Pass via CLI:
+
+```bash
+docker run -e APP_ENV=prod myapp
+```
+
+Compose:
+
+```yaml
+environment:
+  APP_ENV: prod
+```
+
+Using `.env`:
+
+```
+APP_ENV=prod
+```
+
+🧩 Check inside container:
+
+```bash
+docker exec <c> env
+```
+
+💡 **In short:** Use `ENV` or `-e`, not `ARG`, for runtime variables.
+
+---
+
+## Q221: A container keeps restarting in a loop. What would you investigate?
+
+📋 **Investigations**
+
+* **Health check failures**:
+
+```bash
+docker inspect <c> --format '{{json .State.Health}}'
+```
+
+* **Application crash** (check logs):
+
+```bash
+docker logs <c>
+```
+
+* **Restart policy** (auto-restart always):
+
+```bash
+docker inspect <c> | jq .[].HostConfig.RestartPolicy
+```
+
+* **Resource limits** causing OOM:
+
+```bash
+dmesg | grep -i oom
+```
+
+* **Configuration errors** (missing env vars, DB unreachable)
+
+🧩 Disable restart loop temporarily:
+
+```bash
+docker update --restart=no <c>
+```
+
+💡 **In short:** Crashes, health-check failures, or bad config cause restart loops.
+
+---
+
+Below is your **README-style troubleshooting documentation** for **Q222–Q239 (Advanced Docker Troubleshooting)**.
+
+---
+
+## Q222: Docker daemon is consuming high CPU. What could be causing this?
+
+🧠 **Overview**
+High `dockerd` CPU can come from heavy image pulls, many concurrent container events, logging driver overhead, frequent container restarts, or corrupted storage metadata.
+
+⚙️ **What to check**
+
+* High event churn (start/stop loops).
+* Large number of image pulls or pushes.
+* Logging driver throughput (fluentd/syslog).
+* Storage driver issues (overlay metadata churn).
+* Many containers performing I/O heavy ops that cause daemon bookkeeping.
+
+🧩 **Commands**
+
+```bash
+# daemon logs
+journalctl -u docker -n 200 --no-pager
+# check active events and restarts
+docker ps -a --filter "status=restarting"
+# check I/O and CPU per process
+top -p $(pgrep dockerd)
+iotop -o
+```
+
+✅ **Best Practices / Fixes**
+
+* Reduce container churn and fix restart loops.
+* Temporarily switch to `json-file` for debugging to rule out logging-driver load.
+* Inspect and repair `/var/lib/docker` (careful).
+* Restart dockerd after maintenance window.
+* Upgrade Docker to latest stable release.
+
+💡 **In short:** Investigate event churn, logging, storage driver; fix offending containers or upgrade/repair daemon.
+
+---
+
+## Q223: Cannot remove a container: "device or resource busy". How do you resolve this?
+
+🧠 **Overview**
+The error indicates mountpoints or processes still using container resources (bind mounts, volumes, or open file descriptors).
+
+⚙️ **Steps**
+
+1. Stop container:
+
+```bash
+docker stop <id>
+```
+
+2. Check mounts:
+
+```bash
+mount | grep <container_id_or_mountpoint>
+```
+
+3. List processes using mount:
+
+```bash
+lsof +f -- /path/to/mount
+# or
+fuser -m /path/to/mount
+```
+
+4. Kill offending processes and retry:
+
+```bash
+kill -9 <pid>
+docker rm <id>
+```
+
+5. If systemd-managed mounts (like systemd-nspawn), unmount:
+
+```bash
+umount /path/to/mount
+```
+
+🧩 **Commands**
+
+```bash
+# show container mounts
+docker inspect -f '{{json .Mounts}}' <id> | jq
+# show processes using docker's graph dir
+lsof +D /var/lib/docker
+```
+
+✅ **Best Practices**
+
+* Avoid leaving shells/processes attached to volumes.
+* Use `docker container prune` cautiously.
+* Reboot as last resort if stale kernel handles persist.
+
+💡 **In short:** Find and stop processes using the mount, unmount, then remove container.
+
+---
+
+## Q224: Docker network inspect shows no containers attached despite containers running. Why?
+
+🧠 **Overview**
+This often happens when containers are on a different network/project (Compose project name), using host network mode, or the network has been recreated so IDs changed.
+
+⚙️ **What to check**
+
+* Network driver and scope.
+* Container's `NetworkSettings`.
+* Compose project name mismatch or recreated networks.
+
+🧩 **Commands**
+
+```bash
+# inspect network
+docker network inspect <network>
+# inspect container network info
+docker inspect -f '{{json .NetworkSettings}}' <container> | jq
+# check if container uses host network
+docker inspect -f '{{.HostConfig.NetworkMode}}' <container>
+```
+
+✅ **Best Practices / Fixes**
+
+* Ensure containers and network belong to same Compose project (`-p`).
+* If using `--network host`, network inspect will not show attachment.
+* Recreate network and attach container:
+
+```bash
+docker network connect <network> <container>
+```
+
+💡 **In short:** Container might be on a different network mode/project — verify container `NetworkSettings` and reconnect if needed.
+
+---
+
+## Q225: Container file permissions are incorrect causing application failures. How do you fix this?
+
+🧠 **Overview**
+Permission mismatches occur when host UID/GID differ from container expectations, or files copied in image have wrong ownership.
+
+⚙️ **Fix approaches**
+
+* Set ownership at build time (`--chown`) or runtime (`chown` on host).
+* Run container as specific user with `-u UID:GID`.
+
+🧩 **Examples**
+
+```Dockerfile
+COPY --chown=1000:1000 app/ /app
+USER 1000
+```
+
+```bash
+# runtime mount fix
+sudo chown -R 1000:1000 ./host-dir
+docker run -v $(pwd)/host-dir:/data -u 1000:1000 myapp
+```
+
+✅ **Best Practices**
+
+* Prefer non-root user in image.
+* Use `--chown` in `COPY`/`ADD`.
+* For bind mounts, match host ownership or use entrypoint scripts to `chown` on startup (careful with performance).
+
+💡 **In short:** Align UID/GID between host and container; use `--chown` or change ownership before running.
+
+---
+
+## Q226: Docker build fails with "COPY failed: stat". What path issue exists?
+
+🧠 **Overview**
+`COPY` `stat` errors usually mean the source path is missing in the build **context** or excluded by `.dockerignore`.
+
+⚙️ **What to check**
+
+* Are you running `docker build` from correct context directory?
+* Is the source path spelled correctly and present?
+* Is `.dockerignore` excluding the file?
+
+🧩 **Examples**
+
+```bash
+# correct usage: run from project root where file exists
+docker build -t app .
+# or explicitly set context and Dockerfile
+docker build -f ./docker/Dockerfile -t app ./context-dir
+```
+
+✅ **Best Practices**
+
+* Keep Dockerfile and context paths explicit.
+* Check `.dockerignore` contents.
+* Use relative paths inside `COPY` that exist in the context.
+
+💡 **In short:** The file to copy isn't in the build context or is ignored; verify paths and `.dockerignore`.
+
+---
+
+## Q227: A container cannot write to a mounted volume. What permission issue exists?
+
+🧠 **Overview**
+Write failures are usually due to host filesystem ownership/permissions, SELinux/AppArmor labels, or mount options like `ro`.
+
+⚙️ **Checks & fixes**
+
+* Verify mount is writable:
+
+```bash
+docker inspect -f '{{json .Mounts}}' <container> | jq
+# check host fs perms
+ls -ld /host/path
+# try touch as container user
+docker exec -it <c> sh -c 'touch /mount/path/test || echo FAIL'
+```
+
+* Fix ownership:
+
+```bash
+sudo chown -R 1000:1000 /host/path
+```
+
+* For SELinux-enabled hosts, add `:z` or `:Z`:
+
+```bash
+docker run -v /host/dir:/container/dir:z myapp
+```
+
+* Ensure mount not read-only:
+
+```bash
+docker run -v /host/dir:/container/dir:rw ...
+```
+
+✅ **Best Practices**
+
+* Create directories on host with correct owner before mounting.
+* Use named volumes to avoid host permission surprises.
+* Handle SELinux/AppArmor labeling when needed.
+
+💡 **In short:** Adjust host ownership, SELinux labels, or mount mode to allow writes.
+
+---
+
+## Q228: Docker Compose depends_on is not enforcing startup order. How do you handle this?
+
+🧠 **Overview**
+`depends_on` only controls start order, not readiness. Services may start but not be ready to accept connections.
+
+⚙️ **Solutions**
+
+* Use healthchecks and `condition: service_healthy` (Compose v3.9+).
+* Add init/wait-for scripts (e.g., `wait-for`, `dockerize`) in consumer service.
+* Implement retries/backoff in the application.
+
+🧩 **Example (compose)**
+
+```yaml
+services:
+  db:
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+
+  app:
+    depends_on:
+      db:
+        condition: service_healthy
+```
+
+✅ **Best Practices**
+
+* Prefer application-level retries and readiness probes.
+* Use orchestration (Kubernetes) for robust dependency management when at scale.
+
+💡 **In short:** Use health checks + `condition: service_healthy` or implement wait-for logic; `depends_on` alone is insufficient.
+
+---
+
+## Q229: Containers are using the wrong DNS servers. How do you configure custom DNS?
+
+🧠 **Overview**
+Docker containers inherit DNS from Docker daemon or host; you can override via daemon config, container flags, or Compose.
+
+⚙️ **Configuration options**
+
+* Per-container:
+
+```bash
+docker run --dns 10.0.0.2 --dns-search example.com myapp
+```
+
+* Global daemon `/etc/docker/daemon.json`:
+
+```json
+{ "dns": ["10.0.0.2", "8.8.8.8"] }
+```
+
+* Compose:
+
+```yaml
+services:
+  app:
+    dns:
+      - 10.0.0.2
+```
+
+✅ **Best Practices**
+
+* Avoid injecting corporate DNS that causes split-horizon issues unless necessary.
+* For orchestrators, configure cluster DNS (CoreDNS) appropriately.
+
+💡 **In short:** Use `--dns` per run or set daemon `dns` to enforce custom resolvers.
+
+---
+
+## Q230: A containerized application is experiencing network latency. What would you investigate?
+
+🧠 **Overview**
+Network latency can come from host network stack, overlay networks, MTU mismatches, DNS resolution delays, or load balancer misconfiguration.
+
+⚙️ **Checklist**
+
+* Measure latency host ↔ container vs container ↔ container:
+
+```bash
+# inside container
+ping -c 10 <peer>
+# from host to container IP
+ping -c 10 <container_ip>
+```
+
+* Check MTU and fragmentation:
+
+```bash
+ip link show
+ip addr show docker0
+```
+
+* Inspect overlay/vxlan MTU (often 1450) and adjust.
+* Check DNS latency `/etc/resolv.conf` and use local caching.
+* Look at network namespaces and iptables rules causing NAT overhead.
+* Check load balancer or ingress causing extra hops.
+
+🧩 **Tools**
+`ping`, `traceroute`, `ss`, `tcpdump`, `wireshark` (pcap), `iftop`.
+
+✅ **Best Practices**
+
+* Use host networking for low-latency services when safe.
+* Tune MTU consistently across hosts.
+* Use service mesh only when benefits outweigh added latency.
+
+💡 **In short:** Measure latencies at different hops, check MTU/NAT, DNS, and overlay overhead.
+
+---
+
+## Q231: Docker build is not using BuildKit despite being enabled. What configuration is wrong?
+
+🧠 **Overview**
+BuildKit may be disabled in environment, daemon features, or you're invoking legacy build command without enabling BuildKit.
+
+⚙️ **What to check**
+
+* Environment variable: `DOCKER_BUILDKIT=1` set for the shell/CI job.
+* Daemon `features.buildkit` enabled in `/etc/docker/daemon.json`.
+* Using `docker buildx` vs `docker build` — some CI runners prefer `buildx`.
+* Older Docker CLI/daemon versions without BuildKit support.
+
+🧩 **Commands**
+
+```bash
+# enable per process
+DOCKER_BUILDKIT=1 docker build -t myapp .
+# check daemon
+cat /etc/docker/daemon.json
+```
+
+✅ **Best Practices**
+
+* Prefer `docker buildx build` in CI for consistent BuildKit behavior.
+* Ensure both client & server Docker versions support BuildKit.
+
+💡 **In short:** Verify `DOCKER_BUILDKIT=1`, daemon features, and use `buildx` if needed.
+
+---
+
+## Q232: Image push to registry is failing with "denied: access forbidden". What would you check?
+
+🧠 **Overview**
+This indicates auth/permissions issues: wrong credentials, lack of push rights, or repository policy preventing push.
+
+⚙️ **Checklist**
+
+* Logged in to registry:
+
+```bash
+docker login myregistry.example.com
+```
+
+* Correct namespace/repo name (some registries require org prefix).
+* User has push permission to repository.
+* Registry enforces signed images or policy blocking pushes.
+* Check token expiry for CI credentials.
+
+🧩 **Commands**
+
+```bash
+docker pull myregistry.example.com/myrepo/myimage:tag
+docker push myregistry.example.com/myrepo/myimage:tag
+# inspect response for 403 details
+```
+
+✅ **Best Practices**
+
+* Use automation principal with least-privilege push rights.
+* Rotate credentials and use service accounts / tokens.
+* For ECR/GCR/ACR, ensure CLI auth (aws ecr get-login-password, gcloud auth configure-docker).
+
+💡 **In short:** Re-authenticate, verify repo name and permissions, check registry policies.
+
+---
+
+## Q233: Docker exec is failing with "container not running". Why might a container show as running but reject exec?
+
+🧠 **Overview**
+Possible race conditions, PID namespace weirdness, or container using `--init` or paused state. Sometimes `docker ps` shows restarting containers while transiently appearing "running" in UI.
+
+⚙️ **What to check**
+
+* Actual state:
+
+```bash
+docker inspect -f '{{.State.Status}} {{.State.Running}} {{.State.Restarting}}' <id>
+```
+
+* If container is `paused`:
+
+```bash
+docker container ls --filter "status=paused"
+docker unpause <id>
+```
+
+* If the container just exited quickly after `ps` snapshot, `exec` will fail.
+* Check if container uses a custom runtime that disallows exec.
+
+🧩 **Commands**
+
+```bash
+docker inspect <id> | jq .State
+```
+
+✅ **Best Practices**
+
+* Use `docker logs` to see crash reason.
+* Avoid relying on `ps` during state transitions; script with retries.
+
+💡 **In short:** Container may be paused, restarting, or exited between checks — inspect `.State` and logs.
+
+---
+
+## Q234: A container is showing "unhealthy" status. How do you debug the health check?
+
+🧠 **Overview**
+Unhealthy means the configured healthcheck command returned non-zero repeatedly or timed out.
+
+⚙️ **Steps**
+
+1. Inspect health detail:
+
+```bash
+docker inspect --format='{{json .State.Health}}' <id> | jq
+```
+
+2. Run the health command manually inside the container:
+
+```bash
+docker exec -it <id> sh -c "<HEALTHCHECK_CMD>"
+```
+
+3. Check timing: adjust `start-period`, `interval`, `timeout`, `retries`.
+4. Verify service endpoint (port binding, host/localhost).
+5. Look at application logs for errors during health probes.
+
+🧩 **Example**
+
+```Dockerfile
+HEALTHCHECK --start-period=30s --interval=10s --timeout=3s CMD curl -f http://localhost:8080/health || exit 1
+```
+
+✅ **Best Practices**
+
+* Keep healthchecks lightweight and deterministic.
+* Use `start-period` for slow-starting apps.
+* Ensure healthcheck uses correct network interface (0.0.0.0 vs localhost).
+
+💡 **In short:** Inspect health state, run check manually, and tune timings.
+
+---
+
+## Q235: Docker Compose volumes are not persisting data between restarts. What's wrong?
+
+🧠 **Overview**
+Causes: using anonymous volumes that get removed, mounting ephemeral tmpfs, or recreating containers with `docker-compose down -v` which removes volumes.
+
+⚙️ **What to check**
+
+* Are you using named volumes?
+
+```yaml
+volumes:
+  dbdata:
+services:
+  db:
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+```
+
+* Did you run `docker-compose down -v`? That deletes volumes.
+* Are you using `tmpfs` mounts? Those are ephemeral.
+
+🧩 **Commands**
+
+```bash
+docker volume ls
+docker volume inspect <vol>
+```
+
+✅ **Best Practices**
+
+* Use named volumes or host paths for persistence.
+* Avoid `down -v` in production.
+* Backup volumes to external storage (tar/S3).
+
+💡 **In short:** Use named volumes and avoid commands that remove volumes; `tmpfs` and `down -v` cause data loss.
+
+---
+
+## Q236: Container networking is slow compared to host networking. What would you investigate?
+
+🧠 **Overview**
+Overlay networks, NAT, iptables rules, MTU mismatches, and network namespace overhead can slow container networking.
+
+⚙️ **Checklist**
+
+* Compare latency & throughput host vs container.
+* Check if using overlay/VXLAN; measure extra encapsulation overhead.
+* Inspect iptables rules and conntrack table saturation:
+
+```bash
+sudo conntrack -L | wc -l
+sudo sysctl net.netfilter.nf_conntrack_max
+```
+
+* Verify MTU across hosts and path MTU causing fragmentation.
+* Check CPU saturation causing packet processing delays.
+
+🧩 **Tools**
+`iperf3`, `tc`, `tcpdump` (compare inside/outside container).
+
+✅ **Best Practices**
+
+* Use host networking for latency-sensitive services.
+* Tune conntrack table and netfilter settings.
+* Ensure consistent MTU and avoid double encapsulation.
+
+💡 **In short:** Overlay/NAT and conntrack/MTU issues commonly explain slower container networking.
+
+---
+
+## Q237: Cannot connect to Docker daemon on remote host. What configuration is needed?
+
+🧠 **Overview**
+Remote access requires `dockerd` listening on TCP, proper TLS config, and firewall rules.
+
+⚙️ **Steps**
+
+1. Configure daemon to listen (securely) in `/etc/docker/daemon.json`:
+
+```json
+{
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"]
+}
+```
+
+2. Use TLS certificates for authentication (recommended) or configure SSH tunnel.
+3. Open port 2376 (or chosen port) in firewall/security groups.
+4. From client:
+
+```bash
+export DOCKER_HOST=tcp://host:2376
+export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=~/.docker/certs
+docker info
+```
+
+✅ **Best Practices**
+
+* Never expose Docker API without TLS + mutual auth.
+* Use SSH `docker -H ssh://user@host` as a secure alternative.
+* Use Bastion/Jumphost for admin access.
+
+💡 **In short:** Enable TCP socket with TLS or use SSH; open firewall and provide proper certs.
+
+---
+
+## Q238: Docker build fails with "invalid reference format". What syntax error exists?
+
+🧠 **Overview**
+This indicates an incorrect image name/tag format (bad characters, missing tag when required, using uppercase in some contexts, or spaces).
+
+⚙️ **Common mistakes**
+
+* Using spaces in image name or tag:
+
+```bash
+docker build -t "myapp: latest" .   # invalid
+```
+
+* Missing repo/name part when pushing to registry requiring namespace.
+* Using uppercase letters / illegal chars in tag.
+
+🧩 **Valid examples**
+
+```bash
+docker build -t myrepo/myapp:1.2.3 .
+docker tag myapp myrepo/myapp:1.2.3
+```
+
+✅ **Best Practices**
+
+* Use lowercase, `[a-z0-9._-]` for repo and tag parts.
+* Avoid spaces and special characters.
+
+💡 **In short:** Fix the image name/tag syntax — no spaces, use allowed characters and valid `name:tag` format.
+
+---
+
+## Q239: A container has orphaned volumes consuming disk space. How do you clean them up?
+
+🧠 **Overview**
+Orphaned volumes (unused) linger and consume space; Docker provides commands to prune them safely.
+
+⚙️ **Commands**
+
+* List dangling volumes:
+
+```bash
+docker volume ls -f dangling=true
+```
+
+* Inspect to confirm:
+
+```bash
+docker volume inspect <vol>
+```
+
+* Remove all unused volumes interactively:
+
+```bash
+docker volume prune
+```
+
+* Remove specific volume:
+
+```bash
+docker volume rm <vol_name>
+```
+
+🧩 **Automated cleanup**
+
+```bash
+# careful: will remove unused images, containers, networks, volumes
+docker system prune --volumes
+```
+
+✅ **Best Practices**
+
+* Periodically audit volumes before pruning.
+* Keep backups of important volumes before deletion.
+* Use naming conventions for volumes to identify purpose.
+
+💡 **In short:** Use `docker volume prune` or `docker volume rm` after verification to reclaim disk space.
+
+---
+
+Below is your **README-style troubleshooting documentation** for **Q240–Q254 (Advanced Docker Troubleshooting & Scenarios)**.
+
+---
+
+## Q240: ARG values are not being substituted in Dockerfile. What's the syntax issue?
+
+🧠 **Overview**
+`ARG` must be **declared before** being used, and cannot be referenced before its definition. Also, `ARG` is only available at **build time**, not runtime.
+
+🧩 **Correct syntax**
+
+```Dockerfile
+ARG VERSION=1.0
+FROM alpine:${VERSION}
+```
+
+🧩 **Common mistakes**
+
+* Using `ARG` before declaring it:
+
+```Dockerfile
+FROM alpine:${VERSION}   # VERSION not declared yet
+ARG VERSION
+```
+
+* Expecting ARG to work at runtime (use `ENV` instead).
+
+💡 **In short:** Declare ARG before use; ARG is build-time only.
+
+---
+
+## Q241: Docker Compose override file is not being applied. What would you check?
+
+🧠 **Overview**
+Compose merges `docker-compose.override.yml` automatically *only if filenames match* and project name matches.
+
+📋 **Checklist**
+
+* Ensure file name is exactly `docker-compose.override.yml`.
+* Check project directory is correct (`docker compose` uses working directory).
+* Using Compose V2? It supports auto-merge; older Compose may require explicit `-f`.
+
+🧩 **Explicit usage**
+
+```bash
+docker compose -f docker-compose.yml -f custom.override.yml up
+```
+
+💡 **In short:** Check filename, working directory, and merge order.
+
+---
+
+## Q242: Container startup is taking much longer than expected. What would you profile?
+
+🧠 **Overview**
+Slow startup can be due to image size, slow mounts, app initialization, healthcheck gates, DNS latency, or dependency waits.
+
+🧩 **Profile the following:**
+
+* Image pull time (`docker pull` speed).
+* Startup script steps (`ENTRYPOINT` debugging).
+* Application boot logs.
+* Wait-for scripts & DB connectivity.
+* DNS resolution slowdown.
+* Volume mount latency (NFS/EFS).
+* Health check `start-period`.
+
+🧩 **Debug**
+
+```bash
+docker run -it --entrypoint bash myapp
+time ./start.sh
+```
+
+💡 **In short:** Measure pull time, entrypoint execution, dependencies, and DNS/mount latency.
+
+---
+
+## Q243: A bind mount is not reflecting file changes in real-time. What caching issue exists?
+
+🧠 **Overview**
+On macOS/Windows Docker Desktop, bind mounts use file sync layers where changes may be cached due to FUSE/virtualization.
+
+📋 **Fixes**
+
+* Use `cached`, `delegated`, or `consistent` options to tune behavior:
+
+```bash
+docker run -v $(pwd):/app:delegated app
+```
+
+* Use **Mutagen**, **docker-sync**, or WSL2 for better file sync.
+* Avoid mounting large directories on Desktop environments.
+
+💡 **In short:** Desktop bind mounts use slow, cached file sync → use delegated/cached or alternative sync tools.
+
+---
+
+## Q244: Docker prune removed more than intended. How do you recover?
+
+⚠️ **Overview**
+Prune permanently deletes unused images, containers, networks, and optionally volumes. Recovery is limited.
+
+🧩 **Attempt recovery**
+
+* Check if data was stored on persistent volumes not deleted:
+
+```bash
+docker volume ls
+```
+
+* Restore images from registry using tags/digests:
+
+```bash
+docker pull <image>
+```
+
+* If volumes lost → restore from backups or snapshots (EBS, snapshots, NFS backups).
+
+📋 **Recovery limits**
+
+* Deleted volumes cannot be recovered unless backed up.
+* Deleted local-only images must be rebuilt.
+
+💡 **In short:** Recover from backups or remote registry; prune is destructive with no native restore.
+
+---
+
+## Q245: Container timezone is incorrect. How do you set it properly?
+
+🧩 **Methods**
+1️⃣ Set timezone inside container via environment variable (if image supports it):
+
+```bash
+docker run -e TZ=Asia/Kolkata myapp
+```
+
+2️⃣ Mount host timezone:
+
+```bash
+docker run -v /etc/localtime:/etc/localtime:ro myapp
+```
+
+3️⃣ Install tzdata (Debian/Ubuntu-based):
+
+```Dockerfile
+RUN apt-get update && apt-get install -y tzdata
+ENV TZ=Asia/Kolkata
+```
+
+💡 **In short:** Set `TZ`, mount `/etc/localtime`, or install tzdata depending on image.
+
+---
+
+## Q246: A container's IP address keeps changing. How do you assign a static IP?
+
+🧠 **Overview**
+Static IPs require a **user-defined bridge network** with a defined subnet.
+
+🧩 **Example**
+
+```bash
+docker network create --subnet=172.20.0.0/16 mynet
+docker run --net=mynet --ip=172.20.0.10 myapp
+```
+
+⚠️ Static IPs only work on custom bridge networks, not default bridge or overlay networks.
+
+💡 **In short:** Create custom network → assign `--ip`.
+
+---
+
+## Q247: Docker build cache is being invalidated unnecessarily. How do you optimize layer order?
+
+🧠 **Overview**
+Layers must be ordered from **least frequently changing → most frequently changing**.
+
+🧩 **Good layering**
+
+```Dockerfile
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+RUN python setup.py install
+```
+
+🧩 **Bad layering**
+
+```Dockerfile
+COPY . .
+RUN pip install -r requirements.txt
+```
+
+📋 **Tips**
+
+* COPY only necessary files early.
+* Use `.dockerignore` to reduce context churn.
+* Pin base images.
+
+💡 **In short:** Put dependency steps first and app code later.
+
+---
+
+## Q248: Containers cannot access the internet. What network configuration is wrong?
+
+🧠 **Checklist**
+
+* Check host forwarding/NAT:
+
+```bash
+iptables -t nat -L -n
+```
+
+* Check Docker's bridge network is up:
+
+```bash
+ip addr show docker0
+```
+
+* Check DNS:
+
+```bash
+docker run busybox nslookup google.com
+```
+
+* Corporate proxies may block outbound connections.
+* IP forwarding disabled:
+
+```bash
+sysctl net.ipv4.ip_forward
+```
+
+🧩 **Fix**
+
+```bash
+sudo sysctl -w net.ipv4.ip_forward=1
+```
+
+💡 **In short:** NAT/DNS/IP-forwarding misconfiguration commonly causes no-internet issues.
+
+---
+
+## Q249: Docker registry authentication is failing. How do you troubleshoot credentials?
+
+🧠 **Checklist**
+1️⃣ Validate login:
+
+```bash
+docker login <registry>
+```
+
+2️⃣ Check credential store:
+
+```bash
+cat ~/.docker/config.json
+```
+
+3️⃣ For ECR:
+
+```bash
+aws ecr get-login-password | docker login ...
+```
+
+4️⃣ For GCR:
+
+```bash
+gcloud auth configure-docker
+```
+
+5️⃣ For ACR:
+
+```bash
+az acr login -n <registry>
+```
+
+📋 **Common causes**
+
+* Expired tokens
+* Wrong repo name or namespace
+* Configured credential helper interfering
+* TLS inspection breaking auth requests
+
+💡 **In short:** Re-auth, verify config.json, check registry-specific login.
+
+---
+
+## Q250: A container exits with code 137. What does this indicate and how do you fix it?
+
+🧠 **Overview**
+Exit code **137 = SIGKILL**, often due to **OOM kill** (Out-of-memory).
+
+🧩 **Confirm**
+
+```bash
+dmesg | grep -i kill
+docker inspect <c> | jq .[].State
+```
+
+🧩 **Fixes**
+
+* Increase memory:
+
+```bash
+docker run --memory=1g myapp
+```
+
+* Optimize app memory usage.
+* Add swap (non-production usually).
+* Tune GC settings (Java, Node).
+* Fix memory leaks.
+
+💡 **In short:** Code 137 means OOM killed → increase memory or fix leak.
+
+---
+
+## Q251: ENTRYPOINT is not executing the correct command. What syntax issue exists?
+
+🧠 **Overview**
+ENTRYPOINT must be in **exec form** or scripts must have proper shebang and execute permissions.
+
+📋 **Common mistakes**
+
+* Shell form doing unexpected parsing:
+
+```Dockerfile
+ENTRYPOINT python app.py   # BAD
+```
+
+* Exec form correct:
+
+```Dockerfile
+ENTRYPOINT ["python", "app.py"]
+```
+
+* Missing shebang in entrypoint script:
+
+```bash
+#!/bin/sh
+```
+
+* Script not executable:
+
+```bash
+chmod +x entrypoint.sh
+```
+
+💡 **In short:** Use exec form or fix script permissions.
+
+---
+
+## Q252: Docker Compose is using the wrong .env file. How do you specify the correct one?
+
+🧠 **Overview**
+Compose automatically loads `.env` from the project directory. To override, specify `--env-file`.
+
+🧩 **Correct usage**
+
+```bash
+docker compose --env-file ./config/prod.env up
+```
+
+🧩 **Check**
+
+* Working directory
+* Filename must be `.env` for auto-discovery
+
+💡 **In short:** Use `--env-file` explicitly to override default.
+
+---
+
+## Q253: Container resource limits are being ignored. What runtime issue exists?
+
+🧠 **Overview**
+Ignored limits occur when using **cgroup v1/v2 mismatches**, rootless Docker without proper cgroup support, or host kernel lacking resource isolation.
+
+📋 **Checklist**
+
+* Check cgroup mode:
+
+```bash
+docker info | grep -i cgroup
+```
+
+* Rootless Docker cannot enforce all CPU/memory limits.
+* Docker Desktop uses virtualization → limits apply differently.
+* Systemd must delegate cgroup controllers.
+
+🧩 **Fix (systemd delegation)**
+
+```ini
+[Service]
+Delegate=cpu cpuset memory
+```
+
+💡 **In short:** Ensure cgroups are supported and configured; rootless Docker has limit restrictions.
+
+---
+
+## Q254: A scratch-based image fails with "exec format error". What's wrong?
+
+🧠 **Overview**
+This means the binary is not compatible with the container architecture or not statically compiled.
+
+📋 **Causes**
+
+* Running an ARM binary on an x86 host or vice versa.
+* Binary not compiled as **static** → missing dynamic libraries.
+* Using wrong cross-compiled target.
+
+🧩 **Correct Go example**
+
+```bash
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o app
+```
+
+🧩 **Resulting Dockerfile**
+
+```Dockerfile
+FROM scratch
+COPY app /app
+ENTRYPOINT ["/app"]
+```
+
+💡 **In short:** Ensure binary is static and built for correct architecture.
+
+---
+
+Below is your **README-style troubleshooting documentation** for **Q255–Q270 (Advanced Docker Troubleshooting)**.
+
+---
+
+## Q255: Docker build context is too large causing slow builds. How do you reduce it?
+
+🧠 **Overview**
+Large build contexts slow upload time to the Docker daemon/BuildKit and invalidate cache unnecessarily.
+
+🧩 **Fix Strategies**
+
+* Use `.dockerignore` to exclude unnecessary files:
+
+```
+.git/
+node_modules/
+tests/
+*.log
+```
+
+* Build from a smaller subdirectory:
+
+```bash
+docker build -f docker/Dockerfile ./app
+```
+
+* Avoid copying entire project:
+
+```Dockerfile
+COPY src/ /app/src/      # GOOD
+COPY . /app              # BAD
+```
+
+📋 **Check context size**
+
+```bash
+docker build --progress=plain . | head
+du -sh .
+```
+
+💡 **In short:** Shrink context via `.dockerignore` and selective COPY.
+
+---
+
+## Q256: Container cannot write to stdout/stderr. What process issue exists?
+
+🧠 **Overview**
+STDOUT/STDERR must remain open. Issues occur when ENTRYPOINT scripts redirect output, background processes detach, or PID 1 closes standard streams.
+
+📋 **Common causes**
+
+* App daemonizes itself (`nohup`, `--daemon`).
+* ENTRYPOINT script redirects output: `command > /dev/null`.
+* Process uses `exec` incorrectly.
+* TTY allocation issues (`-t` misuse in non-interactive containers).
+
+🧩 **Debug**
+
+```bash
+docker logs <container> --follow
+docker exec -it <container> ps -ef
+```
+
+🧩 **Fix**
+
+* Use `exec` in entrypoint:
+
+```bash
+exec python app.py
+```
+
+* Disable daemon mode:
+
+```
+gunicorn --daemon off
+```
+
+💡 **In short:** The main process must run in foreground and keep stdout/stderr open.
+
+---
+
+## Q257: Docker stats shows 0% CPU usage for an active container. Why?
+
+🧠 **Causes**
+
+* Process running inside container is **sleeping** or I/O bound, not CPU bound.
+* Container using **host PID namespace** → stats may not attribute usage correctly.
+* Running under **cgroup v2** with older Docker → inaccurate CPU metrics.
+* Process running outside the container (spawned incorrectly).
+
+🧩 **Debug**
+
+```bash
+docker top <id>
+pid=$(docker inspect -f '{{.State.Pid}}' <id>)
+ps -p $pid -o %cpu
+```
+
+💡 **In short:** Stats may not show CPU if process idle, using host PID, or due to cgroup accounting issues.
+
+---
+
+## Q258: A container's /etc/hosts file is not being updated with linked containers. What's wrong?
+
+🧠 **Overview**
+`--link` is deprecated. Modern networking uses **DNS-based service discovery** on user-defined networks.
+
+📋 **Fix**
+
+* Use a user-defined bridge network:
+
+```bash
+docker network create backend
+docker run --net backend --name api api-image
+docker run --net backend --name app app-image
+```
+
+* Then containers resolve each other via DNS:
+
+```
+api → app
+app → api
+```
+
+💡 **In short:** /etc/hosts is static; use Docker DNS on user networks.
+
+---
+
+## Q259: BuildKit secrets are being exposed in image layers. How do you fix this?
+
+🧠 **Overview**
+Secrets leak when copied into layers instead of using BuildKit secret mounts.
+
+🧩 **Correct usage**
+
+```Dockerfile
+# DO NOT: COPY secret into image
+# DO: use BuildKit secret mount
+RUN --mount=type=secret,id=mysecret \
+    cat /run/secrets/mysecret > /tmp/output
+```
+
+🧩 **Build command**
+
+```bash
+docker buildx build --secret id=mysecret,src=./secret.txt .
+```
+
+📋 **Verify no secret in layers**
+
+```bash
+dive <image>
+docker history <image>
+```
+
+💡 **In short:** Use `--mount=type=secret` so secrets stay out of image layers.
+
+---
+
+## Q260: Docker Compose service discovery is not working between services. What configuration is missing?
+
+🧠 **Overview**
+Service discovery works only on **user-defined networks**, not the default network unless Compose creates one.
+
+🧩 **Fix**
+
+```yaml
+services:
+  api:
+    networks: [backend]
+
+  app:
+    networks: [backend]
+
+networks:
+  backend:
+```
+
+📋 **Service discovery rules**
+
+* Services resolve by name *only within shared networks*.
+* Must not use `network_mode: host` if you want DNS-based discovery.
+
+💡 **In short:** Services must share a user-defined network.
+
+---
+
+## Q261: A container built on one architecture won't run on another. How do you handle multi-arch?
+
+🧠 **Overview**
+Image architecture must match host CPU (amd64, arm64). Build multi-arch images with BuildX.
+
+🧩 **Build multi-arch**
+
+```bash
+docker buildx create --use
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t myrepo/myapp:latest --push .
+```
+
+🧩 **Inspect**
+
+```bash
+docker manifest inspect myrepo/myapp:latest
+```
+
+💡 **In short:** Build with BuildX for cross-platform compatibility.
+
+---
+
+## Q262: Docker overlay2 storage driver is consuming excessive space. How do you troubleshoot?
+
+🧠 **Overview**
+Overlay2 stores layer diffs; bloat occurs from container writes, dangling layers, build cache, and unused images.
+
+🧩 **Troubleshooting**
+
+```bash
+du -sh /var/lib/docker/overlay2
+docker system df
+docker system prune
+docker builder prune
+```
+
+📋 **Also check**
+
+* Long-lived containers writing frequently.
+* Huge writable layers (logs, caches).
+* Remove unused volumes if needed:
+
+```bash
+docker volume prune
+```
+
+💡 **In short:** Inspect overlay2 directory, prune unused images/layers, reduce container writes.
+
+---
+
+## Q263: Container time is out of sync with host. How do you synchronize it?
+
+🧠 **Overview**
+Containers use the host kernel clock; desync occurs if host isn't synced or virtualization layer introduces drift.
+
+🧩 **Fix**
+
+* Sync host clock (NTP/chrony):
+
+```bash
+timedatectl status
+sudo systemctl restart chrony
+```
+
+* Restart containers after host sync.
+* In Docker Desktop, ensure VM time sync is enabled.
+
+💡 **In short:** Fix the host clock; containers inherit host time.
+
+---
+
+## Q264: Docker API version mismatch between client and server. How do you resolve this?
+
+🧠 **Overview**
+Occurs when Docker CLI and daemon differ in supported API versions.
+
+🧩 **Check versions**
+
+```bash
+docker version
+```
+
+🧩 **Fix options**
+
+* Upgrade Docker client or server.
+* Set compatibility environment variable:
+
+```bash
+export DOCKER_API_VERSION=1.41
+```
+
+* Ensure same Docker version on all nodes in CI.
+
+💡 **In short:** Align CLI/server versions or set `DOCKER_API_VERSION`.
+
+---
+
+## Q265: A container has orphaned processes after main process exits. How do you handle PID 1?
+
+🧠 **Overview**
+PID 1 in containers doesn't reap zombies unless implemented. Use an init process.
+
+🧩 **Fix**
+
+```bash
+docker run --init myapp
+```
+
+Or embed tini in image:
+
+```Dockerfile
+ENTRYPOINT ["/usr/bin/tini", "--", "myapp"]
+```
+
+📋 **Symptoms**
+
+* Zombie processes
+* defunct PIDs visible inside container
+
+💡 **In short:** Use `--init` or tini to ensure PID 1 reaps children.
+
+---
+
+## Q266: Docker build is not respecting .dockerignore. What would you verify?
+
+🧠 **Checklist**
+
+* File name is `.dockerignore` (not `.dockerignore.txt`).
+* File is in the build **context directory**, not next to Dockerfile if contexts differ.
+* Patterns are correct (glob syntax):
+
+```
+node_modules/
+*.log
+```
+
+* Confirm build context path:
+
+```bash
+docker build -f docker/Dockerfile ./context
+```
+
+💡 **In short:** Ensure `.dockerignore` exists in context dir and patterns match.
+
+---
+
+## Q267: Container cannot resolve external DNS but can resolve container names. What's wrong?
+
+🧠 **Overview**
+Internal DNS works (Docker DNS), but upstream DNS (Google, company DNS) failing means `/etc/resolv.conf` or host DNS is misconfigured.
+
+🧩 **Debug**
+
+```bash
+docker exec app cat /etc/resolv.conf
+nslookup google.com
+```
+
+Check host’s `/etc/resolv.conf`, DNS servers reachable, firewall blocking outbound 53/UDP.
+
+🧩 **Fix**
+
+```json
+{
+  "dns": ["8.8.8.8", "1.1.1.1"]
+}
+```
+
+Reload Docker.
+
+💡 **In short:** Configure daemon DNS to valid resolvers.
+
+---
+
+## Q268: A tmpfs mount is not providing the expected performance. What would you check?
+
+🧠 **Overview**
+tmpfs should be RAM-backed, but limits or misconfiguration can degrade performance.
+
+📋 **Investigate**
+
+* tmpfs size:
+
+```bash
+docker inspect <c> | jq .[].HostConfig.Tmpfs
+```
+
+* System memory pressure (swap usage).
+* NUMA node imbalance.
+* If using Docker Desktop → tmpfs inside VM, not real RAM.
+* I/O benchmark inside container:
+
+```bash
+dd if=/dev/zero of=/tmp/test bs=4k count=100000
+```
+
+💡 **In short:** Check tmpfs size, host memory pressure, and virtualization overhead.
+
+---
+
+## Q269: Docker system df shows large "Build Cache" usage. How do you clean it safely?
+
+🧠 **Overview**
+BuildKit caches layers, mounts, and intermediate results.
+
+🧩 **Inspect**
+
+```bash
+docker system df --verbose
+```
+
+🧩 **Clean**
+
+```bash
+docker builder prune
+docker builder prune --all  # removes all cache, use cautiously
+```
+
+🧩 **Selective prune by buildx builder**
+
+```bash
+docker buildx prune
+docker buildx prune --all
+```
+
+💡 **In short:** Use `docker builder prune` to safely clean cached layers.
+
+---
+
+## Q270: Container labels are not being applied despite being defined in Dockerfile. How do you debug this?
+
+🧠 **Checklist**
+
+* Labels overridden by `docker run --label` or Compose labels.
+* Using older image tag (not rebuilt).
+* Labels defined after `FROM` but not in final stage of multi-stage build.
+* Inspecting wrong image.
+
+🧩 **Check**
+
+```bash
+docker inspect <image> | jq .[0].Config.Labels
+```
+
+🧩 **Correct labeling in multi-stage**
+
+```Dockerfile
+FROM base AS final
+LABEL version="1.0"
+```
+
+💡 **In short:** Ensure labels are in the **final stage**, image rebuilt, and not overridden by runtime config.
