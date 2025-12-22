@@ -1,0 +1,91 @@
+
+# Build & Deploy
+
+# This pipeline will run on the runner with the specified tag
+
+# Define stages
+stages:
+  - assume_role
+  - build
+  # - deploy
+
+variables:
+  AWS_ROLE_ARN: "arn:aws:iam::187189592310:role/Bayview-Lo-Dev-Gitlab-CICD-Role"
+  ROLE_SESSION_NAME: "session1"
+
+assume_role_job:
+  stage: assume_role
+  tags:
+    - Linux
+  script:
+    - |
+      echo "Assuming AWS role..."
+      pwd
+      CREDENTIALS=$(aws sts assume-role --role-arn ${AWS_ROLE_ARN} --role-session-name ${ROLE_SESSION_NAME})
+      export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId')
+      export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey')
+      export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.Credentials.SessionToken')
+      echo "AWS credentials assumed successfully."
+      echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" > aws_creds.env
+      echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> aws_creds.env
+      echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> aws_creds.env
+  artifacts:
+    paths:
+      - aws_creds.env
+    expire_in: 1 day
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+      when: on_success
+    - when: manual
+
+
+# Define jobs
+build:backend-srvc:
+  stage: build
+  image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  tags:
+    - Linux  # Specify the tag of the runner
+  before_script:
+    - echo "Pipeline triggered by:$GITLAB_USER_NAME"
+    - export $(cat aws_creds.env | xargs)
+
+    - echo "Logging into Amazon ECR.."
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 187189592310.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+    # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY_URL
+  script: |
+    chmod +x build_script.sh
+    echo "Building the project.."
+    chmod +x build_script.sh
+    SERVICE_LIST=$(grep "Service_List=" deployment_checklist.txt | cut -d'=' -f2)
+    for service in $SERVICE_LIST; do
+      ./build_script.sh $(echo "$service" | tr -d '"') $(grep "Service_Branch=" deployment_checklist.txt | cut -d'=' -f2)
+    done
+  rules:
+    - changes:
+      - deployment_checklist.txt
+
+# deploy:backend-srvc:
+#   stage: deploy
+#   tags:
+#     - Linux2  # Specify the tag of the runner
+#   script: |
+#     echo "Deploying the project..."
+#     echo "$SSH_Key_BV_Dev_LO" > /home/gitlab-runner/Bayview-lo-dev.pem
+#     chmod 600 /home/gitlab-runner/Bayview-lo-dev.pem
+#     ssh -t -o StrictHostKeyChecking=no -i /home/gitlab-runner/Bayview-lo-dev.pem ec2-user@10.216.160.27 <<'ENDSSH'
+#     #!/bin/bash
+#     cd /home/ec2-user/dockercompose
+#     ls -ltr
+#     sudo $(sudo aws ecr get-login --no-include-email --region us-east-1)
+#     sudo docker stack deploy --with-registry-auth --compose-file finexpntbservice.yml bayview_lo_dev
+#     ENDSSH
+#     rm -f /home/gitlab-runner/Bayview-lo-dev.pem
+#   # when:
+#   #   manual
+#   rules:
+#     - changes:
+#       - deployment_checklist.txt
