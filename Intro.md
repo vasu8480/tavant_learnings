@@ -1,9 +1,9 @@
-Hi, I’m Vasu, currently working as a Software Engineer at Tavant Technologies, with 3 years of experience in CI/CD automation, cloud infrastructure, and containerized deployments across AWS and Azure.
+Hi, I'm Vasu. I'm currently working as a Software Engineer at Tavant Technologies with 3 years of experience specializing in DevOps and Cloud.
 
-I automate infrastructure using Terraform and AWS CDK, and design and maintain end-to-end CI/CD pipelines using GitLab CI, Jenkins, and GitHub Actions, integrating SonarQube and Checkmarx for code quality and security, and managing artifacts through Nexus.
+My core expertise lies in CI/CD automation, cloud infrastructure, and containerized deployments. I build and maintain infrastructure as code using Terraform and AWS CDK, and design end-to-end CI/CD pipelines with tools like GitLab CI/CD, Jenkins, GitHub Actions, and ArgoCD.
 
-I work on reliability, observability, and incident management. I’ve implemented monitoring and alerting using Prometheus, Grafana, and ELK, defined actionable alerts, and supported production incident response to reduce downtime.
+I've implemented comprehensive monitoring solutions using Prometheus, Grafana, and the ELK stack, and defined actionable alerts, and supported production incident response to reduce downtime.
 
-On the cloud side, I work extensively with EKS, ECS Fargate, IAM, WAF, and GuardDuty, focusing on secure, reliable, and scalable platforms.
+On the security front, I also worked on tools like SonarQube and Checkmarx into our pipelines to enforce code quality and security standards from the start. Coming to artifact repositories i used Nexus.
 
-Overall, my focus is on stable releases, security-first automation, and improving operational efficiency.
+Ultimately, my goal is to enable stable releases through security-first automation while continuously improving operational efficiency."
